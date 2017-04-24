@@ -1,0 +1,198 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-11-10T04:27:15.104956+00:00",
+    "comment_count": 1,
+    "description": "This does two things\r\n\r\n* Fix typo in parallel_objects docstring\r\n\r\n* Make the default storage result_id more useful\r\n\r\nTo see how this change impacts real script, take a look at the following test script:\r\n\r\n```\r\nimport yt\r\nyt.enable_parallelism()\r\nimport glob\r\n\r\nfrom mpi4py import MPI\r\n\r\n\r\nfns = sorted(glob.glob('enzo_tiny_cosmology/DD????/DD????'))\r\n\r\nstorage = {}\r\n\r\nfor sto, fn in yt.parallel_objects(\r\n        fns, storage=storage):\r\n    sto.result = MPI.COMM_WORLD.rank\r\n\r\nif yt.is_root():\r\n    print storage.items()\r\n```\r\n\r\nIf I run this script on 8 cores before this PR, I get:\r\n\r\n```\r\n[(0, 0), (128, 0), (137, 1), (192, 0), (256, 0), (173, 5), (320, 0), (146, 2), (73, 1), (27, 3), (265, 1), (329, 1), (155, 3), (164, 4), (210, 2), (274, 2), (45, 5), (82, 2), (54, 6), (9, 1), (283, 3), (347, 3), (36, 4), (191, 7), (64, 0), (100, 4), (182, 6), (201, 1), (219, 3), (109, 5), (338, 2), (237, 5), (301, 5), (365, 5), (292, 4), (91, 3), (246, 6), (310, 6), (228, 4), (374, 6), (18, 2), (356, 4), (255, 7), (319, 7), (118, 6), (63, 7), (127, 7)]\r\n```\r\n\r\nAfter this PR I get:\r\n\r\n```\r\n[(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 0), (9, 1), (10, 2), (11, 3), (12, 4), (13, 5), (14, 6), (15, 7), (16, 0), (17, 1), (18, 2), (19, 3), (20, 4), (21, 5), (22, 6), (23, 7), (24, 0), (25, 1), (26, 2), (27, 3), (28, 4), (29, 5), (30, 6), (31, 7), (32, 0), (33, 1), (34, 2), (35, 3), (36, 4), (37, 5), (38, 6), (39, 7), (40, 0), (41, 1), (42, 2), (43, 3), (44, 4), (45, 5), (46, 6)]\r\n```\r\n\r\nNote how the IDs for each individual storage result are now more useful: they can be used for indexing back into the original array, for example.\r\n\r\nIt looks like this behavior goes back to 2012 when we switched to using `itertools.islice` to iterate inside `parallel_objects`, see b739b6a. I think it was a mistake to change the formula used for `result_id`. That said, this behavior goes back to 2012, so it's definitely a behavior change for the 3.x series. Then again, the current behavior isn't really useful, so I doubt anyone is relying on it for anything...",
+    "created_on": "2015-11-09T21:56:54.951041+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/1cd224904d44"
+            }
+        },
+        "hash": "1cd224904d44"
+    },
+    "title": "[bugfix] Make default result_id for parallel_objects more useful",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1851"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "id": 1851,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/7f6e098cd5c2"
+                }
+            },
+            "hash": "7f6e098cd5c2"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/25a0dbd51257"
+                }
+            },
+            "hash": "25a0dbd51257"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851/comments/11629033"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1851/_/diff#comment-11629033"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Make default result_id for parallel_objects more useful",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1851"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1851"
+                    }
+                },
+                "id": 1851
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-10T00:16:46.656932+00:00",
+            "updated_on": "2015-11-10T00:16:46.777928+00:00",
+            "id": 11629033
+        }
+    ]
+}

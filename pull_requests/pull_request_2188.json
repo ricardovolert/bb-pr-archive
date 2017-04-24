@@ -1,0 +1,255 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-05-23T22:16:55.572410+00:00",
+    "comment_count": 2,
+    "description": "This fixes a memory leak identified by an athena++ beta tester. Right now this frontend triggers a reference cycle between an `Index` subclass and `HDF5FileHandler`. Since both of these objects define `__del__`, this causes a memory leak.\r\n\r\nBoth of these `__del__` methods exist only to close old hdf5 file handles when the object goes out of scope. However, h5py newer than 2.4.0 (released January 2015) now automatically closes file handles when it's done using them, so these `__del__` methods are no longer necessary for recent versions of h5py.\r\n\r\nMy fix is just to delete the `__del__` methods and error out when trying to use yt with old h5py versions. This fixes the memory leak in the athena++ frontend and likely will also fix future memory leaks.\r\n\r\n* Delete two __del__ methods which are only necessary for older h5py releases\r\n\r\n* Make on-demand imports new-style classes\r\n\r\n* require h5py be newer than 2.4.0 when used with yt",
+    "created_on": "2016-05-20T20:44:31.456316+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ecfc9590c7e6642114669a6787c491937667d2fd"
+            }
+        },
+        "hash": "ecfc9590c7e6642114669a6787c491937667d2fd"
+    },
+    "title": "Eliminate need for two __del__ methods by requiring h5py 2.4.0 or newer",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2188"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "id": 2188,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/ecfc9590c7e6"
+                }
+            },
+            "hash": "ecfc9590c7e6"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b3c23ff06040"
+                }
+            },
+            "hash": "b3c23ff06040"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/comments/18771907"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:ecfc9590c7e6..b3c23ff06040?path=yt%2Futilities%2Fon_demand_imports.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2188/_/diff#comment-18771907"
+                }
+            },
+            "pullrequest": {
+                "title": "Eliminate need for two __del__ methods by requiring h5py 2.4.0 or newer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2188"
+                    }
+                },
+                "id": 2188
+            },
+            "content": {
+                "raw": "Good catch!",
+                "html": "<p>Good catch!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-05-20T20:46:36.575033+00:00",
+            "updated_on": "2016-05-20T20:46:36.578135+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/on_demand_imports.py",
+                "to": 33
+            },
+            "id": 18771907
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188/comments/18772464"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2188/_/diff#comment-18772464"
+                }
+            },
+            "pullrequest": {
+                "title": "Eliminate need for two __del__ methods by requiring h5py 2.4.0 or newer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2188"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2188"
+                    }
+                },
+                "id": 2188
+            },
+            "content": {
+                "raw": "The user verifies this fixes the memory leak. \n",
+                "html": "<p>The user verifies this fixes the memory leak. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-05-20T21:03:50.515508+00:00",
+            "updated_on": "2016-05-20T21:03:50.517956+00:00",
+            "id": 18772464
+        }
+    ]
+}

@@ -1,0 +1,198 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-04-06T18:09:54.843659+00:00",
+    "comment_count": 1,
+    "description": "It turns out the error reported in the issue only happens when:\r\n\r\n1. Running under IPython\r\n2. In Python 2.7\r\n3. With `suppressStreamLogging` set in the user's yt configuration file.\r\n\r\nI think pretty much just me and Stuart do this. Maybe other users who ignore the error at python shutdown?\r\n\r\n`yt_sh` is never imported elsewhere in yt, so it's ok to only define it conditionally. `colorize_logging` is only called in this file, so it's current implementation is OK. The `uncolorize_logging` function *is* called inside `yt.enable_parallelism()`, so we wrap the implementation of `uncolorize_logging` in a `try` / `except NameError` block to avoid erroring out when calling `enable_parallelism` if someone has `suppressStreamLogging` defined in their yt config. `disable_stream_logging` is called in the answer testing framework, so I added a check to make sure there is a handler defined already before removing it in there.\r\n\r\nThe diff is a bit easier to parse in side-by-side mode.\r\n\r\nping @smumford who originally reported this.",
+    "created_on": "2016-03-31T03:00:32.316810+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c55b7a1e36bf"
+            }
+        },
+        "hash": "c55b7a1e36bf"
+    },
+    "title": "logging: don't create a StreamHandler unless we will use it. Closes #1024",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2102"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "id": 2102,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/def617b415de"
+                }
+            },
+            "hash": "def617b415de"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/068a53069cdf"
+                }
+            },
+            "hash": "068a53069cdf"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102/comments/16493875"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2102/_/diff#comment-16493875"
+                }
+            },
+            "pullrequest": {
+                "title": "logging: don't create a StreamHandler unless we will use it. Closes #1024",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2102"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2102"
+                    }
+                },
+                "id": 2102
+            },
+            "content": {
+                "raw": "Related python bug: http://bugs.python.org/issue9501\n\nThis might be a bug in python 2.7? issue9501 is marked as resolved, but this might be a corner case...",
+                "html": "<p>Related python bug: <a href=\"http://bugs.python.org/issue9501\" rel=\"nofollow\">http://bugs.python.org/issue9501</a></p>\n<p>This might be a bug in python 2.7? issue9501 is marked as resolved, but this might be a corner case...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-31T03:05:34.727619+00:00",
+            "updated_on": "2016-03-31T03:05:34.729866+00:00",
+            "id": 16493875
+        }
+    ]
+}

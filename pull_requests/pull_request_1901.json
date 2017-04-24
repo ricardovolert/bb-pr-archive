@@ -1,0 +1,1292 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-02-03T18:59:35.381752+00:00",
+    "comment_count": 21,
+    "description": "This pull request refactors the octree visitor code to use objects and memory\nviews.  It needs:\n\n * Review\n * Comparison of speed versus old\n * Extra-special octree checks (tests should pick it up)\n\nI've run the geometry tests, and they work great, but I'm going to run it\nthrough a suite of octree and particle code tests in the next few days.\n\nUltimately, if this does not incur too much performance overhead, I would like\nto refactor the grid visitors the same way, and then finish by unifying the two\nsets of code.\n\nI think overall, though, this is way more readable than the void pointer\ncasting nonsensery that I'd implemented before.\n\n",
+    "created_on": "2015-12-09T22:53:20.398461+00:00",
+    "task_count": 1,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/45dc609be9e8"
+            }
+        },
+        "hash": "45dc609be9e8"
+    },
+    "title": "Octree visitor refactoring",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 1901,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/7268e755205a"
+                }
+            },
+            "hash": "7268e755205a"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5beb2280f5c8"
+                }
+            },
+            "hash": "5beb2280f5c8"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/12618775"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-12618775"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/939/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/939/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/939/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-09T23:56:35.599412+00:00",
+            "updated_on": "2015-12-09T23:56:35.658885+00:00",
+            "id": 12618775
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/12621080"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-12621080"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/941/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/941/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/941/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-10T02:33:51.177483+00:00",
+            "updated_on": "2015-12-10T02:33:51.249051+00:00",
+            "id": 12621080
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/12641240"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-12641240"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/12621080"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-12621080"
+                    }
+                },
+                "id": 12621080
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Getting closer.  The main error remaining seems to be the `CopyArray` visitor functions.",
+                "html": "<p>Getting closer.  The main error remaining seems to be the <code>CopyArray</code> visitor functions.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-10T14:18:58.774088+00:00",
+            "updated_on": "2015-12-10T14:18:58.777561+00:00",
+            "id": 12641240
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13045768"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13045768"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1022/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1022/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1022/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-26T10:10:25.353085+00:00",
+            "updated_on": "2015-12-26T10:10:25.427962+00:00",
+            "id": 13045768
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13045897"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13045897"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1023/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1023/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1023/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-26T11:06:05.877194+00:00",
+            "updated_on": "2015-12-26T11:06:05.968050+00:00",
+            "id": 13045897
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13793250"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13793250"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1152/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1152/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1152/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T06:00:56.580018+00:00",
+            "updated_on": "2016-01-25T06:00:56.654701+00:00",
+            "id": 13793250
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13820705"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13820705"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "I've tested this on my machine, and answer tests now pass.  I think that it is ready to go, but I would appreciate a review of the source, and if anyone wants to, a check over some of the plots from SPH data.  It would be really good to get this in sooner rather than later, as once this goes in we can start in earnest finishing up some of the octree refactoring and code cleanup efforts.  (Also, then we can merge it with the grid visitors code.)",
+                "html": "<p>I've tested this on my machine, and answer tests now pass.  I think that it is ready to go, but I would appreciate a review of the source, and if anyone wants to, a check over some of the plots from SPH data.  It would be really good to get this in sooner rather than later, as once this goes in we can start in earnest finishing up some of the octree refactoring and code cleanup efforts.  (Also, then we can merge it with the grid visitors code.)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T17:59:06.514929+00:00",
+            "updated_on": "2016-01-25T17:59:06.517920+00:00",
+            "id": 13820705
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13820918"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13820918"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13820705"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13820705"
+                    }
+                },
+                "id": 13820705
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Have you looked at performance? I'll trigger a docs build to see if the SPH answers look at all different.",
+                "html": "<p>Have you looked at performance? I'll trigger a docs build to see if the SPH answers look at all different.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T18:04:29.147699+00:00",
+            "updated_on": "2016-01-25T18:04:29.150049+00:00",
+            "id": 13820918
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13821092"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13821092"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13820918"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13820918"
+                    }
+                },
+                "id": 13820918
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "I'll do that today.  Unscientific suggests same.",
+                "html": "<p>I'll do that today.  Unscientific suggests same.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T18:09:05.074811+00:00",
+            "updated_on": "2016-01-25T18:09:05.081569+00:00",
+            "id": 13821092
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13821817"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13821817"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T18:28:24.859046+00:00",
+            "updated_on": "2016-01-25T18:28:24.931815+00:00",
+            "id": 13821817
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823223"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:b9768c9cce41..62e350b95311?path=yt%2Fgeometry%2Foct_container.pxd"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823223"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Maybe add a comment explaining that this can be \"r\" or \"o\" and what those two options mean?",
+                "html": "<p>Maybe add a comment explaining that this can be \"r\" or \"o\" and what those two options mean?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T19:04:46.543790+00:00",
+            "updated_on": "2016-01-25T19:04:46.546949+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/oct_container.pxd",
+                "to": 85
+            },
+            "id": 13823223
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823271"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Fgeometry%2Foct_container.pxd"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823271"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823223"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823223"
+                    }
+                },
+                "id": 13823223
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Good idea!",
+                "html": "<p>Good idea!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T19:05:46.463231+00:00",
+            "updated_on": "2016-01-25T19:05:46.465320+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/oct_container.pxd",
+                "to": null
+            },
+            "id": 13823271
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823345"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:7268e755205a..5beb2280f5c8?path=yt%2Fgeometry%2Foct_visitors.pxd"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823345"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "I like how you've made these classes here, much cleaner. Any chance we can get a docstring or comment explaining what each of these objects do?",
+                "html": "<p>I like how you've made these classes here, much cleaner. Any chance we can get a docstring or comment explaining what each of these objects do?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T19:07:15.514447+00:00",
+            "updated_on": "2016-01-25T19:07:15.517753+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/oct_visitors.pxd",
+                "to": 121
+            },
+            "id": 13823345
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823370"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Fgeometry%2Foct_visitors.pxd"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823370"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823345"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823345"
+                    }
+                },
+                "id": 13823345
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Oh I see this was added to the implementation below, sorry!",
+                "html": "<p>Oh I see this was added to the implementation below, sorry!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T19:07:51.521096+00:00",
+            "updated_on": "2016-01-25T19:07:51.525602+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/oct_visitors.pxd",
+                "to": null
+            },
+            "id": 13823370
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823378"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Fgeometry%2Foct_visitors.pxd"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823378"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823345"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823345"
+                    }
+                },
+                "id": 13823345
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Sure, I'll put that in the `.pyx` file.",
+                "html": "<p>Sure, I'll put that in the <code>.pyx</code> file.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T19:08:03.075104+00:00",
+            "updated_on": "2016-01-25T19:08:03.078216+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/oct_visitors.pxd",
+                "to": null
+            },
+            "id": 13823378
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13823496"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13823496"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "This is a very nice cleanup - in particular making each of the visitor objects its own cdef class makes it easier to follow. I'll admit I don't follow the details about how the visitor system works so I'm not able to closely review the details here.\n\nThank you for your work on cleaning up the cython code lately!",
+                "html": "<p>This is a very nice cleanup - in particular making each of the visitor objects its own cdef class makes it easier to follow. I'll admit I don't follow the details about how the visitor system works so I'm not able to closely review the details here.</p>\n<p>Thank you for your work on cleaning up the cython code lately!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T19:10:37.075570+00:00",
+            "updated_on": "2016-01-25T19:10:37.078449+00:00",
+            "id": 13823496
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13825052"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13825052"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/559/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/559/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/559/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/559/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/559/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/559/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T19:49:19.737101+00:00",
+            "updated_on": "2016-01-25T19:49:19.813456+00:00",
+            "id": 13825052
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/13826471"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-13826471"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-25T20:32:40.201951+00:00",
+            "updated_on": "2016-01-25T20:32:40.246108+00:00",
+            "id": 13826471
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/14135948"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-14135948"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "This is ready for review; performance seems okay on my box.",
+                "html": "<p>This is ready for review; performance seems okay on my box.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T20:55:09.338266+00:00",
+            "updated_on": "2016-02-02T20:55:09.341724+00:00",
+            "id": 14135948
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/14138928"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:fc521ecbd44a..109529269a1a?path=yt%2Fgeometry%2Foct_visitors.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-14138928"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "Are these commented out on purpose?",
+                "html": "<p>Are these commented out on purpose?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T22:10:15.449675+00:00",
+            "updated_on": "2016-02-02T22:10:15.452783+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/oct_visitors.pyx",
+                "to": 63
+            },
+            "id": 14138928
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901/comments/14181616"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901/_/diff#comment-14181616"
+                }
+            },
+            "pullrequest": {
+                "title": "Octree visitor refactoring",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1901"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1901"
+                    }
+                },
+                "id": 1901
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1253/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1253/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1253/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-03T18:59:35.314408+00:00",
+            "updated_on": "2016-02-03T18:59:35.374438+00:00",
+            "id": 14181616
+        }
+    ]
+}

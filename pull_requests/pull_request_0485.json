@@ -1,0 +1,476 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-05-01T03:42:00.914789+00:00",
+    "comment_count": 6,
+    "description": "This adds a `data_source` keyword for `ProjectionPlot`.  It seems that this is a more intuitive way of creating these sorts of plots, rather than using `to_pw()`, even though the results are identical.  See e.g. [1] and [2].\r\n\r\n[1] http://lists.spacepope.org/htdig.cgi/yt-users-spacepope.org/2012-October/002997.html\r\n\r\n[2] http://lists.spacepope.org/htdig.cgi/yt-users-spacepope.org/2013-April/003506.html\r\n\r\nWith this change, I'm able to run the following script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nfrom yt.mods import *\r\npf = load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\n\r\nreg = pf.h.all_data()\r\nds = reg.cut_region(\"grid['Radiuskpc'] < 100\")\r\nwidth = (250, 'kpc')\r\n\r\nprj = ProjectionPlot(pf, 0, 'Density', weight_field='Density', data_source=ds,\r\n                     width=width)\r\nprj.save('1')\r\n\r\nreg = pf.h.region([0.5]*3,[0.4]*3,[0.6]*3)\r\nprj = ProjectionPlot(pf, 0, 'Density', weight_field='Density', data_source=reg,\r\n                     width=width)\r\nprj.save('2')\r\n\r\nprj = ProjectionPlot(pf, 0, 'Density', weight_field='Density', width=width)\r\nprj.save('3')\r\n```\r\n\r\n![1](http://i.imgur.com/92LAL04.png)\r\n![2](http://i.imgur.com/BWFwwUa.png)\r\n![3](http://i.imgur.com/rqFMRNt.png)\r\n\r\nI see two reasons why this might be rejected.  This adds duplicate functionality and also adds a new keyword argument to the initializer for ProjectionPlot, which already has a lot of keywords.  I think this functionality is important enough from a UX perspective that in this case it makes sense to add another keyword.\r\n\r\nI'd like to do the same for `SlicePlot`, but that will only be possible in the context of yt-3.0, once #521 is resolved.  Speaking of yt-3.0, this will require a manual change when this is merged in, since 3.0 uses a `data_source` keyword for `YTProjBase` rather than `source`.",
+    "created_on": "2013-04-29T01:39:36.650714+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/8da80188ed68"
+            }
+        },
+        "hash": "8da80188ed68"
+    },
+    "title": "Adding a data_source keyword for ProjectionPlot",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 485,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/be0a96c06b28"
+                }
+            },
+            "hash": "be0a96c06b28"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/aa91cc1e668b"
+                }
+            },
+            "hash": "aa91cc1e668b"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/226568"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-226568"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding a data_source keyword for ProjectionPlot",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485"
+                    }
+                },
+                "id": 485
+            },
+            "content": {
+                "raw": "Despite my normal reservations about adding new kwargs, I think this is a good one.  But I think we should consider a few up for discussion as well -- `max_level`, `axes_unit` specifically.  What do you think about trading?",
+                "html": "<p>Despite my normal reservations about adding new kwargs, I think this is a good one.  But I think we should consider a few up for discussion as well -- <code>max_level</code>, <code>axes_unit</code> specifically.  What do you think about trading?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-30T13:51:04.015759+00:00",
+            "updated_on": "2013-04-30T13:51:04.030445+00:00",
+            "id": 226568
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/226586"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-226586"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding a data_source keyword for ProjectionPlot",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485"
+                    }
+                },
+                "id": 485
+            },
+            "content": {
+                "raw": "Also, what's the consensus on source= vs data_source= ? I can't even remember which one I prefer.  I think I'd be +0 on both of the ones Matt suggests as well. ",
+                "html": "<p>Also, what's the consensus on source= vs data_source= ? I can't even remember which one I prefer.  I think I'd be +0 on both of the ones Matt suggests as well. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-30T13:57:33.927225+00:00",
+            "updated_on": "2013-04-30T13:57:33.933391+00:00",
+            "id": 226586
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/226589"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-226589"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/226586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-226586"
+                    }
+                },
+                "id": 226586
+            },
+            "pullrequest": {
+                "title": "Adding a data_source keyword for ProjectionPlot",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485"
+                    }
+                },
+                "id": 485
+            },
+            "content": {
+                "raw": "I changed it to `data_source` in 3.0 because I liked it more as it's a bit more explicit.  I think keeping that her would be good too.",
+                "html": "<p>I changed it to <code>data_source</code> in 3.0 because I liked it more as it's a bit more explicit.  I think keeping that her would be good too.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-30T13:58:20.021518+00:00",
+            "updated_on": "2013-04-30T13:58:20.029578+00:00",
+            "id": 226589
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/227144"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-227144"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/226586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-226586"
+                    }
+                },
+                "id": 226586
+            },
+            "pullrequest": {
+                "title": "Adding a data_source keyword for ProjectionPlot",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485"
+                    }
+                },
+                "id": 485
+            },
+            "content": {
+                "raw": "Looking at 3.0, it seems `data_source` is standard, as Matt notes above.  I ended up going with that to be forward compatible, although it introduces a little bit of confusion since the keyword is `source` for `AMRProjBase`.",
+                "html": "<p>Looking at 3.0, it seems <code>data_source</code> is standard, as Matt notes above.  I ended up going with that to be forward compatible, although it introduces a little bit of confusion since the keyword is <code>source</code> for <code>AMRProjBase</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-30T18:27:54.175945+00:00",
+            "updated_on": "2013-04-30T18:27:54.185871+00:00",
+            "id": 227144
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/227145"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-227145"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/226568"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-226568"
+                    }
+                },
+                "id": 226568
+            },
+            "pullrequest": {
+                "title": "Adding a data_source keyword for ProjectionPlot",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485"
+                    }
+                },
+                "id": 485
+            },
+            "content": {
+                "raw": "I'm happy to give up `max_level`, if someone really wants it they can construct their own projection.\n\n`axes_unit` is a bit more useful, and I'm -0 on removing it.  Anyone else have an opinion here?",
+                "html": "<p>I'm happy to give up <code>max_level</code>, if someone really wants it they can construct their own projection.</p>\n<p><code>axes_unit</code> is a bit more useful, and I'm -0 on removing it.  Anyone else have an opinion here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-30T18:28:39.317814+00:00",
+            "updated_on": "2013-04-30T18:28:39.336637+00:00",
+            "id": 227145
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485/comments/228012"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485/_/diff#comment-228012"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding a data_source keyword for ProjectionPlot",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/485"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/485"
+                    }
+                },
+                "id": 485
+            },
+            "content": {
+                "raw": "I'm accepting this so it will be in 2.5.2.",
+                "html": "<p>I'm accepting this so it will be in 2.5.2.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-01T03:41:51.556053+00:00",
+            "updated_on": "2013-05-01T03:41:51.563684+00:00",
+            "id": 228012
+        }
+    ]
+}

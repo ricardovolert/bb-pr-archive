@@ -1,0 +1,922 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2017-01-12T16:09:37.712691+00:00",
+    "comment_count": 13,
+    "description": "We now make use of `UnitRegistry.to_json` to store the unit registry of the parent dataset and `UnitRegistry.from_json` to restore it for new datasets created via `save_as_dataset`.  This allows new datasets to access code units from the original dataset rather than redefining code units explicitly as CGS.\r\n\r\nTo cut down on duplicate code for unit registry restoration, I created a new `SavedDataset` class that is a super class of both `YTDataset` and `HaloCatalogDataset`.\r\n\r\nThis should be fully backward compatible yt datasets and halo catalogs made prior to this change.",
+    "created_on": "2016-12-31T14:50:05.625753+00:00",
+    "task_count": 1,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ec92132823b0"
+            }
+        },
+        "hash": "ec92132823b0"
+    },
+    "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2482,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+            },
+            "html": {
+                "href": "https://bitbucket.org/brittonsmith/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Britton Smith",
+        "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+        "username": "brittonsmith"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/brittonsmith/yt/commit/d2be5eb997b5"
+                }
+            },
+            "hash": "d2be5eb997b5"
+        },
+        "repository": {
+            "full_name": "brittonsmith/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/brittonsmith/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/brittonsmith/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/brittonsmith/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{a3a98ec1-6936-4db5-8667-658e17c1eaca}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/003a2e024c30"
+                }
+            },
+            "hash": "003a2e024c30"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006939"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/brittonsmith/yt:7e2620ce1df1..09f0ef297d70?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006939"
+                }
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "It looks like this is only called if `v` isn't a `YTArray` now. Is that right?",
+                "html": "<p>It looks like this is only called if <code>v</code> isn't a <code>YTArray</code> now. Is that right?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:32:38.945320+00:00",
+            "updated_on": "2016-12-31T22:32:38.948731+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": 333
+            },
+            "id": 29006939
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006945"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006945"
+                }
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Does this supplant PR 2208?",
+                "html": "<p>Does this supplant PR 2208?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:33:32.830482+00:00",
+            "updated_on": "2016-12-31T22:33:32.833049+00:00",
+            "id": 29006945
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006978"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/brittonsmith/yt:7e2620ce1df1..09f0ef297d70?path=yt%2Ffrontends%2Fytdata%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006978"
+                }
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Maybe just add a comment saying that this is needed by subclasses to optionally access data when the parameter file is open. It took me a minute or two of staring at this to realize what it was doing.",
+                "html": "<p>Maybe just add a comment saying that this is needed by subclasses to optionally access data when the parameter file is open. It took me a minute or two of staring at this to realize what it was doing.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:38:16.228372+00:00",
+            "updated_on": "2016-12-31T22:38:16.233666+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/ytdata/data_structures.py",
+                "to": 125
+            },
+            "id": 29006978
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006982"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/brittonsmith/yt:7e2620ce1df1..09f0ef297d70?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006982"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006939"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006939"
+                    }
+                },
+                "id": 29006939
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "That's right.  I didn't see a reason to make it as a `YTArray` again if it already was one.  I also needed to do this in order to prevent the units read in from disk from being overridden.",
+                "html": "<p>That's right.  I didn't see a reason to make it as a <code>YTArray</code> again if it already was one.  I also needed to do this in order to prevent the units read in from disk from being overridden.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:38:37.707857+00:00",
+            "updated_on": "2016-12-31T22:38:37.713392+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 29006982
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006985"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/brittonsmith/yt:7e2620ce1df1..09f0ef297d70?path=yt%2Ffrontends%2Fytdata%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006985"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006978"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006978"
+                    }
+                },
+                "id": 29006978
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Can do.",
+                "html": "<p>Can do.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:38:59.689318+00:00",
+            "updated_on": "2016-12-31T22:38:59.691828+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/ytdata/data_structures.py",
+                "to": null
+            },
+            "id": 29006985
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006991"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006991"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006945"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006945"
+                    }
+                },
+                "id": 29006945
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Yes, it would.",
+                "html": "<p>Yes, it would.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:39:41.668201+00:00",
+            "updated_on": "2016-12-31T22:39:41.673517+00:00",
+            "id": 29006991
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007007"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/brittonsmith/yt:7e2620ce1df1..09f0ef297d70?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007007"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006982"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006982"
+                    }
+                },
+                "id": 29006982
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Well, we'll see what the tests say (the test bot is still down I believe), but commenting here because it might cause issues for some of the frontends to not always do `setattr` call. Apologies if you already thought that through.",
+                "html": "<p>Well, we'll see what the tests say (the test bot is still down I believe), but commenting here because it might cause issues for some of the frontends to not always do <code>setattr</code> call. Apologies if you already thought that through.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:42:11.697381+00:00",
+            "updated_on": "2016-12-31T22:42:11.699923+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 29007007
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007023"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007023"
+                }
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Very nice, thanks for taking this on. Being able to work in the original units of the dataset will be very useful, I'm sure. Just a few comments but other than that :+1:",
+                "html": "<p>Very nice, thanks for taking this on. Being able to work in the original units of the dataset will be very useful, I'm sure. Just a few comments but other than that <img src=\"https://d301sr5gafysq2.cloudfront.net/87002ef24cff/emoji/img/%2B1.svg\" alt=\"+1\" title=\"+1\" class=\"emoji\"></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:44:59.351997+00:00",
+            "updated_on": "2016-12-31T22:44:59.362221+00:00",
+            "id": 29007023
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007031"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007031"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29006991"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29006991"
+                    }
+                },
+                "id": 29006991
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "OK, we can close that one now or when we merge this. It would be awesome if you could comment there when that happens.",
+                "html": "<p>OK, we can close that one now or when we merge this. It would be awesome if you could comment there when that happens.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:45:55.946348+00:00",
+            "updated_on": "2016-12-31T22:45:55.948534+00:00",
+            "id": 29007031
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007037"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/brittonsmith/yt:7e2620ce1df1..09f0ef297d70?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007037"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007007"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007007"
+                    }
+                },
+                "id": 29007007
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "I *think* it's ok, but let's see what the tests say when they're back.",
+                "html": "<p>I <em>think</em> it's ok, but let's see what the tests say when they're back.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:46:23.409594+00:00",
+            "updated_on": "2016-12-31T22:46:23.417834+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 29007037
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007040"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007040"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007031"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007031"
+                    }
+                },
+                "id": 29007031
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Ok, I can do that.",
+                "html": "<p>Ok, I can do that.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-31T22:46:40.636440+00:00",
+            "updated_on": "2016-12-31T22:46:40.641328+00:00",
+            "id": 29007040
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29560535"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29560535"
+                }
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "Any more comments on this?  I think it's ready.",
+                "html": "<p>Any more comments on this?  I think it's ready.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-11T21:57:59.359059+00:00",
+            "updated_on": "2017-01-11T21:57:59.361094+00:00",
+            "id": 29560535
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29571864"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29571864"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482/comments/29007040"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482/_/diff#comment-29007040"
+                    }
+                },
+                "id": 29007040
+            },
+            "pullrequest": {
+                "title": "Use parent unit_registry for YTData and HaloCatalog datasets",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2482"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2482"
+                    }
+                },
+                "id": 2482
+            },
+            "content": {
+                "raw": "@brittonsmith now that this has been merged can you comment on PR 2208 and decline it?",
+                "html": "<p><a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> now that this has been merged can you comment on PR 2208 and decline it?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-12T04:29:43.606903+00:00",
+            "updated_on": "2017-01-12T04:29:43.613734+00:00",
+            "id": 29571864
+        }
+    ]
+}

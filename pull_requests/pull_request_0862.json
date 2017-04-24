@@ -1,0 +1,1608 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-06-15T12:45:57.231116+00:00",
+    "comment_count": 27,
+    "description": "Example how to use TheiaScene:\r\n\r\nfrom yt.visualization.volume_rendering.theia.scene import TheiaScene\r\nfrom yt.visualization.volume_rendering.theia.algorithms.front_to_back import FrontToBackRaycaster\r\n\r\nfrom yt.visualization.volume_rendering.transfer_functions import ColorTransferFunction\r\nfrom yt.visualization.color_maps import *\r\n\r\nimport subprocess as sp\r\n\r\nimport numpy as np\r\n\r\ndef scale_func(v, mi, ma):\r\n      return  np.minimum(1.0, (v-mi)/(ma-mi) + 0.0)\r\n\r\nbolshoi = \"/home/bogert/log_densities_1024.npy\"\r\ndensity_grid = np.load(bolshoi)\r\n\r\nts = TheiaScene(volume = density_grid, raycaster = FrontToBackRaycaster(size = (1920,1080) ))\r\n\r\nmi, ma = 0.0, 3.6\r\nbins = 5000\r\ntf = ColorTransferFunction( (mi, ma), bins)\r\ntf.map_to_colormap(0.5, ma, colormap=\"spring\", scale_func = scale_func)\r\nts.source.raycaster.set_transfer(tf)\r\n\r\nts.source.raycaster.set_density_scale(0.03)\r\nts.source.raycaster.set_brightness(2.3)\r\nts.camera.zoom(30.0)\r\n\r\nFFMPEG_BIN = \"ffmpeg\"\r\npipe = sp.Popen([ FFMPEG_BIN,\r\n        '-y', # (optional) overwrite the output file if it already exists\r\n        '-f', 'rawvideo',\r\n        '-vcodec','rawvideo',\r\n        '-s', '1920x1080', # size of one frame\r\n        '-pix_fmt', 'rgba',\r\n        '-r', '9.97', # frames per second\r\n        '-i', '-', # The input comes from a pipe\r\n        '-an', # Tells FFMPEG not to expect any audio\r\n        #'-vcodec', 'dnxhd', '-b:v', '220M',\r\n        '-vcodec', 'libx264', '-preset', 'ultrafast', '-qp', '0',# '-b:v', '220M',\r\n        '-pix_fmt', 'yuv420p',\r\n        'bolshoiplanck2.mkv' ],\r\n        stdin=sp.PIPE,stdout=sp.PIPE)\r\n\r\n\r\n#ts.source.surface.bounds = (1920,1080)\r\nfor k in range (0,50) :\r\n    ts.update()\r\n    ts.camera.rotateX(0.01)\r\n    ts.camera.rotateZ(0.01)\r\n    ts.camera.rotateY(0.01)\r\n    ts.camera.zoom(0.01)\r\n\r\n    array = ts.source.get_results()\r\n\r\n    array.tofile(pipe.stdin)\r\n\r\npipe.terminate()\r\n",
+    "created_on": "2014-05-01T18:26:20.017275+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b6b78bc7de4c"
+            }
+        },
+        "hash": "b6b78bc7de4c"
+    },
+    "title": "CUDA Volume Renderer",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 862,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/fbogert"
+            },
+            "html": {
+                "href": "https://bitbucket.org/fbogert/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Frederick Bogert",
+        "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+        "username": "fbogert"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/fbogert/yt-theia/commit/e68a8cd972f2"
+                }
+            },
+            "hash": "e68a8cd972f2"
+        },
+        "repository": {
+            "full_name": "fbogert/yt-theia",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/fbogert/yt-theia"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/fbogert/yt-theia"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/fbogert/yt-theia/avatar/32/"
+                }
+            },
+            "name": "yt-theia",
+            "uuid": "{bd257626-6108-429c-9029-8d35ab6ec70b}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ea182fc68fae"
+                }
+            },
+            "hash": "ea182fc68fae"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1782260"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1782260"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "I guess that wasn't a good place to put the example..",
+                "html": "<p>I guess that wasn't a good place to put the example..</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-01T18:27:37.210072+00:00",
+            "updated_on": "2014-05-01T18:27:37.392444+00:00",
+            "id": 1782260
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1782263"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1782263"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Whoa!  Unexpected!  Super cool, can't wait to review this.  :)  Thanks, Alex!",
+                "html": "<p>Whoa!  Unexpected!  Super cool, can't wait to review this.  :)  Thanks, Alex!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-01T18:27:48.159835+00:00",
+            "updated_on": "2014-05-01T18:27:48.167400+00:00",
+            "id": 1782263
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1782265"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1782265"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1782260"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1782260"
+                    }
+                },
+                "id": 1782260
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Just enclose it in triple backticks: https://bitbucket.org/tutorials/markdowndemo/overview",
+                "html": "<p>Just enclose it in triple backticks: <a href=\"https://bitbucket.org/tutorials/markdowndemo/overview\" rel=\"nofollow\">https://bitbucket.org/tutorials/markdowndemo/overview</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-01T18:28:15.488262+00:00",
+            "updated_on": "2014-05-01T18:29:04.357920+00:00",
+            "id": 1782265
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1782429"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1782429"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-01T18:46:40.214291+00:00",
+            "updated_on": "2014-05-01T18:46:40.324584+00:00",
+            "id": 1782429
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1782891"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1782891"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "I forgot to mention. This is dependent on pyCUDA being installed. Also the environmental variable CUDA_SAMPLES needs to be set correctly to point to cuda/samples/common/inc this may be in various locations on the server machine. ",
+                "html": "<p>I forgot to mention. This is dependent on pyCUDA being installed. Also the environmental variable CUDA_SAMPLES needs to be set correctly to point to cuda/samples/common/inc this may be in various locations on the server machine. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-01T19:36:38.045181+00:00",
+            "updated_on": "2014-05-01T19:36:38.162040+00:00",
+            "id": 1782891
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1783047"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1783047"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1782265"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1782265"
+                    }
+                },
+                "id": 1782265
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "http://paste.yt-project.org/show/4584/",
+                "html": "<p><a href=\"http://paste.yt-project.org/show/4584/\" rel=\"nofollow\">http://paste.yt-project.org/show/4584/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-01T19:52:50.635883+00:00",
+            "updated_on": "2014-05-01T19:52:50.758724+00:00",
+            "id": 1783047
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1793840"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1793840"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "This looks like a great addition--nice work!  Could you make an addition in the VR docs to reflect this new functionality, what you need to have installed to make it work, and then maybe include your example from above in the cookbook?  or on the VR doc page?",
+                "html": "<p>This looks like a great addition--nice work!  Could you make an addition in the VR docs to reflect this new functionality, what you need to have installed to make it work, and then maybe include your example from above in the cookbook?  or on the VR doc page?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-04T00:54:13.406110+00:00",
+            "updated_on": "2014-05-04T00:54:13.418800+00:00",
+            "id": 1793840
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1825415"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1825415"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1793840"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1793840"
+                    }
+                },
+                "id": 1793840
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "How do I do this? I could write it up in a google doc and link it to you. I've never dealt with the yt docs.",
+                "html": "<p>How do I do this? I could write it up in a google doc and link it to you. I've never dealt with the yt docs.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-07T22:13:45.206539+00:00",
+            "updated_on": "2014-05-07T22:13:45.352025+00:00",
+            "id": 1825415
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1840712"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1840712"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1825415"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1825415"
+                    }
+                },
+                "id": 1825415
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Writing docs is pretty straightforward.  I just updated the documentation on how to do it in yt 3.0 here: http://yt-project.org/docs/dev-3.0/developing/developing.html#how-to-write-documentation .  The easiest way to write a doc is to look at a previous doc and use it as a template.  \n\nFor documenting this new functionality, what I would do is just append your information at the end of the \"visualizing/volume_rendering.rst\" file.  This file is somewhat out of date and is going to be updated soon, but this seems like the obvious location for you to describe your new methods.  Just a short description of how to use this functionality and how it works.\n\nThen, if you stick your example script (that you included above) in a cookbook recipe in the cookbook/ directory, perhaps call it cuda_volume_rendering.py and make a similar should suffice.  You'll need to link it through the appropriate .rst file (maybe complex_plots.rst?).  You can look at the other .py files in the cookbook to get an idea of formatting and such.\n\nLastly, you can try building the docs to see how your additions render before submitting by following these instructions: http://yt-project.org/docs/dev-3.0/developing/building_the_docs.html .  \n\nThanks again for this awesome functionality!",
+                "html": "<p>Writing docs is pretty straightforward.  I just updated the documentation on how to do it in yt 3.0 here: <a href=\"http://yt-project.org/docs/dev-3.0/developing/developing.html#how-to-write-documentation\" rel=\"nofollow\">http://yt-project.org/docs/dev-3.0/developing/developing.html#how-to-write-documentation</a> .  The easiest way to write a doc is to look at a previous doc and use it as a template.  </p>\n<p>For documenting this new functionality, what I would do is just append your information at the end of the \"visualizing/volume_rendering.rst\" file.  This file is somewhat out of date and is going to be updated soon, but this seems like the obvious location for you to describe your new methods.  Just a short description of how to use this functionality and how it works.</p>\n<p>Then, if you stick your example script (that you included above) in a cookbook recipe in the cookbook/ directory, perhaps call it cuda_volume_rendering.py and make a similar should suffice.  You'll need to link it through the appropriate .rst file (maybe complex_plots.rst?).  You can look at the other .py files in the cookbook to get an idea of formatting and such.</p>\n<p>Lastly, you can try building the docs to see how your additions render before submitting by following these instructions: <a href=\"http://yt-project.org/docs/dev-3.0/developing/building_the_docs.html\" rel=\"nofollow\">http://yt-project.org/docs/dev-3.0/developing/building_the_docs.html</a> .  </p>\n<p>Thanks again for this awesome functionality!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-09T14:24:41.952364+00:00",
+            "updated_on": "2014-05-09T14:24:41.958739+00:00",
+            "id": 1840712
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1970806"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1970806"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "I went ahead and pushed what I have. I need to go up to campus later this week to test the OpenGL examples. I have no local system to do this. I will also add more comments to the cookbooks this weekend.",
+                "html": "<p>I went ahead and pushed what I have. I need to go up to campus later this week to test the OpenGL examples. I have no local system to do this. I will also add more comments to the cookbooks this weekend.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-26T18:03:33.127200+00:00",
+            "updated_on": "2014-05-26T18:03:33.267701+00:00",
+            "id": 1970806
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/1971022"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-1971022"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-26T18:47:23.727900+00:00",
+            "updated_on": "2014-05-26T18:47:23.870243+00:00",
+            "id": 1971022
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2055217"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2055217"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Hi Alex, this looks pretty good.  I'm inclined to accept, and then iterate on potential changes at a later time.  Thank you!",
+                "html": "<p>Hi Alex, this looks pretty good.  I'm inclined to accept, and then iterate on potential changes at a later time.  Thank you!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T00:05:48.626603+00:00",
+            "updated_on": "2014-06-05T00:05:48.635681+00:00",
+            "id": 2055217
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2061871"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2061871"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Unless I hear otherwise from the other reviewers, I'm going to accept this tomorrow morning.",
+                "html": "<p>Unless I hear otherwise from the other reviewers, I'm going to accept this tomorrow morning.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T13:59:00.960826+00:00",
+            "updated_on": "2014-06-05T13:59:00.968188+00:00",
+            "id": 2061871
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2061906"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/fbogert/yt-theia:61fbae4a3e5c..3d6f253ca3ec?path=doc%2Fsource%2Fvisualizing%2Fvolume_rendering.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2061906"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "I think this is unnecessary.  ",
+                "html": "<p>I think this is unnecessary.  </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T14:01:20.736714+00:00",
+            "updated_on": "2014-06-05T14:01:20.746397+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/volume_rendering.rst",
+                "to": 472
+            },
+            "id": 2061906
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062451"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/fbogert/yt-theia:61fbae4a3e5c..3d6f253ca3ec?path=doc%2Fsource%2Fcookbook%2Famrkdtree_to_uniformgrid.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062451"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "In general, cookbook recipes have documentation included in them as to what you are doing.  It's great that you're providing 4 different recipes to demonstrate how to use Theia, however, it would be better to have documentation as to what you're doing and how to use it, especially in the case with these super-long recipes where it is somewhat non-intuitive.",
+                "html": "<p>In general, cookbook recipes have documentation included in them as to what you are doing.  It's great that you're providing 4 different recipes to demonstrate how to use Theia, however, it would be better to have documentation as to what you're doing and how to use it, especially in the case with these super-long recipes where it is somewhat non-intuitive.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T14:39:43.296951+00:00",
+            "updated_on": "2014-06-05T14:39:43.305000+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/cookbook/amrkdtree_to_uniformgrid.py",
+                "to": 1
+            },
+            "id": 2062451
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062452"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/fbogert/yt-theia:61fbae4a3e5c..3d6f253ca3ec?path=doc%2Fsource%2Fcookbook%2Fffmpeg_volume_rendering.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062452"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "remove comment?",
+                "html": "<p>remove comment?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T14:40:01.585767+00:00",
+            "updated_on": "2014-06-05T14:40:01.596819+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/cookbook/ffmpeg_volume_rendering.py",
+                "to": 47
+            },
+            "id": 2062452
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062460"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/fbogert/yt-theia:e68a8cd972f2..ea182fc68fae?path=doc%2Fsource%2Fcookbook%2Fopengl_stereo_volume_rendering.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062460"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "group with other import calls?",
+                "html": "<p>group with other import calls?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T14:40:39.261908+00:00",
+            "updated_on": "2014-06-05T14:40:39.269802+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/cookbook/opengl_stereo_volume_rendering.py",
+                "to": 16
+            },
+            "id": 2062460
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062480"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/fbogert/yt-theia:e68a8cd972f2..ea182fc68fae?path=doc%2Fsource%2Fcookbook%2Fopengl_stereo_volume_rendering.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062480"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "what is PBO?",
+                "html": "<p>what is PBO?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T14:41:35.002430+00:00",
+            "updated_on": "2014-06-05T14:41:35.011899+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/cookbook/opengl_stereo_volume_rendering.py",
+                "to": 43
+            },
+            "id": 2062480
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062501"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/fbogert/yt-theia:e68a8cd972f2..ea182fc68fae?path=doc%2Fsource%2Fcookbook%2Fopengl_stereo_volume_rendering.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062501"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "is this worth keeping here? or is this fixed?",
+                "html": "<p>is this worth keeping here? or is this fixed?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T14:42:42.482755+00:00",
+            "updated_on": "2014-06-05T14:42:42.491500+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/cookbook/opengl_stereo_volume_rendering.py",
+                "to": 320
+            },
+            "id": 2062501
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062538"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062538"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "I think the narrative docs are good, but it might be worth documenting the recipes and cleaning them up a little since these are the public-facing documents on how to use the software.  Including a little description at the top of the recipe as to what it is doing and how it is going to do it would be useful, as well as some inline documentation so you can understand the general flow.",
+                "html": "<p>I think the narrative docs are good, but it might be worth documenting the recipes and cleaning them up a little since these are the public-facing documents on how to use the software.  Including a little description at the top of the recipe as to what it is doing and how it is going to do it would be useful, as well as some inline documentation so you can understand the general flow.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T14:45:21.545777+00:00",
+            "updated_on": "2014-06-05T14:45:21.553828+00:00",
+            "id": 2062538
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2065663"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2065663"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062538"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062538"
+                    }
+                },
+                "id": 2062538
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Do you consider any of your comments to be blockers to accepting?",
+                "html": "<p>Do you consider any of your comments to be blockers to accepting?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T19:07:17.892810+00:00",
+            "updated_on": "2014-06-05T19:07:17.901755+00:00",
+            "id": 2065663
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2068003"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2068003"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "I sort of ran out of time with this. The opengl cookbooks are fairly obfuscated because opengl is obfuscated! I wanted to include them because I've never found a working example of PyCUDA/PyOpenGL interop online. These were intended as templates for further development.  I derived these from deprecated code. I didn't really intend Theia to be a frontend for users, but more of a backend tool for developers. So, the cookbooks I included were meant to be examples for -- \"hey look how easy it is to stick Theia into these 'complicated' applications\".\n\nMore importantly, there is a bug in the opengl examples due to changing the surface to uint32 (r,g,b,a). I spent some time debugging it, but still haven't resolved it. Maybe we should scrap the opengl examples for now?",
+                "html": "<p>I sort of ran out of time with this. The opengl cookbooks are fairly obfuscated because opengl is obfuscated! I wanted to include them because I've never found a working example of PyCUDA/PyOpenGL interop online. These were intended as templates for further development.  I derived these from deprecated code. I didn't really intend Theia to be a frontend for users, but more of a backend tool for developers. So, the cookbooks I included were meant to be examples for -- \"hey look how easy it is to stick Theia into these 'complicated' applications\".</p>\n<p>More importantly, there is a bug in the opengl examples due to changing the surface to uint32 (r,g,b,a). I spent some time debugging it, but still haven't resolved it. Maybe we should scrap the opengl examples for now?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-05T23:31:41.001499+00:00",
+            "updated_on": "2014-06-05T23:31:41.134291+00:00",
+            "id": 2068003
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2075115"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2075115"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062538"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062538"
+                    }
+                },
+                "id": 2062538
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "This afternoon I will fix these comments. I'll add comments to the maptogrid example and ffmpeg. I may try and take one more shot of fixing the opengl examples if i have time.\n\n",
+                "html": "<p>This afternoon I will fix these comments. I'll add comments to the maptogrid example and ffmpeg. I may try and take one more shot of fixing the opengl examples if i have time.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-06T16:02:56.332576+00:00",
+            "updated_on": "2014-06-06T16:02:56.468712+00:00",
+            "id": 2075115
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/fbogert"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/fbogert/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/fbogert/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Frederick Bogert",
+                "uuid": "{23ad620d-a0bd-4c82-9f60-d411aa810a3c}",
+                "username": "fbogert"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2076588"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2076588"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2062538"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2062538"
+                    }
+                },
+                "id": 2062538
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Okay - added comments and fixed the things pointed out. OpenGL example works now, but uncommented. Didn't have time to get to the stereoscopic example. ",
+                "html": "<p>Okay - added comments and fixed the things pointed out. OpenGL example works now, but uncommented. Didn't have time to get to the stereoscopic example. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-06T18:40:24.157552+00:00",
+            "updated_on": "2014-06-06T18:40:24.273114+00:00",
+            "id": 2076588
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2076787"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2076787"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-06T19:02:40.318458+00:00",
+            "updated_on": "2014-06-06T19:02:40.435979+00:00",
+            "id": 2076787
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2100204"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2100204"
+                }
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "Any reason this shouldn't go in?  @fbogert , @chummels ?",
+                "html": "<p>Any reason this shouldn't go in?  <a href=\"/fbogert/\" rel=\"nofollow\" title=\"@fbogert\" class=\"mention\">Frederick Bogert</a> , <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-10T17:41:02.215518+00:00",
+            "updated_on": "2014-06-10T17:41:02.300205+00:00",
+            "id": 2100204
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2116366"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2116366"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862/comments/2100204"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862/_/diff#comment-2100204"
+                    }
+                },
+                "id": 2100204
+            },
+            "pullrequest": {
+                "title": "CUDA Volume Renderer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/862"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/862"
+                    }
+                },
+                "id": 862
+            },
+            "content": {
+                "raw": "This looks good to me.  Thank you for your hard work, @fbogert !",
+                "html": "<p>This looks good to me.  Thank you for your hard work, <a href=\"/fbogert/\" rel=\"nofollow\" title=\"@fbogert\" class=\"mention\">Frederick Bogert</a> !</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-11T22:38:31.960750+00:00",
+            "updated_on": "2014-06-11T22:38:32.026344+00:00",
+            "id": 2116366
+        }
+    ]
+}

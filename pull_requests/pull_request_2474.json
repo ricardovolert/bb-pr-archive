@@ -1,0 +1,1671 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-12-15T21:55:49.420164+00:00",
+    "comment_count": 26,
+    "description": "## Motivation\r\n\r\nCurrently the `ParticleDataset` in yt is not well designed in that it doesn't work as a good abstraction of the common properties and operations of a particle dataset. A better support for particle datasets in yt definitely requires a better base class, which is what I propose to implement in this PR.\r\n\r\n## Roadmap\r\n\r\n- [DONE] Separate `ParticleDataset` into `ParticleDataset` for pure N-body codes and `SPHDataset` for SPH codes, where `SPHDataset` is a subclass of `ParticleDataset`.\r\n- Move particle and SPH specific attributes and methods to their corresponding classes, both from upstream like `Dataset` and downstream like `TipsyDataset` and `GadgetDataset`. Currently the following are planned:\r\n    - [DONE] Move the `add_smoothed_particle_field` from `Dataset` to `SPHDataset`.\r\n    - [DONE] Move the initialization of `n_ref` and `over_refine_factor` to `ParticleDataset`.\r\n- Add particle and SPH specific attributes and methods as needed. Currently the following are planned:\r\n    - [DONE] Add a default kernel functionality to `SPHDataset`. Implementation details are described in [this commit](https://bitbucket.org/qobilidop/yt/commits/4e7367415e60a894f59bcef5725509b7ab38f9fe).\r\n- Move `ParticleDataset` and `SPHDataset` into the `data_objects` directory since they are not real frontends, but are base classes for frontends, much like `Dataset`.\r\n    - [DONE] `ParticleDataset`.\r\n    - [WONTDO] `SPHDataset`.\r\n\r\n## Family Tree\r\n\r\n- **`ParticleDataset`**\r\n    - **`HTTPStreamDataset`**\r\n    - **`SDFDataset`**\r\n    - **`SPHDataset`**\r\n        - **`GadgetDataset`**\r\n            - `GadgetHDF5Dataset`\r\n                - `EagleDataset`\r\n                    - `EagleNetworkDataset`\r\n                - `GizmoDataset`\r\n                - `OWLSDataset`\r\n        - **`TipsyDataset`**\r\n\r\nEmphasized classes are directly influenced by this PR.",
+    "created_on": "2016-12-14T18:29:55.198051+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/dcfa4d3f885f"
+            }
+        },
+        "hash": "dcfa4d3f885f"
+    },
+    "title": "Refactor particle dataset",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 2474,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+            },
+            "html": {
+                "href": "https://bitbucket.org/qobilidop/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Bili Dong",
+        "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+        "username": "qobilidop"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/qobilidop/yt/commit/eadae145e294"
+                }
+            },
+            "hash": "eadae145e294"
+        },
+        "repository": {
+            "full_name": "qobilidop/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/qobilidop/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/qobilidop/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/qobilidop/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{d9c776ae-b43e-4866-bdfd-e86c6031ba81}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ad6d4f04b990"
+                }
+            },
+            "hash": "ad6d4f04b990"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28338877"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:d105a0583f1b..011cd1956321?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28338877"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I think this should remain on the base dataset class as it's useful for grid and oct codes as well.",
+                "html": "<p>I think this should remain on the base dataset class as it's useful for grid and oct codes as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T18:35:19.529897+00:00",
+            "updated_on": "2016-12-14T18:35:19.537793+00:00",
+            "inline": {
+                "from": 1149,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 28338877
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28338920"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28338920"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": ":+1: on the refactor. There are definitely a number of other places where we could separate concerns better, particularly in the way SPH fields are setup.",
+                "html": "<p><img src=\"https://d301sr5gafysq2.cloudfront.net/87002ef24cff/emoji/img/%2B1.svg\" alt=\"+1\" title=\"+1\" class=\"emoji\"> on the refactor. There are definitely a number of other places where we could separate concerns better, particularly in the way SPH fields are setup.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T18:35:58.081106+00:00",
+            "updated_on": "2016-12-14T18:35:58.084310+00:00",
+            "id": 28338920
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28339219"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:d105a0583f1b..011cd1956321?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28339219"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28338877"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28338877"
+                    }
+                },
+                "id": 28338877
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Oh I didn't know that. I'll move it back.",
+                "html": "<p>Oh I didn't know that. I'll move it back.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T18:41:00.993708+00:00",
+            "updated_on": "2016-12-14T18:41:00.996104+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 28339219
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28341845"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28341845"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/455/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/457/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/458/\n",
+                "html": "<ul>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/455/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/455/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/457/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/457/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/458/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/458/</a></li>\n</ul>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T19:20:40.343639+00:00",
+            "updated_on": "2016-12-15T04:07:52.725487+00:00",
+            "id": 28341845
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28343212"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:f2982890c401..011cd1956321?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28343212"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I'm not sure if my use of :attr: here is correct.",
+                "html": "<p>I'm not sure if my use of :attr: here is correct.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T19:43:13.194838+00:00",
+            "updated_on": "2016-12-14T19:43:13.199896+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sph/data_structures.py",
+                "to": 54
+            },
+            "id": 28343212
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28343538"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:f2982890c401..011cd1956321?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28343538"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28343212"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28343212"
+                    }
+                },
+                "id": 28343212
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I think this needs to be \n\n    :attr:`~yt.frontends.sph.data_structures.ParticleDataset.default_kernel`",
+                "html": "<p>I think this needs to be </p>\n<div class=\"codehilite\"><pre><span></span>:attr:`~yt.frontends.sph.data_structures.ParticleDataset.default_kernel`\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T19:48:07.869588+00:00",
+            "updated_on": "2016-12-14T19:48:07.872794+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sph/data_structures.py",
+                "to": null
+            },
+            "id": 28343538
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28343875"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:f2982890c401..011cd1956321?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28343875"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28343538"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28343538"
+                    }
+                },
+                "id": 28343538
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Okay, thanks! I'll correct it.",
+                "html": "<p>Okay, thanks! I'll correct it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T19:53:04.867943+00:00",
+            "updated_on": "2016-12-14T19:53:04.869960+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sph/data_structures.py",
+                "to": null
+            },
+            "id": 28343875
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28344333"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:0c4bb07de4f2..011cd1956321?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28344333"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Should this be changed to `_default_kernel` instead? I don't know how to make this decision.",
+                "html": "<p>Should this be changed to <code>_default_kernel</code> instead? I don't know how to make this decision.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T20:00:06.329086+00:00",
+            "updated_on": "2016-12-14T20:00:06.331090+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sph/data_structures.py",
+                "to": 29
+            },
+            "id": 28344333
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28344773"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:0c4bb07de4f2..011cd1956321?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28344773"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28344333"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28344333"
+                    }
+                },
+                "id": 28344333
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Attributes prepended with an underscore are \"hidden\" (just by convention, they're still visible to users via e.g. `getattr` or regular attribute access, but things like IPython's tab completion will hide them). If you feel like this should be a private attribute (just an implementation detail) then it should be prepended with an underscore. If you feel like it should be part of the public API then it should be named without the underscore.",
+                "html": "<p>Attributes prepended with an underscore are \"hidden\" (just by convention, they're still visible to users via e.g. <code>getattr</code> or regular attribute access, but things like IPython's tab completion will hide them). If you feel like this should be a private attribute (just an implementation detail) then it should be prepended with an underscore. If you feel like it should be part of the public API then it should be named without the underscore.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T20:06:33.891196+00:00",
+            "updated_on": "2016-12-14T20:06:33.893631+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sph/data_structures.py",
+                "to": null
+            },
+            "id": 28344773
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28344792"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:0c4bb07de4f2..011cd1956321?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28344792"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28344333"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28344333"
+                    }
+                },
+                "id": 28344333
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I think it's similar to `over_refine_factor` as, so just leave it as `default_kernel`.",
+                "html": "<p>I think it's similar to <code>over_refine_factor</code> as, so just leave it as <code>default_kernel</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T20:06:48.375634+00:00",
+            "updated_on": "2016-12-14T20:06:48.381358+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sph/data_structures.py",
+                "to": null
+            },
+            "id": 28344792
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28344911"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:0c4bb07de4f2..011cd1956321?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28344911"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28344773"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28344773"
+                    }
+                },
+                "id": 28344773
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I'm thinking this should be settable in the loading process. So it should be public.",
+                "html": "<p>I'm thinking this should be settable in the loading process. So it should be public.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T20:09:08.961830+00:00",
+            "updated_on": "2016-12-14T20:09:08.967031+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sph/data_structures.py",
+                "to": null
+            },
+            "id": 28344911
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28345572"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28345572"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "There are three classes inherited from `ParticleDataset` directly: `TipsyDataset`, `GadgetDataset` and `HTTPStreamDataset`. There are common parts in their constructors. I'd like to extract that common part out and put it in `ParticleDataset`. Is there anything against doing so?",
+                "html": "<p>There are three classes inherited from <code>ParticleDataset</code> directly: <code>TipsyDataset</code>, <code>GadgetDataset</code> and <code>HTTPStreamDataset</code>. There are common parts in their constructors. I'd like to extract that common part out and put it in <code>ParticleDataset</code>. Is there anything against doing so?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T20:19:46.844940+00:00",
+            "updated_on": "2016-12-14T20:19:46.851894+00:00",
+            "id": 28345572
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28345732"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28345732"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28345572"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28345572"
+                    }
+                },
+                "id": 28345572
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": ":+1: if you want opinions from more people you should probably mail yt-deb but i seriously doubt anyone would have a problem with it.\n\n`HTTPStreamDataset` is a bit of an oddball there because it's not for an SPH code but is instead there to support loading data from the dark skies simulation. It might make more sense to be its own thing independent of the SPH codes (i.e. having an `SPHParticleDataset` for SPH codes but `ParticleDataset` for pure N-body codes).",
+                "html": "<p><img src=\"https://d301sr5gafysq2.cloudfront.net/87002ef24cff/emoji/img/%2B1.svg\" alt=\"+1\" title=\"+1\" class=\"emoji\"> if you want opinions from more people you should probably mail yt-deb but i seriously doubt anyone would have a problem with it.</p>\n<p><code>HTTPStreamDataset</code> is a bit of an oddball there because it's not for an SPH code but is instead there to support loading data from the dark skies simulation. It might make more sense to be its own thing independent of the SPH codes (i.e. having an <code>SPHParticleDataset</code> for SPH codes but <code>ParticleDataset</code> for pure N-body codes).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T20:22:46.269438+00:00",
+            "updated_on": "2016-12-14T20:22:46.274284+00:00",
+            "id": 28345732
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28345876"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28345876"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28345732"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28345732"
+                    }
+                },
+                "id": 28345732
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Thanks for the information!",
+                "html": "<p>Thanks for the information!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T20:24:52.732629+00:00",
+            "updated_on": "2016-12-14T20:25:00.729958+00:00",
+            "id": 28345876
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28349622"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28349622"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Great idea to do this, Bili.",
+                "html": "<p>Great idea to do this, Bili.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-14T21:30:37.491928+00:00",
+            "updated_on": "2016-12-14T21:30:37.494814+00:00",
+            "id": 28349622
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28357822"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28357822"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I'm trying to figure out all the frontends that should be a subclass of `ParticleDataset` (in the sense of pure N-body codes) using the criteria that `n_ref` and `over_refine_factor` appear in its `__init__` and that it is a subclass of `Dataset` currently. The results are: `GadgetFOFDataset`, `HaloCatalogDataset`, `OWLSSubfindDataset`, `RockstarDataset`, `SDFDataset` and `YTDataContainerDataset`. There are some other frontends that have `n_ref` and `over_refine_factor` in their constructors but do not inherit from `Dataset` directly. I think for those we could use multiple inheritance and add `ParticleDataset` to their base classes.\n\nI'm not familiar with most of these frontends so I'm not sure what I plan to do is justified. I'd like to get some opinions on it.",
+                "html": "<p>I'm trying to figure out all the frontends that should be a subclass of <code>ParticleDataset</code> (in the sense of pure N-body codes) using the criteria that <code>n_ref</code> and <code>over_refine_factor</code> appear in its <code>__init__</code> and that it is a subclass of <code>Dataset</code> currently. The results are: <code>GadgetFOFDataset</code>, <code>HaloCatalogDataset</code>, <code>OWLSSubfindDataset</code>, <code>RockstarDataset</code>, <code>SDFDataset</code> and <code>YTDataContainerDataset</code>. There are some other frontends that have <code>n_ref</code> and <code>over_refine_factor</code> in their constructors but do not inherit from <code>Dataset</code> directly. I think for those we could use multiple inheritance and add <code>ParticleDataset</code> to their base classes.</p>\n<p>I'm not familiar with most of these frontends so I'm not sure what I plan to do is justified. I'd like to get some opinions on it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T00:17:16.711693+00:00",
+            "updated_on": "2016-12-15T00:18:35.624131+00:00",
+            "id": 28357822
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28357996"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28357996"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I plan to move `ParticleDataset` out from `frontends.sph` to form its own frontend. Is this reasonable?",
+                "html": "<p>I plan to move <code>ParticleDataset</code> out from <code>frontends.sph</code> to form its own frontend. Is this reasonable?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T00:21:56.854599+00:00",
+            "updated_on": "2016-12-15T00:21:56.856972+00:00",
+            "id": 28357996
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358015"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358015"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28357822"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28357822"
+                    }
+                },
+                "id": 28357822
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "`SDFDataset` is the only one that's actually a pure N-body code (again, for the Dark Skies simulations). `GadgetFOFDataset`, `HaloCatalogDataset`, `OWLSSubfindDataset`, and `RockstarDataset` are for dealing with halo catalogs. `YTDataContainerDataset` is a generic dataset for reloading processed data as a yt dataset (see [the documentation](http://yt-project.org/docs/dev/analyzing/saving_data.html) for the ytdata frontend for more details).\n\nAs a first pass, I'd suggest simply ignoring all of these (except for perhaps `SDFDataset`, which probably should have been inheriting from `ParticleDataset` all this time). In a future refactor we could come back and unify the N-body and halo catalog frontends, but I don't think that's a good use of your time right now.",
+                "html": "<p><code>SDFDataset</code> is the only one that's actually a pure N-body code (again, for the Dark Skies simulations). <code>GadgetFOFDataset</code>, <code>HaloCatalogDataset</code>, <code>OWLSSubfindDataset</code>, and <code>RockstarDataset</code> are for dealing with halo catalogs. <code>YTDataContainerDataset</code> is a generic dataset for reloading processed data as a yt dataset (see <a href=\"http://yt-project.org/docs/dev/analyzing/saving_data.html\">the documentation</a> for the ytdata frontend for more details).</p>\n<p>As a first pass, I'd suggest simply ignoring all of these (except for perhaps <code>SDFDataset</code>, which probably should have been inheriting from <code>ParticleDataset</code> all this time). In a future refactor we could come back and unify the N-body and halo catalog frontends, but I don't think that's a good use of your time right now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T00:22:25.246085+00:00",
+            "updated_on": "2016-12-15T00:22:25.248002+00:00",
+            "id": 28358015
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358073"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358073"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358015"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358015"
+                    }
+                },
+                "id": 28358015
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I agree. This looks like too big a change for this PR.",
+                "html": "<p>I agree. This looks like too big a change for this PR.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T00:23:45.463697+00:00",
+            "updated_on": "2016-12-15T00:23:45.465730+00:00",
+            "id": 28358073
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358119"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358119"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28357996"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28357996"
+                    }
+                },
+                "id": 28357996
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Maybe it could live in `yt/data_structures`? Either in the same file as `Dataset` is defined in (`static_output.py`) or its own file. I think it makes more sense for code that's actually specific to a real frontend to live in the `yt.frontends` namespace. It was probably a mistake to create `yt.frontends.sph`. All of the SPH frontends used to live in subdirectories of `yt.frontends.sph` but since we initially added support for SPH data we've now split them off into their own frontends.",
+                "html": "<p>Maybe it could live in <code>yt/data_structures</code>? Either in the same file as <code>Dataset</code> is defined in (<code>static_output.py</code>) or its own file. I think it makes more sense for code that's actually specific to a real frontend to live in the <code>yt.frontends</code> namespace. It was probably a mistake to create <code>yt.frontends.sph</code>. All of the SPH frontends used to live in subdirectories of <code>yt.frontends.sph</code> but since we initially added support for SPH data we've now split them off into their own frontends.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T00:24:53.944498+00:00",
+            "updated_on": "2016-12-15T00:24:53.946425+00:00",
+            "id": 28358119
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358247"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358247"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358119"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358119"
+                    }
+                },
+                "id": 28358119
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "You mean `yt/data_objects`? I feel the same way. They should be in that directory. Let me come up with a plan to move them there.",
+                "html": "<p>You mean <code>yt/data_objects</code>? I feel the same way. They should be in that directory. Let me come up with a plan to move them there.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T00:28:04.356603+00:00",
+            "updated_on": "2016-12-15T00:28:04.358630+00:00",
+            "id": 28358247
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358280"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358280"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358247"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358247"
+                    }
+                },
+                "id": 28358247
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Yes, `yt/data_objects`.\n\nThank you for taking all of this on, these are enormously beneficial cleanups that will help make the codebase more logically structured.",
+                "html": "<p>Yes, <code>yt/data_objects</code>.</p>\n<p>Thank you for taking all of this on, these are enormously beneficial cleanups that will help make the codebase more logically structured.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T00:28:50.541872+00:00",
+            "updated_on": "2016-12-15T00:28:50.547920+00:00",
+            "id": 28358280
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28362201"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28362201"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28358119"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28358119"
+                    }
+                },
+                "id": 28358119
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "I have moved `ParticleDataset` to `static_output.py`. `SPHDataset` is trickier to deal with, because there is this `SPHFieldInfo` class, which I couldn't find a better place for. So maybe leaving `SPHDataset` in `frontends/sph` is the best solution for now?",
+                "html": "<p>I have moved <code>ParticleDataset</code> to <code>static_output.py</code>. <code>SPHDataset</code> is trickier to deal with, because there is this <code>SPHFieldInfo</code> class, which I couldn't find a better place for. So maybe leaving <code>SPHDataset</code> in <code>frontends/sph</code> is the best solution for now?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T02:28:40.991392+00:00",
+            "updated_on": "2016-12-15T02:28:40.997086+00:00",
+            "id": 28362201
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28362286"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28362286"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28362201"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28362201"
+                    }
+                },
+                "id": 28362201
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "SGTM",
+                "html": "<p>SGTM</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T02:32:31.263958+00:00",
+            "updated_on": "2016-12-15T02:32:31.271842+00:00",
+            "id": 28362286
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28362321"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28362321"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28362286"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28362286"
+                    }
+                },
+                "id": 28362286
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Okay, thank you for your help!",
+                "html": "<p>Okay, thank you for your help!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T02:33:55.269892+00:00",
+            "updated_on": "2016-12-15T02:33:55.275303+00:00",
+            "id": 28362321
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474/comments/28432473"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474/_/diff#comment-28432473"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor particle dataset",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2474"
+                    }
+                },
+                "id": 2474
+            },
+            "content": {
+                "raw": "Thanks for doing this.  Looking it over, I like it, and don't have any objections.  The thing I'm not sure about is the smoothed fields thing, because in theory one *could* do this for grid datasets (it won't work right now because of a lack of a `smooth` function on the `GridPatch` object, but that could/should be implemented) but I don't think it's worth the cognitive overhead of having that function on the base class.  So I think you did the right thing moving that around in this case.\n\nNice work, and thank you for taking the time and effort to do this!",
+                "html": "<p>Thanks for doing this.  Looking it over, I like it, and don't have any objections.  The thing I'm not sure about is the smoothed fields thing, because in theory one <em>could</em> do this for grid datasets (it won't work right now because of a lack of a <code>smooth</code> function on the <code>GridPatch</code> object, but that could/should be implemented) but I don't think it's worth the cognitive overhead of having that function on the base class.  So I think you did the right thing moving that around in this case.</p>\n<p>Nice work, and thank you for taking the time and effort to do this!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-15T21:55:33.727028+00:00",
+            "updated_on": "2016-12-15T21:55:33.730998+00:00",
+            "id": 28432473
+        }
+    ]
+}

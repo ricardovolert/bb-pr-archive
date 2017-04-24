@@ -1,0 +1,894 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-05-20T12:06:55.986556+00:00",
+    "comment_count": 13,
+    "description": "After some discussion with the folks developing the python radio tools, I've decided to make some changes to the FITS frontend. \r\n\r\n1) The biggest change is that I am reverting to the original behavior of treating the spectral axis of a FITS cube to be in \"pixel\" units (see 2) below, however). This will avoid messy situations with the large aspect ratio. To get the same `PlotWindow` plots, I have added logic to the coordinate handler for the FITS cubes to set the extents and units of the plot.   \r\n2) The exception to 1) is that in order to get the spectral axis into a more reasonable length, a `spectral_factor` can be specified to change the width in `code_length` along the spectral axis, which helps with volume rendering. By default, `spectral_factor = 1`, but can be set by hand to another number or set to `\"auto\"` to make the spectral axis have the same width as the largest position axis.    \r\n3) Changed the naming convention for \"position-position-velocity\" to \"position-position-spectral\", since this is slightly broader terminology that encompasses line-of-sight velocities, frequencies, wavelengths, and energies.   \r\n4) Made a few other minor changes to the FITS frontend to cover corner cases of field naming, and streamlined `PlotWindowWCS`.   \r\n\r\nI've also added some preliminary documentation for installing with Anaconda, some notes about installing and developing on Windows, and updated the `photon_simulator` docs.\r\n\r\nUPDATE: Responded to @ngoldbaum and @cnbeaumont 's comments-- hoping to strike a balance with the `SpectralCube` name, and added a bit more detail to the installation section. \r\n\r\nUPDATE 2: Fixing [Issue #841](https://bitbucket.org/yt_analysis/yt/issue/841/absorptionspectrum-import-fails).",
+    "created_on": "2014-05-15T23:44:22.437996+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/8ce1487c06c6"
+            }
+        },
+        "hash": "8ce1487c06c6"
+    },
+    "title": "FITS frontend refactor, and some docs",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 905,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/5c2d8110d05a"
+                }
+            },
+            "hash": "5c2d8110d05a"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt-3.x",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
+                }
+            },
+            "name": "yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/78d4ad6d2542"
+                }
+            },
+            "hash": "78d4ad6d2542"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1894204"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1894204"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T00:02:16.291792+00:00",
+            "updated_on": "2014-05-16T00:02:16.417786+00:00",
+            "id": 1894204
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1895364"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:dbc69e197550..e36b5500ae24?path=doc%2Fsource%2Finstalling.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1895364"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "Perhaps add a mention of `import yt; yt.run_nose()`? Totally optional and I see ample justification for not confusing new users by bringing up the unit tests.",
+                "html": "<p>Perhaps add a mention of <code>import yt; yt.run_nose()</code>? Totally optional and I see ample justification for not confusing new users by bringing up the unit tests.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T04:34:13.554334+00:00",
+            "updated_on": "2014-05-16T04:34:13.566955+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/installing.rst",
+                "to": 96
+            },
+            "id": 1895364
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1895379"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:dbc69e197550..e36b5500ae24?path=doc%2Fsource%2Finstalling.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1895379"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "Perhaps add a section on setting up a checkout of the yt mercurial repo via `setup.py develop`?  I worry about relying on Continuum IO to update their build of yt.  Supposedly they are adding the ability to have cross-platform buildbots for binstar, which may eventually be the most sustainable portable option for distributing up-to-date builds of yt.",
+                "html": "<p>Perhaps add a section on setting up a checkout of the yt mercurial repo via <code>setup.py develop</code>?  I worry about relying on Continuum IO to update their build of yt.  Supposedly they are adding the ability to have cross-platform buildbots for binstar, which may eventually be the most sustainable portable option for distributing up-to-date builds of yt.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T04:36:08.789611+00:00",
+            "updated_on": "2014-05-16T04:36:08.798833+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/installing.rst",
+                "to": 194
+            },
+            "id": 1895379
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/cnbeaumont"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/cnbeaumont/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/cnbeaumont/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Chris Beaumont",
+                "uuid": "{14097c6a-d047-47b1-8caf-e11d02de43b2}",
+                "username": "cnbeaumont"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899101"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:dbc69e197550..e36b5500ae24?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899101"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "I gather that this block is stripping out the stokes axis? Technically speaking, there's nothing that requires stokes to be axis=4 (though I can't think of a time it hasn't been)",
+                "html": "<p>I gather that this block is stripping out the stokes axis? Technically speaking, there's nothing that requires stokes to be axis=4 (though I can't think of a time it hasn't been)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T13:16:15.897931+00:00",
+            "updated_on": "2014-05-16T13:16:16.040052+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": 423
+            },
+            "id": 1899101
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/cnbeaumont"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/cnbeaumont/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/cnbeaumont/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Chris Beaumont",
+                "uuid": "{14097c6a-d047-47b1-8caf-e11d02de43b2}",
+                "username": "cnbeaumont"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899121"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:dbc69e197550..e36b5500ae24?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899121"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "I understand the motivation for preferring `pps` over `ppv`, so I'll just note something I'm sure you've considered -- `ppv` terminology is quite common in radio circles",
+                "html": "<p>I understand the motivation for preferring <code>pps</code> over <code>ppv</code>, so I'll just note something I'm sure you've considered -- <code>ppv</code> terminology is quite common in radio circles</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T13:18:00.827406+00:00",
+            "updated_on": "2014-05-16T13:18:00.971514+00:00",
+            "inline": {
+                "from": 448,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": null
+            },
+            "id": 1899121
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899132"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899132"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899121"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899121"
+                    }
+                },
+                "id": 1899121
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "Even when that axis isn't velocity?",
+                "html": "<p>Even when that axis isn't velocity?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T13:19:02.684304+00:00",
+            "updated_on": "2014-05-16T13:19:02.695248+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": null
+            },
+            "id": 1899132
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/cnbeaumont"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/cnbeaumont/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/cnbeaumont/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Chris Beaumont",
+                "uuid": "{14097c6a-d047-47b1-8caf-e11d02de43b2}",
+                "username": "cnbeaumont"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899200"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899200"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899132"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899132"
+                    }
+                },
+                "id": 1899132
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "Yeah -- I agree that `pps` is more general, and somebody with more expertise might correct me and say they've seen `pps` used before. I just haven't come across it",
+                "html": "<p>Yeah -- I agree that <code>pps</code> is more general, and somebody with more expertise might correct me and say they've seen <code>pps</code> used before. I just haven't come across it</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T13:24:50.956164+00:00",
+            "updated_on": "2014-05-16T13:24:51.062049+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": null
+            },
+            "id": 1899200
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899475"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899475"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899200"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899200"
+                    }
+                },
+                "id": 1899200
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "To reduce confusion and maintain generality, probably the best thing to do is to call them \"spectral cubes\" here as well.",
+                "html": "<p>To reduce confusion and maintain generality, probably the best thing to do is to call them \"spectral cubes\" here as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T13:45:57.535106+00:00",
+            "updated_on": "2014-05-16T13:45:57.546550+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": null
+            },
+            "id": 1899475
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1900207"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1900207"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1899101"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1899101"
+                    }
+                },
+                "id": 1899101
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "We've specified in the docs that the Stokes axis needs to be the 4th. ",
+                "html": "<p>We've specified in the docs that the Stokes axis needs to be the 4th. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-16T14:43:11.760203+00:00",
+            "updated_on": "2014-05-16T14:43:11.770131+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": null
+            },
+            "id": 1900207
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1907064"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1907064"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-18T20:02:19.426588+00:00",
+            "updated_on": "2014-05-18T20:02:19.534370+00:00",
+            "id": 1907064
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1912459"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1912459"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "Unless there are any other suggestions, I think this is ready to go.",
+                "html": "<p>Unless there are any other suggestions, I think this is ready to go.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-19T13:38:20.211245+00:00",
+            "updated_on": "2014-05-19T13:38:20.218607+00:00",
+            "id": 1912459
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1918788"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1918788"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-20T02:32:14.043260+00:00",
+            "updated_on": "2014-05-20T02:32:14.177242+00:00",
+            "id": 1918788
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905/comments/1919262"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905/_/diff#comment-1919262"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend refactor, and some docs",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/905"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/905"
+                    }
+                },
+                "id": 905
+            },
+            "content": {
+                "raw": "I cannot speak to the FITS stuff too much, but the docs look great!",
+                "html": "<p>I cannot speak to the FITS stuff too much, but the docs look great!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-20T04:38:45.981007+00:00",
+            "updated_on": "2014-05-20T04:38:45.990333+00:00",
+            "id": 1919262
+        }
+    ]
+}

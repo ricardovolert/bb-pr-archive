@@ -1,0 +1,1012 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-02-03T17:17:20.746930+00:00",
+    "comment_count": 17,
+    "description": "This adds support for displacement fields to ExodusII Datasets. The fields are switched on and off when the dataset is loaded, and arbitrary scale factors can be applied to each mesh.\r\n\r\nThe following script demonstrates the usage:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nfrom yt.visualization.volume_rendering.api import MeshSource, Camera\r\nimport yt.utilities.png_writer as pw\r\n\r\n# For the 1st mesh, we scale the displacements by a factor of 3.\r\n# For the 2nd mesh, we scale the displacements by 10.0 and also\r\n# offset all vertices by 1.0 unit in the z direction.\r\ndisplacements={'connect1': (3.0, [0.0,  0.0, 0.0]),\r\n                          'connect2': (10.0, [0.0, 0.0, 1.0])}\r\n\r\nds = yt.load(\"MOOSE_sample_data/mps_out.e\",\r\n             step=-1,\r\n             displacements=displacements)\r\n\r\nms = MeshSource(ds, ('connect2', 'temp'))\r\n\r\n# set up the camera\r\ncam = Camera(ds)\r\ncamera_position = ds.arr([-1.0, 1.0, -0.5], 'code_length')\r\nnorth_vector = ds.arr([0.0, 1.0, 1.0], 'dimensionless')\r\ncam.width = ds.arr([0.05, 0.05, 0.05], 'code_length')\r\ncam.resolution = (800, 800)\r\ncam.set_position(camera_position, north_vector)\r\n\r\nim = ms.render(cam, cmap='hot', color_bounds=(500.0, 1700.0))\r\nim = ms.annotate_mesh_lines()\r\npw.write_png(im, 'hex20_render.png')\r\n\r\n```\r\n\r\nEDIT: I have changed the API slightly to allow for arbitrary offsets, and also removed the anisotropic scale factor business, since that is not a very common use case.",
+    "created_on": "2016-01-19T00:27:57.208665+00:00",
+    "task_count": 1,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5b35020ba8fb"
+            }
+        },
+        "hash": "5b35020ba8fb"
+    },
+    "title": "Displacement Fields for ExodusII Datasets.",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1946,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt/commit/91a5b65ff969"
+                }
+            },
+            "hash": "91a5b65ff969"
+        },
+        "repository": {
+            "full_name": "atmyers/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/atmyers/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/atmyers/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{14866916-6c53-4d06-95e1-89d30c798c08}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/03adb8fb971d"
+                }
+            },
+            "hash": "03adb8fb971d"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13603985"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13603985"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-19T01:30:53.524743+00:00",
+            "updated_on": "2016-01-19T01:30:53.578352+00:00",
+            "id": 13603985
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13681550"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13681550"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "I think this needs to be covered in the unstructured mesh frontend narrative docs.",
+                "html": "<p>I think this needs to be covered in the unstructured mesh frontend narrative docs.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T17:33:04.815626+00:00",
+            "updated_on": "2016-01-20T17:33:04.817993+00:00",
+            "id": 13681550
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13782342"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13782342"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-23T09:10:40.734275+00:00",
+            "updated_on": "2016-01-23T09:10:40.793124+00:00",
+            "id": 13782342
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13782418"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13782418"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/552/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/552/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/552/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/552/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/552/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/552/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-23T09:44:42.282407+00:00",
+            "updated_on": "2016-01-23T09:44:42.368114+00:00",
+            "id": 13782418
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13915268"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:bd1fced7cfb1..bc0cc00c150c?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13915268"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "I'm not sure if it's immediately obvious to a finite element user what a displacement field is, but maybe briefly describe it?",
+                "html": "<p>I'm not sure if it's immediately obvious to a finite element user what a displacement field is, but maybe briefly describe it?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-27T17:24:02.793139+00:00",
+            "updated_on": "2016-01-27T17:24:02.794986+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/examining/loading_data.rst",
+                "to": 430
+            },
+            "id": 13915268
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13915317"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13915317"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Maybe a test for this?",
+                "html": "<p>Maybe a test for this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-27T17:24:56.989470+00:00",
+            "updated_on": "2016-01-27T17:24:56.992596+00:00",
+            "id": 13915317
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13936919"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13936919"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-28T07:28:18.009303+00:00",
+            "updated_on": "2016-01-28T07:28:18.075122+00:00",
+            "id": 13936919
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13972611"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13972611"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Do I need to do anything to generate answers for the new test here?",
+                "html": "<p>Do I need to do anything to generate answers for the new test here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-28T19:42:09.144834+00:00",
+            "updated_on": "2016-01-28T19:42:09.146874+00:00",
+            "id": 13972611
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13972938"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13972938"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13972611"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13972611"
+                    }
+                },
+                "id": 13972611
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Nope, it's already queued on my TODO :-)",
+                "html": "<p>Nope, it's already queued on my TODO :-)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-28T19:51:49.681514+00:00",
+            "updated_on": "2016-01-28T19:51:49.686847+00:00",
+            "id": 13972938
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13973103"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13973103"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/13972938"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-13972938"
+                    }
+                },
+                "id": 13972938
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Cool, thank you!",
+                "html": "<p>Cool, thank you!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-28T19:56:26.495895+00:00",
+            "updated_on": "2016-01-28T19:56:26.498068+00:00",
+            "id": 13973103
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/14092847"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-14092847"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1240/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1240/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1240/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T02:08:52.876778+00:00",
+            "updated_on": "2016-02-02T02:08:52.952415+00:00",
+            "id": 14092847
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/14093722"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-14093722"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1241/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1241/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1241/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T03:16:37.157177+00:00",
+            "updated_on": "2016-02-02T03:16:37.226985+00:00",
+            "id": 14093722
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/14094773"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-14094773"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/585/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/585/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/585/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/585/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/585/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/585/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T04:38:20.128130+00:00",
+            "updated_on": "2016-02-02T04:38:20.202052+00:00",
+            "id": 14094773
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/14096210"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-14096210"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T06:12:36.516878+00:00",
+            "updated_on": "2016-02-02T06:12:36.575005+00:00",
+            "id": 14096210
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/14096926"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-14096926"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/586/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/586/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/586/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/586/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/586/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/586/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T06:56:00.660935+00:00",
+            "updated_on": "2016-02-02T06:56:00.740932+00:00",
+            "id": 14096926
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/14097299"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-14097299"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T07:17:32.408962+00:00",
+            "updated_on": "2016-02-02T07:17:32.465953+00:00",
+            "id": 14097299
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946/comments/14100553"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946/_/diff#comment-14100553"
+                }
+            },
+            "pullrequest": {
+                "title": "Displacement Fields for ExodusII Datasets.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1946"
+                    }
+                },
+                "id": 1946
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/587/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/587/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/587/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/587/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/587/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/587/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-02T09:00:03.391149+00:00",
+            "updated_on": "2016-02-02T09:00:03.541205+00:00",
+            "id": 14100553
+        }
+    ]
+}

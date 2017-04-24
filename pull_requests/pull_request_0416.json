@@ -1,0 +1,2329 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-02-14T18:45:53.998208+00:00",
+    "comment_count": 39,
+    "description": "I re-factored the derived field saving code so that all the changes were made to the base classes (StaticOutput, IOHandler, and AMRHierarchy). The only change now to the individual frontends is to rename the _read_data_set function to _read_data. This has been tested on all the different code frontends I have datasets for - Flash, Orion, Enzo, and Chombo. Since this does touch the other code frontends, it would be great if there were a way to make sure I'm not breaking anything there. \r\n\r\nOther points:\r\n\r\n1. Currently, if you're working on a dataset called \"fn\", the code will save the field in \"fn_backup.gdf\", along side the \"fn.yt\" file. Is this dumb?\r\n\r\n2. I did have to re-arrange the gdf writer a bit to get this to work. The code passes the test in \"test_writer.py\", but Casey or someone might want to make sure I'm not messing anything up in there.  \r\n\r\nEDIT - I accidently overwrote some changes that read in periodicity information for the orion, flash, and enzo frontends. This is fixed now.\r\n  ",
+    "created_on": "2013-02-07T01:38:52.071686+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5027f592349e"
+            }
+        },
+        "hash": "5027f592349e"
+    },
+    "title": "Saving derived fields to disk",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 416,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": null,
+        "repository": null
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a42fc6396b3b"
+                }
+            },
+            "hash": "a42fc6396b3b"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109550"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109550"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Wow, super cool!  I'm going to review this and get back to you.  It may be that we could also move the backup file into the base data structures, and if it's there, just use it.  What do you think?",
+                "html": "<p>Wow, super cool!  I'm going to review this and get back to you.  It may be that we could also move the backup file into the base data structures, and if it's there, just use it.  What do you think?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T14:01:15.254003+00:00",
+            "updated_on": "2013-02-07T14:01:15.262173+00:00",
+            "id": 109550
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109741"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ec04e80b9ece..d0e722ba5afe?path=yt%2Ffrontends%2Fchombo%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109741"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Two quick comments -- Which exception is this meant to catch?  If it's a particular one, we can probably either catch it, or check for the existence of the field.  (i.e., `if field in grid_group`).  The second one is, maybe this should be moved up to the base class.  I just don't quite know how we would want to do that without breaking the existing `_read_data_set` calls elsewhere.",
+                "html": "<p>Two quick comments -- Which exception is this meant to catch?  If it's a particular one, we can probably either catch it, or check for the existence of the field.  (i.e., <code>if field in grid_group</code>).  The second one is, maybe this should be moved up to the base class.  I just don't quite know how we would want to do that without breaking the existing <code>_read_data_set</code> calls elsewhere.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T16:11:12.943318+00:00",
+            "updated_on": "2013-02-07T16:11:12.949413+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/io.py",
+                "to": 54
+            },
+            "id": 109741
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109743"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ec04e80b9ece..d0e722ba5afe?path=yt%2Ffrontends%2Fchombo%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109743"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Can we call it something a bit more descriptive that `data`?  Maybe, `saved_fields` or something?",
+                "html": "<p>Can we call it something a bit more descriptive that <code>data</code>?  Maybe, <code>saved_fields</code> or something?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T16:11:43.808625+00:00",
+            "updated_on": "2013-02-07T16:11:43.816857+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/io.py",
+                "to": 57
+            },
+            "id": 109743
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109868"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Ffrontends%2Fchombo%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109868"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109741"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109741"
+                    }
+                },
+                "id": 109741
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "I am +1000 on moving this up to the base class. My opinion would be that we should hold off on accepting until it is. The quick (though potentially sloppy) way to do this would mean a small refactor, as in the base class would have the method `_read_data_set`, which would then call the frontend-specific function (which would have to be named something else now), and use the backup dataset as a fallback if the field is not found in the former. ",
+                "html": "<p>I am +1000 on moving this up to the base class. My opinion would be that we should hold off on accepting until it is. The quick (though potentially sloppy) way to do this would mean a small refactor, as in the base class would have the method <code>_read_data_set</code>, which would then call the frontend-specific function (which would have to be named something else now), and use the backup dataset as a fallback if the field is not found in the former. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T17:45:15.014764+00:00",
+            "updated_on": "2013-02-07T17:45:15.021959+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/io.py",
+                "to": null
+            },
+            "id": 109868
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109871"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Ffrontends%2Fchombo%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109871"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109743"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109743"
+                    }
+                },
+                "id": 109743
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi Matt,\n\nI think the \"data\" name comes from the GDF standard, which wants fields to be stored in ``/data/grid_%010i/%(field)s``",
+                "html": "<p>Hi Matt,</p>\n<p>I think the \"data\" name comes from the GDF standard, which wants fields to be stored in <code>/data/grid_%010i/%(field)s</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T17:51:30.695846+00:00",
+            "updated_on": "2013-02-07T17:51:30.816200+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/io.py",
+                "to": null
+            },
+            "id": 109871
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109875"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Ffrontends%2Fchombo%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109875"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109741"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109741"
+                    }
+                },
+                "id": 109741
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi Matt,\n\nOn the first point, that was just a clunky way of checking whether the field was in the backup file, and I agree it should be \"if field in grid_group\" or something similar. \n\nOn the second, I'm think John makes a good suggestion above. ",
+                "html": "<p>Hi Matt,</p>\n<p>On the first point, that was just a clunky way of checking whether the field was in the backup file, and I agree it should be \"if field in grid_group\" or something similar. </p>\n<p>On the second, I'm think John makes a good suggestion above. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T17:53:32.872759+00:00",
+            "updated_on": "2013-02-07T17:56:12.344003+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/io.py",
+                "to": null
+            },
+            "id": 109875
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/110006"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Ffrontends%2Fchombo%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-110006"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/109871"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-109871"
+                    }
+                },
+                "id": 109871
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "[slaps forehead]  I think I wrote that.\n\nOkay, retracted!  ;-)",
+                "html": "<p>[slaps forehead]  I think I wrote that.</p>\n<p>Okay, retracted!  ;-)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T19:39:29.819469+00:00",
+            "updated_on": "2013-02-07T19:39:29.831466+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/io.py",
+                "to": null
+            },
+            "id": 110006
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111669"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111669"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Andrew,\n\nFirst off, this is great! I hope to check this out sometime tonight or tomorrow. \n\nJust a quick question: how does this handle particle fields? ",
+                "html": "<p>Andrew,</p>\n<p>First off, this is great! I hope to check this out sometime tonight or tomorrow. </p>\n<p>Just a quick question: how does this handle particle fields? </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-08T23:58:23.038884+00:00",
+            "updated_on": "2013-02-08T23:58:23.048392+00:00",
+            "id": 111669
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111686"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111686"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111669"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111669"
+                    }
+                },
+                "id": 111669
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi John,\n\nAt the moment, it doesn't, but the gdf writer does support writing out particle fields, and I think I could make it work by being slightly more sophisticated in the _read_data_set method. ",
+                "html": "<p>Hi John,</p>\n<p>At the moment, it doesn't, but the gdf writer does support writing out particle fields, and I think I could make it work by being slightly more sophisticated in the _read_data_set method. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-09T02:18:32.745293+00:00",
+            "updated_on": "2013-02-09T02:18:32.867530+00:00",
+            "id": 111686
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111690"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111690"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111686"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111686"
+                    }
+                },
+                "id": 111686
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Once I get the chance to test it (sorry, access to email but not code), I can accept as-is and try adding in the particle support later, as I've been messing around with them quite a bit lately. But if you want to give it a try go ahead. \n\nTypically this has happened by checking the shape of the field, to see if it is 1-D or 3-D.",
+                "html": "<p>Once I get the chance to test it (sorry, access to email but not code), I can accept as-is and try adding in the particle support later, as I've been messing around with them quite a bit lately. But if you want to give it a try go ahead. </p>\n<p>Typically this has happened by checking the shape of the field, to see if it is 1-D or 3-D.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-09T02:49:07.548033+00:00",
+            "updated_on": "2013-02-09T02:49:07.556789+00:00",
+            "id": 111690
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111691"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111691"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111690"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111690"
+                    }
+                },
+                "id": 111690
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "I have some data I have in mind for this purpose, so I can give it a try. ",
+                "html": "<p>I have some data I have in mind for this purpose, so I can give it a try. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-09T02:49:36.471633+00:00",
+            "updated_on": "2013-02-09T02:49:36.478826+00:00",
+            "id": 111691
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111889"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111889"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Andrew--sorry, when I merged in your other pull request it created a conflict with this one. Can you fix it?",
+                "html": "<p>Andrew--sorry, when I merged in your other pull request it created a conflict with this one. Can you fix it?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T06:03:35.947403+00:00",
+            "updated_on": "2013-02-10T06:03:35.956130+00:00",
+            "id": 111889
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111890"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111890"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111889"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111889"
+                    }
+                },
+                "id": 111889
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Whoops - I should have considered that. Should be fixed now.",
+                "html": "<p>Whoops - I should have considered that. Should be fixed now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T06:37:04.013152+00:00",
+            "updated_on": "2013-02-10T06:37:04.132286+00:00",
+            "id": 111890
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111891"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111891"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Something odd is happening when I try this. I added a simple field:\n\n```\n#!python\n\ndef _Entropy(field, data) :\n    return data[\"Temperature\"]*data[\"Density\"]**(-2./3.)\nadd_field(\"Entr\", function=_Entropy)\n\n```\n\nI open a pf, then try to save the field:\n\n```\n#!python\n\nsave_field(pf, \"Entr\")\n```\n\nWhen it tries to save the field to disk, it has to get the field, so it uses the grid's \"get_data\" method. Since the field is composed of two fields that are actually in the file, yt calls the the I/O handler, which now bails: `KeyError: \"unable to open object (Symbol table: Can't open object)\"`\n\nThis was on a FLASH dataset. Funky things seem to happen when two file handles are open...",
+                "html": "<p>Something odd is happening when I try this. I added a simple field:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"k\">def</span> <span class=\"nf\">_Entropy</span><span class=\"p\">(</span><span class=\"n\">field</span><span class=\"p\">,</span> <span class=\"n\">data</span><span class=\"p\">)</span> <span class=\"p\">:</span>\n    <span class=\"k\">return</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"s2\">&quot;Temperature&quot;</span><span class=\"p\">]</span><span class=\"o\">*</span><span class=\"n\">data</span><span class=\"p\">[</span><span class=\"s2\">&quot;Density&quot;</span><span class=\"p\">]</span><span class=\"o\">**</span><span class=\"p\">(</span><span class=\"o\">-</span><span class=\"mf\">2.</span><span class=\"o\">/</span><span class=\"mf\">3.</span><span class=\"p\">)</span>\n<span class=\"n\">add_field</span><span class=\"p\">(</span><span class=\"s2\">&quot;Entr&quot;</span><span class=\"p\">,</span> <span class=\"n\">function</span><span class=\"o\">=</span><span class=\"n\">_Entropy</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>I open a pf, then try to save the field:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">save_field</span><span class=\"p\">(</span><span class=\"n\">pf</span><span class=\"p\">,</span> <span class=\"s2\">&quot;Entr&quot;</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>When it tries to save the field to disk, it has to get the field, so it uses the grid's \"get_data\" method. Since the field is composed of two fields that are actually in the file, yt calls the the I/O handler, which now bails: <code>KeyError: \"unable to open object (Symbol table: Can't open object)\"</code></p>\n<p>This was on a FLASH dataset. Funky things seem to happen when two file handles are open...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T06:58:07.903405+00:00",
+            "updated_on": "2013-02-10T06:58:07.909375+00:00",
+            "id": 111891
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111893"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111893"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111891"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111891"
+                    }
+                },
+                "id": 111891
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi John,\n\nThanks for testing this. It turns out that in my last update, I missed a couple of places where the grid._id_offset fix needed to be made, which ended up breaking the pull request once that fix was made to the gdf writer. \n\nWhile I was fixing that, I also found another problem with saving a field to a _backup.gdf file that already existed. That is fixed now too. The scripts [here](http://paste.yt-project.org/show/3142/) and [here](http://paste.yt-project.org/show/3143/) now work for me for flash, orion, chombo, and enzo datasets, after deleting any corrupted _backup.gdf files.  ",
+                "html": "<p>Hi John,</p>\n<p>Thanks for testing this. It turns out that in my last update, I missed a couple of places where the grid._id_offset fix needed to be made, which ended up breaking the pull request once that fix was made to the gdf writer. </p>\n<p>While I was fixing that, I also found another problem with saving a field to a _backup.gdf file that already existed. That is fixed now too. The scripts <a href=\"http://paste.yt-project.org/show/3142/\">here</a> and <a href=\"http://paste.yt-project.org/show/3143/\">here</a> now work for me for flash, orion, chombo, and enzo datasets, after deleting any corrupted _backup.gdf files.  </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T08:20:48.978730+00:00",
+            "updated_on": "2013-02-10T08:20:49.366377+00:00",
+            "id": 111893
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111971"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111971"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "So those scripts work for me now, but attempting to make a `SlicePlot` of FLASH data did not. In this case, it's because the implementation of `_read_data_slice` that the FLASH frontend has is completely independent of `_read_data`. @MatthewTurk, would rewriting `_read_data_slice` here to use `_read_data` have any undesirable side effect that you can think of?",
+                "html": "<p>So those scripts work for me now, but attempting to make a <code>SlicePlot</code> of FLASH data did not. In this case, it's because the implementation of <code>_read_data_slice</code> that the FLASH frontend has is completely independent of <code>_read_data</code>. <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a>, would rewriting <code>_read_data_slice</code> here to use <code>_read_data</code> have any undesirable side effect that you can think of?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T15:54:34.604816+00:00",
+            "updated_on": "2013-02-10T15:54:34.620342+00:00",
+            "id": 111971
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111972"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111972"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Sorry, I think I meant to say `_read_data_set`",
+                "html": "<p>Sorry, I think I meant to say <code>_read_data_set</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T15:55:43.281381+00:00",
+            "updated_on": "2013-02-10T15:55:43.294422+00:00",
+            "id": 111972
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111983"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111983"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "I'm noticing this is a potential problem for other frontends, including GDF itself.",
+                "html": "<p>I'm noticing this is a potential problem for other frontends, including GDF itself.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T16:07:50.829610+00:00",
+            "updated_on": "2013-02-10T16:07:50.836751+00:00",
+            "id": 111983
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111984"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111984"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi all, I hope to provide a review of this soon -- sorry I haven't yet.  @jzuhone , to quickly answer your question, I no longer believe that `_read_data_slice` is efficient, especially for large quantities of data where the amount of data skipped is small.  For FLASH it's probably faster to not use `_read_data_slice`, since what we're doing is trading the cost of constructing a (relatively expensive) python wrapper to an H5 data space versus reading the other 7 rows of data and discarding them.",
+                "html": "<p>Hi all, I hope to provide a review of this soon -- sorry I haven't yet.  <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> , to quickly answer your question, I no longer believe that <code>_read_data_slice</code> is efficient, especially for large quantities of data where the amount of data skipped is small.  For FLASH it's probably faster to not use <code>_read_data_slice</code>, since what we're doing is trading the cost of constructing a (relatively expensive) python wrapper to an H5 data space versus reading the other 7 rows of data and discarding them.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T16:08:25.087670+00:00",
+            "updated_on": "2013-02-10T16:08:25.099271+00:00",
+            "id": 111984
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111990"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111990"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111984"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111984"
+                    }
+                },
+                "id": 111984
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "So what are we talking about here then? Removing `_read_data_slice` altogether from all frontends?",
+                "html": "<p>So what are we talking about here then? Removing <code>_read_data_slice</code> altogether from all frontends?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T16:17:09.579239+00:00",
+            "updated_on": "2013-02-10T16:17:09.591247+00:00",
+            "id": 111990
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111992"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111992"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111990"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111990"
+                    }
+                },
+                "id": 111990
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "I would be fine with that: it is gone in 3.0 anyway.  The only place I could see this being a big performance hit is for situations where you have a large grid that is being sliced; say, 128^3 or 512^3.  But I'm not sure.  I have to think on this.  For FLASH, `_read_data_slice` is almost certainly worse than throwing away the data that's over-read.",
+                "html": "<p>I would be fine with that: it is gone in 3.0 anyway.  The only place I could see this being a big performance hit is for situations where you have a large grid that is being sliced; say, 128^3 or 512^3.  But I'm not sure.  I have to think on this.  For FLASH, <code>_read_data_slice</code> is almost certainly worse than throwing away the data that's over-read.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T16:18:40.256727+00:00",
+            "updated_on": "2013-02-10T16:18:40.264335+00:00",
+            "id": 111992
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111993"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111993"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "@atmyers and @jzuhone , can we set up a hangout to go over this?  Maybe Tuesday, 1:30PM EST?  I'd like to push this through before the release, but I also want to take some time to make sure I understand what's going on everywhere in it.",
+                "html": "<p><a href=\"/atmyers/\" rel=\"nofollow\" title=\"@atmyers\" class=\"mention\">Andrew Myers</a> and <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> , can we set up a hangout to go over this?  Maybe Tuesday, 1:30PM EST?  I'd like to push this through before the release, but I also want to take some time to make sure I understand what's going on everywhere in it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T16:19:42.484205+00:00",
+            "updated_on": "2013-02-10T16:19:42.499250+00:00",
+            "id": 111993
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111995"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111995"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111993"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111993"
+                    }
+                },
+                "id": 111993
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "That works for me. ",
+                "html": "<p>That works for me. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T16:23:57.485351+00:00",
+            "updated_on": "2013-02-10T16:23:57.495499+00:00",
+            "id": 111995
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/112080"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-112080"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111971"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111971"
+                    }
+                },
+                "id": 111971
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Yeah, I see what you mean. I had fooled myself into thinking that slices worked, since some of the frontends do just call _read_data_set and then slice the output. Clearly this needs a bit more work... ",
+                "html": "<p>Yeah, I see what you mean. I had fooled myself into thinking that slices worked, since some of the frontends do just call _read_data_set and then slice the output. Clearly this needs a bit more work... </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T19:12:15.273922+00:00",
+            "updated_on": "2013-02-10T19:12:15.399700+00:00",
+            "id": 112080
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/112082"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-112082"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/111993"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-111993"
+                    }
+                },
+                "id": 111993
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Yeah, that would work for me, too.",
+                "html": "<p>Yeah, that would work for me, too.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-10T19:12:39.214092+00:00",
+            "updated_on": "2013-02-10T19:12:39.311681+00:00",
+            "id": 112082
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/112657"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-112657"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/112082"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-112082"
+                    }
+                },
+                "id": 112082
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Alright, I've scheduled it.  Talk to you both then!",
+                "html": "<p>Alright, I've scheduled it.  Talk to you both then!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-11T11:07:50.062327+00:00",
+            "updated_on": "2013-02-11T11:07:50.073396+00:00",
+            "id": 112657
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/114653"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:043815a1ec25..a42fc6396b3b?path=yt%2Fdata_objects%2Fhierarchy.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-114653"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "I think I'd like to see this a bit more clear: actually check and return if `data` not in the `f`, and also try for `IOError` and then return.  This would let most of the function live at top-level indentation.",
+                "html": "<p>I think I'd like to see this a bit more clear: actually check and return if <code>data</code> not in the <code>f</code>, and also try for <code>IOError</code> and then return.  This would let most of the function live at top-level indentation.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-12T18:22:30.889914+00:00",
+            "updated_on": "2013-02-12T18:22:30.897733+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/hierarchy.py",
+                "to": 99
+            },
+            "id": 114653
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/114654"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-114654"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi Andrew, I'm going to leave some code comments, but we'll talk during the hangout.  Don't think you, alone, have to apply them.",
+                "html": "<p>Hi Andrew, I'm going to leave some code comments, but we'll talk during the hangout.  Don't think you, alone, have to apply them.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-12T18:22:58.322210+00:00",
+            "updated_on": "2013-02-12T18:22:58.330809+00:00",
+            "id": 114654
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/114659"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:e1b7792e6807..a42fc6396b3b?path=yt%2Ffrontends%2Fchombo%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-114659"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Nice catch!",
+                "html": "<p>Nice catch!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-12T18:23:58.288505+00:00",
+            "updated_on": "2013-02-12T18:23:58.297292+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/data_structures.py",
+                "to": 223
+            },
+            "id": 114659
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/114664"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:043815a1ec25..a42fc6396b3b?path=yt%2Futilities%2Fgrid_data_format%2Fwriter.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-114664"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "This is very nice; down the road I would like to see this move into a `SidecarFile` object or something, but that shouldn't hold us up.",
+                "html": "<p>This is very nice; down the road I would like to see this move into a <code>SidecarFile</code> object or something, but that shouldn't hold us up.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-12T18:27:40.565271+00:00",
+            "updated_on": "2013-02-12T18:27:40.571471+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/grid_data_format/writer.py",
+                "to": 60
+            },
+            "id": 114664
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/114690"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-114690"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Options moving forward:\n\n * Refactor `_read_data_slice` for those frontends that use it.  (Enzo, GDF, Athena, Stream.)\n * Remove `_read_data_slice`\n\nRemove FLASH's use of `_read_data_slice`",
+                "html": "<p>Options moving forward:</p>\n<ul>\n<li>Refactor <code>_read_data_slice</code> for those frontends that use it.  (Enzo, GDF, Athena, Stream.)</li>\n<li>Remove <code>_read_data_slice</code></li>\n</ul>\n<p>Remove FLASH's use of <code>_read_data_slice</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-12T18:37:28.089565+00:00",
+            "updated_on": "2013-02-12T18:37:56.231149+00:00",
+            "id": 114690
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/114784"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-114784"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi Andrew, I just realized that this might end up with a medium-to-big performance regression.  Can we have it so that if `backup_filename` is `None`, we don't call `_field_in_backup`?  Otherwise we're constantly hitting the disk.  And just set `backup_filename` to `None` if it doesn't exist?",
+                "html": "<p>Hi Andrew, I just realized that this might end up with a medium-to-big performance regression.  Can we have it so that if <code>backup_filename</code> is <code>None</code>, we don't call <code>_field_in_backup</code>?  Otherwise we're constantly hitting the disk.  And just set <code>backup_filename</code> to <code>None</code> if it doesn't exist?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-12T19:31:44.953379+00:00",
+            "updated_on": "2013-02-12T19:31:44.962355+00:00",
+            "id": 114784
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/116993"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-116993"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/114784"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-114784"
+                    }
+                },
+                "id": 114784
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Hi Matt,\n\nGood point. This is fixed in the most recent update. It should now only check for the presence of a backup file once, when you load the pf.",
+                "html": "<p>Hi Matt,</p>\n<p>Good point. This is fixed in the most recent update. It should now only check for the presence of a backup file once, when you load the pf.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-14T05:58:28.771918+00:00",
+            "updated_on": "2013-02-14T05:58:28.919687+00:00",
+            "id": 116993
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117939"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117939"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Andrew, would you mind pulling e1b7792e6807 from https://bitbucket.org/MatthewTurk/yt/ and including it in the PR?\n\nI have removed `_read_data_slice` from most IO frontends and placed it into the base class.  I also removed the (unused) `HDF4_2D` Enzo IO handler.",
+                "html": "<p>Andrew, would you mind pulling <a href=\"/yt_analysis/yt/commits/e1b7792e6807\" rel=\"nofollow\">e1b7792e6807</a> from <a href=\"https://bitbucket.org/MatthewTurk/yt/\" rel=\"nofollow\">https://bitbucket.org/MatthewTurk/yt/</a> and including it in the PR?</p>\n<p>I have removed <code>_read_data_slice</code> from most IO frontends and placed it into the base class.  I also removed the (unused) <code>HDF4_2D</code> Enzo IO handler.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-14T18:29:05.744575+00:00",
+            "updated_on": "2013-02-14T18:29:05.756387+00:00",
+            "id": 117939
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117941"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117941"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117939"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117939"
+                    }
+                },
+                "id": 117939
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "I think with that change, and the two that aren't in this PR that you made that I based it on, we are ready to go.",
+                "html": "<p>I think with that change, and the two that aren't in this PR that you made that I based it on, we are ready to go.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-14T18:29:22.351528+00:00",
+            "updated_on": "2013-02-14T18:29:22.362183+00:00",
+            "id": 117941
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117942"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117942"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117939"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117939"
+                    }
+                },
+                "id": 117939
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Cool - let me try this out",
+                "html": "<p>Cool - let me try this out</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-14T18:30:40.941546+00:00",
+            "updated_on": "2013-02-14T18:30:41.096767+00:00",
+            "id": 117942
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117966"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117966"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117939"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117939"
+                    }
+                },
+                "id": 117939
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "I tested this on Enzo, Chombo, Orion, and Flash, including making slices, and it all seems to work perfectly",
+                "html": "<p>I tested this on Enzo, Chombo, Orion, and Flash, including making slices, and it all seems to work perfectly</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-14T18:43:57.911710+00:00",
+            "updated_on": "2013-02-14T18:43:58.015749+00:00",
+            "id": 117966
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117968"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117968"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117966"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117966"
+                    }
+                },
+                "id": 117966
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Alright, sounds good to me!",
+                "html": "<p>Alright, sounds good to me!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-14T18:45:34.797632+00:00",
+            "updated_on": "2013-02-14T18:45:34.812153+00:00",
+            "id": 117968
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416/comments/117969"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416/_/diff#comment-117969"
+                }
+            },
+            "pullrequest": {
+                "title": "Saving derived fields to disk",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/416"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/416"
+                    }
+                },
+                "id": 416
+            },
+            "content": {
+                "raw": "Thanks for doing this, Andrew!  This will be a huge benefit.",
+                "html": "<p>Thanks for doing this, Andrew!  This will be a huge benefit.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-14T18:45:45.369988+00:00",
+            "updated_on": "2013-02-14T18:45:45.377517+00:00",
+            "id": 117969
+        }
+    ]
+}

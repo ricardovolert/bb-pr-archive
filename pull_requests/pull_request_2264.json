@@ -1,0 +1,296 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-07-16T17:41:40.399563+00:00",
+    "comment_count": 3,
+    "description": "This is a refactoring of the Cython code for volume rendering.\n\nThis presents *no* user-facing changes, except potentially if people are\nimporting partitioned grids, which should still be available as before.\nHere are the highlights:\n\n * Removes uses of the star samplers, which are not currently supported, but\n   which could come back in the future.\n * Splits the `grid_traversal.pyx` file into manageable chunks, pushing things\n   into other files like `lenses.pyx`, `image_samplers.pyx`,\n   `volume_container.pyx` and `partitioned_grid.pyx`.\n * Make the `sample` function a static cdef method on the `ImageSampler`\n   object.  This keeps things all in the same place, which is nice.\n\nThere are more changes I would like to make, to improve readability and\nextensibility.  This is already a relatively large PR, though, so I'm going to\nhold off for a bit.\n\nTests pass for me, but I think we need to build the docs as well.  One fun\nthing is that because we use inline functions for fixed interpolation tables\nthat use C functions, I had to build things a bit differently to get\n`mesh_traversal.pyx` to compile.\n\nAlso, I think this can eventually clean up (and remove) the `utils.py` file in\n`yt/visualization/volume_rendering/` which is what started all this.\n\n\n",
+    "created_on": "2016-07-07T20:56:17.201114+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/6a4eea9e6d94"
+            }
+        },
+        "hash": "6a4eea9e6d94"
+    },
+    "title": "Refactor volume rendering Cython code",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2264"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2264,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/a6f4cd1d07f7"
+                }
+            },
+            "hash": "a6f4cd1d07f7"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e7aabcd61165"
+                }
+            },
+            "hash": "e7aabcd61165"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/comments/20748664"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2264/_/diff#comment-20748664"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor volume rendering Cython code",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2264"
+                    }
+                },
+                "id": 2264
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/687/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/687/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/687/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-07T21:40:13.256605+00:00",
+            "updated_on": "2016-07-07T21:40:13.316164+00:00",
+            "id": 20748664
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/comments/20750780"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2264/_/diff#comment-20750780"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor volume rendering Cython code",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2264"
+                    }
+                },
+                "id": 2264
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/963/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/963/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/963/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/963/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/963/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/963/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-07T22:51:04.483905+00:00",
+            "updated_on": "2016-07-07T22:51:04.552916+00:00",
+            "id": 20750780
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264/comments/21103913"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2264/_/diff#comment-21103913"
+                }
+            },
+            "pullrequest": {
+                "title": "Refactor volume rendering Cython code",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2264"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2264"
+                    }
+                },
+                "id": 2264
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/728/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/728/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/728/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-16T17:37:52.956581+00:00",
+            "updated_on": "2016-07-16T17:37:53.027591+00:00",
+            "id": 21103913
+        }
+    ]
+}

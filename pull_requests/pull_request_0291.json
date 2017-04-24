@@ -1,0 +1,349 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2012-10-15T23:10:39.758487+00:00",
+    "comment_count": 4,
+    "description": "This PR adds several new universal fields derived from the vector velocity and magnetic fields.  To do so, I've added some new functionality in math_utils.py to project vector fields onto cylindrical and spherical coordinate systems defined by data objects.  I've also moved the code that handles coordinate transformations for curvilinear coordinate systems from universal_fields to math_utils since the new fields leverage the coordinate generating code.  In principle I could grab the fields directly rather than using the helper functions but separating out the coordinate transformations in math_utils is a bit cleaner, I think.  This should hopefully make it easy to port the functionality to yt-3.0 where a coordinate handling class will do all of this work.\r\n\r\nThis PR allows me to write a script like this: http://paste.yt-project.org/show/2756/\r\n\r\nThe script defines a AMRCylinderBase enclosing an accretion disk in one of my simulations and calculates the cylindrical tangential and radial velocity of the gas in the disk.  It produces these outputs: http://i.imgur.com/67yiy.png http://i.imgur.com/DqG8l.png\r\n\r\nUpdate: For some reason this fetches the coordinates and velocities from disk more than once for my test script.  I'm not sure if that's the expected behavior given the way I'm using BinnedProfile1D\r\n\r\nUpdate: Implementing @xarthisius' suggestions.  Thanks Kacper!\r\n\r\nUpdate2: Minor fix.  Still no tests yet.\r\n\r\nUpdate3: Adding tests.  All tests pass.",
+    "created_on": "2012-10-05T00:32:28.442774+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Vector coordinate transformations",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 291,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/018cc61ee15a"
+                }
+            },
+            "hash": "018cc61ee15a"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/598c0df92558"
+                }
+            },
+            "hash": "598c0df92558"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/comments/21089"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291/_/diff#comment-21089"
+                }
+            },
+            "pullrequest": {
+                "title": "Vector coordinate transformations",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291"
+                    }
+                },
+                "id": 291
+            },
+            "content": {
+                "raw": "I've 2 remarks:\n\n * could you change 1e-5 to km_per_cm from physical_constants?\n * _cyl_RadialVelocity, _cyl_TangentialVelocity, _RadialVelocity could be refactored to avoid code duplication, same with _B... and get_sph_... functions",
+                "html": "<p>I've 2 remarks:</p>\n<ul><li>could you change 1e-5 to km_per_cm from physical_constants?\n</li><li>_cyl_RadialVelocity, _cyl_TangentialVelocity, _RadialVelocity could be refactored to avoid code duplication, same with _B... and get_sph_... functions</li></ul>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-10-06T11:52:40.676472+00:00",
+            "updated_on": "2012-10-06T11:52:40.847964+00:00",
+            "id": 21089
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/comments/21285"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291/_/diff#comment-21285"
+                }
+            },
+            "pullrequest": {
+                "title": "Vector coordinate transformations",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291"
+                    }
+                },
+                "id": 291
+            },
+            "content": {
+                "raw": "Hi Nathan,\n\nThe code all looks great to me.  My only thought is that these routines are *ideal* for unit testing.  I think that there should at least be a few trivial tests, if not more extensive ones, placed inside {{{yt/utilities/lib/tests}}} and {{{yt/utilities/tests}}} to test some conversions and some simple rvec stuff.  What do you think?",
+                "html": "<p>Hi Nathan,</p>\n<p>The code all looks great to me.  My only thought is that these routines are *ideal* for unit testing.  I think that there should at least be a few trivial tests, if not more extensive ones, placed inside <code>yt/utilities/lib/tests</code> and <code>yt/utilities/tests</code> to test some conversions and some simple rvec stuff.  What do you think?</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-10-08T21:07:23.701205+00:00",
+            "updated_on": "2012-10-08T21:07:23.709494+00:00",
+            "id": 21285
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/comments/21611"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291/_/diff#comment-21611"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/comments/21285"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291/_/diff#comment-21285"
+                    }
+                },
+                "id": 21285
+            },
+            "pullrequest": {
+                "title": "Vector coordinate transformations",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291"
+                    }
+                },
+                "id": 291
+            },
+            "content": {
+                "raw": "I agree that it would be good to write tests for this.  Unfortunately I don't have the time right now to learn the new testing system and write the tests.  I'll try to do it this weekend but it might be a while before I can come back to this.",
+                "html": "<p>I agree that it would be good to write tests for this.  Unfortunately I don't have the time right now to learn the new testing system and write the tests.  I'll try to do it this weekend but it might be a while before I can come back to this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-10-09T19:11:07.805817+00:00",
+            "updated_on": "2012-10-09T19:11:07.814396+00:00",
+            "id": 21611
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291/comments/21642"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291/_/diff#comment-21642"
+                }
+            },
+            "pullrequest": {
+                "title": "Vector coordinate transformations",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/291"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/291"
+                    }
+                },
+                "id": 291
+            },
+            "content": {
+                "raw": "Nathan -- I don't want to suggest making a lot of new work for you, since I am pleased to see these contributions.  Since the testing stuff is new, I would be happy to either contribute tests or write them all.  But, I'd like to do so from a given spec (even though I have some ideas :) so perhaps we can walk through this and figure out what should be tested and then divide that up.",
+                "html": "<p>Nathan -- I don't want to suggest making a lot of new work for you, since I am pleased to see these contributions.  Since the testing stuff is new, I would be happy to either contribute tests or write them all.  But, I'd like to do so from a given spec (even though I have some ideas :) so perhaps we can walk through this and figure out what should be tested and then divide that up.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-10-09T20:01:50.116731+00:00",
+            "updated_on": "2012-10-09T20:01:50.122248+00:00",
+            "id": 21642
+        }
+    ]
+}

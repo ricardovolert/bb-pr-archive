@@ -1,0 +1,1401 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-04-14T19:08:16.615270+00:00",
+    "comment_count": 22,
+    "description": "This PR includes two improvements to the units system:\r\n\r\n1. I've added MKS conversions.  For now users have to explicitly ask for data in MKS units.  Perhaps in the future we can use this to return data in MKS units.\r\n\r\n2. Removed code units from the default unit symbol lookup table.\r\n\r\nThe main justification for eliminating code units from the default unit symbol table is that using them will almost never do what the user expects.  Since we need to know something about the dataset to reference a code unit system, creating a code unit *without* referencing a dataset creates a `YTArray` or `YTQuantity` that will spew out subtly incorrect results, unless the simulations used CGS units internally.\r\n\r\nNow, when we see a user trying to access a code unit without referencing a unit registry (e.g. through `ds.arr` or `ds.quan`) we throw an error pointing them in the correct direction (see line 245 of `yt_array.py`).\r\n\r\nThe bulk of the changes in this PR replace usages of `YTArray` with `ds.arr` and `YTQuantity` with `ds.quan` in situations where code units might be used.  There are a couple more minor changes - for example the `unitary` unit symbol is now *added* to the `unit_registry` in the `Dataset` initializer.\r\n\r\nSince we do not have answer tests and I have not verified that all frontends work it might be best to wait to pull this in until @MatthewTurk finishes his push on the tests.",
+    "created_on": "2014-04-10T06:03:29.682131+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/eaf23ee4fc06"
+            }
+        },
+        "hash": "eaf23ee4fc06"
+    },
+    "title": "Units updates: code units and MKS conversions",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 807,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/242ec87c903d"
+                }
+            },
+            "hash": "242ec87c903d"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/47cca121fc80"
+                }
+            },
+            "hash": "47cca121fc80"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1625840"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1625840"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "I also need to document the MKS conversions.  Please reply to this comment if you have comments or suggestions about the API I'm using for MKS conversions.",
+                "html": "<p>I also need to document the MKS conversions.  Please reply to this comment if you have comments or suggestions about the API I'm using for MKS conversions.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-10T06:04:19.110367+00:00",
+            "updated_on": "2014-04-10T06:04:19.119231+00:00",
+            "id": 1625840
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1625989"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1625989"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/428/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/428/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/428/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-10T06:31:55.495095+00:00",
+            "updated_on": "2014-04-10T06:31:55.635057+00:00",
+            "id": 1625989
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1626188"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1626188"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/429/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/429/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/429/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-10T07:01:54.044323+00:00",
+            "updated_on": "2014-04-10T07:01:54.188413+00:00",
+            "id": 1626188
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1626902"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1626902"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/430/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/430/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/430/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-10T08:31:45.042578+00:00",
+            "updated_on": "2014-04-10T08:31:45.204638+00:00",
+            "id": 1626902
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1634402"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1634402"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1626902"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1626902"
+                    }
+                },
+                "id": 1626902
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Unfortunately I'm unable to replicate this locally since I don't have SZpack.  Anyone have any idea why this is coming up here?",
+                "html": "<p>Unfortunately I'm unable to replicate this locally since I don't have SZpack.  Anyone have any idea why this is coming up here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-10T21:07:58.811680+00:00",
+            "updated_on": "2014-04-10T21:07:58.822385+00:00",
+            "id": 1634402
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1638426"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1638426"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1634402"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1634402"
+                    }
+                },
+                "id": 1634402
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "This is reduced test case w/o SZPack:\n\n\n```\n#!python\n\nimport numpy as np\nfrom yt.frontends.stream.api import load_uniform_grid\nfrom yt.utilities.physical_constants import cm_per_km, cm_per_kpc\n\nR = 1000.\nr_c = 100.\nrho_c = 1.673e-26\nnx, ny, nz = 16, 16, 16\nv0 = 300.*cm_per_km\nddims = (nx,ny,nz)\n\nx, y, z = np.mgrid[-R:R:nx*1j,\n                   -R:R:ny*1j,\n                   -R:R:nz*1j]\nr = np.sqrt(x ** 2 + y ** 2 + z ** 2)\n\ndens = rho_c*(1.0 + (r / r_c) ** 2) ** (-1.5)\ndata = {\"density\": (dens, \"g/cm**3\")}\n\nbbox = np.array([[-0.5, 0.5], [-0.5, 0.5], [-0.5, 0.5]])\nL = 2 * R * cm_per_kpc\n\npf = load_uniform_grid(data, ddims, length_unit=L, bbox=bbox)\n\nproj = pf.h.proj(\"density\", 2)\nfrb = proj.to_frb((1, 'unitary'), 16)\nprint 'my_frb', frb['density'][0]\n\n```\n\nit produces different results starting from revision [1aea5ba](https://bitbucket.org/ngoldbaum/yt/commits/1aea5ba8236cb53fb986466af25ecb61bddb8021). ",
+                "html": "<p>This is reduced test case w/o SZPack:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"kn\">import</span> <span class=\"nn\">numpy</span> <span class=\"kn\">as</span> <span class=\"nn\">np</span>\n<span class=\"kn\">from</span> <span class=\"nn\">yt.frontends.stream.api</span> <span class=\"kn\">import</span> <span class=\"n\">load_uniform_grid</span>\n<span class=\"kn\">from</span> <span class=\"nn\">yt.utilities.physical_constants</span> <span class=\"kn\">import</span> <span class=\"n\">cm_per_km</span><span class=\"p\">,</span> <span class=\"n\">cm_per_kpc</span>\n\n<span class=\"n\">R</span> <span class=\"o\">=</span> <span class=\"mf\">1000.</span>\n<span class=\"n\">r_c</span> <span class=\"o\">=</span> <span class=\"mf\">100.</span>\n<span class=\"n\">rho_c</span> <span class=\"o\">=</span> <span class=\"mf\">1.673e-26</span>\n<span class=\"n\">nx</span><span class=\"p\">,</span> <span class=\"n\">ny</span><span class=\"p\">,</span> <span class=\"n\">nz</span> <span class=\"o\">=</span> <span class=\"mi\">16</span><span class=\"p\">,</span> <span class=\"mi\">16</span><span class=\"p\">,</span> <span class=\"mi\">16</span>\n<span class=\"n\">v0</span> <span class=\"o\">=</span> <span class=\"mf\">300.</span><span class=\"o\">*</span><span class=\"n\">cm_per_km</span>\n<span class=\"n\">ddims</span> <span class=\"o\">=</span> <span class=\"p\">(</span><span class=\"n\">nx</span><span class=\"p\">,</span><span class=\"n\">ny</span><span class=\"p\">,</span><span class=\"n\">nz</span><span class=\"p\">)</span>\n\n<span class=\"n\">x</span><span class=\"p\">,</span> <span class=\"n\">y</span><span class=\"p\">,</span> <span class=\"n\">z</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">mgrid</span><span class=\"p\">[</span><span class=\"o\">-</span><span class=\"n\">R</span><span class=\"p\">:</span><span class=\"n\">R</span><span class=\"p\">:</span><span class=\"n\">nx</span><span class=\"o\">*</span><span class=\"mi\">1j</span><span class=\"p\">,</span>\n                   <span class=\"o\">-</span><span class=\"n\">R</span><span class=\"p\">:</span><span class=\"n\">R</span><span class=\"p\">:</span><span class=\"n\">ny</span><span class=\"o\">*</span><span class=\"mi\">1j</span><span class=\"p\">,</span>\n                   <span class=\"o\">-</span><span class=\"n\">R</span><span class=\"p\">:</span><span class=\"n\">R</span><span class=\"p\">:</span><span class=\"n\">nz</span><span class=\"o\">*</span><span class=\"mi\">1j</span><span class=\"p\">]</span>\n<span class=\"n\">r</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">sqrt</span><span class=\"p\">(</span><span class=\"n\">x</span> <span class=\"o\">**</span> <span class=\"mi\">2</span> <span class=\"o\">+</span> <span class=\"n\">y</span> <span class=\"o\">**</span> <span class=\"mi\">2</span> <span class=\"o\">+</span> <span class=\"n\">z</span> <span class=\"o\">**</span> <span class=\"mi\">2</span><span class=\"p\">)</span>\n\n<span class=\"n\">dens</span> <span class=\"o\">=</span> <span class=\"n\">rho_c</span><span class=\"o\">*</span><span class=\"p\">(</span><span class=\"mf\">1.0</span> <span class=\"o\">+</span> <span class=\"p\">(</span><span class=\"n\">r</span> <span class=\"o\">/</span> <span class=\"n\">r_c</span><span class=\"p\">)</span> <span class=\"o\">**</span> <span class=\"mi\">2</span><span class=\"p\">)</span> <span class=\"o\">**</span> <span class=\"p\">(</span><span class=\"o\">-</span><span class=\"mf\">1.5</span><span class=\"p\">)</span>\n<span class=\"n\">data</span> <span class=\"o\">=</span> <span class=\"p\">{</span><span class=\"s2\">&quot;density&quot;</span><span class=\"p\">:</span> <span class=\"p\">(</span><span class=\"n\">dens</span><span class=\"p\">,</span> <span class=\"s2\">&quot;g/cm**3&quot;</span><span class=\"p\">)}</span>\n\n<span class=\"n\">bbox</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">array</span><span class=\"p\">([[</span><span class=\"o\">-</span><span class=\"mf\">0.5</span><span class=\"p\">,</span> <span class=\"mf\">0.5</span><span class=\"p\">],</span> <span class=\"p\">[</span><span class=\"o\">-</span><span class=\"mf\">0.5</span><span class=\"p\">,</span> <span class=\"mf\">0.5</span><span class=\"p\">],</span> <span class=\"p\">[</span><span class=\"o\">-</span><span class=\"mf\">0.5</span><span class=\"p\">,</span> <span class=\"mf\">0.5</span><span class=\"p\">]])</span>\n<span class=\"n\">L</span> <span class=\"o\">=</span> <span class=\"mi\">2</span> <span class=\"o\">*</span> <span class=\"n\">R</span> <span class=\"o\">*</span> <span class=\"n\">cm_per_kpc</span>\n\n<span class=\"n\">pf</span> <span class=\"o\">=</span> <span class=\"n\">load_uniform_grid</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">,</span> <span class=\"n\">ddims</span><span class=\"p\">,</span> <span class=\"n\">length_unit</span><span class=\"o\">=</span><span class=\"n\">L</span><span class=\"p\">,</span> <span class=\"n\">bbox</span><span class=\"o\">=</span><span class=\"n\">bbox</span><span class=\"p\">)</span>\n\n<span class=\"n\">proj</span> <span class=\"o\">=</span> <span class=\"n\">pf</span><span class=\"o\">.</span><span class=\"n\">h</span><span class=\"o\">.</span><span class=\"n\">proj</span><span class=\"p\">(</span><span class=\"s2\">&quot;density&quot;</span><span class=\"p\">,</span> <span class=\"mi\">2</span><span class=\"p\">)</span>\n<span class=\"n\">frb</span> <span class=\"o\">=</span> <span class=\"n\">proj</span><span class=\"o\">.</span><span class=\"n\">to_frb</span><span class=\"p\">((</span><span class=\"mi\">1</span><span class=\"p\">,</span> <span class=\"s1\">&#39;unitary&#39;</span><span class=\"p\">),</span> <span class=\"mi\">16</span><span class=\"p\">)</span>\n<span class=\"k\">print</span> <span class=\"s1\">&#39;my_frb&#39;</span><span class=\"p\">,</span> <span class=\"n\">frb</span><span class=\"p\">[</span><span class=\"s1\">&#39;density&#39;</span><span class=\"p\">][</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n</pre></div>\n\n\n<p>it produces different results starting from revision <a href=\"https://bitbucket.org/ngoldbaum/yt/commits/1aea5ba8236cb53fb986466af25ecb61bddb8021\">1aea5ba</a>. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-11T10:26:18.663566+00:00",
+            "updated_on": "2014-04-11T10:26:32.500984+00:00",
+            "id": 1638426
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1639191"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1639191"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1638426"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1638426"
+                    }
+                },
+                "id": 1638426
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "`L` passed as `length_unit` doesn't make sense anymore. Following diff should fix tests:\n\n```\n#!diff\n\ndiff -r 1aea5ba8236c yt/analysis_modules/sunyaev_zeldovich/tests/test_projection.py\n--- a/yt/analysis_modules/sunyaev_zeldovich/tests/test_projection.py\tWed Apr 09 22:41:27 2014 -0700\n+++ b/yt/analysis_modules/sunyaev_zeldovich/tests/test_projection.py\tFri Apr 11 13:59:01 2014 +0200\n@@ -86,12 +86,12 @@\n     data[\"velocity_y\"] = (np.zeros(ddims), \"cm/s\")\n     data[\"velocity_z\"] = (velz, \"cm/s\")\n \n-    bbox = np.array([[-0.5,0.5],[-0.5,0.5],[-0.5,0.5]])\n+    L = 2 * R * cm_per_kpc\n+    bbox = np.array([[-0.5,0.5],[-0.5,0.5],[-0.5,0.5]]) * L\n \n-    L = 2*R*cm_per_kpc\n     dl = L/nz\n \n-    pf = load_uniform_grid(data, ddims, length_unit=L, bbox=bbox)\n+    pf = load_uniform_grid(data, ddims, length_unit='cm', bbox=bbox)\n     pf.h\n \n     return pf\n```\n",
+                "html": "<p><code>L</code> passed as <code>length_unit</code> doesn't make sense anymore. Following diff should fix tests:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"gh\">diff -r 1aea5ba8236c yt/analysis_modules/sunyaev_zeldovich/tests/test_projection.py</span>\n<span class=\"gd\">--- a/yt/analysis_modules/sunyaev_zeldovich/tests/test_projection.py    Wed Apr 09 22:41:27 2014 -0700</span>\n<span class=\"gi\">+++ b/yt/analysis_modules/sunyaev_zeldovich/tests/test_projection.py    Fri Apr 11 13:59:01 2014 +0200</span>\n<span class=\"gu\">@@ -86,12 +86,12 @@</span>\n     data[&quot;velocity_y&quot;] = (np.zeros(ddims), &quot;cm/s&quot;)\n     data[&quot;velocity_z&quot;] = (velz, &quot;cm/s&quot;)\n\n<span class=\"gd\">-    bbox = np.array([[-0.5,0.5],[-0.5,0.5],[-0.5,0.5]])</span>\n<span class=\"gi\">+    L = 2 * R * cm_per_kpc</span>\n<span class=\"gi\">+    bbox = np.array([[-0.5,0.5],[-0.5,0.5],[-0.5,0.5]]) * L</span>\n\n<span class=\"gd\">-    L = 2*R*cm_per_kpc</span>\n     dl = L/nz\n\n<span class=\"gd\">-    pf = load_uniform_grid(data, ddims, length_unit=L, bbox=bbox)</span>\n<span class=\"gi\">+    pf = load_uniform_grid(data, ddims, length_unit=&#39;cm&#39;, bbox=bbox)</span>\n     pf.h\n\n     return pf\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-11T11:59:27.878828+00:00",
+            "updated_on": "2014-04-11T11:59:27.886399+00:00",
+            "id": 1639191
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1642344"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1642344"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1639191"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1639191"
+                    }
+                },
+                "id": 1639191
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Thanks for looking over this @xarthisius, I really appreciate you spending some time on this.  I will update with your proposed fix along with docs updates over the weekend.",
+                "html": "<p>Thanks for looking over this <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a>, I really appreciate you spending some time on this.  I will update with your proposed fix along with docs updates over the weekend.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-11T17:29:26.669446+00:00",
+            "updated_on": "2014-04-11T17:29:26.681596+00:00",
+            "id": 1642344
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1643583"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1643583"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "It looks like this PR fixes an issue with comoving units not being available for cosmological FLASH datasets.  Yay!",
+                "html": "<p>It looks like this PR fixes an issue with comoving units not being available for cosmological FLASH datasets.  Yay!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-11T20:29:28.720385+00:00",
+            "updated_on": "2014-04-11T20:29:28.731049+00:00",
+            "id": 1643583
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1647255"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1647255"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Assuming the tests pass, I think this should be good to go now.  Would appreciate it if someone looked it over as well.",
+                "html": "<p>Assuming the tests pass, I think this should be good to go now.  Would appreciate it if someone looked it over as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T00:25:43.051984+00:00",
+            "updated_on": "2014-04-14T00:25:43.058947+00:00",
+            "id": 1647255
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1647315"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1647315"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T01:01:39.821767+00:00",
+            "updated_on": "2014-04-14T01:01:39.955105+00:00",
+            "id": 1647315
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1651486"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1651486"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "I like this, but can we wait a day or two until I manage to finish the answer tests to the point of running?  I'm just a little leery.",
+                "html": "<p>I like this, but can we wait a day or two until I manage to finish the answer tests to the point of running?  I'm just a little leery.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T13:27:31.862419+00:00",
+            "updated_on": "2014-04-14T13:27:31.876801+00:00",
+            "id": 1651486
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655052"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:242ec87c903d..47cca121fc80?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655052"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "For my own understanding, is this functionally equivalent, or does this do something important with how the registry is set up?",
+                "html": "<p>For my own understanding, is this functionally equivalent, or does this do something important with how the registry is set up?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:26:55.629439+00:00",
+            "updated_on": "2014-04-14T18:26:55.642470+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": 588
+            },
+            "id": 1655052
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655074"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:242ec87c903d..47cca121fc80?path=yt%2Ffrontends%2Fflash%2Ffields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655074"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Where is `Na` defined?  I can't find it.",
+                "html": "<p>Where is <code>Na</code> defined?  I can't find it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:28:31.941703+00:00",
+            "updated_on": "2014-04-14T18:28:31.951870+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/flash/fields.py",
+                "to": 146
+            },
+            "id": 1655074
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655091"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:242ec87c903d..47cca121fc80?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655091"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "What are your thoughts on instead having a dict of dicts?  Top-level gets would be `cgs` and `mks`?  Then users could extend these.",
+                "html": "<p>What are your thoughts on instead having a dict of dicts?  Top-level gets would be <code>cgs</code> and <code>mks</code>?  Then users could extend these.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:29:39.648878+00:00",
+            "updated_on": "2014-04-14T18:29:39.665627+00:00",
+            "inline": {
+                "from": 174,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": null
+            },
+            "id": 1655091
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655103"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655103"
+                }
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Minor comments, mostly not needing changes, and I'm +1.",
+                "html": "<p>Minor comments, mostly not needing changes, and I'm +1.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:30:21.010890+00:00",
+            "updated_on": "2014-04-14T18:30:21.018014+00:00",
+            "id": 1655103
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655258"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655258"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655052"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655052"
+                    }
+                },
+                "id": 1655052
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Functionally equivalent yes - the old implementation was buggy however.  Creating a `YTQuantity` without supplying a `UnitRegistry` instance via the `registry` keyword argument will use the *default* unit registry, which does not include code units or comoving units.  The `quan` and `arr` aliases were added by you to ensure the dataset's unit registry is attached to the newly created array or quantity.  They're just syntax sugar.  This:\n\n```\na = YTQuantity(3, 'cm', registry=ds.unit_registry)\n```\n\nis equivalent to this:\n\n```\na = ds.quan(3, 'cm')\n```\n\nSince the old code didn't specify a unit registry, this makes it impossible to convert these quantities to code units.  My patch properly attaches the correct unit registry to these quantities.",
+                "html": "<p>Functionally equivalent yes - the old implementation was buggy however.  Creating a <code>YTQuantity</code> without supplying a <code>UnitRegistry</code> instance via the <code>registry</code> keyword argument will use the <em>default</em> unit registry, which does not include code units or comoving units.  The <code>quan</code> and <code>arr</code> aliases were added by you to ensure the dataset's unit registry is attached to the newly created array or quantity.  They're just syntax sugar.  This:</p>\n<div class=\"codehilite\"><pre><span></span>a = YTQuantity(3, &#39;cm&#39;, registry=ds.unit_registry)\n</pre></div>\n\n\n<p>is equivalent to this:</p>\n<div class=\"codehilite\"><pre><span></span>a = ds.quan(3, &#39;cm&#39;)\n</pre></div>\n\n\n<p>Since the old code didn't specify a unit registry, this makes it impossible to convert these quantities to code units.  My patch properly attaches the correct unit registry to these quantities.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:46:59.285262+00:00",
+            "updated_on": "2014-04-14T18:46:59.295846+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 1655258
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655268"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655268"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655258"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655258"
+                    }
+                },
+                "id": 1655258
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Makes sense!  Thanks.",
+                "html": "<p>Makes sense!  Thanks.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:48:04.586987+00:00",
+            "updated_on": "2014-04-14T18:48:04.595124+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 1655268
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655299"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Ffrontends%2Fflash%2Ffields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655299"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655074"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655074"
+                    }
+                },
+                "id": 1655074
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "It's defined in `yt.utilities.physical_constants`:\n\n\n```\n#!python\n\nNa = 1 / amu_cgs\n```\n\nwhere\n\n\n```\n#!python\n\namu_grams         = 1.660538921e-24\namu_cgs           = YTQuantity(amu_grams, 'g')\n```\n\n",
+                "html": "<p>It's defined in <code>yt.utilities.physical_constants</code>:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">Na</span> <span class=\"o\">=</span> <span class=\"mi\">1</span> <span class=\"o\">/</span> <span class=\"n\">amu_cgs</span>\n</pre></div>\n\n\n<p>where</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">amu_grams</span>         <span class=\"o\">=</span> <span class=\"mf\">1.660538921e-24</span>\n<span class=\"n\">amu_cgs</span>           <span class=\"o\">=</span> <span class=\"n\">YTQuantity</span><span class=\"p\">(</span><span class=\"n\">amu_grams</span><span class=\"p\">,</span> <span class=\"s1\">&#39;g&#39;</span><span class=\"p\">)</span>\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:50:10.192024+00:00",
+            "updated_on": "2014-04-14T18:50:10.204724+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/flash/fields.py",
+                "to": null
+            },
+            "id": 1655299
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655315"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655315"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655091"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655091"
+                    }
+                },
+                "id": 1655091
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "That's fine, although that wouldn't be very useful until we added hooks for user-supplied unit systems.  Do you mind if we hold off on changing this until we think more about user-defined unit systems?",
+                "html": "<p>That's fine, although that wouldn't be very useful until we added hooks for user-supplied unit systems.  Do you mind if we hold off on changing this until we think more about user-defined unit systems?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:51:18.836970+00:00",
+            "updated_on": "2014-04-14T18:51:18.853605+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": null
+            },
+            "id": 1655315
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/aaron_smith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/aaron_smith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/aaron_smith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Aaron Smith",
+                "uuid": "{59c932f7-85c2-414a-b557-8abafdafc415}",
+                "username": "aaron_smith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655346"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655346"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1643583"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1643583"
+                    }
+                },
+                "id": 1643583
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "Yes, it does! +1",
+                "html": "<p>Yes, it does! +1</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:54:08.730149+00:00",
+            "updated_on": "2014-04-14T18:54:08.872437+00:00",
+            "id": 1655346
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655359"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/diff/ngoldbaum/yt:None..None?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655359"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807/comments/1655315"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807/_/diff#comment-1655315"
+                    }
+                },
+                "id": 1655315
+            },
+            "pullrequest": {
+                "title": "Units updates: code units and MKS conversions",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/807"
+                    }
+                },
+                "id": 807
+            },
+            "content": {
+                "raw": "I don't mind at all.",
+                "html": "<p>I don't mind at all.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T18:55:14.116663+00:00",
+            "updated_on": "2014-04-14T18:55:14.134952+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": null
+            },
+            "id": 1655359
+        }
+    ]
+}

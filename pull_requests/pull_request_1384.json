@@ -1,0 +1,1023 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-04-03T14:13:29.682206+00:00",
+    "comment_count": 18,
+    "description": "(Commit e88d27c has more details)\r\n\r\nThis implements a new scheme for potentially fast indexing of patch-based AMR data.  It is not yet faster, and it is currently disabled.  However, it moves a considerable amount of computation into Cython, removes almost all of the caching of child masks and selector masks from grid patch objects (for what should be an extremely large memory savings on big patch datasets) and should when implemented result in a much bigger performance boost for things like projections, ghost zones, and the like.\r\n\r\nThere are several caveats:\r\n\r\n * It is currently disabled\r\n * It uses the existing grid patch object API as a fallback\r\n * It will not (yet) work with datasets where a child patch has non-unique parentage; this should be a simple fix but it is not yet implemented.\r\n * refinement factor is exclusively 2, but can be changed.\r\n * As noted above, it is not yet faster.  For the small dataset I have been testing with, it's roughly the same speed as the old method, but importantly it does *not* rely on any caching of selection or child masking.  Both of these could be huge speedups, but as-is the memory win is pleasing.  (i.e., no more uint8_t masks of selection and children for every grid in a selector object.)\r\n\r\nMore on this as time permits.  I am optimistic that this will eventually replace the existing methods for selecting data in patch based AMR for non-\"grid\" data selection.\r\n\r\n * UPDATE 1: This is ready for review.  As it stands, behavior is *unchanged*.  But it lays the groundwork for future fast indexing systems, so I would like to get it landed as a staging ground before building it further and enabling it.",
+    "created_on": "2015-01-02T02:05:01.487159+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/6aa1f1d5c32f"
+            }
+        },
+        "hash": "6aa1f1d5c32f"
+    },
+    "title": "Grid visitors in Cython",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "id": 1384,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/191f8d6601bb"
+                }
+            },
+            "hash": "191f8d6601bb"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d932cca5a478"
+                }
+            },
+            "hash": "d932cca5a478"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/4480078"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-4480078"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1809/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1809/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1809/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-02T03:28:26.821177+00:00",
+            "updated_on": "2015-01-02T03:28:27.077971+00:00",
+            "id": 4480078
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/4487415"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-4487415"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-03T16:56:25.135889+00:00",
+            "updated_on": "2015-01-03T16:56:25.293216+00:00",
+            "id": 4487415
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/4487676"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-4487676"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-03T20:35:02.649148+00:00",
+            "updated_on": "2015-01-03T20:35:02.903344+00:00",
+            "id": 4487676
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5916023"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5916023"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite/160/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite/160/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite/160/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-26T23:48:44.995417+00:00",
+            "updated_on": "2015-03-26T23:48:45.039913+00:00",
+            "id": 5916023
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5938476"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5938476"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "@xarthisius can you hit the button again on this?",
+                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> can you hit the button again on this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-27T21:12:40.736523+00:00",
+            "updated_on": "2015-03-27T21:12:40.749060+00:00",
+            "id": 5938476
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5940158"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5940158"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-27T23:44:44.759461+00:00",
+            "updated_on": "2015-03-27T23:44:44.797314+00:00",
+            "id": 5940158
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5989598"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5989598"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "As someone who has never touched this part of the code, I really don't know what is going on here.  Would it be possible to include some comments and docstrings on major functions, or even a basic description of what is going on, so that I (we) can best review the code?  Other than that, I'd just be looking for small coding mistakes.",
+                "html": "<p>As someone who has never touched this part of the code, I really don't know what is going on here.  Would it be possible to include some comments and docstrings on major functions, or even a basic description of what is going on, so that I (we) can best review the code?  Other than that, I'd just be looking for small coding mistakes.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T15:33:05.934189+00:00",
+            "updated_on": "2015-03-31T15:33:05.943667+00:00",
+            "id": 5989598
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997141"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:06b7702fdd7b..0dca6f095d12?path=yt%2Fgeometry%2Fgrid_geometry_handler.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997141"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Should these commented out lines still be here?",
+                "html": "<p>Should these commented out lines still be here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T20:41:23.780028+00:00",
+            "updated_on": "2015-03-31T20:41:23.788461+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/grid_geometry_handler.py",
+                "to": 298
+            },
+            "id": 5997141
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997158"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Fgeometry%2Fgrid_geometry_handler.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997158"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997141"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997141"
+                    }
+                },
+                "id": 5997141
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Yeah -- when it gets turned on, this is what will be uncommented.",
+                "html": "<p>Yeah -- when it gets turned on, this is what will be uncommented.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T20:42:00.505148+00:00",
+            "updated_on": "2015-03-31T20:42:00.511213+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/grid_geometry_handler.py",
+                "to": null
+            },
+            "id": 5997158
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997175"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Fgeometry%2Fgrid_geometry_handler.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997175"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997158"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997158"
+                    }
+                },
+                "id": 5997158
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Ok, perhaps a comment to anyone who might come across this before then would be useful.",
+                "html": "<p>Ok, perhaps a comment to anyone who might come across this before then would be useful.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T20:42:41.950415+00:00",
+            "updated_on": "2015-03-31T20:42:41.957334+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/grid_geometry_handler.py",
+                "to": null
+            },
+            "id": 5997175
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997603"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997603"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5989598"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5989598"
+                    }
+                },
+                "id": 5989598
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "I have to agree that the Cython code in particular could use some comments or docstrings on the functions to explain what's happening.\n\nOn a separate note, I see that there are unit tests added, but are there also answer tests in place that will fail if this has changed getting field data from containers?",
+                "html": "<p>I have to agree that the Cython code in particular could use some comments or docstrings on the functions to explain what's happening.</p>\n<p>On a separate note, I see that there are unit tests added, but are there also answer tests in place that will fail if this has changed getting field data from containers?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T21:02:24.599697+00:00",
+            "updated_on": "2015-03-31T21:02:24.605429+00:00",
+            "id": 5997603
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997632"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997632"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997603"
+                    }
+                },
+                "id": 5997603
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Yup, answer tests should fail if the data changes -- but it's still turned off.  I'll add comments to the Cython code, but I am not yet sure about adding docstrings since most/all of them are private methods.\n\nOne note is that the `grid_tree` stuff is all from @jzuhone , with minor cleanups.",
+                "html": "<p>Yup, answer tests should fail if the data changes -- but it's still turned off.  I'll add comments to the Cython code, but I am not yet sure about adding docstrings since most/all of them are private methods.</p>\n<p>One note is that the <code>grid_tree</code> stuff is all from <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> , with minor cleanups.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T21:04:27.421519+00:00",
+            "updated_on": "2015-03-31T21:04:27.434676+00:00",
+            "id": 5997632
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997776"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997776"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997632"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997632"
+                    }
+                },
+                "id": 5997632
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Even a minimal docstring can still be really helpful.  If only for the sanity of other developers / PR reviewers.",
+                "html": "<p>Even a minimal docstring can still be really helpful.  If only for the sanity of other developers / PR reviewers.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T21:11:30.446785+00:00",
+            "updated_on": "2015-03-31T21:11:30.454369+00:00",
+            "id": 5997776
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997823"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997823"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/5997632"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-5997632"
+                    }
+                },
+                "id": 5997632
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "It looks like @MatthewTurk has moved `grid_tree`, but so long as all of the tests pass (including the particle generator ones), then that portion should be ok. ",
+                "html": "<p>It looks like <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> has moved <code>grid_tree</code>, but so long as all of the tests pass (including the particle generator ones), then that portion should be ok. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-31T21:12:58.023924+00:00",
+            "updated_on": "2015-03-31T21:12:58.033186+00:00",
+            "id": 5997823
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/6001482"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-6001482"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "Okay, all new additions now have comments and/or docstrings!",
+                "html": "<p>Okay, all new additions now have comments and/or docstrings!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-01T02:06:07.472493+00:00",
+            "updated_on": "2015-04-01T02:06:07.479600+00:00",
+            "id": 6001482
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384/comments/6001998"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384/_/diff#comment-6001998"
+                }
+            },
+            "pullrequest": {
+                "title": "Grid visitors in Cython",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1384"
+                    }
+                },
+                "id": 1384
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-01T03:04:18.922740+00:00",
+            "updated_on": "2015-04-01T03:04:18.968127+00:00",
+            "id": 6001998
+        }
+    ]
+}

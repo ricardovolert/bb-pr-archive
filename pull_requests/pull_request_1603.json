@@ -1,0 +1,1153 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-06-18T13:17:36.360631+00:00",
+    "comment_count": 19,
+    "description": "A while back, I put in capabilities for writing 2D or 3D NumPy arrays from FRBs, CoveringGrids, or whatever to FITS images, with additional coordinate information. This PR represents a refactor of that functionality, with some new capabilities. \r\n\r\n1. I renamed the `FITSImageBuffer` class to `FITSImageData`, since it is a bit more accurate of a name. An alias to the old name has been added. \r\n2. Added class methods for creating `FITSImageData` instances from FITS files previously written to disk, and combining a number of `FITSImageData` instances into one. \r\n3. `create_sky_wcs` is now a method of `FITSImageData`, which allows one to quickly take a FITS image with linear coordinates, and convert it to one with a celestial coordinate system, given an angular scale and center coordinates. Other options for tweaking the coordinates are also available.\r\n4. Remove a field from the `FITSImageData` instance with `pop`.  \r\n5. I added testing support for `FITSImageData` as well. \r\n6. Other various helper methods have been added. \r\n7. Writing directly to FITS images from off axis slices and projections has been added. \r\n\r\nIn addition, I did the following:\r\n\r\n* The documentation has been updated to reflect the new changes, and explains essentially all of the new functionality. To get a sense of what this code is doing, I recommend looking at the FITSImageData.ipynb notebook, which you can find a completed version of here: https://gist.github.com/70d3dd03221bb7106d13\r\n* I also updated whatever parts of the code that were using `FITSImageBuffer`, including volume rendering, FRB generation, `PPVCube`, and `sunyaev_zeldovich`. \r\n* I fixed a double return statement in off axis projections that probably wasn't hurting anyone, but shouldn't have been there. \r\n\r\nUPDATE: After some reflection on @ngoldbaum's comment, I reverted a couple of the API changes that weren't strictly necessary (decided I didn't even really want them), and created an alias to `FITSImageBuffer`.",
+    "created_on": "2015-05-29T02:59:53.005300+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e4bc6b4f239b"
+            }
+        },
+        "hash": "e4bc6b4f239b"
+    },
+    "title": "FITS image writing refactor",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 1603,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt/commit/2ab401515cc1"
+                }
+            },
+            "hash": "2ab401515cc1"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{aa71d2fb-24c5-4e74-8701-f32955348acf}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/73ca90e95399"
+                }
+            },
+            "hash": "73ca90e95399"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7171893"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7171893"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "What do you think about defining `FITSImageBuffer` as an alias for `FITSImageData` in `yt.utilities.fits_image`?  What about other API changes?  If they're substantial enough, should we leave behind the whole FITSImageBuffer class, mark it as deprecated, and remove it in yt 4.0?\n\nI'm not sure how big the userbase for this feature is but I hate to break APIs for things that aren't explicitly marked as experimental.",
+                "html": "<p>What do you think about defining <code>FITSImageBuffer</code> as an alias for <code>FITSImageData</code> in <code>yt.utilities.fits_image</code>?  What about other API changes?  If they're substantial enough, should we leave behind the whole FITSImageBuffer class, mark it as deprecated, and remove it in yt 4.0?</p>\n<p>I'm not sure how big the userbase for this feature is but I hate to break APIs for things that aren't explicitly marked as experimental.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T03:07:35.549865+00:00",
+            "updated_on": "2015-05-29T03:07:47.281530+00:00",
+            "id": 7171893
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7172167"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7172167"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/100/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/100/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/100/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T03:38:02.770058+00:00",
+            "updated_on": "2015-05-29T03:38:02.934144+00:00",
+            "id": 7172167
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7173498"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7173498"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/101/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/101/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/101/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T06:11:58.058682+00:00",
+            "updated_on": "2015-05-29T06:11:58.208780+00:00",
+            "id": 7173498
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7174061"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7174061"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/102/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/102/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/102/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T06:52:39.982184+00:00",
+            "updated_on": "2015-05-29T06:52:40.163822+00:00",
+            "id": 7174061
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7183798"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7183798"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T13:55:39.438203+00:00",
+            "updated_on": "2015-05-29T13:55:39.488721+00:00",
+            "id": 7183798
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7195248"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7195248"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T22:39:40.990951+00:00",
+            "updated_on": "2015-05-29T22:39:41.053190+00:00",
+            "id": 7195248
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7230040"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7230040"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-02T01:21:48.852348+00:00",
+            "updated_on": "2015-06-02T01:21:48.914009+00:00",
+            "id": 7230040
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7255509"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7255509"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "@jzuhone is this ready for review?",
+                "html": "<p><a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> is this ready for review?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-02T19:19:55.954498+00:00",
+            "updated_on": "2015-06-02T19:19:55.963688+00:00",
+            "id": 7255509
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7255521"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7255521"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7255509"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7255509"
+                    }
+                },
+                "id": 7255509
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Yep. ",
+                "html": "<p>Yep. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-02T19:20:21.894907+00:00",
+            "updated_on": "2015-06-02T19:20:21.902220+00:00",
+            "id": 7255521
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7285192"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7285192"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-03T17:38:33.210275+00:00",
+            "updated_on": "2015-06-03T17:38:33.262871+00:00",
+            "id": 7285192
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7466100"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7466100"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "This is ready for review--some other stuff I'd like to PR depends on some of it, actually. ",
+                "html": "<p>This is ready for review--some other stuff I'd like to PR depends on some of it, actually. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T16:36:06.510896+00:00",
+            "updated_on": "2015-06-11T16:36:06.519253+00:00",
+            "id": 7466100
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7473430"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:a8be9a38fde1..aaf2b4a8a158?path=yt%2Fanalysis_modules%2Fppv_cube%2Fppv_cube.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7473430"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Since you're grabbing `.v` do you think you could perform unit conversion first?",
+                "html": "<p>Since you're grabbing <code>.v</code> do you think you could perform unit conversion first?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T21:29:32.300706+00:00",
+            "updated_on": "2015-06-11T21:29:32.308772+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/ppv_cube/ppv_cube.py",
+                "to": 316
+            },
+            "id": 7473430
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7473458"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:a8be9a38fde1..aaf2b4a8a158?path=yt%2Futilities%2Ffits_image.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7473458"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "If `width` is an int, this might be troublesome.  Cast it to a float?",
+                "html": "<p>If <code>width</code> is an int, this might be troublesome.  Cast it to a float?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T21:30:43.604931+00:00",
+            "updated_on": "2015-06-11T21:30:43.613399+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/fits_image.py",
+                "to": 166
+            },
+            "id": 7473458
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7473482"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:a8be9a38fde1..aaf2b4a8a158?path=yt%2Futilities%2Ffits_image.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7473482"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "`ds.refine_by` ?",
+                "html": "<p><code>ds.refine_by</code> ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T21:31:48.780730+00:00",
+            "updated_on": "2015-06-11T21:31:48.789072+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/fits_image.py",
+                "to": 432
+            },
+            "id": 7473482
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7473494"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:None..None?path=yt%2Fanalysis_modules%2Fppv_cube%2Fppv_cube.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7473494"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7473430"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7473430"
+                    }
+                },
+                "id": 7473430
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Sorry--could you elaborate?\n\nAlso, I think these lines are here because I just moved it from above and added an underscore--but that doesn't mean I won't gladly take comments on it. :)",
+                "html": "<p>Sorry--could you elaborate?</p>\n<p>Also, I think these lines are here because I just moved it from above and added an underscore--but that doesn't mean I won't gladly take comments on it. :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T21:32:32.446577+00:00",
+            "updated_on": "2015-06-11T21:32:32.455972+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/ppv_cube/ppv_cube.py",
+                "to": null
+            },
+            "id": 7473494
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7473514"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:None..None?path=yt%2Fanalysis_modules%2Fppv_cube%2Fppv_cube.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7473514"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7473494"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7473494"
+                    }
+                },
+                "id": 7473494
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Sure -- `.v` drops all units, right?  So we want to make sure, before we do that, that they are in the *right* units.  So converting first, then dropping units.",
+                "html": "<p>Sure -- <code>.v</code> drops all units, right?  So we want to make sure, before we do that, that they are in the <em>right</em> units.  So converting first, then dropping units.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T21:33:09.279105+00:00",
+            "updated_on": "2015-06-11T21:33:09.288440+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/ppv_cube/ppv_cube.py",
+                "to": null
+            },
+            "id": 7473514
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7474690"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7474690"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T22:39:47.967445+00:00",
+            "updated_on": "2015-06-11T22:39:48.030560+00:00",
+            "id": 7474690
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7475111"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7475111"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/53/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/53/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/53/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-11T23:10:33.325593+00:00",
+            "updated_on": "2015-06-11T23:10:33.471003+00:00",
+            "id": 7475111
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603/comments/7616007"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603/_/diff#comment-7616007"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS image writing refactor",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1603"
+                    }
+                },
+                "id": 1603
+            },
+            "content": {
+                "raw": "I see no reason this can't go in -- it's a pretty robust PR with new tests.  Since we have a three-reviewer requirement for changes like this, can I solicit an eyeball from @brittonsmith or @xarthisius?",
+                "html": "<p>I see no reason this can't go in -- it's a pretty robust PR with new tests.  Since we have a three-reviewer requirement for changes like this, can I solicit an eyeball from <a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> or <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T01:09:21.475296+00:00",
+            "updated_on": "2015-06-18T01:09:21.487394+00:00",
+            "id": 7616007
+        }
+    ]
+}

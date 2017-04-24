@@ -1,0 +1,541 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-11-22T02:15:57.711583+00:00",
+    "comment_count": 7,
+    "description": "Issue #933 ended up being a bit of a rabbit hole!\r\n\r\nFirst, this fixes an unrelated issue in the tests for the unit object that were passing accidentally before due to the logic in the Unit constructor.  I've tightened that logic and fixed the newly failing tests, which by all rights should have been failing ever since they were written.\r\n\r\nSecond, I've added some logic to `YTArray.__array_wrap__` to handle the corner case exposed in #933.  See the notes for [4b395f8](https://bitbucket.org/ngoldbaum/yt/commits/4b395f8c71e86638d4bc001647e4055fe24612ba) more details.\r\n\r\nThird, I've added some new tests for bugs that came up during this debugging session.\r\n\r\nTo fix the issue, I had to introduce a behavior change for `YTArray`:\r\n\r\n```\r\n#!python\r\n\r\n>>> # current tip of the yt branch\r\n>>> from yt import YTQuantity as q\r\n>>> q(3, 'm')/q(3, 'cm')\r\n1 m/cm\r\n\r\n>>> # with this PR\r\n>>> from yt import YTQuantity as q\r\n>>> q(3, 'm')/q(3, 'cm')\r\n100 dimensionless\r\n```\r\nI think it's a good change and I don't think it will cause any issues in practice, since the two results are equal from the point of view of the unit system.\r\n\r\nThe logic I've added in `__array_wrap__` could probably be generalized to do more simplification after unit multiplication and division, but I'm leaving it at this for now since going further will require a bit of care.\r\n\r\nThis passes the unit tests on my laptop, but I don't know if this will break other things.  I would definitely appreciate some comments.",
+    "created_on": "2014-11-10T07:08:07.898928+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b07a33287102"
+            }
+        },
+        "hash": "b07a33287102"
+    },
+    "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1300,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/d131c8977529"
+                }
+            },
+            "hash": "d131c8977529"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5bd8229b55cf"
+                }
+            },
+            "hash": "5bd8229b55cf"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3800241"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3800241"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+                    }
+                },
+                "id": 1300
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-10T08:39:48.817961+00:00",
+            "updated_on": "2014-11-10T08:39:49.343261+00:00",
+            "id": 3800241
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3848335"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:4b395f8c71e8..f7c75759e039?path=yt%2Funits%2Funit_object.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3848335"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+                    }
+                },
+                "id": 1300
+            },
+            "content": {
+                "raw": "Do we not need to pass in the registry here? ",
+                "html": "<p>Do we not need to pass in the registry here? </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-12T18:12:19.588727+00:00",
+            "updated_on": "2014-11-12T18:12:19.603405+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_object.py",
+                "to": 223
+            },
+            "id": 3848335
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3853028"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Funits%2Funit_object.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3853028"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3848335"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3848335"
+                    }
+                },
+                "id": 3848335
+            },
+            "pullrequest": {
+                "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+                    }
+                },
+                "id": 1300
+            },
+            "content": {
+                "raw": "Good point!  Should be fixed shortly.",
+                "html": "<p>Good point!  Should be fixed shortly.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-12T23:14:01.768132+00:00",
+            "updated_on": "2014-11-12T23:14:01.784570+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_object.py",
+                "to": null
+            },
+            "id": 3853028
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3853918"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3853918"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+                    }
+                },
+                "id": 1300
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-13T00:52:10.755302+00:00",
+            "updated_on": "2014-11-13T00:52:11.279621+00:00",
+            "id": 3853918
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3916189"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3916189"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+                    }
+                },
+                "id": 1300
+            },
+            "content": {
+                "raw": "Do we need any other approvals for this?",
+                "html": "<p>Do we need any other approvals for this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-18T05:07:52.842146+00:00",
+            "updated_on": "2014-11-18T05:07:52.849608+00:00",
+            "id": 3916189
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3916210"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3916210"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3916189"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3916189"
+                    }
+                },
+                "id": 3916189
+            },
+            "pullrequest": {
+                "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+                    }
+                },
+                "id": 1300
+            },
+            "content": {
+                "raw": "I think this one needs at least one more careful going over.",
+                "html": "<p>I think this one needs at least one more careful going over.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-18T05:09:54.766336+00:00",
+            "updated_on": "2014-11-18T05:09:54.774857+00:00",
+            "id": 3916210
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/cosmosquark/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Ben Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
+                "username": "cosmosquark"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3965130"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3965130"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300/comments/3916210"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300/_/diff#comment-3916210"
+                    }
+                },
+                "id": 3916210
+            },
+            "pullrequest": {
+                "title": "Fix issues with dimensionless results of multiplication or division. Closes #933",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1300"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1300"
+                    }
+                },
+                "id": 1300
+            },
+            "content": {
+                "raw": "I will have a quick play with this one this weekend... looks like it should be fine though.",
+                "html": "<p>I will have a quick play with this one this weekend... looks like it should be fine though.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-20T14:03:35.318462+00:00",
+            "updated_on": "2014-11-20T14:03:35.517957+00:00",
+            "id": 3965130
+        }
+    ]
+}

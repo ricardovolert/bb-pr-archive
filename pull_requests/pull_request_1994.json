@@ -1,0 +1,655 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-02-24T17:37:19.025080+00:00",
+    "comment_count": 10,
+    "description": "This adds a pure cython ray-tracer that uses a bounding volume hierarchy for spatial acceleration. This is not used by default, but it may ultimately be useful for people who don't want to install external packages. \r\n\r\nIt currently takes about 4 seconds to render the example image, which Embree can do in less than 1 second. However, I think we can likely get some speedups by taking advantage of threading with prange and by using a surface area heuristic to build a more balanced tree. \r\n\r\nEDIT: I added support for OpenMP, dropping the run time from 4 seconds to ~1 second on my 4-core laptop.\r\n\r\nHere is an example script that uses this as the ray-tracing engine:\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nimport numpy as np\r\nfrom yt.utilities.lib.bounding_volume_hierarchy import BVH, \\\r\n    test_ray_trace\r\nfrom yt.utilities.lib.tests.test_bounding_volume_hierarchy import get_rays\r\nfrom yt.visualization.volume_rendering.api import Camera\r\nfrom yt.visualization.image_writer import write_image\r\n\r\nfn = \"MOOSE_sample_data/out.e-s010\"\r\n\r\nds = yt.load(fn)\r\nvertices = ds.index.meshes[0].connectivity_coords\r\nindices  = ds.index.meshes[0].connectivity_indices - 1\r\n\r\nad = ds.all_data()\r\nfield_data = ad['connect1', 'diffused']\r\n\r\nbvh = BVH(vertices, indices, field_data)\r\n\r\ncam = Camera()\r\ncam.focus = np.array([0.0, 0.0, 0.0])\r\ncam.set_position(np.array([-8.0, -8.0, -8.0]), np.array([0.0, -1.0, 1.0]))\r\norigins, direction = get_rays(cam)\r\n\r\nimage = np.empty(800*800, np.float64)\r\ntest_ray_trace(image, origins, direction, bvh)\r\nimage = image.reshape((800, 800))\r\nwrite_image(image, 'ray_trace_test.png')\r\n```\r\n\r\nand here is the resulting image:\r\n\r\n![ray_trace_test.png](https://bitbucket.org/repo/BXbAb/images/3856832036-ray_trace_test.png)",
+    "created_on": "2016-02-16T20:50:19.296209+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d18dc7748e19"
+            }
+        },
+        "hash": "d18dc7748e19"
+    },
+    "title": "Pure Cython Ray Tracer for Triangle Meshes",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1994,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt/commit/dc97a2d7cd52"
+                }
+            },
+            "hash": "dc97a2d7cd52"
+        },
+        "repository": {
+            "full_name": "atmyers/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/atmyers/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/atmyers/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{14866916-6c53-4d06-95e1-89d30c798c08}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/aaa54f6b1a1b"
+                }
+            },
+            "hash": "aaa54f6b1a1b"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14662821"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14662821"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "Hi Andrew, this is great -- thank you for contributing this.  I will review this ASAP, but I am really happy to see this!",
+                "html": "<p>Hi Andrew, this is great -- thank you for contributing this.  I will review this ASAP, but I am really happy to see this!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-16T20:51:46.703796+00:00",
+            "updated_on": "2016-02-16T20:51:46.707097+00:00",
+            "id": 14662821
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14664765"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14664765"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1292/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1292/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1292/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-16T21:49:13.975695+00:00",
+            "updated_on": "2016-02-16T21:49:14.205404+00:00",
+            "id": 14664765
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14824199"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14824199"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1301/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1301/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1301/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-20T20:14:51.481431+00:00",
+            "updated_on": "2016-02-20T20:14:51.607648+00:00",
+            "id": 14824199
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14824475"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14824475"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1302/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1302/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1302/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-20T21:19:42.487711+00:00",
+            "updated_on": "2016-02-20T21:19:42.561980+00:00",
+            "id": 14824475
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14825075"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14825075"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1304/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1304/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1304/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-21T01:12:53.582542+00:00",
+            "updated_on": "2016-02-21T01:12:54.883264+00:00",
+            "id": 14825075
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14825177"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14825177"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1305/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1305/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1305/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-21T02:20:29.392137+00:00",
+            "updated_on": "2016-02-21T02:20:29.473770+00:00",
+            "id": 14825177
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14835433"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14835433"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1306/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1306/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1306/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-22T06:50:17.698124+00:00",
+            "updated_on": "2016-02-22T06:50:17.758448+00:00",
+            "id": 14835433
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14966671"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14966671"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "@MatthewTurk do you still want to look at this?",
+                "html": "<p><a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> do you still want to look at this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-24T17:10:57.143746+00:00",
+            "updated_on": "2016-02-24T17:10:57.152511+00:00",
+            "id": 14966671
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14967983"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:dc97a2d7cd52..aaa54f6b1a1b?path=yt%2Futilities%2Flib%2Fbounding_volume_hierarchy.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14967983"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "Can we make the constant here a compile time thing, like `DETERMINANT_EPS` or something, at the top?\n\n```\nDEF DETERMINANT_EPS = 1-e10\n\n...\n\nif (det > -DETERMINANT_EPS and det < DETERMINANT_EPS):\n```",
+                "html": "<p>Can we make the constant here a compile time thing, like <code>DETERMINANT_EPS</code> or something, at the top?</p>\n<div class=\"codehilite\"><pre><span></span>DEF DETERMINANT_EPS = 1-e10\n\n...\n\nif (det &gt; -DETERMINANT_EPS and det &lt; DETERMINANT_EPS):\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-24T17:35:19.126561+00:00",
+            "updated_on": "2016-02-24T17:35:19.129099+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/bounding_volume_hierarchy.pyx",
+                "to": 61
+            },
+            "id": 14967983
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994/comments/14968015"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:dc97a2d7cd52..aaa54f6b1a1b?path=yt%2Futilities%2Flib%2Fbounding_volume_hierarchy.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994/_/diff#comment-14968015"
+                }
+            },
+            "pullrequest": {
+                "title": "Pure Cython Ray Tracer for Triangle Meshes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1994"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1994"
+                    }
+                },
+                "id": 1994
+            },
+            "content": {
+                "raw": "Can we make this either `DEF` above, or a default argument to the `__cinit__`?",
+                "html": "<p>Can we make this either <code>DEF</code> above, or a default argument to the <code>__cinit__</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-24T17:35:57.463639+00:00",
+            "updated_on": "2016-02-24T17:35:57.466071+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/bounding_volume_hierarchy.pyx",
+                "to": 131
+            },
+            "id": 14968015
+        }
+    ]
+}

@@ -1,0 +1,501 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-04-18T03:09:29.701652+00:00",
+    "comment_count": 7,
+    "description": "This fixes an issue that came up recently where one would specify a data_source, only to not have its field_parameters inherited as well.  It came up in the context of doing a ProjectionPlot of \"RadialVelocity\" of a sphere where the bulk_velocity field parameter was set, but it did not propagate to the actual Projection Plot.\r\n\r\nThis PR enables field parameters to be inherited from a data_source, but only if they override nonexistent or default field parameters in the calling object.\r\n\r\nI have tested it, and it seems to work OK.\r\n\r\nThis can be ported to 3.0, but there will have to be some minor tweaks based on the change in the field parameter structure in 3.0.\r\n\r\nNote: this is a continuation of Pull Request #792 , which I declined.  There is some discussion of this issue in the comments, though.\r\n\r\nUPDATE1:  Addressed @MatthewTurk 's comments.  Also expanded so that both AMRProjBase and AMRQuadTreeProjBase utilize this functionality (and inherit the field_parameters of their sources).  Should we do this for VR stuff too?  Or perhaps that's something to do in 3.0 and not worry about here.  Tested on my data, and these modifications still work OK.\r\n\r\nUPDATE2:  Added test for this behavior.  Note, I didn't include docs for this feature, because it seemed that this sort of behavior was already expected from yt.",
+    "created_on": "2014-04-17T03:27:37.880124+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 831,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/6c43763f6c83"
+                }
+            },
+            "hash": "6c43763f6c83"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c03ad444c015"
+                }
+            },
+            "hash": "c03ad444c015"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments/1680045"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831/_/diff#comment-1680045"
+                }
+            },
+            "pullrequest": {
+                "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+                    }
+                },
+                "id": 831
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-17T03:56:01.418480+00:00",
+            "updated_on": "2014-04-17T03:56:01.569051+00:00",
+            "id": 1680045
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments/1683033"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:abcc1d3c8d00..c03ad444c015?path=yt%2Fdata_objects%2Fdata_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831/_/diff#comment-1683033"
+                }
+            },
+            "pullrequest": {
+                "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+                    }
+                },
+                "id": 831
+            },
+            "content": {
+                "raw": "I think this will only work for arrays, and I would also like to avoid bare excepts.  I believe it should be safe -- as long as we do not conduct any in-place operations (which I think would be unlikely) -- to do an identity comparison.  So instead of doing a comparison, you can simply do:\n\n```\nif parameter not in self.default_field_parameters: return False\nreturn self.default_field_parameters[parameter] is self.field_parameters[parameter]\n```",
+                "html": "<p>I think this will only work for arrays, and I would also like to avoid bare excepts.  I believe it should be safe -- as long as we do not conduct any in-place operations (which I think would be unlikely) -- to do an identity comparison.  So instead of doing a comparison, you can simply do:</p>\n<div class=\"codehilite\"><pre><span></span>if parameter not in self.default_field_parameters: return False\nreturn self.default_field_parameters[parameter] is self.field_parameters[parameter]\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-17T11:07:35.271625+00:00",
+            "updated_on": "2014-04-17T11:07:35.280213+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/data_containers.py",
+                "to": 236
+            },
+            "id": 1683033
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments/1683035"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:abcc1d3c8d00..c03ad444c015?path=yt%2Fdata_objects%2Fdata_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831/_/diff#comment-1683035"
+                }
+            },
+            "pullrequest": {
+                "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+                    }
+                },
+                "id": 831
+            },
+            "content": {
+                "raw": "Could you put a space before `dtype`?",
+                "html": "<p>Could you put a space before <code>dtype</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-17T11:07:54.001591+00:00",
+            "updated_on": "2014-04-17T11:07:54.008214+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/data_containers.py",
+                "to": 218
+            },
+            "id": 1683035
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments/1683040"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831/_/diff#comment-1683040"
+                }
+            },
+            "pullrequest": {
+                "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+                    }
+                },
+                "id": 831
+            },
+            "content": {
+                "raw": "Thanks, @chummels .  Would you be open to making both `default_field_parameters` and `is_default_field_parameter` into semi-private names, by prefixing with a single underscore?",
+                "html": "<p>Thanks, <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> .  Would you be open to making both <code>default_field_parameters</code> and <code>is_default_field_parameter</code> into semi-private names, by prefixing with a single underscore?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-17T11:08:38.467578+00:00",
+            "updated_on": "2014-04-17T11:08:38.492350+00:00",
+            "id": 1683040
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments/1685522"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831/_/diff#comment-1685522"
+                }
+            },
+            "pullrequest": {
+                "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+                    }
+                },
+                "id": 831
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-17T14:57:25.924562+00:00",
+            "updated_on": "2014-04-17T14:57:26.040164+00:00",
+            "id": 1685522
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments/1685555"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831/_/diff#comment-1685555"
+                }
+            },
+            "pullrequest": {
+                "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+                    }
+                },
+                "id": 831
+            },
+            "content": {
+                "raw": "Cameron, would you mind adding a test to the projection test file?",
+                "html": "<p>Cameron, would you mind adding a test to the projection test file?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-17T15:00:14.081909+00:00",
+            "updated_on": "2014-04-17T15:00:14.108324+00:00",
+            "id": 1685555
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831/comments/1686451"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831/_/diff#comment-1686451"
+                }
+            },
+            "pullrequest": {
+                "title": "Making field_parameters from a data_source override objects own field_parameters when sensible",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/831"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/831"
+                    }
+                },
+                "id": 831
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-17T16:26:51.778412+00:00",
+            "updated_on": "2014-04-17T16:26:51.993080+00:00",
+            "id": 1686451
+        }
+    ]
+}

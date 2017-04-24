@@ -1,0 +1,398 @@
+{
+    "reason": "this is being merged in as part of PR 2255",
+    "state": "DECLINED",
+    "updated_on": "2016-07-01T15:01:52.822076+00:00",
+    "comment_count": 7,
+    "description": "1) Problem description: profile data had zeros at the end points.\r\n\r\nDetails: Previously create_profile used to take the extrema[] for\r\nthe bin fields. In the case when x,y, or z is a bin field extrema[]\r\nreturns the outermost grid zone centres, thus excluding the regions\r\nbetween the centres and the grid edges, i.e. the outer halfs of\r\nthese grid zones. Furthermore np.digitize was utilized in a way\r\nthat excludes the right end.\r\n\r\nSolution: The intervals to be split in bins for each bin field\r\nare determined in the following way: if the bin field is present\r\nin the extrema parameter to the create_profile() then the given\r\nvalues are used as a left and right ends (both need to be\r\nsupplied); otherwise if the bin field is one of x, y or z\r\nthe data_source.left_edge and .right_edge are used or for any\r\nother bi field the data_source.quantities[\"Extrema\"] is used.\r\n\r\nAdditionally in all calls to np.digitize in the method _bin_chunk\r\nin the classes Profile1D, Profile2D and Profile3D has been added\r\na parameter right=True to include the right boundary.\r\n\r\n2) Problem description: For specific bin fields create_profile\r\nreturns profile data with axes in other than expected order.\r\n\r\nDetails: It was established that when the bin fields are particular\r\npermutations of x, y and z than the axes of the returned profile\r\ndata are not ordered as expected. The problem is not present when\r\nonly two of x,y and z are chosen to be bin fields no matter of\r\nthe permutation. The exact reason for this behaviour was not tracked.\r\n\r\nSolution: Ad-hoc fix was created at the end of create_profile -\r\nfor a list of bin_fields values transpose the data axes.",
+    "created_on": "2016-06-06T07:12:45.071427+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Two fixes to create_profile(): 1) binniing along x,y,z; 2) transpose returned profile data; Added test_profile_binning_2 for nosetest.",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2216,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/hristovb"
+            },
+            "html": {
+                "href": "https://bitbucket.org/hristovb/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/hristovb/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Boyan Hristov",
+        "uuid": "{4ff363be-b5fe-424b-bc0d-1e9c148716c6}",
+        "username": "hristovb"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/hristovb/yt-dev/commit/27d08ab7e82c"
+                }
+            },
+            "hash": "27d08ab7e82c"
+        },
+        "repository": {
+            "full_name": "hristovb/yt-dev",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/hristovb/yt-dev"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/hristovb/yt-dev"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/hristovb/yt-dev/avatar/32/"
+                }
+            },
+            "name": "yt-dev",
+            "uuid": "{85ca43be-9936-4fcb-af36-57f3672de006}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/428dd2f17465"
+                }
+            },
+            "hash": "428dd2f17465"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/comments/19351487"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216/_/diff#comment-19351487"
+                }
+            },
+            "pullrequest": {
+                "title": "Two fixes to create_profile(): 1) binniing along x,y,z; 2) transpose returned profile data; Added test_profile_binning_2 for nosetest.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216"
+                    }
+                },
+                "id": 2216
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/533/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/533/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/533/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-06T07:17:05.797326+00:00",
+            "updated_on": "2016-06-06T07:17:05.885893+00:00",
+            "id": 19351487
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/comments/19351873"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216/_/diff#comment-19351873"
+                }
+            },
+            "pullrequest": {
+                "title": "Two fixes to create_profile(): 1) binniing along x,y,z; 2) transpose returned profile data; Added test_profile_binning_2 for nosetest.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216"
+                    }
+                },
+                "id": 2216
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/534/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/534/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/534/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-06T07:27:23.290195+00:00",
+            "updated_on": "2016-06-06T07:27:23.368998+00:00",
+            "id": 19351873
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/comments/19351978"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216/_/diff#comment-19351978"
+                }
+            },
+            "pullrequest": {
+                "title": "Two fixes to create_profile(): 1) binniing along x,y,z; 2) transpose returned profile data; Added test_profile_binning_2 for nosetest.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216"
+                    }
+                },
+                "id": 2216
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/915/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/915/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/915/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-06T07:29:55.457010+00:00",
+            "updated_on": "2016-06-06T07:29:55.573008+00:00",
+            "id": 19351978
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/comments/19501833"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216/_/diff#comment-19501833"
+                }
+            },
+            "pullrequest": {
+                "title": "Two fixes to create_profile(): 1) binniing along x,y,z; 2) transpose returned profile data; Added test_profile_binning_2 for nosetest.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216"
+                    }
+                },
+                "id": 2216
+            },
+            "content": {
+                "raw": "I corresponded with Boyan privately about this, but just in case anyone else wants to take this up:\n\nThis pull request copy/pastes the versions of these files from the stable branch (since Boyan did this work on the stable branch). Unfortunately, that overwrites changes that have been made to these files since the last stable release.\n\nI've gone ahead and rebased Boyan's original changes and pushed them to my repository on the `profile-fixes` bookmark: https://bitbucket.org/ngoldbaum/yt/commits/branch/profile-fixes.\n\nThis pull request needs to be re-issued using the rebased changes before it can be merged.",
+                "html": "<p>I corresponded with Boyan privately about this, but just in case anyone else wants to take this up:</p>\n<p>This pull request copy/pastes the versions of these files from the stable branch (since Boyan did this work on the stable branch). Unfortunately, that overwrites changes that have been made to these files since the last stable release.</p>\n<p>I've gone ahead and rebased Boyan's original changes and pushed them to my repository on the <code>profile-fixes</code> bookmark: <a href=\"https://bitbucket.org/ngoldbaum/yt/commits/branch/profile-fixes\" rel=\"nofollow\">https://bitbucket.org/ngoldbaum/yt/commits/branch/profile-fixes</a>.</p>\n<p>This pull request needs to be re-issued using the rebased changes before it can be merged.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-08T15:56:14.963669+00:00",
+            "updated_on": "2016-06-08T15:56:14.966244+00:00",
+            "id": 19501833
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/comments/19858673"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216/_/diff#comment-19858673"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216/comments/19501833"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216/_/diff#comment-19501833"
+                    }
+                },
+                "id": 19501833
+            },
+            "pullrequest": {
+                "title": "Two fixes to create_profile(): 1) binniing along x,y,z; 2) transpose returned profile data; Added test_profile_binning_2 for nosetest.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2216"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2216"
+                    }
+                },
+                "id": 2216
+            },
+            "content": {
+                "raw": "ping @hristovb ",
+                "html": "<p>ping <a href=\"/hristovb/\" rel=\"nofollow\" title=\"@hristovb\" class=\"mention\">Boyan Hristov</a> </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-16T15:33:00.212400+00:00",
+            "updated_on": "2016-06-16T15:33:00.251491+00:00",
+            "id": 19858673
+        }
+    ]
+}

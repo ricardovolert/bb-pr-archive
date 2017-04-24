@@ -1,0 +1,961 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-09-02T21:23:29.323998+00:00",
+    "comment_count": 15,
+    "description": "This gets up to be up when using either write_png or save_annotated.  This is tested with the script I posted to the mailing list, reproduced here:\r\n\r\n```\r\nimport pylab\r\nimport yt\r\nimport numpy as np\r\n\r\nN = 128\r\n\r\nxmin = ymin = zmin = -1.0\r\nxmax = ymax = zmax = 1.0\r\n\r\narr = np.zeros((N,N,N), dtype=np.float64)\r\narr[:,:,:] = 1.e-4\r\n\r\nbbox = np.array([ [xmin, xmax], [ymin, ymax], [zmin, zmax] ])\r\n\r\n# coordinates -- in the notation data[i, j, k]\r\nx = (np.arange(N) + 0.5)*(xmax - xmin)/N + xmin\r\ny = (np.arange(N) + 0.5)*(ymax - ymin)/N + ymin\r\nz = (np.arange(N) + 0.5)*(zmax - zmin)/N + zmin\r\n\r\nx3d, y3d, z3d = np.meshgrid(x, y, z, indexing=\"ij\")\r\n\r\n# single cube on +x\r\nxc = 0.75\r\ndx = 0.05\r\nidx = np.logical_and(np.logical_and(x3d > xc-dx, x3d < xc+dx),\r\n                     np.logical_and(np.logical_and(y3d > -dx, y3d < dx),\r\n                                    np.logical_and(z3d > -dx, z3d < dx)) )\r\n\r\narr[idx] = 1.0\r\n\r\n\r\n# two cubes on +y\r\ndy = 0.05\r\nfor yc in [0.65, 0.85]:\r\n\r\n    idx = np.logical_and(np.logical_and(y3d > yc-dy, y3d < yc+dy),\r\n                         np.logical_and(np.logical_and(x3d > -dy, x3d < dy),\r\n                                        np.logical_and(z3d > -dy, z3d < dy)) )\r\n\r\n    arr[idx] = 0.8\r\n\r\n# three cubes on +z\r\ndz = 0.05\r\nfor zc in [0.5, 0.7, 0.9]:\r\n\r\n    idx = np.logical_and(np.logical_and(z3d > zc-dz, z3d < zc+dz),\r\n                         np.logical_and(np.logical_and(x3d > -dz, x3d < dz),\r\n                                        np.logical_and(y3d > -dz, y3d < dz)) )\r\n\r\n    arr[idx] = 0.6\r\n\r\n\r\n\r\n\r\ndata = dict(Density = arr)\r\nds = yt.load_uniform_grid(data, arr.shape, bbox=bbox)\r\n\r\nimport yt.visualization.volume_rendering.api as vr\r\n\r\nc = np.array([0, 0, 0])\r\nL = np.array([1.0, 1.0, 1.0])\r\nW = 2.0*ds.domain_width\r\nN = 720\r\n\r\nnorth = np.array([0, 0, 1])\r\n\r\ntf = vr.ColorTransferFunction((0.1,1.0))\r\ntf.sample_colormap(1.0, 0.01, colormap=\"coolwarm\")\r\ntf.sample_colormap(0.8, 0.01, colormap=\"coolwarm\")\r\ntf.sample_colormap(0.6, 0.01, colormap=\"coolwarm\")\r\n\r\ncam = vr.Camera(c, L, W, N, transfer_function=tf, \r\n                north_vector = north, \r\n                ds=ds, fields=[('gas', 'Density')], \r\n                log_fields=[False])\r\n\r\n\r\nim = cam.snapshot()\r\nnim = cam.draw_domain(im)\r\n\r\nnim.write_png(\"test.png\")\r\n\r\ncam.save_annotated(\"test_annotated.png\", nim)\r\n```",
+    "created_on": "2014-08-01T00:48:12.503467+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/66661ac7b420"
+            }
+        },
+        "hash": "66661ac7b420"
+    },
+    "title": "this gets the orientation correct for a volume-rendered image ",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ChrisMalone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ChrisMalone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ChrisMalone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Chris Malone",
+        "uuid": "{eab958cf-edbf-44db-8a2e-8b8ed90af67f}",
+        "username": "ChrisMalone"
+    },
+    "id": 1117,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/mzingale"
+            },
+            "html": {
+                "href": "https://bitbucket.org/mzingale/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Michael  Zingale",
+        "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+        "username": "mzingale"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/mzingale/yt.old/commit/cddc7db004ba"
+                }
+            },
+            "hash": "cddc7db004ba"
+        },
+        "repository": {
+            "full_name": "mzingale/yt.old",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/mzingale/yt.old"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/mzingale/yt.old"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/mzingale/yt.old/avatar/32/"
+                }
+            },
+            "name": "yt.old",
+            "uuid": "{a2366d4c-3f63-4335-b81c-6b141249e3a7}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/2c3d2e84074a"
+                }
+            },
+            "hash": "2c3d2e84074a"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2589863"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2589863"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-01T01:48:15.014925+00:00",
+            "updated_on": "2014-08-01T01:48:15.163920+00:00",
+            "id": 2589863
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2589880"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2589880"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "I think this should go in before we release.",
+                "html": "<p>I think this should go in before we release.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-01T01:49:30.775152+00:00",
+            "updated_on": "2014-08-01T01:49:30.783309+00:00",
+            "id": 2589880
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2593970"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2593970"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2589880"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2589880"
+                    }
+                },
+                "id": 2589880
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "@samskillman can you accept this if you approve?",
+                "html": "<p><a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a> can you accept this if you approve?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-01T11:21:58.168807+00:00",
+            "updated_on": "2014-08-01T11:21:58.186293+00:00",
+            "id": 2593970
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2595625"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2595625"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "Just to make sure that these changes also result in ProjectionPlots having the correct orientation, here are ProjectionPlots of this same test data, resulting from:\n\n```\nyt.ProjectionPlot(ds, \"x\", (\"gas\", \"Density\"), origin=\"native\").save()\nyt.ProjectionPlot(ds, \"y\", (\"gas\", \"Density\"), origin=\"native\").save()\nyt.ProjectionPlot(ds, \"z\", (\"gas\", \"Density\"), origin=\"native\").save()\n```\n\nhttp://bender.astro.sunysb.edu/random/UniformGridData_Projection_x_Density.png\n\nhttp://bender.astro.sunysb.edu/random/UniformGridData_Projection_y_Density.png\n\nhttp://bender.astro.sunysb.edu/random/UniformGridData_Projection_z_Density.png\n\nThese look ok to me.",
+                "html": "<p>Just to make sure that these changes also result in ProjectionPlots having the correct orientation, here are ProjectionPlots of this same test data, resulting from:</p>\n<div class=\"codehilite\"><pre><span></span>yt.ProjectionPlot(ds, &quot;x&quot;, (&quot;gas&quot;, &quot;Density&quot;), origin=&quot;native&quot;).save()\nyt.ProjectionPlot(ds, &quot;y&quot;, (&quot;gas&quot;, &quot;Density&quot;), origin=&quot;native&quot;).save()\nyt.ProjectionPlot(ds, &quot;z&quot;, (&quot;gas&quot;, &quot;Density&quot;), origin=&quot;native&quot;).save()\n</pre></div>\n\n\n<p><a href=\"http://bender.astro.sunysb.edu/random/UniformGridData_Projection_x_Density.png\" rel=\"nofollow\">http://bender.astro.sunysb.edu/random/UniformGridData_Projection_x_Density.png</a></p>\n<p><a href=\"http://bender.astro.sunysb.edu/random/UniformGridData_Projection_y_Density.png\" rel=\"nofollow\">http://bender.astro.sunysb.edu/random/UniformGridData_Projection_y_Density.png</a></p>\n<p><a href=\"http://bender.astro.sunysb.edu/random/UniformGridData_Projection_z_Density.png\" rel=\"nofollow\">http://bender.astro.sunysb.edu/random/UniformGridData_Projection_z_Density.png</a></p>\n<p>These look ok to me.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-01T13:40:28.662573+00:00",
+            "updated_on": "2014-08-01T13:40:47.866694+00:00",
+            "id": 2595625
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2595696"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2595696"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2595625"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2595625"
+                    }
+                },
+                "id": 2595625
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "although, just to be clear, the handedness implies here that the +projected axis is coming out of the screen in each case.",
+                "html": "<p>although, just to be clear, the handedness implies here that the +projected axis is coming out of the screen in each case.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-01T13:44:43.484059+00:00",
+            "updated_on": "2014-08-01T13:44:43.491232+00:00",
+            "id": 2595696
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2596860"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2596860"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "actually, hold off on this one -- the draw_coordinate_vectors is upside down now.\n",
+                "html": "<p>actually, hold off on this one -- the draw_coordinate_vectors is upside down now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-01T15:10:42.228340+00:00",
+            "updated_on": "2014-08-01T15:10:42.238527+00:00",
+            "id": 2596860
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2597562"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2597562"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2596860"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2596860"
+                    }
+                },
+                "id": 2596860
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "There is something further going on here, which may be some amount of pebcak on my part.  I'm doing more tests with the volume rotating to see how it goes, since the perspective I was doing can be misleading.",
+                "html": "<p>There is something further going on here, which may be some amount of pebcak on my part.  I'm doing more tests with the volume rotating to see how it goes, since the perspective I was doing can be misleading.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-01T15:52:49.829655+00:00",
+            "updated_on": "2014-08-01T15:52:49.843122+00:00",
+            "id": 2597562
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2604638"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2604638"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2597562"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2597562"
+                    }
+                },
+                "id": 2597562
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "Posted some more examples of the before and after here:\n\nhttp://bender.astro.sunysb.edu/yt-experiments/\n\nI still believe this fix is right, but I need to fix draw_domain() and draw_coordinate_vectors() to deal with the flipped image if we want this to go through.",
+                "html": "<p>Posted some more examples of the before and after here:</p>\n<p><a href=\"http://bender.astro.sunysb.edu/yt-experiments/\" rel=\"nofollow\">http://bender.astro.sunysb.edu/yt-experiments/</a></p>\n<p>I still believe this fix is right, but I need to fix draw_domain() and draw_coordinate_vectors() to deal with the flipped image if we want this to go through.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-03T22:30:22.535900+00:00",
+            "updated_on": "2014-08-03T22:30:22.547090+00:00",
+            "id": 2604638
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2614071"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2614071"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "updated this to point to yt branch",
+                "html": "<p>updated this to point to yt branch</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-04T17:20:44.815285+00:00",
+            "updated_on": "2014-08-04T17:20:44.830365+00:00",
+            "id": 2614071
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2678467"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2678467"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "Hey Mike, what do you think about talking this over over a hangout sometime this week?",
+                "html": "<p>Hey Mike, what do you think about talking this over over a hangout sometime this week?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-10T17:18:25.644930+00:00",
+            "updated_on": "2014-08-10T17:18:25.657120+00:00",
+            "id": 2678467
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2678528"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2678528"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2678467"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2678467"
+                    }
+                },
+                "id": 2678467
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "sure, that sounds like a good way to get this sorted out.",
+                "html": "<p>sure, that sounds like a good way to get this sorted out.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-10T18:20:56.809536+00:00",
+            "updated_on": "2014-08-10T18:20:56.819858+00:00",
+            "id": 2678528
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2752945"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2752945"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2678528"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2678528"
+                    }
+                },
+                "id": 2678528
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "can we do a hangout for this sometime this coming week?  Any day other than Monday is good by me.",
+                "html": "<p>can we do a hangout for this sometime this coming week?  Any day other than Monday is good by me.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-17T17:58:53.981556+00:00",
+            "updated_on": "2014-08-17T17:58:53.992059+00:00",
+            "id": 2752945
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2752953"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2752953"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2752945"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2752945"
+                    }
+                },
+                "id": 2752945
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "I would be up for it. Maybe Wednesday either early morning or just after\nlunch. My schedule is a bit hard to accommodate both UK and West Coast, so\ndon't necessarily schedule around me.",
+                "html": "<p>I would be up for it. Maybe Wednesday either early morning or just after\nlunch. My schedule is a bit hard to accommodate both UK and West Coast, so\ndon't necessarily schedule around me.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-17T18:05:20.479657+00:00",
+            "updated_on": "2014-08-17T18:05:20.504998+00:00",
+            "id": 2752953
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2874835"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2874835"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "Honestly, I think we should just pull the trigger on this.  @mzingale has made a pretty good case this is a correction.",
+                "html": "<p>Honestly, I think we should just pull the trigger on this.  <a href=\"/mzingale/\" rel=\"nofollow\" title=\"@mzingale\" class=\"mention\">Michael  Zingale</a> has made a pretty good case this is a correction.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-27T18:05:36.873060+00:00",
+            "updated_on": "2014-08-27T18:05:36.886067+00:00",
+            "id": 2874835
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117/comments/2874886"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117/_/diff#comment-2874886"
+                }
+            },
+            "pullrequest": {
+                "title": "this gets the orientation correct for a volume-rendered image ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1117"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1117"
+                    }
+                },
+                "id": 1117
+            },
+            "content": {
+                "raw": "It makes sense to me, my only question is what is the intended direction for the looking vector.  I think that the docstring is a little ambiguous.\n\nIt also may be that the draw_domain et al. routines will need to know about this flipping. ",
+                "html": "<p>It makes sense to me, my only question is what is the intended direction for the looking vector.  I think that the docstring is a little ambiguous.</p>\n<p>It also may be that the draw_domain et al. routines will need to know about this flipping. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-27T18:09:03.631936+00:00",
+            "updated_on": "2014-08-27T18:09:03.641529+00:00",
+            "id": 2874886
+        }
+    ]
+}

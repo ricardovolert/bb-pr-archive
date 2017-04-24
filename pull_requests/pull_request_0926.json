@@ -1,0 +1,394 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-05-29T16:47:19.791795+00:00",
+    "comment_count": 5,
+    "description": "This pull request enables improved compatibility for binary operations that include a YTArray and a list or a tuple.  This improves compatibility for YTArray in that it does \"the right thing\" when asked to do unitful operations on lists of floats or quantities, just as ndarray did when presented with a list of numbers.\r\n\r\nFor example, with ndarray it's possible to do the following:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport numpy as np\r\n\r\nprint np.array([1, 2, 3]) + [1, 2, 3]\r\n```\r\n\r\nthis will print `[2, 4, 6]`.\r\n\r\nWith this PR, it is now possible to write a script like this:\r\n\r\n```\r\n#!python\r\n\r\nimport numpy as np\r\nimport yt\r\n\r\nfrom yt.units import g, Mpc\r\n\r\nds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\n\r\ncenter = (ds.domain_right_edge - ds.domain_left_edge)/2.0\r\n\r\nprint [3*Mpc, 4*Mpc, 5*Mpc] + center\r\n\r\ncenter.shape = (3, 1)\r\n\r\ncenter_tile = np.tile(center, (1, 100))\r\n\r\nprint [np.ones(100)*Mpc, np.ones(100)*Mpc, np.ones(100)*Mpc] + center_tile\r\n```\r\n\r\nAnd do the appropriate unitful operation in all cases.  I've also added a number of new units tests to check whether we're doing the appropriate thing in all cases.\r\n\r\nThis adds some new overhead to YTArray operations, specifically the `coerce_iterable_units` function.  In situations where we deal with lists or tuples this adds a new O(N) search over the iterable to check whether the units are consistent. In all other situations this adds at most two extra calls to `isinstance`.\r\n\r\nI could see the argument for not doing these O(N) checks and just ignoring iterables with inconsistent units, but I prefer to add the extra bit of runtime checking to catch when someone does something silly like `[3*g, 4*cm] * [1, 2]*g`. I've done some benchmarking and don't see any new significant differences in the timings.  That said, I've by no means done exhaustive testing and if the consensus is that the `coerce_iterable_units` function should be simplified I will happily do that.\r\n\r\nThanks to @bwoshea for writing a detailed bug report that triggered an example within the halo finding code of the buggy behavior this PR corrects.",
+    "created_on": "2014-05-27T06:50:11.944911+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/f1fa8e20ab51"
+            }
+        },
+        "hash": "f1fa8e20ab51"
+    },
+    "title": "Improved compatibility for YTArray operations that include iterables.",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "id": 926,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/8d1f7cd39264"
+                }
+            },
+            "hash": "8d1f7cd39264"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/3cfb38afe34d"
+                }
+            },
+            "hash": "3cfb38afe34d"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/comments/1974134"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926/_/diff#comment-1974134"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved compatibility for YTArray operations that include iterables.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926"
+                    }
+                },
+                "id": 926
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-27T07:17:48.911323+00:00",
+            "updated_on": "2014-05-27T07:17:49.028933+00:00",
+            "id": 1974134
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/bwoshea"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/bwoshea/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/bwoshea/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Brian O'Shea",
+                "uuid": "{dd23b047-4753-4e1b-b195-e2796fdbda16}",
+                "username": "bwoshea"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/comments/1980775"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926/_/diff#comment-1980775"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved compatibility for YTArray operations that include iterables.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926"
+                    }
+                },
+                "id": 926
+            },
+            "content": {
+                "raw": "This fixes the problem I was seeing.  Thanks!",
+                "html": "<p>This fixes the problem I was seeing.  Thanks!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-27T17:13:36.064514+00:00",
+            "updated_on": "2014-05-27T17:13:36.192451+00:00",
+            "id": 1980775
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/comments/1981260"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926/_/diff#comment-1981260"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved compatibility for YTArray operations that include iterables.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926"
+                    }
+                },
+                "id": 926
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-27T18:02:27.322319+00:00",
+            "updated_on": "2014-05-27T18:02:27.464995+00:00",
+            "id": 1981260
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/comments/1996380"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926/_/diff#comment-1996380"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved compatibility for YTArray operations that include iterables.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926"
+                    }
+                },
+                "id": 926
+            },
+            "content": {
+                "raw": "@jzuhone could you take a look at this?  I don't want to merge this before someone else takes a look at it.",
+                "html": "<p><a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> could you take a look at this?  I don't want to merge this before someone else takes a look at it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-29T00:10:53.144339+00:00",
+            "updated_on": "2014-05-29T00:10:53.157622+00:00",
+            "id": 1996380
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926/comments/1997318"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926/_/diff#comment-1997318"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved compatibility for YTArray operations that include iterables.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/926"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/926"
+                    }
+                },
+                "id": 926
+            },
+            "content": {
+                "raw": "Unless I hear anything from anyone else, I'm merging in the morning. ",
+                "html": "<p>Unless I hear anything from anyone else, I'm merging in the morning. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-29T03:47:14.603140+00:00",
+            "updated_on": "2014-05-29T03:47:14.610874+00:00",
+            "id": 1997318
+        }
+    ]
+}

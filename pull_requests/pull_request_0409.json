@@ -1,0 +1,198 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-01-24T11:37:43.464050+00:00",
+    "comment_count": 1,
+    "description": "This adds a new optional parameter to the install script which, when turned on, will create a local version of BLAS, LAPACK, and build numpy and scipy using these new local libraries.  I've tested this on my mac desktop (OS X 10.6) and a linux server (Centos 5, which runs a ~6 year old linux kernel and has gcc 4.1 installed).  On OS X this works with no modifications to the install script but on Centos I had to use the NUMPY_ARGS environment variable to tell it to use gfortran instead of g77 when building numpy and scipy.  This is getting to be a pretty rare configuration so I don't think it's worth worrying about too much.\r\n\r\nThere are a couple down sides to this approach.  I could conceivably have set up scipy and numpy to wrap ATLAS instead of LAPACK.  This would buy a ~5-10 times speedup for operations on large matrices.  I decided against doing this because it would add additional complexity (see the instructions in the scipy install notes here: http://projects.scipy.org/scipy/browser/trunk/INSTALL.txt).  On OS X, scipy will find accelerate/veclib bundled with the OS and use that to build an optimized LAPACK.  Unfortunately, the way I've set it up, the install script scipy will use the BLAS and LAPACK we compile instead of accelerate/veclib.  I think one could try to install scipy without building LAPACK and BLAS, check if it fails, and then try again using the bundled LAPACK and BLAS but am unsure how to do that.\r\n\r\nI've already deployed tarballs for scipy, BLAS, and LAPACK to yt-project.org, so no need to do that once this is accepted.\r\n\r\nIf anyone tries running the updated install script on newer OS X and linux installations and runs into issues, please let me know and I'll try to add a workaround.  \r\n\r\nIMPORTANT: you must remove yt's old numpy by hand if you want to do this on top of an existing installation.  The updated install script will build a version of numpy that links against LAPACK and BLAS.\r\n\r\nPlease test that your installation passes the scipy unit tests by doing the following at the python prompt:\r\n\r\n    >>> import scipy\r\n    >>> scipy.test()\r\n\r\nThere should be no errors or fails, although there will be a number of skipped tests and known fails.",
+    "created_on": "2013-01-24T02:42:17.309527+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/bc4b2b140eeb"
+            }
+        },
+        "hash": "bc4b2b140eeb"
+    },
+    "title": "Adding scipy to the install script.",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/409"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 409,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/4be99c4ab148"
+                }
+            },
+            "hash": "4be99c4ab148"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ec2e81dc0bc3"
+                }
+            },
+            "hash": "ec2e81dc0bc3"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409/comments/94446"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/409/_/diff#comment-94446"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding scipy to the install script.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/409"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/409"
+                    }
+                },
+                "id": 409
+            },
+            "content": {
+                "raw": "Looks good to me, and worked for me.\n\nI think it is fine to make the compromises you mention, of installing BLAS/LAPACK instead of ATLAS.  In fact, I would be -1 on installing anything more complex than this.  A major aspect of the install script that we shouldn't forget is that in no way does it stop people from installing packages on their own; if someone wants to ensure they are optimizing the linear algebra available to them in NumPy/SciPy, they should manage this installation themselves.  And this is a very nice compromise in that we can help to make a base level package available, but we do not prevent more advanced, tuned packages.\n\nThank you, Nathan.",
+                "html": "<p>Looks good to me, and worked for me.</p>\n<p>I think it is fine to make the compromises you mention, of installing BLAS/LAPACK instead of ATLAS.  In fact, I would be -1 on installing anything more complex than this.  A major aspect of the install script that we shouldn't forget is that in no way does it stop people from installing packages on their own; if someone wants to ensure they are optimizing the linear algebra available to them in NumPy/SciPy, they should manage this installation themselves.  And this is a very nice compromise in that we can help to make a base level package available, but we do not prevent more advanced, tuned packages.</p>\n<p>Thank you, Nathan.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-01-24T11:37:36.439409+00:00",
+            "updated_on": "2013-01-24T11:37:36.446533+00:00",
+            "id": 94446
+        }
+    ]
+}

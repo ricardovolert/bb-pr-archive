@@ -1,0 +1,803 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-08-27T16:35:07.107102+00:00",
+    "comment_count": 12,
+    "description": "This is complementary work to PR 1665. Using [script](http://paste.yt-project.org/raw/5821/) and data provided by @chummels I was able to identify few hotspots related to \"unitful\" operations inside computationally expensive routine executed in a long loop (`tau_profile`). \r\n\r\nInitially I had:\r\n\r\n```\r\n#!text\r\n\r\n$ time python foo.py\r\nAdding line - HI [1215.670000 A]: 100% ... Time: 00:05:44\r\nyt : [INFO     ] 2015-08-15 17:34:06,334 Writing spectrum to hdf5 file:\r\nspectrum.h5.\r\nyt : [INFO     ] 2015-08-15 17:34:06,395 Writing spectral line list:\r\nala.txt.\r\n\r\nreal\t5m48.929s\r\nuser\t5m48.508s\r\nsys\t0m0.210s\r\n```\r\n\r\nafter changes made in this PR:\r\n\r\n```\r\n#!text\r\nAdding line - HI [1215.670000 A]: 100% ... Time: 00:00:32\r\nyt : [INFO     ] 2015-08-15 17:27:32,076 Writing spectrum to hdf5 file:\r\nspectrum.h5.\r\nyt : [INFO     ] 2015-08-15 17:27:32,106 Writing spectral line list:\r\nala.txt.\r\n\r\nreal\t0m36.685s\r\nuser\t0m36.485s\r\nsys\t0m0.153s\r\n```\r\n\r\nThe results are identical with *rtol ~ 1e-11*. I assume it's directly related to some inline optimizations (especially computing `x` in `tau_profile`). I'd appreciate double check from people actively using this module though.\r\n\r\nMinor other changes inlcude whitespaces (sorry about it, it will be probably easier to review with `?w=1`) and *lamba_0* -> *lambda_0*\r\n\r\n### Updates ###\r\n\r\n1. Fix units for thermal b\r\n1. Futher optimization\r\n\r\n```\r\n#!text\r\nreal\t0m7.524s\r\nuser\t0m7.379s\r\nsys\t0m0.138s\r\n```",
+    "created_on": "2015-08-15T23:13:31.257092+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/798706bc587f"
+            }
+        },
+        "hash": "798706bc587f"
+    },
+    "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1701,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/xarthisius/yt/commit/2b2c467a3f8f"
+                }
+            },
+            "hash": "2b2c467a3f8f"
+        },
+        "repository": {
+            "full_name": "xarthisius/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/xarthisius/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/xarthisius/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/xarthisius/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b753a527-1ccd-415c-8b85-3244947466a3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/14a4cacf4dfa"
+                }
+            },
+            "hash": "14a4cacf4dfa"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118001"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118001"
+                }
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-16T00:06:38.571218+00:00",
+            "updated_on": "2015-08-16T00:06:38.751568+00:00",
+            "id": 9118001
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118012"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118012"
+                }
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "Super impressive speedup, @xarthisius .  I'll test this out early next week.  The crazy thing is that @brittonsmith just added the units to this (at my behest) to bring it up to yt3 standards.  I didn't realize that units slow things down so dramatically in certain circumstances.",
+                "html": "<p>Super impressive speedup, <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> .  I'll test this out early next week.  The crazy thing is that <a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> just added the units to this (at my behest) to bring it up to yt3 standards.  I didn't realize that units slow things down so dramatically in certain circumstances.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-16T00:10:58.233275+00:00",
+            "updated_on": "2015-08-16T00:10:58.249788+00:00",
+            "id": 9118012
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118016"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118016"
+                }
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "Why not just recast the unitful objects to not have units inside the `tau_profile()`?  That way we could not break API and perhaps still get the speedup that you've provided?  Or is it just faster to have `tau_profile()` not even accept unitful args?",
+                "html": "<p>Why not just recast the unitful objects to not have units inside the <code>tau_profile()</code>?  That way we could not break API and perhaps still get the speedup that you've provided?  Or is it just faster to have <code>tau_profile()</code> not even accept unitful args?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-16T00:13:06.324936+00:00",
+            "updated_on": "2015-08-16T00:13:06.332746+00:00",
+            "id": 9118016
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118110"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118110"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118016"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118016"
+                    }
+                },
+                "id": 9118016
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "Is `tau_profile` part of the public API?",
+                "html": "<p>Is <code>tau_profile</code> part of the public API?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-16T00:47:58.840069+00:00",
+            "updated_on": "2015-08-16T00:47:58.847253+00:00",
+            "id": 9118110
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118114"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118114"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118012"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118012"
+                    }
+                },
+                "id": 9118012
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "Like most pure Python things, the units can be slow. Profiling helps, which is what I assume Kacper did here.\n\nIn general you want to avoid repeated unit conversions in tight loops if possible.",
+                "html": "<p>Like most pure Python things, the units can be slow. Profiling helps, which is what I assume Kacper did here.</p>\n<p>In general you want to avoid repeated unit conversions in tight loops if possible.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-16T00:49:11.065367+00:00",
+            "updated_on": "2015-08-16T00:49:11.072491+00:00",
+            "id": 9118114
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118146"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118146"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118016"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118016"
+                    }
+                },
+                "id": 9118016
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "Everything that happens in `tau_profile` for your particular test case happens *5e4* times. If something can be done in outer loop, it should be done there.",
+                "html": "<p>Everything that happens in <code>tau_profile</code> for your particular test case happens <em>5e4</em> times. If something can be done in outer loop, it should be done there.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-16T01:02:48.894032+00:00",
+            "updated_on": "2015-08-16T01:02:48.900915+00:00",
+            "id": 9118146
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9118254"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9118254"
+                }
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-16T01:53:08.002869+00:00",
+            "updated_on": "2015-08-16T01:53:08.065607+00:00",
+            "id": 9118254
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9260883"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9260883"
+                }
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-20T19:00:42.067877+00:00",
+            "updated_on": "2015-08-20T19:00:42.222602+00:00",
+            "id": 9260883
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9413742"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9413742"
+                }
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "I have tested this functionality, and I'm very impressed.  Differences with previous results are at the 1e-11 level in a variety of contexts.  I see speedups on the order of 35x!!  @xarthisius : thank you thank you thank you.  ",
+                "html": "<p>I have tested this functionality, and I'm very impressed.  Differences with previous results are at the 1e-11 level in a variety of contexts.  I see speedups on the order of 35x!!  <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> : thank you thank you thank you.  </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-26T21:39:59.496300+00:00",
+            "updated_on": "2015-08-26T21:39:59.510001+00:00",
+            "id": 9413742
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9416952"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9416952"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9413742"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9413742"
+                    }
+                },
+                "id": 9413742
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "@chummels could you add whatever tests you ran to the testing suite, so that if there are additional changes they will be automatically tested?",
+                "html": "<p><a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> could you add whatever tests you ran to the testing suite, so that if there are additional changes they will be automatically tested?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-27T00:24:38.235266+00:00",
+            "updated_on": "2015-08-27T00:24:38.249020+00:00",
+            "id": 9416952
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9417028"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9417028"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9416952"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9416952"
+                    }
+                },
+                "id": 9416952
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "Yes, I can add the tests to the testing suite, but it wouldn't necessarily recognize the optimization that @xarthisius made here.  The resulting outputs are the same, but the speed of processing is substantially different.  \n\nThe main script I used is the one Kacper includes in this PR description, but it requires a large LightRay in order to show any substantial slowdowns, speedups.  That LightRay is at much larger length and resolution than can be generated with any of the sample datasets, unfortunately.  So I'm not sure what to provide as a sample dataset to the testing suite.",
+                "html": "<p>Yes, I can add the tests to the testing suite, but it wouldn't necessarily recognize the optimization that <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> made here.  The resulting outputs are the same, but the speed of processing is substantially different.  </p>\n<p>The main script I used is the one Kacper includes in this PR description, but it requires a large LightRay in order to show any substantial slowdowns, speedups.  That LightRay is at much larger length and resolution than can be generated with any of the sample datasets, unfortunately.  So I'm not sure what to provide as a sample dataset to the testing suite.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-27T00:31:11.515340+00:00",
+            "updated_on": "2015-08-27T00:31:11.540497+00:00",
+            "id": 9417028
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9417068"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9417068"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701/comments/9417028"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701/_/diff#comment-9417028"
+                    }
+                },
+                "id": 9417028
+            },
+            "pullrequest": {
+                "title": "[opt] Drop units from computationally expensive parts of absorption_spectrum module",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1701"
+                    }
+                },
+                "id": 1701
+            },
+            "content": {
+                "raw": "I didn't mean for benchmarking, I meant to automate whatever process resulted in your 1e-11 difference test.",
+                "html": "<p>I didn't mean for benchmarking, I meant to automate whatever process resulted in your 1e-11 difference test.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-27T00:33:04.534231+00:00",
+            "updated_on": "2015-08-27T00:33:04.546920+00:00",
+            "id": 9417068
+        }
+    ]
+}

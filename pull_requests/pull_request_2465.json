@@ -1,0 +1,1049 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2017-01-19T17:10:37.187491+00:00",
+    "comment_count": 15,
+    "description": "The `spectral_integrator` analysis module creates X-ray emission fields in user-specified energy bands. Per our recent discussion on analysis modules, I'm moving this under `yt.fields`.\r\n\r\nI've also simplified the signature of `add_xray_emissivity_field` somewhat, to combine two metallicity parameters (allowing for a constant metallicity vs a metallicity field) into one. \r\n\r\nThis version also optionally creates \"intensity\" fields for cosmologically distant objects which are suitable for projections. \r\n\r\nBackwards-compatibility with the old `analysis_modules` version has been accounted for by putting a link to the new module there and a deprecation warning. Deprecated keyword arguments are also handled.\r\n\r\nThis version does not allow one to supply an alternative table filename: it must be either `apec_emissivity.h5` or `cloudy_emissivity.h5`. \r\n\r\nThe new files (not included in this PR) are not backwards-compatible with the old analysis module: I have sacrificed backwards-compatiblity for considerable simplification of code. \r\n\r\nI've also added answer tests. I've manually checked this version against the old one for consistency. \r\n\r\nWhat needs to happen before this can be un-marked as WIP:\r\n\r\n* Pull Request #2471 needs to be merged in, and the emissivity data needs to be downloaded to `\"supp_data_dir\"` on the build box.\r\n* Update the documentation.\r\n\r\nUPDATE: Docs are in. This is ready to test after `apec_emissivity_v2.h5` and `cloudy_emissivity_v2.h5` are put on the build box (ping @xarthisius).",
+    "created_on": "2016-12-07T19:27:26.098801+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/f0fa273ba464"
+            }
+        },
+        "hash": "f0fa273ba464"
+    },
+    "title": "Port the spectral_integrator analysis module into yt.fields",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2465,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt/commit/defc74f819ae"
+                }
+            },
+            "hash": "defc74f819ae"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{aa71d2fb-24c5-4e74-8701-f32955348acf}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/f00742795e09"
+                }
+            },
+            "hash": "f00742795e09"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29483351"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29483351"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "`supp_data_dir` is set on build box and has the following:\n\n```\n# ls -l\ntotal 2348\n-rw-r--r--. 1 root root  248560 Jan 10 13:51 apec_emissivity_v2.h5\n-rw-r--r--. 1 root root 2151096 Dec  8 15:31 cloudy_emissivity_v2.h5\n```",
+                "html": "<p><code>supp_data_dir</code> is set on build box and has the following:</p>\n<div class=\"codehilite\"><pre><span></span># ls -l\ntotal 2348\n-rw-r--r--. 1 root root  248560 Jan 10 13:51 apec_emissivity_v2.h5\n-rw-r--r--. 1 root root 2151096 Dec  8 15:31 cloudy_emissivity_v2.h5\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-10T22:06:11.641079+00:00",
+            "updated_on": "2017-01-10T22:06:33.323298+00:00",
+            "id": 29483351
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487195"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:411342c26f95..eb89d13ffb42?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487195"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "Can you add a docstring entry for `use_metals`?",
+                "html": "<p>Can you add a docstring entry for <code>use_metals</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-10T23:28:51.645107+00:00",
+            "updated_on": "2017-01-10T23:28:51.647340+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": 91
+            },
+            "id": 29487195
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487580"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:411342c26f95..eb89d13ffb42?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487580"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "This is leftover from the original code, but I think the field that is really required here is `H_nuclei_density`.  Currently, `H_number_density` is n_HI.  If you're tracking primordial chemistry in the simulation, the HI number density and total H number density (H nuclei density) are likely going to be pretty different in the regime where this code will be used.  I think this may be worth fixing.  The other benefit of switching to `H_nuclei_density` is that the fallback in place below is already covered by that field definition.",
+                "html": "<p>This is leftover from the original code, but I think the field that is really required here is <code>H_nuclei_density</code>.  Currently, <code>H_number_density</code> is n_HI.  If you're tracking primordial chemistry in the simulation, the HI number density and total H number density (H nuclei density) are likely going to be pretty different in the regime where this code will be used.  I think this may be worth fixing.  The other benefit of switching to <code>H_nuclei_density</code> is that the fallback in place below is already covered by that field definition.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-10T23:39:54.811149+00:00",
+            "updated_on": "2017-01-10T23:39:54.813447+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": 223
+            },
+            "id": 29487580
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487718"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487718"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "Couple comments, but it looks good.  I like the simplification of the metallicity and it's nice to get one more analysis module out of there.  Nice work, @jzuhone.",
+                "html": "<p>Couple comments, but it looks good.  I like the simplification of the metallicity and it's nice to get one more analysis module out of there.  Nice work, <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-10T23:43:43.851436+00:00",
+            "updated_on": "2017-01-10T23:43:43.858275+00:00",
+            "id": 29487718
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487976"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487976"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1427/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1427/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1429/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1429/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1435/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1435/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1437/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1437/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1438/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1438/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1442/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1442/artifact/sandbox/doc/build/html/index.html\n",
+                "html": "<ul>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1427/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1427/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1427/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1427/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1429/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1429/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1429/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1429/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1435/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1435/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1435/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1435/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1437/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1437/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1437/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1437/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1438/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1438/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1438/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1438/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1442/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1442/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1442/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1442/artifact/sandbox/doc/build/html/index.html</a></li>\n</ul>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-10T23:50:57.571784+00:00",
+            "updated_on": "2017-01-17T19:15:28.889972+00:00",
+            "id": 29487976
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29488252"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:411342c26f95..eb89d13ffb42?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29488252"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487195"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487195"
+                    }
+                },
+                "id": 29487195
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "I can do that, but I'm now wondering a bit why it has a docstring at all because it's not in the public API.",
+                "html": "<p>I can do that, but I'm now wondering a bit why it has a docstring at all because it's not in the public API.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-10T23:59:10.733314+00:00",
+            "updated_on": "2017-01-10T23:59:10.736158+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": null
+            },
+            "id": 29488252
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29488461"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:411342c26f95..eb89d13ffb42?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29488461"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29488252"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29488252"
+                    }
+                },
+                "id": 29488252
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "Docstrings are good. We should have more of them, even in the internal API.",
+                "html": "<p>Docstrings are good. We should have more of them, even in the internal API.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-11T00:05:29.075869+00:00",
+            "updated_on": "2017-01-11T00:05:29.078011+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": null
+            },
+            "id": 29488461
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29495913"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:411342c26f95..eb89d13ffb42?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29495913"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487580"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487580"
+                    }
+                },
+                "id": 29487580
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "Isn't the X-ray emissivity proportional to the density of ionized hydrogen only? This is how it's defined for APEC--I'm not sure how it's defined in Cloudy. ",
+                "html": "<p>Isn't the X-ray emissivity proportional to the density of ionized hydrogen only? This is how it's defined for APEC--I'm not sure how it's defined in Cloudy. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-11T04:58:07.123075+00:00",
+            "updated_on": "2017-01-11T04:58:07.125379+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": null
+            },
+            "id": 29495913
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29603722"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:0bf3a2e0c0f1..e03273b808d6?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29603722"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487580"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487580"
+                    }
+                },
+                "id": 29487580
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "Any further thoughts on this issue, @brittonsmith? I'm pretty sure that the H density should be ionized H, unless I am missing something. ",
+                "html": "<p>Any further thoughts on this issue, <a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a>? I'm pretty sure that the H density should be ionized H, unless I am missing something. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-12T14:08:41.981476+00:00",
+            "updated_on": "2017-01-12T14:08:50.731437+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": null
+            },
+            "id": 29603722
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29614825"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:0bf3a2e0c0f1..e03273b808d6?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29614825"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29603722"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29603722"
+                    }
+                },
+                "id": 29603722
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "Sorry, had a moving truck arrive yesterday.  The emissivities from the Cloudy tables are scaled with n_H total.  This is also the input parameter they get run with, so you need to supply n_H total to get the interpolation right.  I think we'll have to do it differently for each table.",
+                "html": "<p>Sorry, had a moving truck arrive yesterday.  The emissivities from the Cloudy tables are scaled with n_H total.  This is also the input parameter they get run with, so you need to supply n_H total to get the interpolation right.  I think we'll have to do it differently for each table.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-12T16:09:19.300533+00:00",
+            "updated_on": "2017-01-12T16:09:19.303525+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": null
+            },
+            "id": 29614825
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29799560"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:0bf3a2e0c0f1..e03273b808d6?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29799560"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29487580"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29487580"
+                    }
+                },
+                "id": 29487580
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "I've replaced `H_number_density` with `H_nuclei_density` because it makes more sense. For APEC the whole thing will be ionized anyway. ",
+                "html": "<p>I've replaced <code>H_number_density</code> with <code>H_nuclei_density</code> because it makes more sense. For APEC the whole thing will be ionized anyway. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-16T20:24:36.230483+00:00",
+            "updated_on": "2017-01-16T20:24:36.233993+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": null
+            },
+            "id": 29799560
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29799581"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29799581"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "I think this is now ready to go. ",
+                "html": "<p>I think this is now ready to go. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-16T20:24:54.733086+00:00",
+            "updated_on": "2017-01-16T20:24:54.735699+00:00",
+            "id": 29799581
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29862359"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:0bf3a2e0c0f1..e03273b808d6?path=doc%2Fsource%2Fanalyzing%2Fxray_emission_fields.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29862359"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "Either `s/-/_/` or do the other way around in `doc/source/analyzing/analysis_modules/synthetic_observation.rst` cause right now it doesn't pop up in the TOC",
+                "html": "<p>Either <code>s/-/_/</code> or do the other way around in <code>doc/source/analyzing/analysis_modules/synthetic_observation.rst</code> cause right now it doesn't pop up in the TOC</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-17T16:34:54.590386+00:00",
+            "updated_on": "2017-01-17T16:34:54.593872+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/analyzing/xray_emission_fields.rst",
+                "to": 1
+            },
+            "id": 29862359
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29863733"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:defc74f819ae..f00742795e09?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29863733"
+                }
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "what's the difference between this method and `_emissivity_field`? only units? If so couldn't those be coalesced into one and units be enforced via `add_field` or as an additional argument?",
+                "html": "<p>what's the difference between this method and <code>_emissivity_field</code>? only units? If so couldn't those be coalesced into one and units be enforced via <code>add_field</code> or as an additional argument?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-17T16:49:05.547779+00:00",
+            "updated_on": "2017-01-17T16:49:51.479197+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": 250
+            },
+            "id": 29863733
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29864800"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:defc74f819ae..f00742795e09?path=yt%2Ffields%2Fxray_emission_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29864800"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465/comments/29863733"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465/_/diff#comment-29863733"
+                    }
+                },
+                "id": 29863733
+            },
+            "pullrequest": {
+                "title": "Port the spectral_integrator analysis module into yt.fields",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2465"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2465"
+                    }
+                },
+                "id": 2465
+            },
+            "content": {
+                "raw": "There is another difference--one uses the `em_0` and `em_Z` interpolators and the other uses the `emp_0` and `emp_Z` interpolators. I'm not sure it's a simple matter of combining them. ",
+                "html": "<p>There is another difference--one uses the <code>em_0</code> and <code>em_Z</code> interpolators and the other uses the <code>emp_0</code> and <code>emp_Z</code> interpolators. I'm not sure it's a simple matter of combining them. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-17T17:00:55.569604+00:00",
+            "updated_on": "2017-01-17T17:00:55.572708+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/xray_emission_fields.py",
+                "to": null
+            },
+            "id": 29864800
+        }
+    ]
+}

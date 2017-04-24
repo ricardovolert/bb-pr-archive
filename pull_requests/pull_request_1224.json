@@ -1,0 +1,2036 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-09-29T18:19:47.603398+00:00",
+    "comment_count": 33,
+    "description": "As I was trying to use the \"style\" feature as described in the docs  (http://yt-project.org/docs/dev/visualizing/plots.html#types-of-projections), I encountered some errors because of a mistake in the docs.\r\n\r\nI realized that (1) the docs are wrong in that they reference \"style\" instead of \"proj_style\" associated with ProjectionPlot; (2) there are no docstrings in ProjectionPlot for the use of this attribute; and (3) the QuadTree data object (which is what the ProjectionPlot generates for the projection) has the attribute labeled as \"style\", whereas ProjectionPlot has it labeled as \"proj_style\".\r\n\r\nI figure this change makes the code more internally consistent, adds docstrings, and brings the code in line with our published documentation.  I'm guessing that not many people will notice this API breakage since our public-facing docs were directing them to use the \"style\" keyword in the first place, but I'm open to hearing from the other devs on this.  What do you peeps think?\r\n\r\nUPDATE1: Realized there was also a bug when using the 'mip' style which yielded the wrong field units off by a factor of `length`.  A demonstration of this is to take a `ProjectionPlot(ds,'x','density','mip')` and see the projected units as `g/cm**2` instead of `g/cm**3`.  Corrected this.  Also reinstated `proj_style` keyword in ProjectionPlot but deprecated it in the docstrings. \r\n\r\nUPDATE2: Changed \"style\" to \"method\" throughout ProjectionPlot and QuadTree. Updated docs too.\r\n\r\nUPDATE3: Fixed a problem with nosetest failing.  Needed to switch the cython code where the QuadTree object is defined to switch \"style\" keyword to \"method\" keyword.  This is fixed, however, it now requires one to rebuild yt (i.e. `python setup.py develop`) to make the appropriate c code.  Ugh.\r\n\r\nUPDATE4: Made \"style\" a deprecated but allowed keyword for the QuadTree object.  Updated the docs.  Added a test to PlotWindow tests for all projection methods: 'mip', 'sum', 'integrate'.",
+    "created_on": "2014-09-27T02:29:18.823017+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/90dad9d0c93b"
+            }
+        },
+        "hash": "90dad9d0c93b"
+    },
+    "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1224,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/f827ebe4d6bb"
+                }
+            },
+            "hash": "f827ebe4d6bb"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/64c466c241dc"
+                }
+            },
+            "hash": "64c466c241dc"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239311"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239311"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Can you leave `proj_style` in the API, but mark it as deprecated?  We can remove it in a version or two.",
+                "html": "<p>Can you leave <code>proj_style</code> in the API, but mark it as deprecated?  We can remove it in a version or two.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T02:30:50.584358+00:00",
+            "updated_on": "2014-09-27T02:30:50.590632+00:00",
+            "id": 3239311
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239314"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239314"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Sure, that makes sense.  That's a good compromise if we are going to switch to `style`.",
+                "html": "<p>Sure, that makes sense.  That's a good compromise if we are going to switch to <code>style</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T02:31:50.915134+00:00",
+            "updated_on": "2014-09-27T02:31:50.922487+00:00",
+            "id": 3239314
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239316"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239316"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239314"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239314"
+                    }
+                },
+                "id": 3239314
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "When you say \"mark as deprecated\", you just mean mention in the docstring that it is deprecated?  Or also mention elsewhere in the docs?  or do something else?",
+                "html": "<p>When you say \"mark as deprecated\", you just mean mention in the docstring that it is deprecated?  Or also mention elsewhere in the docs?  or do something else?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T02:35:34.128650+00:00",
+            "updated_on": "2014-09-27T02:35:34.137637+00:00",
+            "id": 3239316
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239323"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239323"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239316"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239316"
+                    }
+                },
+                "id": 3239316
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Mention that as of the yt 3.0.2 release, it's deprecated. You'll also need to add some logic to make sure it's assigned to `style` if someone passes it in.",
+                "html": "<p>Mention that as of the yt 3.0.2 release, it's deprecated. You'll also need to add some logic to make sure it's assigned to <code>style</code> if someone passes it in.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T02:37:54.678153+00:00",
+            "updated_on": "2014-09-27T02:37:54.685182+00:00",
+            "id": 3239323
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239351"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239351"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T03:11:35.891518+00:00",
+            "updated_on": "2014-09-27T03:11:36.302748+00:00",
+            "id": 3239351
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239412"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239412"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T04:24:57.620297+00:00",
+            "updated_on": "2014-09-27T04:24:57.849103+00:00",
+            "id": 3239412
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239951"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239951"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "As long as we are changing, I'd prefer something like \"method\" to \"style\".",
+                "html": "<p>As long as we are changing, I'd prefer something like \"method\" to \"style\".</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T10:55:05.850628+00:00",
+            "updated_on": "2014-09-27T10:55:05.887914+00:00",
+            "id": 3239951
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3240142"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3240142"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3239951"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3239951"
+                    }
+                },
+                "id": 3239951
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "What do other people think?  I don't want to make the change unless there is widespread support for it.  \"method\" is fine by me.",
+                "html": "<p>What do other people think?  I don't want to make the change unless there is widespread support for it.  \"method\" is fine by me.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T13:23:06.601906+00:00",
+            "updated_on": "2014-09-27T13:23:39.765569+00:00",
+            "id": 3240142
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3240323"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3240323"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1400/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1400/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1400/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T15:07:52.550699+00:00",
+            "updated_on": "2014-09-27T15:07:52.893904+00:00",
+            "id": 3240323
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3240386"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:974e906da750..4cf5c5369df9?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3240386"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Why did the logic change here?",
+                "html": "<p>Why did the logic change here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T15:47:30.962731+00:00",
+            "updated_on": "2014-09-27T15:47:30.970362+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": 221
+            },
+            "id": 3240386
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3240666"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3240666"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3240386"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3240386"
+                    }
+                },
+                "id": 3240386
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "I was simplifying it.  If you look on line 213, the 'sum' style becomes the 'integrate' style, so this check is redundant.",
+                "html": "<p>I was simplifying it.  If you look on line 213, the 'sum' style becomes the 'integrate' style, so this check is redundant.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T19:01:50.173183+00:00",
+            "updated_on": "2014-09-27T19:01:50.187021+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": null
+            },
+            "id": 3240666
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3240672"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:974e906da750..4cf5c5369df9?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3240672"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Doesn't this break the API?",
+                "html": "<p>Doesn't this break the API?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-27T19:05:56.439030+00:00",
+            "updated_on": "2014-09-27T19:05:56.445524+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": 211
+            },
+            "id": 3240672
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241223"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241223"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3240672"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3240672"
+                    }
+                },
+                "id": 3240672
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Yes & no: it looks like the problem was that I didn't switch the QuadTree cython code to incorporate the change from \"style\" to \"method\".  Should be fixed now.",
+                "html": "<p>Yes &amp; no: it looks like the problem was that I didn't switch the QuadTree cython code to incorporate the change from \"style\" to \"method\".  Should be fixed now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T04:17:55.272103+00:00",
+            "updated_on": "2014-09-28T04:17:55.281412+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": null
+            },
+            "id": 3241223
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241233"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241233"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241223"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241223"
+                    }
+                },
+                "id": 3241223
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "I mean to say, don't you need to preserve this keyword but mark it as deprecated in the docstrings, just like `proj_style` for `ProjectionPlot`?",
+                "html": "<p>I mean to say, don't you need to preserve this keyword but mark it as deprecated in the docstrings, just like <code>proj_style</code> for <code>ProjectionPlot</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T04:32:18.533978+00:00",
+            "updated_on": "2014-09-28T04:32:51.918360+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": null
+            },
+            "id": 3241233
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241245"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241245"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241233"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241233"
+                    }
+                },
+                "id": 3241233
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Oh, you're absolutely right.  I'll fix that.  Sorry--I didn't anticipate making such a substantial change to everything.  I just wanted to bring the code in-line with the docs and self-consistent.",
+                "html": "<p>Oh, you're absolutely right.  I'll fix that.  Sorry--I didn't anticipate making such a substantial change to everything.  I just wanted to bring the code in-line with the docs and self-consistent.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T05:14:42.393165+00:00",
+            "updated_on": "2014-09-28T05:14:42.400213+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": null
+            },
+            "id": 3241245
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241247"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241247"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T05:26:10.222467+00:00",
+            "updated_on": "2014-09-28T05:26:10.597434+00:00",
+            "id": 3241247
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241796"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241796"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "For what it is worth, the QuadTree object itself, in Cython, doesn't need\nto worry about API compat. The python one does.",
+                "html": "<p>For what it is worth, the QuadTree object itself, in Cython, doesn't need\nto worry about API compat. The python one does.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T13:25:14.522850+00:00",
+            "updated_on": "2014-09-28T13:25:14.553844+00:00",
+            "id": 3241796
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241799"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241799"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241796"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241796"
+                    }
+                },
+                "id": 3241796
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "I had to update the cython code to accept the \"method\" keyword as well as the \"style\" keyword or else trying to initialize the QuadTree object in python would fail.  This is what caused the test failure after UPDATE2.",
+                "html": "<p>I had to update the cython code to accept the \"method\" keyword as well as the \"style\" keyword or else trying to initialize the QuadTree object in python would fail.  This is what caused the test failure after UPDATE2.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T13:27:46.858064+00:00",
+            "updated_on": "2014-09-28T13:27:46.867205+00:00",
+            "id": 3241799
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241830"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241830"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241799"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241799"
+                    }
+                },
+                "id": 3241799
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Well, an alternate would be to fix the python code. :)",
+                "html": "<p>Well, an alternate would be to fix the python code. :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T13:40:05.190481+00:00",
+            "updated_on": "2014-09-28T13:40:05.240617+00:00",
+            "id": 3241830
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241853"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241853"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241830"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241830"
+                    }
+                },
+                "id": 3241830
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "I don't understand.  Isn't this how it is supposed to work?  Up until now, I didn't realize there was cython code for generating the QuadTree before it interfaced with the python data object.  But it seems like everything is in order, no?",
+                "html": "<p>I don't understand.  Isn't this how it is supposed to work?  Up until now, I didn't realize there was cython code for generating the QuadTree before it interfaced with the python data object.  But it seems like everything is in order, no?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T13:54:29.307289+00:00",
+            "updated_on": "2014-09-28T13:54:29.314367+00:00",
+            "id": 3241853
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241874"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241874"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-28T14:09:55.401261+00:00",
+            "updated_on": "2014-09-28T14:09:55.791034+00:00",
+            "id": 3241874
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3251728"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3251728"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3241853"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3241853"
+                    }
+                },
+                "id": 3241853
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "What I was getting at was really that the Cython QuadTree isn't really a \"public\" API, and only gets called inside the Python code.  So instead of changing it, you could just change the Python code that calls it.  It's not a big deal.",
+                "html": "<p>What I was getting at was really that the Cython QuadTree isn't really a \"public\" API, and only gets called inside the Python code.  So instead of changing it, you could just change the Python code that calls it.  It's not a big deal.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T14:31:50.621366+00:00",
+            "updated_on": "2014-09-29T14:31:50.631066+00:00",
+            "id": 3251728
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3252506"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3252506"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3251728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3251728"
+                    }
+                },
+                "id": 3251728
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Oh, well the python code was already fixed before.  I've now removed the cython change.",
+                "html": "<p>Oh, well the python code was already fixed before.  I've now removed the cython change.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T15:02:26.711499+00:00",
+            "updated_on": "2014-09-29T15:02:26.719708+00:00",
+            "id": 3252506
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3252532"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:f827ebe4d6bb..64c466c241dc?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3252532"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Does this now need to be changed back?",
+                "html": "<p>Does this now need to be changed back?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T15:03:40.441452+00:00",
+            "updated_on": "2014-09-29T15:03:40.455070+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": 272
+            },
+            "id": 3252532
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3252612"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3252612"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3252532"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3252532"
+                    }
+                },
+                "id": 3252532
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "I removed the extra deprecation check from the QuadTree cython code, so there is no check for \"style\" as a keyword (since all calls to the QuadTree code switch `style` to `method`).  I thought it would be better to retain the same keyword in the cython code that is called from the python code (i.e. `method`) instead of having `method` in the python code and `style` in the cython code.",
+                "html": "<p>I removed the extra deprecation check from the QuadTree cython code, so there is no check for \"style\" as a keyword (since all calls to the QuadTree code switch <code>style</code> to <code>method</code>).  I thought it would be better to retain the same keyword in the cython code that is called from the python code (i.e. <code>method</code>) instead of having <code>method</code> in the python code and <code>style</code> in the cython code.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T15:08:01.308977+00:00",
+            "updated_on": "2014-09-29T15:08:01.321921+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": null
+            },
+            "id": 3252612
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3252634"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3252634"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3252612"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3252612"
+                    }
+                },
+                "id": 3252612
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "So in answer to your question, no.  Also, I added a test for this (using the `method` keyword), and the tests all pass.",
+                "html": "<p>So in answer to your question, no.  Also, I added a test for this (using the <code>method</code> keyword), and the tests all pass.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T15:09:04.517239+00:00",
+            "updated_on": "2014-09-29T15:09:04.528902+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": null
+            },
+            "id": 3252634
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3254962"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3254962"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T17:28:18.520082+00:00",
+            "updated_on": "2014-09-29T17:28:18.695102+00:00",
+            "id": 3254962
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3254974"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3254974"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Thanks for adding tests for this!",
+                "html": "<p>Thanks for adding tests for this!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T17:29:00.966404+00:00",
+            "updated_on": "2014-09-29T17:29:00.973724+00:00",
+            "id": 3254974
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255022"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255022"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3254974"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3254974"
+                    }
+                },
+                "id": 3254974
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": ":)",
+                "html": "<p>:)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T17:31:26.023253+00:00",
+            "updated_on": "2014-09-29T17:31:26.032367+00:00",
+            "id": 3255022
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255060"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255060"
+                }
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Unless anyone objects I will push the button.",
+                "html": "<p>Unless anyone objects I will push the button.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T17:35:22.484461+00:00",
+            "updated_on": "2014-09-29T17:35:22.491847+00:00",
+            "id": 3255060
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255518"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255518"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255060"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255060"
+                    }
+                },
+                "id": 3255060
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "No objections here.  @MatthewTurk ?  Any problems I have not addressed?",
+                "html": "<p>No objections here.  <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> ?  Any problems I have not addressed?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T18:08:43.114467+00:00",
+            "updated_on": "2014-09-29T18:08:43.126193+00:00",
+            "id": 3255518
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255551"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255551"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255518"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255518"
+                    }
+                },
+                "id": 3255518
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "Nope, although I am still unclear on why the change to the instantiation of\nQuadTree, whose API in Cython hasn't changed, isn't breaking the tests.",
+                "html": "<p>Nope, although I am still unclear on why the change to the instantiation of\nQuadTree, whose API in Cython hasn't changed, isn't breaking the tests.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T18:10:16.964946+00:00",
+            "updated_on": "2014-09-29T18:10:17.011296+00:00",
+            "id": 3255551
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255666"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255666"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224/comments/3255551"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224/_/diff#comment-3255551"
+                    }
+                },
+                "id": 3255551
+            },
+            "pullrequest": {
+                "title": "[APICHANGE] [BUGFIX] Changing ProjectionPlot's \"proj_style\" attribute to be \"style\" attribute",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1224"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1224"
+                    }
+                },
+                "id": 1224
+            },
+            "content": {
+                "raw": "The API in Cython has changed from `style` to `method` just like the API in Python has changed from `style` to `method`.  The code I removed from cython earlier was just the deprecated `style` keyword, since it should only be called from within python, and all the calls in python are for `method`.",
+                "html": "<p>The API in Cython has changed from <code>style</code> to <code>method</code> just like the API in Python has changed from <code>style</code> to <code>method</code>.  The code I removed from cython earlier was just the deprecated <code>style</code> keyword, since it should only be called from within python, and all the calls in python are for <code>method</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-29T18:17:18.502747+00:00",
+            "updated_on": "2014-09-29T18:17:18.510615+00:00",
+            "id": 3255666
+        }
+    ]
+}

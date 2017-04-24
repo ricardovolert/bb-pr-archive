@@ -1,0 +1,649 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-01-13T23:44:36.767679+00:00",
+    "comment_count": 9,
+    "description": "This PR is a continuation from Benjamin Thompson's PR 1308.\r\n\r\n* The fields currently in yt with names like `particle_spherical_position_radius` return incorrect results. See #966. This PR ensures these fields return correct results.\r\n\r\n* Adds new `particle_position_relative` and `particle_velocity_relative` fields. This makes it possible to get particle positions and velocities in a rotated reference frame.\r\n\r\n* The naming system for particle and mesh vector fields has never been codified. In this PR I implement a proposed naming system. \r\n\r\nParticle vector fields will be of the form:\r\n\r\n`particle_<vector field name>_coordinate`\r\n\r\nWhile mesh vector fields should have names following:\r\n\r\n`<vector_field_name>_coordinate`\r\n\r\nSo the spherical radius particle position field becomes `particle_position_spherical_radius`. The main advantage is that this matches our current naming system for cartesian coordinates (e.g. `particle_position_x`, `particle_velocity_y`).\r\n\r\nWhere there are fields that are currently in yt that have names that do not match this naming convention, I've stubbed out their implementation and made them aliases for the fields with names following my proposed naming convention. I've also marked these stub fields as deprecated in their docstrings.  In a few places (particularly in the fluid velocity fields), I've opted to leave the old fields behind without marking them as deprecated.  There are mostly commonly used fields like `radial_velocity`, which is now just an alias for `velocity_spherical_r`.\r\n\r\nLet me know if you disagree with any decisions I've made about field deprecation.\r\n\r\nWhen no field already existed (e.g. the position fields in cylindrical coordinates), I've simply added the new fields following my proposed naming convention without adding fields that would immediately need to be deprecated.\r\n\r\nUpdate: I've updated this so that all the index and gas velocity fields match the naming convention used for the particle fields.",
+    "created_on": "2014-12-30T00:32:43.553815+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/def04a244759"
+            }
+        },
+        "hash": "def04a244759"
+    },
+    "title": "positions and velocities for various coordinate systems. Fixes #966",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1381,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/5db9af2d0957"
+                }
+            },
+            "hash": "5db9af2d0957"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b7feb560aa19"
+                }
+            },
+            "hash": "b7feb560aa19"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4490367"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:8b6a5a6061b6..15f858d36882?path=yt%2Ffields%2Fparticle_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4490367"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "Should this be \"The spherical phi component of the particle velocities\" ?",
+                "html": "<p>Should this be \"The spherical phi component of the particle velocities\" ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-05T00:52:34.121936+00:00",
+            "updated_on": "2015-01-05T00:52:34.133201+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/particle_fields.py",
+                "to": 738
+            },
+            "id": 4490367
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4490375"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:8b6a5a6061b6..15f858d36882?path=yt%2Ffields%2Fparticle_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4490375"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "Extremely minor nit: I would do \"... of the particle velocities\" for the sake of consistency.",
+                "html": "<p>Extremely minor nit: I would do \"... of the particle velocities\" for the sake of consistency.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-05T00:53:51.498681+00:00",
+            "updated_on": "2015-01-05T00:53:51.506200+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/particle_fields.py",
+                "to": 831
+            },
+            "id": 4490375
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4490376"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Ffields%2Fparticle_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4490376"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4490367"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4490367"
+                    }
+                },
+                "id": 4490367
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "Good catch!  Likely a copy/paste error.  Let me know if you catch any more.",
+                "html": "<p>Good catch!  Likely a copy/paste error.  Let me know if you catch any more.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-05T00:54:09.572709+00:00",
+            "updated_on": "2015-01-05T00:54:09.584185+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/particle_fields.py",
+                "to": null
+            },
+            "id": 4490376
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4490380"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:8b6a5a6061b6..15f858d36882?path=yt%2Ffields%2Fparticle_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4490380"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "Another extremely minor nit: sometimes you say \"radius\" and sometimes \"radial\". I'd pick one and stick with it.",
+                "html": "<p>Another extremely minor nit: sometimes you say \"radius\" and sometimes \"radial\". I'd pick one and stick with it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-05T00:54:46.291937+00:00",
+            "updated_on": "2015-01-05T00:54:46.300148+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/particle_fields.py",
+                "to": 655
+            },
+            "id": 4490380
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4490387"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4490387"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "Other than my highly tedious docstring complaints, I tried this out and it seems to work as advertised. Looks good to me. ",
+                "html": "<p>Other than my highly tedious docstring complaints, I tried this out and it seems to work as advertised. Looks good to me. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-05T00:55:29.526121+00:00",
+            "updated_on": "2015-01-05T00:55:29.534979+00:00",
+            "id": 4490387
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4491734"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4491734"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-05T06:20:24.801932+00:00",
+            "updated_on": "2015-01-05T06:20:25.119025+00:00",
+            "id": 4491734
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/cosmosquark/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Ben Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
+                "username": "cosmosquark"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4531173"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:5db9af2d0957..b7feb560aa19?path=yt%2Ffields%2Fparticle_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4531173"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "Just thinking, with regards to the bulk velocity, would this also need a co-ordinate transformation too? similar to what we are doing with the velocities here?",
+                "html": "<p>Just thinking, with regards to the bulk velocity, would this also need a co-ordinate transformation too? similar to what we are doing with the velocities here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-07T15:22:40.733632+00:00",
+            "updated_on": "2015-01-07T15:22:41.024054+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/particle_fields.py",
+                "to": 509
+            },
+            "id": 4531173
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/cosmosquark/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Ben Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
+                "username": "cosmosquark"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4531211"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:5db9af2d0957..b7feb560aa19?path=yt%2Ffields%2Fparticle_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4531211"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "I know this was my own doing, but this line could be skipped, and the next line could follow as\n\n\n```\n#!python\nvel = YTArray([data[ptype, svel % ax] for ax in \"xyz\"])\n\n```\nsince on line 225 and 226 we have\n\n\n```\n#!python\n\n                            spos = \"particle_position_%s\",\n                             svel = \"particle_velocity_%s\"\n```\n\n\nI know this was my own design however :P",
+                "html": "<p>I know this was my own doing, but this line could be skipped, and the next line could follow as</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">vel</span> <span class=\"o\">=</span> <span class=\"n\">YTArray</span><span class=\"p\">([</span><span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">svel</span> <span class=\"o\">%</span> <span class=\"n\">ax</span><span class=\"p\">]</span> <span class=\"k\">for</span> <span class=\"n\">ax</span> <span class=\"ow\">in</span> <span class=\"s2\">&quot;xyz&quot;</span><span class=\"p\">])</span>\n</pre></div>\n\n\n<p>since on line 225 and 226 we have</p>\n<div class=\"codehilite\"><pre><span></span>                            <span class=\"n\">spos</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;particle_position_</span><span class=\"si\">%s</span><span class=\"s2\">&quot;</span><span class=\"p\">,</span>\n                             <span class=\"n\">svel</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;particle_velocity_</span><span class=\"si\">%s</span><span class=\"s2\">&quot;</span>\n</pre></div>\n\n\n<p>I know this was my own design however :P</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-07T15:24:43.422903+00:00",
+            "updated_on": "2015-01-07T15:26:45.428753+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/particle_fields.py",
+                "to": 510
+            },
+            "id": 4531211
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/cosmosquark/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Ben Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
+                "username": "cosmosquark"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381/comments/4531512"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381/_/diff#comment-4531512"
+                }
+            },
+            "pullrequest": {
+                "title": "positions and velocities for various coordinate systems. Fixes #966",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1381"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1381"
+                    }
+                },
+                "id": 1381
+            },
+            "content": {
+                "raw": "Just thinking, for a later PR (which I would be happy to work on). We could probably condense down the number of lines of code (especially after adding the relative fields) by calling again\n\n\n```\n#!python\n\ndef standard_particle_fields(registry, ptype,\n                             spos = \"particle_position_%s\",\n                             svel = \"particle_velocity_%s\"):\n```\n\nwith something like this\n\n\n```\n#!python\n\ndef standard_particle_fields(registry, ptype,\n                             spos = \"particle_position_%s_%s\",\n                             svel = \"particle_velocity_%s_%s\"):\n                             reference = \"relative\"\n```\n\nSo rather than having\n\n\n\n```\n#!python\n\n def _particle_specific_angular_momentum_z(field, data):\n        if data.has_field_parameter(\"bulk_velocity\"):\n            bv = data.get_field_parameter(\"bulk_velocity\")\n        else: bv = np.zeros(3, dtype=np.float64)\n        center = data.get_field_parameter('center')\n        x = data[ptype, spos % \"x\"] - center[0]\n        y = data[ptype, spos % \"y\"] - center[1]\n        xv = data[ptype, svel % \"x\"] - bv[0]\n        yv = data[ptype, svel % \"y\"] - bv[1]\n        return xv*y - yv*x\n```\n\nwe could have \n\n\n```\n#!python\n\n def _particle_specific_angular_momentum_z(field, data):\n        if data.has_field_parameter(\"bulk_velocity\"):\n            bv = data.get_field_parameter(\"bulk_velocity\")\n        else: bv = np.zeros(3, dtype=np.float64)\n        center = data.get_field_parameter('center')\n        if extra = \"relative\"\n              normal = data.get_field_parameter\n              x = data[ptype, spos % extra, \"x\"] - center[0]\n              y = data[ptype, spos % extra, \"y\"] - center[1]\n              xv = data[ptype, svel % extra, \"x\"] - bv[0]\n              yv = data[ptype, svel % extra, \"y\"] - bv[1]\n        else:\n              x = data[ptype, spos % \"x\"] - center[0]\n              y = data[ptype, spos % \"y\"] - center[1]\n              xv = data[ptype, svel % \"x\"] - bv[0]\n              yv = data[ptype, svel % \"y\"] - bv[1]\n        return xv*y - yv*x\n\n\n  registry.add_field((ptype, \"particle_%s_specific_angular_momentum_z\" % extra),\n              function=_particle_specific_angular_momentum_z,\n              particle_type=True,\n              units=\"cm**2/s\",\n              validators=[ValidateParameter(\"center\")])\n```\n\n\nDefinatly for another PR. Bonus points if it also rotates the deposit fields around too :)",
+                "html": "<p>Just thinking, for a later PR (which I would be happy to work on). We could probably condense down the number of lines of code (especially after adding the relative fields) by calling again</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"k\">def</span> <span class=\"nf\">standard_particle_fields</span><span class=\"p\">(</span><span class=\"n\">registry</span><span class=\"p\">,</span> <span class=\"n\">ptype</span><span class=\"p\">,</span>\n                             <span class=\"n\">spos</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;particle_position_</span><span class=\"si\">%s</span><span class=\"s2\">&quot;</span><span class=\"p\">,</span>\n                             <span class=\"n\">svel</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;particle_velocity_</span><span class=\"si\">%s</span><span class=\"s2\">&quot;</span><span class=\"p\">):</span>\n</pre></div>\n\n\n<p>with something like this</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"k\">def</span> <span class=\"nf\">standard_particle_fields</span><span class=\"p\">(</span><span class=\"n\">registry</span><span class=\"p\">,</span> <span class=\"n\">ptype</span><span class=\"p\">,</span>\n                             <span class=\"n\">spos</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;particle_position_</span><span class=\"si\">%s</span><span class=\"s2\">_</span><span class=\"si\">%s</span><span class=\"s2\">&quot;</span><span class=\"p\">,</span>\n                             <span class=\"n\">svel</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;particle_velocity_</span><span class=\"si\">%s</span><span class=\"s2\">_</span><span class=\"si\">%s</span><span class=\"s2\">&quot;</span><span class=\"p\">):</span>\n                             <span class=\"n\">reference</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;relative&quot;</span>\n</pre></div>\n\n\n<p>So rather than having</p>\n<div class=\"codehilite\"><pre><span></span> <span class=\"k\">def</span> <span class=\"nf\">_particle_specific_angular_momentum_z</span><span class=\"p\">(</span><span class=\"n\">field</span><span class=\"p\">,</span> <span class=\"n\">data</span><span class=\"p\">):</span>\n        <span class=\"k\">if</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">has_field_parameter</span><span class=\"p\">(</span><span class=\"s2\">&quot;bulk_velocity&quot;</span><span class=\"p\">):</span>\n            <span class=\"n\">bv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">get_field_parameter</span><span class=\"p\">(</span><span class=\"s2\">&quot;bulk_velocity&quot;</span><span class=\"p\">)</span>\n        <span class=\"k\">else</span><span class=\"p\">:</span> <span class=\"n\">bv</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">zeros</span><span class=\"p\">(</span><span class=\"mi\">3</span><span class=\"p\">,</span> <span class=\"n\">dtype</span><span class=\"o\">=</span><span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">float64</span><span class=\"p\">)</span>\n        <span class=\"n\">center</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">get_field_parameter</span><span class=\"p\">(</span><span class=\"s1\">&#39;center&#39;</span><span class=\"p\">)</span>\n        <span class=\"n\">x</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">spos</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;x&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">center</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n        <span class=\"n\">y</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">spos</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;y&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">center</span><span class=\"p\">[</span><span class=\"mi\">1</span><span class=\"p\">]</span>\n        <span class=\"n\">xv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">svel</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;x&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">bv</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n        <span class=\"n\">yv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">svel</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;y&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">bv</span><span class=\"p\">[</span><span class=\"mi\">1</span><span class=\"p\">]</span>\n        <span class=\"k\">return</span> <span class=\"n\">xv</span><span class=\"o\">*</span><span class=\"n\">y</span> <span class=\"o\">-</span> <span class=\"n\">yv</span><span class=\"o\">*</span><span class=\"n\">x</span>\n</pre></div>\n\n\n<p>we could have </p>\n<div class=\"codehilite\"><pre><span></span> <span class=\"k\">def</span> <span class=\"nf\">_particle_specific_angular_momentum_z</span><span class=\"p\">(</span><span class=\"n\">field</span><span class=\"p\">,</span> <span class=\"n\">data</span><span class=\"p\">):</span>\n        <span class=\"k\">if</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">has_field_parameter</span><span class=\"p\">(</span><span class=\"s2\">&quot;bulk_velocity&quot;</span><span class=\"p\">):</span>\n            <span class=\"n\">bv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">get_field_parameter</span><span class=\"p\">(</span><span class=\"s2\">&quot;bulk_velocity&quot;</span><span class=\"p\">)</span>\n        <span class=\"k\">else</span><span class=\"p\">:</span> <span class=\"n\">bv</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">zeros</span><span class=\"p\">(</span><span class=\"mi\">3</span><span class=\"p\">,</span> <span class=\"n\">dtype</span><span class=\"o\">=</span><span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">float64</span><span class=\"p\">)</span>\n        <span class=\"n\">center</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">get_field_parameter</span><span class=\"p\">(</span><span class=\"s1\">&#39;center&#39;</span><span class=\"p\">)</span>\n        <span class=\"k\">if</span> <span class=\"n\">extra</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;relative&quot;</span>\n              <span class=\"n\">normal</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">get_field_parameter</span>\n              <span class=\"n\">x</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">spos</span> <span class=\"o\">%</span> <span class=\"n\">extra</span><span class=\"p\">,</span> <span class=\"s2\">&quot;x&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">center</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n              <span class=\"n\">y</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">spos</span> <span class=\"o\">%</span> <span class=\"n\">extra</span><span class=\"p\">,</span> <span class=\"s2\">&quot;y&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">center</span><span class=\"p\">[</span><span class=\"mi\">1</span><span class=\"p\">]</span>\n              <span class=\"n\">xv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">svel</span> <span class=\"o\">%</span> <span class=\"n\">extra</span><span class=\"p\">,</span> <span class=\"s2\">&quot;x&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">bv</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n              <span class=\"n\">yv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">svel</span> <span class=\"o\">%</span> <span class=\"n\">extra</span><span class=\"p\">,</span> <span class=\"s2\">&quot;y&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">bv</span><span class=\"p\">[</span><span class=\"mi\">1</span><span class=\"p\">]</span>\n        <span class=\"k\">else</span><span class=\"p\">:</span>\n              <span class=\"n\">x</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">spos</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;x&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">center</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n              <span class=\"n\">y</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">spos</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;y&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">center</span><span class=\"p\">[</span><span class=\"mi\">1</span><span class=\"p\">]</span>\n              <span class=\"n\">xv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">svel</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;x&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">bv</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n              <span class=\"n\">yv</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"n\">svel</span> <span class=\"o\">%</span> <span class=\"s2\">&quot;y&quot;</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">bv</span><span class=\"p\">[</span><span class=\"mi\">1</span><span class=\"p\">]</span>\n        <span class=\"k\">return</span> <span class=\"n\">xv</span><span class=\"o\">*</span><span class=\"n\">y</span> <span class=\"o\">-</span> <span class=\"n\">yv</span><span class=\"o\">*</span><span class=\"n\">x</span>\n\n\n  <span class=\"n\">registry</span><span class=\"o\">.</span><span class=\"n\">add_field</span><span class=\"p\">((</span><span class=\"n\">ptype</span><span class=\"p\">,</span> <span class=\"s2\">&quot;particle_</span><span class=\"si\">%s</span><span class=\"s2\">_specific_angular_momentum_z&quot;</span> <span class=\"o\">%</span> <span class=\"n\">extra</span><span class=\"p\">),</span>\n              <span class=\"n\">function</span><span class=\"o\">=</span><span class=\"n\">_particle_specific_angular_momentum_z</span><span class=\"p\">,</span>\n              <span class=\"n\">particle_type</span><span class=\"o\">=</span><span class=\"bp\">True</span><span class=\"p\">,</span>\n              <span class=\"n\">units</span><span class=\"o\">=</span><span class=\"s2\">&quot;cm**2/s&quot;</span><span class=\"p\">,</span>\n              <span class=\"n\">validators</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"n\">ValidateParameter</span><span class=\"p\">(</span><span class=\"s2\">&quot;center&quot;</span><span class=\"p\">)])</span>\n</pre></div>\n\n\n<p>Definatly for another PR. Bonus points if it also rotates the deposit fields around too :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-01-07T15:37:30.302164+00:00",
+            "updated_on": "2015-01-07T15:45:21.773199+00:00",
+            "id": 4531512
+        }
+    ]
+}

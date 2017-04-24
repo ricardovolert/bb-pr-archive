@@ -1,0 +1,727 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-10-22T13:43:29.573553+00:00",
+    "comment_count": 11,
+    "description": "I've added a derived field for \"shear\" to universal_fields.py.  I have tested it on both 2D and 3D datasets using PPM and zeus.  Because it uses different stencils for Zeus and PPM, I don't imagine it will work for other codes without modification.  I've included comments in the field definition describing the algorithm for determining shear, which is different from the current enzo shear refinement definition (but they will soon be in line when I PR my changes to enzo).\r\n\r\nUPDATE1: Fixing a typo which caused the field to fail upon use.\r\nUPDATE2: Fixing a bug, which I thought was responsible for nose test failing, but I guess it is not.\r\nUPDATE3: Updating derived fields: Shear (in cgs units), and ShearMach (Shear scaled by local sound speed and root grid dx).  ",
+    "created_on": "2013-09-05T21:27:17.111881+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Shear derived field",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 586,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/7e151eeaaad8"
+                }
+            },
+            "hash": "7e151eeaaad8"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/6c2659ee47dc"
+                }
+            },
+            "hash": "6c2659ee47dc"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/536805"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:3b1c9b1f479d..079e456c38a8?path=yt%2Fdata_objects%2Funiversal_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-536805"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "I think we should have this fail.",
+                "html": "<p>I think we should have this fail.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-05T23:23:07.709147+00:00",
+            "updated_on": "2013-09-05T23:23:07.717889+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/universal_fields.py",
+                "to": 691
+            },
+            "id": 536805
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/536807"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:3b1c9b1f479d..079e456c38a8?path=yt%2Fdata_objects%2Funiversal_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-536807"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "Sometimes dx will be a single value; this is different in yt-3.0.  Often what we do is  use `just_one(data['dx'])` and have it as a scalar.",
+                "html": "<p>Sometimes dx will be a single value; this is different in yt-3.0.  Often what we do is  use <code>just_one(data['dx'])</code> and have it as a scalar.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-05T23:23:39.098478+00:00",
+            "updated_on": "2013-09-05T23:23:39.112492+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/universal_fields.py",
+                "to": 696
+            },
+            "id": 536807
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/536811"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Funiversal_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-536811"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/536807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-536807"
+                    }
+                },
+                "id": 536807
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "This could be causing the indexing error.  I'm not terribly happy that this is how it is, but it's too big a change to 2.x to fix it there.",
+                "html": "<p>This could be causing the indexing error.  I'm not terribly happy that this is how it is, but it's too big a change to 2.x to fix it there.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-05T23:24:06.736823+00:00",
+            "updated_on": "2013-09-05T23:24:06.745526+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/universal_fields.py",
+                "to": null
+            },
+            "id": 536811
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/536813"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-536813"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "Hi @chummels, looks great!  A very nice addition.  I left a couple comments; the dx one should fix the failing tests.",
+                "html": "<p>Hi <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>, looks great!  A very nice addition.  I left a couple comments; the dx one should fix the failing tests.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-05T23:25:23.221642+00:00",
+            "updated_on": "2013-09-05T23:25:23.238451+00:00",
+            "id": 536813
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/566765"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-566765"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-13T23:38:32.580251+00:00",
+            "updated_on": "2013-09-13T23:38:32.755406+00:00",
+            "id": 566765
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/566777"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-566777"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "Don't accept this yet.  There are problems with it that I'm working on.",
+                "html": "<p>Don't accept this yet.  There are problems with it that I'm working on.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-13T23:44:56.593587+00:00",
+            "updated_on": "2013-09-13T23:44:56.603353+00:00",
+            "id": 566777
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/579529"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-579529"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/566777"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-566777"
+                    }
+                },
+                "id": 566777
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "Anything we can help with?",
+                "html": "<p>Anything we can help with?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-18T11:54:26.125170+00:00",
+            "updated_on": "2013-09-18T11:54:26.133757+00:00",
+            "id": 579529
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/618488"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-618488"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "Ping?",
+                "html": "<p>Ping?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-28T21:07:36.158255+00:00",
+            "updated_on": "2013-09-28T21:07:36.167839+00:00",
+            "id": 618488
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/618849"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-618849"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "I'm still working on it, and trying to work out some issues.  This goes hand-in-hand with the existing enzo shear-refinement criterion being incorrect, and so rather than just submitting a PR to fix it, and have it be wrong, and requiring to do it again, I'm waiting until it is done correctly.  I anticipate finishing/resubmitting this in the early half of this week.",
+                "html": "<p>I'm still working on it, and trying to work out some issues.  This goes hand-in-hand with the existing enzo shear-refinement criterion being incorrect, and so rather than just submitting a PR to fix it, and have it be wrong, and requiring to do it again, I'm waiting until it is done correctly.  I anticipate finishing/resubmitting this in the early half of this week.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-29T14:47:38.420066+00:00",
+            "updated_on": "2013-09-29T14:47:38.428250+00:00",
+            "id": 618849
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/673311"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-673311"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-2.x_testing/155/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-2.x_testing/155/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-2.x_testing/155/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-10-11T23:55:34.844000+00:00",
+            "updated_on": "2013-10-11T23:55:35.024531+00:00",
+            "id": 673311
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586/comments/711722"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586/_/diff#comment-711722"
+                }
+            },
+            "pullrequest": {
+                "title": "Shear derived field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/586"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/586"
+                    }
+                },
+                "id": 586
+            },
+            "content": {
+                "raw": "Hi Cameron, I know I mentioned I'd take care of this and push -- sorry for the delay, will be working on it today.",
+                "html": "<p>Hi Cameron, I know I mentioned I'd take care of this and push -- sorry for the delay, will be working on it today.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-10-22T12:37:04.832074+00:00",
+            "updated_on": "2013-10-22T12:37:04.839367+00:00",
+            "id": 711722
+        }
+    ]
+}

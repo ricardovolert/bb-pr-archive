@@ -1,0 +1,742 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-04-12T17:19:46.729907+00:00",
+    "comment_count": 10,
+    "description": "This addresses issues #539 and #540.  Unfortunately it seems that somewhere along the line h5py broke how we serialize our data objects.  They have an active open ticket on their tracker:\r\nhttps://github.com/h5py/h5py/issues/63\r\n\r\nFor now, this takes the string returned from serialization and wraps in as a np.array.  This seems to work for the simple tests I made, but this should probably be discussed.  This was all motivated by @salvesen working on clump saving, so I will tell him to use this changeset in the short term while this fix is discussed. No rush to be accepted.\r\n\r\nI'd like some feedback from athena users on where the storage should take place.  Currently it will take place in:\r\nid0/basename.dumpnumber.vtk.yt\r\n\r\nWould it be better to have it in:\r\nbasename.dumpnumber.vtk.yt\r\n\r\nUpdate 1: Changing storage to be at basename.dumpnumber.vtk.yt, getting rid of id0.  If you only load up one cpu file, it will save it in the id%i directory, since that is where you would load it from.  This required a default dirname in initialize_data_storage to be '.' instead of '', which I think is ok.  Also cast the object storage to dtype='c'",
+    "created_on": "2013-04-02T18:10:39.267970+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/3708abcb5084"
+            }
+        },
+        "hash": "3708abcb5084"
+    },
+    "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 474,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/samskillman"
+            },
+            "html": {
+                "href": "https://bitbucket.org/samskillman/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Sam Skillman",
+        "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+        "username": "samskillman"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt/commit/6ab1db6b056e"
+                }
+            },
+            "hash": "6ab1db6b056e"
+        },
+        "repository": {
+            "full_name": "samskillman/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/samskillman/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/samskillman/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{f1df6f31-13ed-4d98-a11d-1954f1f1fdfa}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/527f460483f7"
+                }
+            },
+            "hash": "527f460483f7"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/181829"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-181829"
+                }
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "Sam, I'm just getting started as an Athena user, but I suspect that getting rid of the \"id0\" is preferable, since for single-processor jobs it isn't there. I know most production jobs will have it, but it just seems more \"natural\" to leave it outside of the id0 directory even if it is present. ",
+                "html": "<p>Sam, I'm just getting started as an Athena user, but I suspect that getting rid of the \"id0\" is preferable, since for single-processor jobs it isn't there. I know most production jobs will have it, but it just seems more \"natural\" to leave it outside of the id0 directory even if it is present. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-03T14:23:14.203313+00:00",
+            "updated_on": "2013-04-03T14:23:14.210695+00:00",
+            "id": 181829
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192794"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192794"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/181829"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-181829"
+                    }
+                },
+                "id": 181829
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "I tend to agree.",
+                "html": "<p>I tend to agree.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T17:24:44.999233+00:00",
+            "updated_on": "2013-04-10T17:24:45.007111+00:00",
+            "id": 192794
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192795"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8a02b74fec3d..527f460483f7?path=yt%2Fdata_objects%2Fhierarchy.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192795"
+                }
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "Oops, I meant could we make the dtype \"c\"?",
+                "html": "<p>Oops, I meant could we make the dtype \"c\"?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T17:25:03.002223+00:00",
+            "updated_on": "2013-04-10T17:25:03.021939+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/hierarchy.py",
+                "to": 320
+            },
+            "id": 192795
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192799"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8a02b74fec3d..527f460483f7?path=yt%2Ffrontends%2Fathena%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192799"
+                }
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "We may want to move this up to the base class.",
+                "html": "<p>We may want to move this up to the base class.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T17:25:21.743273+00:00",
+            "updated_on": "2013-04-10T17:25:21.751969+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/athena/data_structures.py",
+                "to": 122
+            },
+            "id": 192799
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192806"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Fdata_objects%2Fhierarchy.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192806"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192795"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192795"
+                    }
+                },
+                "id": 192795
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "why complex floating point?  maybe i don't understand what you mean here. \nhttp://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html\n",
+                "html": "<p>why complex floating point?  maybe i don't understand what you mean here. \n<a href=\"http://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html\" rel=\"nofollow\">http://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T17:29:42.538718+00:00",
+            "updated_on": "2013-04-10T17:29:42.546366+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/hierarchy.py",
+                "to": null
+            },
+            "id": 192806
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192813"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Fdata_objects%2Fhierarchy.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192813"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192806"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192806"
+                    }
+                },
+                "id": 192806
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "...it seems I have been misusing \"c\" to mean \"char\" all of this time.  We may want to modify __tocast on Communicator objects.",
+                "html": "<p>...it seems I have been misusing \"c\" to mean \"char\" all of this time.  We may want to modify __tocast on Communicator objects.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T17:34:46.956299+00:00",
+            "updated_on": "2013-04-10T17:34:46.965628+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/hierarchy.py",
+                "to": null
+            },
+            "id": 192813
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192833"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Fdata_objects%2Fhierarchy.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192833"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192813"
+                    }
+                },
+                "id": 192813
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "just to follow up here, 'c' is 'char'. 'c4','c8',etc are complex.",
+                "html": "<p>just to follow up here, 'c' is 'char'. 'c4','c8',etc are complex.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T17:45:14.509309+00:00",
+            "updated_on": "2013-04-10T17:45:14.517431+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/hierarchy.py",
+                "to": null
+            },
+            "id": 192833
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192858"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Fdata_objects%2Fhierarchy.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192858"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192833"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192833"
+                    }
+                },
+                "id": 192833
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "Okay, then I'd go with what I suggested earlier, if possible -- dtype='c', order should be left unspecified.",
+                "html": "<p>Okay, then I'd go with what I suggested earlier, if possible -- dtype='c', order should be left unspecified.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T17:59:08.177953+00:00",
+            "updated_on": "2013-04-10T17:59:08.187847+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/hierarchy.py",
+                "to": null
+            },
+            "id": 192858
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/stonnes"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/stonnes/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/stonnes/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Stephanie Tonnesen",
+                "uuid": "{345c76a3-0cd5-4b93-a237-16040f49966c}",
+                "username": "stonnes"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/192865"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-192865"
+                }
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "I also agree with John, as long as I am right that if I wanted to just read in data from a single processor, say id3, then while I would want it to also be in the upper directory (above id3) the filename would actually be basename-id3.dumpnumber.vtk.yt  (which is the filename for those vtk files).    ",
+                "html": "<p>I also agree with John, as long as I am right that if I wanted to just read in data from a single processor, say id3, then while I would want it to also be in the upper directory (above id3) the filename would actually be basename-id3.dumpnumber.vtk.yt  (which is the filename for those vtk files).    </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-10T18:02:36.184253+00:00",
+            "updated_on": "2013-04-10T18:02:36.290859+00:00",
+            "id": 192865
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474/comments/197181"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474/_/diff#comment-197181"
+                }
+            },
+            "pullrequest": {
+                "title": "Implementing data storage for athena datasets, and fixing a bug from h5py not",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/474"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/474"
+                    }
+                },
+                "id": 474
+            },
+            "content": {
+                "raw": "Looks good to me.  Thanks, Sam!",
+                "html": "<p>Looks good to me.  Thanks, Sam!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-12T17:19:40.251391+00:00",
+            "updated_on": "2013-04-12T17:19:40.259702+00:00",
+            "id": 197181
+        }
+    ]
+}

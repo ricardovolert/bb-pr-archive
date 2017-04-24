@@ -1,0 +1,890 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-12-16T07:16:40.548687+00:00",
+    "comment_count": 14,
+    "description": "It's been a known issue for some time that the yt logger does not work as expected in IPython notebooks, and also that the yt logger modifies the root logger in such a way as to change other loggers (such as Astropy, e.g. [Issue #900](https://bitbucket.org/yt_analysis/yt/issue/900/yt-modifies-logger-which-clashes-with)).\r\n\r\nThe problem was that we were using `logging.basicConfig` to set up the logger, which does not work if a `StreamHandler` is set up by another application, as is the case in IPython notebooks. \r\n\r\nBefore this fix (with yt's loglevel = 20/INFO):\r\n\r\nhttp://nbviewer.ipython.org/gist/jzuhone/35b0045b956209667b11\r\n\r\nAfter this fix (with yt's loglevel = 20/INFO):\r\n\r\nhttp://nbviewer.ipython.org/gist/jzuhone/d66f3f7ef43b300f0a2f\r\n\r\nSo this PR does two things:\r\n\r\n1. Removes all modifications to the root logger. The practical implications of this are that a) other loggers will not be affected by yt's settings (fixing [Issue #900](https://bitbucket.org/yt_analysis/yt/issue/900/yt-modifies-logger-which-clashes-with)) and b) setting `suppressStreamLogging = True` will only suppress the yt log. \r\n\r\n2. Sets up a `StreamHandler` object specific to the yt logger, which will allow it to handle its own settings and prevent IPython (or anything else) from blocking this. \r\n\r\nThe most practical application of this is that logging messages will appear in the IPython notebook in accordance with the yt configuration settings. Otherwise, the behavior of the logger in the IPython console, the standard Python interpreter, and when running Python scripts is not altered.\r\n\r\nThis PR also indicates that OS X 10.10 (Yosemite) is supported by the install script. ",
+    "created_on": "2014-12-12T06:42:58.071975+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/85c080fca437"
+            }
+        },
+        "hash": "85c080fca437"
+    },
+    "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "id": 1355,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/965060fd1dce"
+                }
+            },
+            "hash": "965060fd1dce"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt-3.x",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
+                }
+            },
+            "name": "yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/bca4a0577dde"
+                }
+            },
+            "hash": "bca4a0577dde"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4278754"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4278754"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "This has the possibly undesirable side effect that with the default log level setting (20/INFO), lots of voluminous output will start appearing in Python notebooks. We can resolve this by changing the log level configuration, or perhaps there is an as-yet-undiscovered way to set this differently when in the notebook. ",
+                "html": "<p>This has the possibly undesirable side effect that with the default log level setting (20/INFO), lots of voluminous output will start appearing in Python notebooks. We can resolve this by changing the log level configuration, or perhaps there is an as-yet-undiscovered way to set this differently when in the notebook. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T06:44:46.050478+00:00",
+            "updated_on": "2014-12-12T06:44:46.060319+00:00",
+            "id": 4278754
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4278860"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4278860"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4278754"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4278754"
+                    }
+                },
+                "id": 4278754
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "Maybe this is just a documentation problem?  We should make it clearer how to configure the log level.\n\nThanks for looking into this John.",
+                "html": "<p>Maybe this is just a documentation problem?  We should make it clearer how to configure the log level.</p>\n<p>Thanks for looking into this John.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T06:57:41.415358+00:00",
+            "updated_on": "2014-12-12T06:57:41.423319+00:00",
+            "id": 4278860
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4278884"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4278884"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4278860"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4278860"
+                    }
+                },
+                "id": 4278860
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "We can always change the log level when calling `yt notebook` from the command line, but if you want to use yt from a notebook session not called from there, then you'd have to set it manually. ",
+                "html": "<p>We can always change the log level when calling <code>yt notebook</code> from the command line, but if you want to use yt from a notebook session not called from there, then you'd have to set it manually. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T07:00:10.013101+00:00",
+            "updated_on": "2014-12-12T07:00:10.024537+00:00",
+            "id": 4278884
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4278934"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4278934"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "Incidentally, I learned way more about loggers and IPython's handling of them than I wanted to, so I discovered a fix for a related issue with Astropy: \n\nhttps://github.com/astropy/astropy/pull/3198",
+                "html": "<p>Incidentally, I learned way more about loggers and IPython's handling of them than I wanted to, so I discovered a fix for a related issue with Astropy: </p>\n<p><a href=\"https://github.com/astropy/astropy/pull/3198\" rel=\"nofollow\">https://github.com/astropy/astropy/pull/3198</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T07:05:52.771564+00:00",
+            "updated_on": "2014-12-12T07:05:52.781821+00:00",
+            "id": 4278934
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4286405"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4286405"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4278884"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4278884"
+                    }
+                },
+                "id": 4278884
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "I think this is a good idea.  At least we'll cover the more popular use case.  \n\nAs Nathan suggests, it might be a docs issue too.  Could you add an entry to the FAQ on this?  I think this is a perfect place for this info.",
+                "html": "<p>I think this is a good idea.  At least we'll cover the more popular use case.  </p>\n<p>As Nathan suggests, it might be a docs issue too.  Could you add an entry to the FAQ on this?  I think this is a perfect place for this info.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T15:03:24.637667+00:00",
+            "updated_on": "2014-12-12T15:03:24.653787+00:00",
+            "id": 4286405
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4288372"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4288372"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "Beautiful.",
+                "html": "<p>Beautiful.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T16:19:32.329737+00:00",
+            "updated_on": "2014-12-12T16:19:32.338035+00:00",
+            "id": 4288372
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4289322"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4289322"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "It's been pointed out to me in another context that turning propagation off potentially prevents logging to files from a global logger. Does anyone do this?",
+                "html": "<p>It's been pointed out to me in another context that turning propagation off potentially prevents logging to files from a global logger. Does anyone do this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T17:01:19.299511+00:00",
+            "updated_on": "2014-12-12T17:01:19.308235+00:00",
+            "id": 4289322
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4289701"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4289701"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "On my machine anyway, the table I wrote for the FAQ spans the browser width, which is completely undesirable. Does anyone know what I did wrong?",
+                "html": "<p>On my machine anyway, the table I wrote for the FAQ spans the browser width, which is completely undesirable. Does anyone know what I did wrong?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T17:21:59.817958+00:00",
+            "updated_on": "2014-12-12T17:21:59.827893+00:00",
+            "id": 4289701
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4289733"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4289733"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "Also, I thought that doing something like this would execute code in the notebook:\n\n\n```\n#!python\napp = NotebookApp(open_browser=args.open_browser,\n                  **kwargs)\napp.config.NotebookApp.code_to_run = \\\n    \"from yt.config import ytcfg; ytcfg['yt','loglevel'] = %d\" % args.log_level\napp.initialize(argv=[])\n```\nbut it turns out it does nothing. \n",
+                "html": "<p>Also, I thought that doing something like this would execute code in the notebook:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">app</span> <span class=\"o\">=</span> <span class=\"n\">NotebookApp</span><span class=\"p\">(</span><span class=\"n\">open_browser</span><span class=\"o\">=</span><span class=\"n\">args</span><span class=\"o\">.</span><span class=\"n\">open_browser</span><span class=\"p\">,</span>\n                  <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">)</span>\n<span class=\"n\">app</span><span class=\"o\">.</span><span class=\"n\">config</span><span class=\"o\">.</span><span class=\"n\">NotebookApp</span><span class=\"o\">.</span><span class=\"n\">code_to_run</span> <span class=\"o\">=</span> \\\n    <span class=\"s2\">&quot;from yt.config import ytcfg; ytcfg[&#39;yt&#39;,&#39;loglevel&#39;] = </span><span class=\"si\">%d</span><span class=\"s2\">&quot;</span> <span class=\"o\">%</span> <span class=\"n\">args</span><span class=\"o\">.</span><span class=\"n\">log_level</span>\n<span class=\"n\">app</span><span class=\"o\">.</span><span class=\"n\">initialize</span><span class=\"p\">(</span><span class=\"n\">argv</span><span class=\"o\">=</span><span class=\"p\">[])</span>\n</pre></div>\n\n\n<p>but it turns out it does nothing. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T17:23:45.920434+00:00",
+            "updated_on": "2014-12-12T17:23:45.928454+00:00",
+            "id": 4289733
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4290371"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4290371"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "This should go in before Cameron's doc PR - @chummels you'll need to resolve merge conflicts (if any) with the FAQ once this goes in.  LGTM!",
+                "html": "<p>This should go in before Cameron's doc PR - <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> you'll need to resolve merge conflicts (if any) with the FAQ once this goes in.  LGTM!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T18:02:53.717999+00:00",
+            "updated_on": "2014-12-12T18:02:53.739631+00:00",
+            "id": 4290371
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4292519"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4292519"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "This wasn't quite ready--but I can apply the fixes later. ",
+                "html": "<p>This wasn't quite ready--but I can apply the fixes later. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T20:16:34.696023+00:00",
+            "updated_on": "2014-12-12T20:16:34.703755+00:00",
+            "id": 4292519
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4292558"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4292558"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4292519"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4292519"
+                    }
+                },
+                "id": 4292519
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "I'm sorry, @jzuhone .  I thought it looked great, and thanks for adding the FAQ entry!  Sorry to have jumped the gun!",
+                "html": "<p>I'm sorry, <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> .  I thought it looked great, and thanks for adding the FAQ entry!  Sorry to have jumped the gun!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T20:19:16.648030+00:00",
+            "updated_on": "2014-12-12T20:19:16.662245+00:00",
+            "id": 4292558
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4292576"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4292576"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4292558"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4292558"
+                    }
+                },
+                "id": 4292558
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "The FAQ entry just needs to be fixed up a bit. @ngoldbaum wanted me to rephrase the \"shut up\" sentence, and the table is still spanning the browser. ",
+                "html": "<p>The FAQ entry just needs to be fixed up a bit. <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> wanted me to rephrase the \"shut up\" sentence, and the table is still spanning the browser. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-12T20:20:28.515451+00:00",
+            "updated_on": "2014-12-12T20:20:28.530951+00:00",
+            "id": 4292576
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355/comments/4323804"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355/_/diff#comment-4323804"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] More consistent behavior for the logger, mentioning OS X 10.10 in the install script",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1355"
+                    }
+                },
+                "id": 1355
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-16T07:16:40.295046+00:00",
+            "updated_on": "2014-12-16T07:16:40.527522+00:00",
+            "id": 4323804
+        }
+    ]
+}

@@ -1,0 +1,148 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-03-30T22:16:16.648262+00:00",
+    "comment_count": 0,
+    "description": "Currently if you do \"ctrl-C\" while a volume rendering is processing inside cython, you will need to wait until the control flow returns to the python level before the SIGINT gets processed and a `KeyboardInterrupt` gets raised. Depending on the volume rendering, this can sometimes take a while.\r\n\r\nThis change makes it so that the SIGINT is handled much more quickly (almost instantaneously in my basic tests).\r\n\r\nI benchmarked using the following test script (courtesy Andrew Myers):\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nimport time\r\n\r\nds = yt.load(\"Enzo_64/DD0043/data0043\")\r\nstart = time.time()\r\nim, sc = yt.volume_render(ds, 'density', fname='rendering.png')\r\nprint time.time() - start\r\n\r\n```\r\n\r\nOn a linux server with 40 cores, before this PR the script prints \"14.8716130257\", and after it prints \"14.8941721916\". Retrying 10 or so times, I feel confident that these differences are well within the noise. I also tried with OMP_NUM_THREADS=4, and didn't see any differences there either.\r\n\r\nIf anyone has any suggestions for additional benchmarks to run I'd be happy to oblige.",
+    "created_on": "2016-03-29T16:19:41.061176+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d923aa143295"
+            }
+        },
+        "hash": "d923aa143295"
+    },
+    "title": "Handle KeyboardInterrupt in volume rendering cython loop",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2094"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2094/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "id": 2094,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/ba7e9b3b3fa4"
+                }
+            },
+            "hash": "ba7e9b3b3fa4"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e376760e7ac4"
+                }
+            },
+            "hash": "e376760e7ac4"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": []
+}

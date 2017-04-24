@@ -1,0 +1,307 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2011-10-06T19:57:37.376489+00:00",
+    "comment_count": 3,
+    "description": "Hi all,\r\n\r\nSam said he'd try to take a look at this one, but I'd greatly appreciate eyes from everyone else that can spare some time.  It's a lot bigger than the previous ones.  I committed it on the end of my previous one, so I'm going to just update/replace the data_coords pull request with this combined one.\r\n\r\nThis pull request includes the addition of two new pieces of functionality:\r\n\r\n * Calculating the isocontour vertices for grids instead of just partitioned grids, and wrapping that in a function on AMR3DData.\r\n * Calculating the flux (centroid_value * code_area * (normal dot vector_field)) over isocontours, and wrapping this in a helper function on AMR3DData.\r\n\r\nThere are a couple points to the second item that I'm not sure about.  The main one is that of units: normally, we would want to multiply by something like cm.  We know how to do this for projections, but it's not clear that projection_conversion^2.0 gives us an appropriate area_conversion.  So right now, it's all calculated in the natural units of the field (i.e., CGS) and code units of the area.  I believe it should be left up to the user to correct this.\r\n\r\nThe other item is that I am not yet sure how to test this for accuracy; I did go through quite carefully to make sure that the internal normal vectors and whatnot are reasonable, but suggestions for actually testing correctness would be greatly appreciated.  Visualizing using meshlab the output from the isocontours suggest it is correct, for the marching cubes algorithm.\r\n\r\nI'm very excited about using this functionality, and I'd like to make sure it is correct.  An example script is here:\r\n\r\nhttp://paste.yt-project.org/show/1846/\r\n\r\nI think there may be a corner case with particularly odd choices of data objects, but I'm still thinking about how to work around that.  You can see the usage in a data_object if you uncomment the sphere line, but you might want to make it ~100 kpc.\r\n\r\nNote that this pull request also includes updates to data_coords, which can be tested with this script: http://paste.yt-project.org/show/1845/ .\r\n\r\nThanks very much,\r\n\r\nMatt\r\n\r\n**UPDATE**\r\n\r\nThis includes a new changeset.  Sam's comments pointed out that the normal vectors and areas were not being calculated.  I stripped it down to this:\r\n\r\nhttp://paste.yt-project.org/show/1861/\r\n\r\nand fiddled around until finding that the gradient gives the right normal vector, better than the triangles did.  I also updated eval_gradient to work with pre-offset data.  (It might benefit from an update at some point.)  I think this is now correct, but I'd like Sam to give one more go at checking it out with his test.\r\n\r\nOne minor thing is that I'm not sure if the fluxes point in the right direction; I think the magnitude is now correct, but it's not yet clear to me that (conceptually) we're having them go the right direction.  Sam, what do you think?\r\n\r\nThanks again for testing and brainstorming!\r\n\r\n** UPDATE 2 **\r\n\r\nThis changes it such that the flux is now not multiplied by the contoured field.  It's either multiplied by 1.0 or it can be multiplied against another field, if specified.  Thanks to Sam for pointing out how boneheaded my initial thoughts on this were!  :)\r\n\r\nhttp://paste.yt-project.org/show/1862/\r\n\r\n** UPDATE 3 **\r\n\r\nActually include the negative sign, so that it correctly points \"inward.\"",
+    "created_on": "2011-10-03T19:51:48.906799+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/639506f1b34c"
+            }
+        },
+        "hash": "639506f1b34c"
+    },
+    "title": "Addition of flux calculations",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/samskillman"
+            },
+            "html": {
+                "href": "https://bitbucket.org/samskillman/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Sam Skillman",
+        "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+        "username": "samskillman"
+    },
+    "id": 4,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/7efe36e44c0e"
+                }
+            },
+            "hash": "7efe36e44c0e"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/f666f1121f75"
+                }
+            },
+            "hash": "f666f1121f75"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/comments/323"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4/_/diff#comment-323"
+                }
+            },
+            "pullrequest": {
+                "title": "Addition of flux calculations",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4"
+                    }
+                },
+                "id": 4
+            },
+            "content": {
+                "raw": "Hi Matt,\n\nUnits:\nI think your thought on the units is the right one.  If you think of calculating something like a mass flux, you'd create derived x,y,z momentum-density fields, then dot that with a surface area so that you have [(g/cm^3)*(cm/s)] * [cm^2] = [g/s].\n\nTesting:\n\nSo first of all, running the example script works fine for me.  I can think of a few ways to test this.  One that I just tried out was contouring on 'x', and using vector fields of 'Ones'.  It turns out that if you do this on all_data(), the interpolation of the ghost zones means that in my periodic box I got two sets of surfaces (one at x=0.5, one at the periodic boundary). Now, if I make a region that is c=[0.5]*3 and c-+0.25 for the LE,RE, and remember to not normalize the vertices, I get a single surface that has values of x=0.5, so that seems to pick up that simple case.  In meshlab it looks like a nice plane.  I've moved around to different x values and it even picks up stuff like the AMR region and seems to cover it.\n\nThe cooler test is to make a field r=(x^2+y^2+z^2)^1/2.  I've currently got a meshlab image of 1/8th a sphere on all_data().  It does again pick up the periodic boundaries, which is (maybe) not ideal?  Pretty cool looking...\n\nNow, what I expected to get from\n\nc = na.array([0.5]*3)\n\ndd = pf.h.region(c, c-0.25, c+0.25)\n\nflux = dd.calculate_isocontour_flux(\"x\", 0.5,\"Ones\", \"Ones\", \"Ones\") \n\nwas flux = 0.25 or maybe 0.25/sqrt(3) corresponding to the surface area of the square with length 0.5 on each side..  However, I got -1.642e-5.  Even if you take the magnitude of that, I don't think that it would be correct.  Maybe I'm thinking about this incorrectly.  \nI tried normalizing the normal vector here: \n\n                        normal[0] = ( current.p[0][1] * current.p[1][2]\n                                    - current.p[0][2] * current.p[1][1])\n\n                        normal[1] = ( current.p[0][2] * current.p[1][0]\n                                    - current.p[0][0] * current.p[1][2])\n\n                        normal[2] = ( current.p[0][0] * current.p[1][1]\n                                    - current.p[0][1] * current.p[1][0])\n\n                        norm_mag = (normal[0]^2 + normal[1]^2 + normal[2]^2)^0.5 # excuse the ^ over stars for this formatting.\n\n                        temp = wval * (fv[0] * normal[0] +\n\n                                       fv[1] * normal[1] +\n\n                                       fv[2] * normal[2])/norm_mag\n\nBut that only brought the flux to -1.401e-3 for the same case as above.  I'm not currently seeing anything else obvious.\n\nI could also see using the gdf to create an ideal dataset that you can calculate the flux through some spherically symmetric object or something.  Another good test might be to take an MHD simulation and calculate the total B flux through the surface and make sure it's small.\n\nI'll keep looking through the flux calculation and thinking of other tests, but I might not get to it immediately.\n\nSam\n\n",
+                "html": "<p>Hi Matt,</p>\n<p>Units:\nI think your thought on the units is the right one.  If you think of calculating something like a mass flux, you'd create derived x,y,z momentum-density fields, then dot that with a surface area so that you have [(g/cm^3)*(cm/s)] * [cm^2] = [g/s].</p>\n<p>Testing:</p>\n<p>So first of all, running the example script works fine for me.  I can think of a few ways to test this.  One that I just tried out was contouring on 'x', and using vector fields of 'Ones'.  It turns out that if you do this on all_data(), the interpolation of the ghost zones means that in my periodic box I got two sets of surfaces (one at x=0.5, one at the periodic boundary). Now, if I make a region that is c=[0.5]*3 and c-+0.25 for the LE,RE, and remember to not normalize the vertices, I get a single surface that has values of x=0.5, so that seems to pick up that simple case.  In meshlab it looks like a nice plane.  I've moved around to different x values and it even picks up stuff like the AMR region and seems to cover it.</p>\n<p>The cooler test is to make a field r=(x^2+y^2+z^2)^1/2.  I've currently got a meshlab image of 1/8th a sphere on all_data().  It does again pick up the periodic boundaries, which is (maybe) not ideal?  Pretty cool looking...</p>\n<p>Now, what I expected to get from</p>\n<p>c = na.array([0.5]*3)</p>\n<p>dd = pf.h.region(c, c-0.25, c+0.25)</p>\n<p>flux = dd.calculate_isocontour_flux(\"x\", 0.5,\"Ones\", \"Ones\", \"Ones\") </p>\n<p>was flux = 0.25 or maybe 0.25/sqrt(3) corresponding to the surface area of the square with length 0.5 on each side..  However, I got -1.642e-5.  Even if you take the magnitude of that, I don't think that it would be correct.  Maybe I'm thinking about this incorrectly.  \nI tried normalizing the normal vector here: </p>\n<p>                        normal[0] = ( current.p[0][1] * current.p[1][2]\n                                    - current.p[0][2] * current.p[1][1])</p>\n<p>                        normal[1] = ( current.p[0][2] * current.p[1][0]\n                                    - current.p[0][0] * current.p[1][2])</p>\n<p>                        normal[2] = ( current.p[0][0] * current.p[1][1]\n                                    - current.p[0][1] * current.p[1][0])</p>\n<p>                        norm_mag = (normal[0]^2 + normal[1]^2 + normal[2]^2)^0.5 # excuse the ^ over stars for this formatting.</p>\n<p>                        temp = wval * (fv[0] * normal[0] +</p>\n<p>                                       fv[1] * normal[1] +</p>\n<p>                                       fv[2] * normal[2])/norm_mag</p>\n<p>But that only brought the flux to -1.401e-3 for the same case as above.  I'm not currently seeing anything else obvious.</p>\n<p>I could also see using the gdf to create an ideal dataset that you can calculate the flux through some spherically symmetric object or something.  Another good test might be to take an MHD simulation and calculate the total B flux through the surface and make sure it's small.</p>\n<p>I'll keep looking through the flux calculation and thinking of other tests, but I might not get to it immediately.</p>\n<p>Sam</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2011-10-06T16:49:24.574912+00:00",
+            "updated_on": "2011-10-06T16:51:31.548680+00:00",
+            "id": 323
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/comments/324"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4/_/diff#comment-324"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/comments/323"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4/_/diff#comment-323"
+                    }
+                },
+                "id": 323
+            },
+            "pullrequest": {
+                "title": "Addition of flux calculations",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4"
+                    }
+                },
+                "id": 4
+            },
+            "content": {
+                "raw": "Thanks, Sam.  Inspired by your suggestion, I wrote a very small script to try to implement it:\n\nhttp://paste.yt-project.org/show/1860/\n\nFor my 100,100,100 grid running from 0 .. 1, isocontoured at x=0.591, with flux only along x, I get -2.518e-3.  I'll continue looking into it, but I think I should be getting a flux of 1.0.",
+                "html": "<p>Thanks, Sam.  Inspired by your suggestion, I wrote a very small script to try to implement it:</p>\n<p><a href=\"http://paste.yt-project.org/show/1860/\">http://paste.yt-project.org/show/1860/</a></p>\n<p>For my 100,100,100 grid running from 0 .. 1, isocontoured at x=0.591, with flux only along x, I get -2.518e-3.  I'll continue looking into it, but I think I should be getting a flux of 1.0.</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2011-10-06T17:41:23.672358+00:00",
+            "updated_on": "2011-10-06T17:41:23.686370+00:00",
+            "id": 324
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4/comments/327"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4/_/diff#comment-327"
+                }
+            },
+            "pullrequest": {
+                "title": "Addition of flux calculations",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/4"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/4"
+                    }
+                },
+                "id": 4
+            },
+            "content": {
+                "raw": "After UPDATE 3, everything looks good to me on the contour flux calculation.  Accepting!",
+                "html": "<p>After UPDATE 3, everything looks good to me on the contour flux calculation.  Accepting!</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2011-10-06T19:57:26.072445+00:00",
+            "updated_on": "2011-10-06T19:57:26.093732+00:00",
+            "id": 327
+        }
+    ]
+}

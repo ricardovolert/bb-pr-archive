@@ -1,0 +1,642 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-10-26T18:47:34.100133+00:00",
+    "comment_count": 9,
+    "description": "This uses memoryviews to make it easier to access the underlying data in\r\ngrid_containers as well as in oct_containers.\r\n\r\nFor example, this script:\r\n\r\n\r\n```\r\n#!python\r\nimport numpy as np\r\nimport yt\r\nds = yt.load(\"ramses_mhd_amr/output_00019/info_00019.txt\")\r\noh = ds.index.domains[0]\r\nmv = oh.oct_handler.get_memview()\r\nds2 = yt.load(\"IsolatedGalaxy/galaxy0030/galaxy0030\")\r\ntree = ds2.index._get_grid_tree()\r\ngrids = tree.grid_arrays\r\n```\r\n\r\nWith this change, we can now start moving *everything* to the GridTree, and we\r\ncan also start making the Octs much more visible.  It should be a lot easier to\r\nhandle enhancements to grid visitors, and also eventually even getting rid of\r\nhaving the hierarchy stored in Python (except on-demand) for AMR datasets.\r\n\r\n",
+    "created_on": "2015-10-18T03:53:38.220773+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/75c9b92eb87a"
+            }
+        },
+        "hash": "75c9b92eb87a"
+    },
+    "title": "Adding grid_arrays to grid_container",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1818,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/7abdbfb8260c"
+                }
+            },
+            "hash": "7abdbfb8260c"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/2096df33b692"
+                }
+            },
+            "hash": "2096df33b692"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903213"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903213"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "I *think* you want this to be pointed at the \"development\" head.",
+                "html": "<p>I <em>think</em> you want this to be pointed at the \"development\" head.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T03:58:11.844366+00:00",
+            "updated_on": "2015-10-18T03:58:11.848109+00:00",
+            "id": 10903213
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903216"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903216"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903213"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903213"
+                    }
+                },
+                "id": 10903213
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "Looks like you fixed it quickly :)",
+                "html": "<p>Looks like you fixed it quickly :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T03:59:47.792355+00:00",
+            "updated_on": "2015-10-18T03:59:47.794459+00:00",
+            "id": 10903216
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903225"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903225"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903216"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903216"
+                    }
+                },
+                "id": 10903216
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "Before you'd left the comment, even.  :)",
+                "html": "<p>Before you'd left the comment, even.  :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T04:05:11.349227+00:00",
+            "updated_on": "2015-10-18T04:05:11.379596+00:00",
+            "id": 10903225
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903257"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903257"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "Awesome, this works great! I'm able to run your test script with no issues locally.\n\nWhat do you think about making some tests for the new functionality you've added? This could be as simple as converting the test script you've added into a unit test that does `requires_file` on the ramses and enzo datasets you're loading.",
+                "html": "<p>Awesome, this works great! I'm able to run your test script with no issues locally.</p>\n<p>What do you think about making some tests for the new functionality you've added? This could be as simple as converting the test script you've added into a unit test that does <code>requires_file</code> on the ramses and enzo datasets you're loading.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T04:31:59.033004+00:00",
+            "updated_on": "2015-10-18T04:31:59.035242+00:00",
+            "id": 10903257
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903259"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:648624c4ca8b..ca754f897f2f?path=yt%2Fgeometry%2Foct_container.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903259"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "Maybe this could be exposed as an `oct_arrays` property like with the grids?",
+                "html": "<p>Maybe this could be exposed as an <code>oct_arrays</code> property like with the grids?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T04:32:51.400200+00:00",
+            "updated_on": "2015-10-18T04:32:51.405974+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/oct_container.pyx",
+                "to": 113
+            },
+            "id": 10903259
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903328"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903328"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T05:29:43.197195+00:00",
+            "updated_on": "2015-10-18T05:29:43.260704+00:00",
+            "id": 10903328
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10905270"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10905270"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10903257"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10903257"
+                    }
+                },
+                "id": 10903257
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "Yup, sounds good.  I'm going to make the changes and add this.\n\nI've added trello cards for making the full AMR hierarchy use this, to avoid duplication of memory.  It will probably take a bit of work because it would mean inverting the order of creating the grid tree, but I think it would be better.",
+                "html": "<p>Yup, sounds good.  I'm going to make the changes and add this.</p>\n<p>I've added trello cards for making the full AMR hierarchy use this, to avoid duplication of memory.  It will probably take a bit of work because it would mean inverting the order of creating the grid tree, but I think it would be better.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T16:10:34.577699+00:00",
+            "updated_on": "2015-10-18T16:10:34.593850+00:00",
+            "id": 10905270
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10905277"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10905277"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10905270"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10905270"
+                    }
+                },
+                "id": 10905270
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "Also, it'll need to be made 64-bit safe, which it isn't at present.",
+                "html": "<p>Also, it'll need to be made 64-bit safe, which it isn't at present.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T16:12:19.101087+00:00",
+            "updated_on": "2015-10-18T16:12:19.103379+00:00",
+            "id": 10905277
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818/comments/10905578"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818/_/diff#comment-10905578"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding grid_arrays to grid_container",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1818"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1818"
+                    }
+                },
+                "id": 1818
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-10-18T17:39:56.186929+00:00",
+            "updated_on": "2015-10-18T17:39:56.233880+00:00",
+            "id": 10905578
+        }
+    ]
+}

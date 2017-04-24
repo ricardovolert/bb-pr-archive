@@ -1,0 +1,402 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-06-01T18:23:42.107769+00:00",
+    "comment_count": 5,
+    "description": "This is the start of some refactoring of AMR KDTree.  I'm going to use the open PR as a place to store some work and thoughts.  A few things that will be attempted: superclass the tree to enable non-grid based splits, and memoryviews everywhere instead of pointers.\r\n\r\nUPDATE 0: This contains a refactoring of the kdtools file to use memoryviews everywhere it can.  Note that in many cases, I've converted to using `alloca`, which may *break* if it can't get a big enough array on the stack.  So those may need to be changed back, but I don't have a handy/good solution yet for the allocation/deallocation of memoryviews like that.\r\n\r\nUPDATE 1: This now uses cython arrays, which may have slightly higher overhead (see http://stackoverflow.com/questions/18462785/what-is-the-recommended-way-of-allocating-memory-for-a-typed-memory-view ) but are safer than alloca for large array allocations.  I believe this is ready for review, as I'm going to push off any subsequent changes to subsequent PRs.",
+    "created_on": "2016-05-19T01:46:43.701981+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/6873d6aa7e0a"
+            }
+        },
+        "hash": "6873d6aa7e0a"
+    },
+    "title": "Switch to memoryviews in AMRKDTree",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2185,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/4598672884af"
+                }
+            },
+            "hash": "4598672884af"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b8a09cd382dd"
+                }
+            },
+            "hash": "b8a09cd382dd"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/comments/18696489"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185/_/diff#comment-18696489"
+                }
+            },
+            "pullrequest": {
+                "title": "Switch to memoryviews in AMRKDTree",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185"
+                    }
+                },
+                "id": 2185
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/462/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/462/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/462/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-05-19T13:10:16.992196+00:00",
+            "updated_on": "2016-05-19T13:10:17.071525+00:00",
+            "id": 18696489
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/comments/18699730"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185/_/diff#comment-18699730"
+                }
+            },
+            "pullrequest": {
+                "title": "Switch to memoryviews in AMRKDTree",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185"
+                    }
+                },
+                "id": 2185
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/463/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/463/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/463/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-05-19T13:59:37.120010+00:00",
+            "updated_on": "2016-05-19T13:59:37.195185+00:00",
+            "id": 18699730
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/comments/18704360"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185/_/diff#comment-18704360"
+                }
+            },
+            "pullrequest": {
+                "title": "Switch to memoryviews in AMRKDTree",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185"
+                    }
+                },
+                "id": 2185
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/464/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/464/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/464/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-05-19T14:59:49.813708+00:00",
+            "updated_on": "2016-05-19T14:59:49.882581+00:00",
+            "id": 18704360
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/comments/18709452"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185/_/diff#comment-18709452"
+                }
+            },
+            "pullrequest": {
+                "title": "Switch to memoryviews in AMRKDTree",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185"
+                    }
+                },
+                "id": 2185
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/465/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/465/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/465/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-05-19T16:17:02.542644+00:00",
+            "updated_on": "2016-05-19T16:17:02.619967+00:00",
+            "id": 18709452
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185/comments/18715934"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:4598672884af..b8a09cd382dd?path=yt%2Futilities%2Flib%2Famr_kdtools.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185/_/diff#comment-18715934"
+                }
+            },
+            "pullrequest": {
+                "title": "Switch to memoryviews in AMRKDTree",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2185"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2185"
+                    }
+                },
+                "id": 2185
+            },
+            "content": {
+                "raw": ":clap:",
+                "html": "<p><img src=\"https://d301sr5gafysq2.cloudfront.net/1fcbca467d92/emoji/img/clap.svg\" alt=\"clap\" title=\"clap\" class=\"emoji\"></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-05-19T18:44:26.962875+00:00",
+            "updated_on": "2016-05-19T18:44:26.968650+00:00",
+            "inline": {
+                "from": 360,
+                "path": "yt/utilities/lib/amr_kdtools.pyx",
+                "to": null
+            },
+            "id": 18715934
+        }
+    ]
+}

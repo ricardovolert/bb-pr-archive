@@ -1,0 +1,737 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-08-23T16:54:38.999358+00:00",
+    "comment_count": 11,
+    "description": "Currently, we mask LightRay data to only include cells with non-zero values of any included field with units of 'K', 'g/cm**3', or 'cm**-3'.  This means that the inclusion of a field with legitimate zero values, like 30-ionized Zinc, will mask out all fields including 'density', 'temperature', and 'H_number_density', which may contain necessary and still useful data.\r\n\r\nI have removed the stringent requirements on the LightRay constructor, and only require it to mask out cells with zero-value temperature, since that is what was actually responsible for breaking things in Issue #1232 which ultimately led to the current situation.  \r\n\r\nFurthermore, I make an additional check in the AbsorptionSpectrum itself to avoid hitting cells with zero values in the temperature field or zero values in any of the ion_field *at the time each field is being added to the AbsorptionSpectrum*.  Lastly, I update the docs and include a test which explicitly covers the problem script submitted in Issue #1232 to assure we never break on that again.\r\n\r\nUPDATE1: Removing unused unit import to pass flake tests.\r\n\r\nUPDATE2: Making temperature field automatically added to LightRay as suggested by @brittonsmith .",
+    "created_on": "2016-08-19T07:14:00.161233+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c2ff880b5787cfe955d8871bc548a8d18b68303c"
+            }
+        },
+        "hash": "c2ff880b5787cfe955d8871bc548a8d18b68303c"
+    },
+    "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 2344,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/c2ff880b5787"
+                }
+            },
+            "hash": "c2ff880b5787"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/9d20cd224c72"
+                }
+            },
+            "hash": "9d20cd224c72"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22569876"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22569876"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/47/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/47/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/47/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T07:56:02.561682+00:00",
+            "updated_on": "2016-08-19T07:56:02.627879+00:00",
+            "id": 22569876
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22572110"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22572110"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1157/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1157/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1157/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1157/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1157/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1157/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T08:40:46.823868+00:00",
+            "updated_on": "2016-08-19T08:40:46.889504+00:00",
+            "id": 22572110
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22574437"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:aa2ad4a0ca1f..9d20cd224c72?path=yt%2Fanalysis_modules%2Fcosmological_observation%2Flight_ray%2Flight_ray.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22574437"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "Is there no need to do this with the density field as well?  Also, perhaps it's worth trying to add the temperature field automatically.",
+                "html": "<p>Is there no need to do this with the density field as well?  Also, perhaps it's worth trying to add the temperature field automatically.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T09:23:37.255470+00:00",
+            "updated_on": "2016-08-19T09:23:37.258991+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/cosmological_observation/light_ray/light_ray.py",
+                "to": 609
+            },
+            "id": 22574437
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22595841"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fcosmological_observation%2Flight_ray%2Flight_ray.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22595841"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22574437"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22574437"
+                    }
+                },
+                "id": 22574437
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "Well, strictly speaking, the density field is not required for this operation.  You only need the field corresponding to the line feature, which is typically an ion field.  The temperature field, on the other hand, is always required, because it defines the thermal width of the individual voigt profiles.  So effectively by masking out zero values in the density field, we should get rid of any non-physical values when creating the LightRay.  But even if we don't, the AbsorptionSpectrum will skip any non-physical field values by passing on cells where temperature or the ion_field == 0 at the time lines are deposited.\n\nWe could automatically include temperature, but sometimes temperature is set as `'temperature'`, and sometimes it is set as `('gas', 'temperature')`.  I *think* if we just always grab `('gas', 'temperature')` that it will get the right field, but I have not tested this.  ",
+                "html": "<p>Well, strictly speaking, the density field is not required for this operation.  You only need the field corresponding to the line feature, which is typically an ion field.  The temperature field, on the other hand, is always required, because it defines the thermal width of the individual voigt profiles.  So effectively by masking out zero values in the density field, we should get rid of any non-physical values when creating the LightRay.  But even if we don't, the AbsorptionSpectrum will skip any non-physical field values by passing on cells where temperature or the ion_field == 0 at the time lines are deposited.</p>\n<p>We could automatically include temperature, but sometimes temperature is set as <code>'temperature'</code>, and sometimes it is set as <code>('gas', 'temperature')</code>.  I <em>think</em> if we just always grab <code>('gas', 'temperature')</code> that it will get the right field, but I have not tested this.  </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T15:15:00.260113+00:00",
+            "updated_on": "2016-08-19T15:15:00.263698+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/cosmological_observation/light_ray/light_ray.py",
+                "to": null
+            },
+            "id": 22595841
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22605415"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22605415"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/51/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/51/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/51/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T18:26:42.811032+00:00",
+            "updated_on": "2016-08-19T18:26:42.877848+00:00",
+            "id": 22605415
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22605943"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22605943"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22605415"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22605415"
+                    }
+                },
+                "id": 22605415
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "I don't see any failures on these tests.",
+                "html": "<p>I don't see any failures on these tests.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T18:39:51.151181+00:00",
+            "updated_on": "2016-08-19T18:39:51.153514+00:00",
+            "id": 22605943
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22605958"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22605958"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1161/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1161/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1161/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1161/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1161/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1161/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T18:40:11.891307+00:00",
+            "updated_on": "2016-08-19T18:40:11.971359+00:00",
+            "id": 22605958
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22606833"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22606833"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22605943"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22605943"
+                    }
+                },
+                "id": 22605943
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "The python2.7 tests timed out (see how it ran for 2 hours) due to the hang we've been seeing recently. It's almost certainly unrelated to your pull request, but you can double-check by triggering another test run.",
+                "html": "<p>The python2.7 tests timed out (see how it ran for 2 hours) due to the hang we've been seeing recently. It's almost certainly unrelated to your pull request, but you can double-check by triggering another test run.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T19:01:48.788512+00:00",
+            "updated_on": "2016-08-19T19:01:48.791222+00:00",
+            "id": 22606833
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22607264"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22607264"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/52/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/52/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/52/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T19:13:49.820034+00:00",
+            "updated_on": "2016-08-19T19:13:49.890839+00:00",
+            "id": 22607264
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22613982"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22613982"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/53/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/53/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/53/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-19T23:08:27.873954+00:00",
+            "updated_on": "2016-08-19T23:08:27.951234+00:00",
+            "id": 22613982
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/devinsilvia"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/devinsilvia/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/devinsilvia/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Devin Silvia",
+                "uuid": "{de10a23c-34a0-4f76-a031-b5ec3b2a34db}",
+                "username": "devinsilvia"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344/comments/22732615"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344/_/diff#comment-22732615"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Prevents overmasking of LightRay data. Closes #1262",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2344"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2344"
+                    }
+                },
+                "id": 2344
+            },
+            "content": {
+                "raw": "As far as I can tell, this should avoid the issues during spectrum generation when density or temperature values are not present.",
+                "html": "<p>As far as I can tell, this should avoid the issues during spectrum generation when density or temperature values are not present.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-23T16:51:30.588584+00:00",
+            "updated_on": "2016-08-23T16:51:30.632561+00:00",
+            "id": 22732615
+        }
+    ]
+}

@@ -1,0 +1,1453 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-08-20T19:03:37.274618+00:00",
+    "comment_count": 22,
+    "description": "This implements functionality to allow one to get different colored grids (shades of white to black) for the overplot grid boxes in the plot window interface using \"annotate_grids\".  I'm happy to edit the docs describing this feature, but I wanted to make sure people thought the feature was fine as is before I did.\r\n\r\nUPDATE 1:  Applied the suggestion of @samskillman by following the same mechanism for adding colors to grid cells of different levels as that used in the camera object for volume rendering.  In the process of doing this, I no longer use a shaded_level kwarg, but now I use a cmap kwarg.  If cmap=None, then it produces the previous behavior of plotting black for all grid cells (of all levels).  The default, however, is to use a white-to-black colormap from low to high refinement levels.\r\n\r\nIn the process of writing this PR, I realized there were no good colormaps for going from white to black, so I modified the look-up tables to include a \"reverse\" colormap for each of the existing colormaps already defined in yt.  By simply adding an \"_r\" to the end of any existing colormap, you get the reversal of it.  This is consistent with the convention set by matplotlib.\r\n\r\nAgain, I'm happy to include an example in the cookbook of this when we reach acceptance level on the functional form and syntax.\r\n\r\nUPDATE 2:  Updated the docstrings as per Nathan's request.  I hadn't realized why the callback docstrings were a different format, but now I do.  Fixed (and fixed a few others that were out of sync with their true kw list).  Additionally made a cookbook entry in the docs as a separate PR to that repo.",
+    "created_on": "2013-08-15T01:20:19.890257+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/04f2aa00bfa6"
+            }
+        },
+        "hash": "04f2aa00bfa6"
+    },
+    "title": "Adding shaded_level kwarg to annotate_grids",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 571,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/c0ffdcc604f7"
+                }
+            },
+            "hash": "c0ffdcc604f7"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5cd76d510e52"
+                }
+            },
+            "hash": "5cd76d510e52"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/469960"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:f633de3b779a..7d2a2985e72d?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-469960"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "The two lines above are functionally repeated below, can you move them outside of the `if else` block?",
+                "html": "<p>The two lines above are functionally repeated below, can you move them outside of the <code>if else</code> block?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T01:33:13.131822+00:00",
+            "updated_on": "2013-08-15T02:03:51.085362+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 421
+            },
+            "id": 469960
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/469961"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:f633de3b779a..7d2a2985e72d?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-469961"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Delete this extra whitespace, it doesn't need to be part of the PR.",
+                "html": "<p>Delete this extra whitespace, it doesn't need to be part of the PR.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T01:33:38.588961+00:00",
+            "updated_on": "2013-08-15T01:33:38.598116+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 441
+            },
+            "id": 469961
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470022"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470022"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/469960"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-469960"
+                    }
+                },
+                "id": 469960
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "I don't think so unfortunately.  The add_collection function has to be called on each individual grid_collection (i.e. each refinement level), so it cannot be removed from the \"for j,level in enumerate()\" block.  Thus, it doesn't make much sense to pull it out of this if statement, since I'd just be moving it to after the else statement.",
+                "html": "<p>I don't think so unfortunately.  The add_collection function has to be called on each individual grid_collection (i.e. each refinement level), so it cannot be removed from the \"for j,level in enumerate()\" block.  Thus, it doesn't make much sense to pull it out of this if statement, since I'd just be moving it to after the else statement.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T02:16:12.376495+00:00",
+            "updated_on": "2013-08-15T02:16:12.383730+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 470022
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470046"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470046"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470022"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470022"
+                    }
+                },
+                "id": 470022
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Couldn't you precalculate `edgecolors` in the for loop below, and then only call `PolyCollection` once?",
+                "html": "<p>Couldn't you precalculate <code>edgecolors</code> in the for loop below, and then only call <code>PolyCollection</code> once?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T02:28:14.199401+00:00",
+            "updated_on": "2013-08-15T02:28:14.209370+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 470046
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470082"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470082"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470046"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470046"
+                    }
+                },
+                "id": 470046
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Yes, I suppose I could make a new edgecolors_array object which stores edgecolors for each iteration in the for loop and remove PolyCollection from the for loop.  But then I'd have to unpack that edgecolors array by making a second for loop which runs PolyCollection on each individual level's edgecolors instance.\n\nWould I achieve the simplicity of having PolyCollection only once in the code? Yes.  Would it save any computational time? No.  Would it increase memory consumption? Yes, due to the extra edgecolors array.  And it would add a bunch of lines to the code and make it harder to follow.\n\nI think I'm going to leave it as is.",
+                "html": "<p>Yes, I suppose I could make a new edgecolors_array object which stores edgecolors for each iteration in the for loop and remove PolyCollection from the for loop.  But then I'd have to unpack that edgecolors array by making a second for loop which runs PolyCollection on each individual level's edgecolors instance.</p>\n<p>Would I achieve the simplicity of having PolyCollection only once in the code? Yes.  Would it save any computational time? No.  Would it increase memory consumption? Yes, due to the extra edgecolors array.  And it would add a bunch of lines to the code and make it harder to follow.</p>\n<p>I think I'm going to leave it as is.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T02:47:47.329406+00:00",
+            "updated_on": "2013-08-15T02:47:47.339059+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 470082
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470261"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470261"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470082"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470082"
+                    }
+                },
+                "id": 470082
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Sorry I wasn't clearer, it's much easier than that if you just sort the grids by level first. I went ahead and implemented this.  The following diff is relative to the tip of this PR:\n\n```\n#!diff\n\ndiff -r f633de3b779a yt/visualization/plot_modifications.py\n--- a/yt/visualization/plot_modifications.py    Wed Aug 14 18:14:05 2013 -0700\n+++ b/yt/visualization/plot_modifications.py    Wed Aug 14 21:23:02 2013 -0700\n@@ -386,9 +386,10 @@\n             pxs, pys = np.mgrid[-1:1:3j,-1:1:3j]\n         else:\n             pxs, pys = np.mgrid[0:0:1j,0:0:1j]\n-        GLE = plot.data.grid_left_edge\n-        GRE = plot.data.grid_right_edge\n-        grid_levels = plot.data.grid_levels[:,0]\n+        srt = np.argsort(plot.data.grid_levels[:,0])\n+        grid_levels = plot.data.grid_levels[srt,0]\n+        GLE = plot.data.grid_left_edge[srt,:]\n+        GRE = plot.data.grid_right_edge[srt,:]\n         min_level = self.min_level\n         max_level = self.max_level\n         if min_level is None:\n@@ -411,31 +412,24 @@\n             verts = np.array(\n                 [(left_edge_x, left_edge_x, right_edge_x, right_edge_x),\n                  (left_edge_y, right_edge_y, right_edge_y, left_edge_y)])\n-            if not self.shaded_levels:\n-                verts=verts.transpose()[visible,:,:]\n-                edgecolors = (0.0,0.0,0.0,self.alpha)\n-                grid_collection = matplotlib.collections.PolyCollection(\n+            verts=verts.transpose()[visible,:,:]\n+            # if shaded_levels is defined, then make the different\n+            # grid boxes different colors, from white to black.\n+            if self.shaded_levels:\n+                edgecolors = []\n+                for j,level in enumerate(range(min_level, max_level+1)):\n+                    shade = 1 - (j*(1./(self.max_level - self.min_level)))\n+                    rgba_tup = (shade, shade, shade, self.alpha)\n+                    grids_on_lev = np.logical_and(visible, grid_levels == level)\n+                    grids_on_lev = np.where(grids_on_lev)[0]\n+                    edgecolors = edgecolors + [rgba_tup]*len(grids_on_lev)\n+            else:\n+                edgecolors = (0.0, 0.0, 0.0, self.alpha)\n+            grid_collection = matplotlib.collections.PolyCollection(\n                     verts, facecolors=\"none\",\n                     edgecolors=edgecolors)\n-                plot._axes.hold(True)\n-                plot._axes.add_collection(grid_collection)\n-            # if shaded_levels is defined, then make the different\n-            # grid boxes different colors.  lowest level of resolution\n-            # is white and go up in shades of gray to highest level\n-            # of resolution which is black.\n-            else:\n-                level_range = max_level - min_level\n-                for j,level in enumerate(range(min_level, max_level+1)):\n-                    edge_shade = 1-(j*(1./level_range))\n-                    edgecolors = (edge_shade, edge_shade, edge_shade, self.alpha)\n-                    one_level =  ( xpix * (right_edge_x - left_edge_x) / (xx1 - xx0) > self.min_pix ) & \\\n-                                 ( ypix * (right_edge_y - left_edge_y) / (yy1 - yy0) > self.min_pix ) & \\\n-                                 ( grid_levels == level)\n-                    grid_collection = matplotlib.collections.PolyCollection(\n-                                      verts.transpose()[one_level,:,:], facecolors=\"none\",\n-                                      edgecolors=edgecolors)\n-                    plot._axes.hold(True)\n-                    plot._axes.add_collection(grid_collection)\n+            plot._axes.hold(True)\n+            plot._axes.add_collection(grid_collection)\n             if self.draw_ids:\n                 visible_ids =  ( xpix * (right_edge_x - left_edge_x) / (xx1 - xx0) > self.min_pix_ids ) & \\\n                                ( ypix * (right_edge_y - left_edge_y) / (yy1 - yy0) > self.min_pix_ids )\n```\n\nThe extra memory consumption is trivial, I think, and the original solution uses more code. This also avoids duplicating code and makes it so only edgecolors is touched inside the new if statement, which should help avoid bugs in the future.",
+                "html": "<p>Sorry I wasn't clearer, it's much easier than that if you just sort the grids by level first. I went ahead and implemented this.  The following diff is relative to the tip of this PR:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"gh\">diff -r f633de3b779a yt/visualization/plot_modifications.py</span>\n<span class=\"gd\">--- a/yt/visualization/plot_modifications.py    Wed Aug 14 18:14:05 2013 -0700</span>\n<span class=\"gi\">+++ b/yt/visualization/plot_modifications.py    Wed Aug 14 21:23:02 2013 -0700</span>\n<span class=\"gu\">@@ -386,9 +386,10 @@</span>\n             pxs, pys = np.mgrid[-1:1:3j,-1:1:3j]\n         else:\n             pxs, pys = np.mgrid[0:0:1j,0:0:1j]\n<span class=\"gd\">-        GLE = plot.data.grid_left_edge</span>\n<span class=\"gd\">-        GRE = plot.data.grid_right_edge</span>\n<span class=\"gd\">-        grid_levels = plot.data.grid_levels[:,0]</span>\n<span class=\"gi\">+        srt = np.argsort(plot.data.grid_levels[:,0])</span>\n<span class=\"gi\">+        grid_levels = plot.data.grid_levels[srt,0]</span>\n<span class=\"gi\">+        GLE = plot.data.grid_left_edge[srt,:]</span>\n<span class=\"gi\">+        GRE = plot.data.grid_right_edge[srt,:]</span>\n         min_level = self.min_level\n         max_level = self.max_level\n         if min_level is None:\n<span class=\"gu\">@@ -411,31 +412,24 @@</span>\n             verts = np.array(\n                 [(left_edge_x, left_edge_x, right_edge_x, right_edge_x),\n                  (left_edge_y, right_edge_y, right_edge_y, left_edge_y)])\n<span class=\"gd\">-            if not self.shaded_levels:</span>\n<span class=\"gd\">-                verts=verts.transpose()[visible,:,:]</span>\n<span class=\"gd\">-                edgecolors = (0.0,0.0,0.0,self.alpha)</span>\n<span class=\"gd\">-                grid_collection = matplotlib.collections.PolyCollection(</span>\n<span class=\"gi\">+            verts=verts.transpose()[visible,:,:]</span>\n<span class=\"gi\">+            # if shaded_levels is defined, then make the different</span>\n<span class=\"gi\">+            # grid boxes different colors, from white to black.</span>\n<span class=\"gi\">+            if self.shaded_levels:</span>\n<span class=\"gi\">+                edgecolors = []</span>\n<span class=\"gi\">+                for j,level in enumerate(range(min_level, max_level+1)):</span>\n<span class=\"gi\">+                    shade = 1 - (j*(1./(self.max_level - self.min_level)))</span>\n<span class=\"gi\">+                    rgba_tup = (shade, shade, shade, self.alpha)</span>\n<span class=\"gi\">+                    grids_on_lev = np.logical_and(visible, grid_levels == level)</span>\n<span class=\"gi\">+                    grids_on_lev = np.where(grids_on_lev)[0]</span>\n<span class=\"gi\">+                    edgecolors = edgecolors + [rgba_tup]*len(grids_on_lev)</span>\n<span class=\"gi\">+            else:</span>\n<span class=\"gi\">+                edgecolors = (0.0, 0.0, 0.0, self.alpha)</span>\n<span class=\"gi\">+            grid_collection = matplotlib.collections.PolyCollection(</span>\n                     verts, facecolors=&quot;none&quot;,\n                     edgecolors=edgecolors)\n<span class=\"gd\">-                plot._axes.hold(True)</span>\n<span class=\"gd\">-                plot._axes.add_collection(grid_collection)</span>\n<span class=\"gd\">-            # if shaded_levels is defined, then make the different</span>\n<span class=\"gd\">-            # grid boxes different colors.  lowest level of resolution</span>\n<span class=\"gd\">-            # is white and go up in shades of gray to highest level</span>\n<span class=\"gd\">-            # of resolution which is black.</span>\n<span class=\"gd\">-            else:</span>\n<span class=\"gd\">-                level_range = max_level - min_level</span>\n<span class=\"gd\">-                for j,level in enumerate(range(min_level, max_level+1)):</span>\n<span class=\"gd\">-                    edge_shade = 1-(j*(1./level_range))</span>\n<span class=\"gd\">-                    edgecolors = (edge_shade, edge_shade, edge_shade, self.alpha)</span>\n<span class=\"gd\">-                    one_level =  ( xpix * (right_edge_x - left_edge_x) / (xx1 - xx0) &gt; self.min_pix ) &amp; \\</span>\n<span class=\"gd\">-                                 ( ypix * (right_edge_y - left_edge_y) / (yy1 - yy0) &gt; self.min_pix ) &amp; \\</span>\n<span class=\"gd\">-                                 ( grid_levels == level)</span>\n<span class=\"gd\">-                    grid_collection = matplotlib.collections.PolyCollection(</span>\n<span class=\"gd\">-                                      verts.transpose()[one_level,:,:], facecolors=&quot;none&quot;,</span>\n<span class=\"gd\">-                                      edgecolors=edgecolors)</span>\n<span class=\"gd\">-                    plot._axes.hold(True)</span>\n<span class=\"gd\">-                    plot._axes.add_collection(grid_collection)</span>\n<span class=\"gi\">+            plot._axes.hold(True)</span>\n<span class=\"gi\">+            plot._axes.add_collection(grid_collection)</span>\n             if self.draw_ids:\n                 visible_ids =  ( xpix * (right_edge_x - left_edge_x) / (xx1 - xx0) &gt; self.min_pix_ids ) &amp; \\\n                                ( ypix * (right_edge_y - left_edge_y) / (yy1 - yy0) &gt; self.min_pix_ids )\n</pre></div>\n\n\n<p>The extra memory consumption is trivial, I think, and the original solution uses more code. This also avoids duplicating code and makes it so only edgecolors is touched inside the new if statement, which should help avoid bugs in the future.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T04:25:54.268097+00:00",
+            "updated_on": "2013-08-15T04:43:14.331135+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 470261
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/471194"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-471194"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Hi Cameron,\n\nI like this addition a lot, and once everything shakes out below I think it will be a widely used feature.  My only question right now is whether we should allow for an arbitrary colormap to be applied to the different grid levels, similar to how it is done in the volume rendering.  I think it would be fairly straightforward to copy that functionality here.  Anyways, it could default to one of the white-black colormaps like grey or whatever. Anyways, just a thought. I don't know if I have a particularly strong opinion either way, but it might be nice to have a semi-consistent grid-drawing operation.",
+                "html": "<p>Hi Cameron,</p>\n<p>I like this addition a lot, and once everything shakes out below I think it will be a widely used feature.  My only question right now is whether we should allow for an arbitrary colormap to be applied to the different grid levels, similar to how it is done in the volume rendering.  I think it would be fairly straightforward to copy that functionality here.  Anyways, it could default to one of the white-black colormaps like grey or whatever. Anyways, just a thought. I don't know if I have a particularly strong opinion either way, but it might be nice to have a semi-consistent grid-drawing operation.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T12:36:14.202709+00:00",
+            "updated_on": "2013-08-15T12:36:14.212945+00:00",
+            "id": 471194
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/471787"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-471787"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/470261"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-470261"
+                    }
+                },
+                "id": 470261
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "thanks for the changeset, @ngoldbaum !  I certainly didn't expect this kind of detailed review, but I thank you for the work you put in on this.",
+                "html": "<p>thanks for the changeset, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> !  I certainly didn't expect this kind of detailed review, but I thank you for the work you put in on this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T15:21:12.980835+00:00",
+            "updated_on": "2013-08-15T15:21:12.993083+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 471787
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/471791"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-471791"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/471194"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-471194"
+                    }
+                },
+                "id": 471194
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Sam, you're right.  I don't know why I didn't just apply the same thing as is done in drawing the grids for VRs.  That would allow consistency in colors.  I guess this was just a fast and dirty approach, as I needed to get something working for visually differentiating between grids levels.  I'll see if I can mod it to make it use the same infrastructure as the VR example.",
+                "html": "<p>Sam, you're right.  I don't know why I didn't just apply the same thing as is done in drawing the grids for VRs.  That would allow consistency in colors.  I guess this was just a fast and dirty approach, as I needed to get something working for visually differentiating between grids levels.  I'll see if I can mod it to make it use the same infrastructure as the VR example.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-15T15:21:43.372903+00:00",
+            "updated_on": "2013-08-15T15:21:43.380539+00:00",
+            "id": 471791
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473665"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473665"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Oh, and thanks to @MatthewTurk and @ngoldbaum for their assistance on debugging the colormap problems!",
+                "html": "<p>Oh, and thanks to <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> and <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> for their assistance on debugging the colormap problems!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T03:13:16.806323+00:00",
+            "updated_on": "2013-08-16T03:13:16.822013+00:00",
+            "id": 473665
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473674"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473674"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "It seems like it would be cool to have the grid level colors mean something to the viewer.  Perhaps I might have a kwarg that turns on a \"caption\", whereby in the corner you might get the numbers of levels listed, and each one in the color of that level?  Seems like potentially using the draw_ids machinery for this should be relatively straightforward, I think. Interest?",
+                "html": "<p>It seems like it would be cool to have the grid level colors mean something to the viewer.  Perhaps I might have a kwarg that turns on a \"caption\", whereby in the corner you might get the numbers of levels listed, and each one in the color of that level?  Seems like potentially using the draw_ids machinery for this should be relatively straightforward, I think. Interest?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T03:20:47.820573+00:00",
+            "updated_on": "2013-08-16T03:20:47.827609+00:00",
+            "id": 473674
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473679"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:ff6095a3185a..0bd09ebbc6c1?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473679"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Can you restore the function signature? That needs to be there because the way callbacks are set up for PlotWindow, the signature is obscured.  This way it will at least show up in the docstrings.",
+                "html": "<p>Can you restore the function signature? That needs to be there because the way callbacks are set up for PlotWindow, the signature is obscured.  This way it will at least show up in the docstrings.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T03:24:21.711943+00:00",
+            "updated_on": "2013-08-16T03:24:21.721514+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 341
+            },
+            "id": 473679
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473686"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473686"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473674"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473674"
+                    }
+                },
+                "id": 473674
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "If that ends up looking good, sure.",
+                "html": "<p>If that ends up looking good, sure.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T03:27:29.209189+00:00",
+            "updated_on": "2013-08-16T03:27:29.218190+00:00",
+            "id": 473686
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473689"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473689"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473679"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473679"
+                    }
+                },
+                "id": 473679
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "I can restore it, but it had been missing a few of the kwargs.  I'll update it to reflect all of the new kwargs.",
+                "html": "<p>I can restore it, but it had been missing a few of the kwargs.  I'll update it to reflect all of the new kwargs.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T03:28:26.970350+00:00",
+            "updated_on": "2013-08-16T03:28:26.977576+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 473689
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473690"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473690"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "This looks good to me, although I haven't tested it.\n\nI'm not a fan if the colormap being on by default since it changes the default behavior in a surprising way if someone isn't looking closely.\n\nOn the other hand, making alpha smaller by default probably helps since the lines are somewhat thick.",
+                "html": "<p>This looks good to me, although I haven't tested it.</p>\n<p>I'm not a fan if the colormap being on by default since it changes the default behavior in a surprising way if someone isn't looking closely.</p>\n<p>On the other hand, making alpha smaller by default probably helps since the lines are somewhat thick.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T03:30:15.614830+00:00",
+            "updated_on": "2013-08-16T03:30:15.628705+00:00",
+            "id": 473690
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473821"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473821"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473690"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473690"
+                    }
+                },
+                "id": 473690
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "It's true that it changes the default, however, it seems like it's more beneficial for the user to be able to differentiate between levels.  It's not necessarily prettier, though.  I tried a bunch of cmaps, but nothing seems to work super well with the algae cmap for the projection.  Maybe the cmap_r colormap.\n\nThis [script](http://paste.yt-project.org/show/3768/) produces this [plot](http://i.imgur.com/shdu22A.png) (with diff grays for grid levels--the proposed default).\n\nThis [script](http://paste.yt-project.org/show/3769/) produces this [plot](http://i.imgur.com/Ypa7Eqo.png) (with all black grid levels--the previous default).\n\nThis [script](http://paste.yt-project.org/show/3770/) produces this [plot](http://i.imgur.com/VkWguqo.png) (with the reverse algae cmap for grid levels--an ugly mess).",
+                "html": "<p>It's true that it changes the default, however, it seems like it's more beneficial for the user to be able to differentiate between levels.  It's not necessarily prettier, though.  I tried a bunch of cmaps, but nothing seems to work super well with the algae cmap for the projection.  Maybe the cmap_r colormap.</p>\n<p>This <a href=\"http://paste.yt-project.org/show/3768/\">script</a> produces this <a href=\"http://i.imgur.com/shdu22A.png\">plot</a> (with diff grays for grid levels--the proposed default).</p>\n<p>This <a href=\"http://paste.yt-project.org/show/3769/\">script</a> produces this <a href=\"http://i.imgur.com/Ypa7Eqo.png\">plot</a> (with all black grid levels--the previous default).</p>\n<p>This <a href=\"http://paste.yt-project.org/show/3770/\">script</a> produces this <a href=\"http://i.imgur.com/VkWguqo.png\">plot</a> (with the reverse algae cmap for grid levels--an ugly mess).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T05:02:26.650093+00:00",
+            "updated_on": "2013-08-16T05:02:26.657833+00:00",
+            "id": 473821
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473828"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473828"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473821"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473821"
+                    }
+                },
+                "id": 473821
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Seeing the plots changed my mind, this is obviously better.  Great work Cameron. I agree it would be cool if we could figure out a way to indicate the grid level.  One possible way to do it, and I'm not sure how this would look, would be a small inset colorbar that uses a discrete colormap.",
+                "html": "<p>Seeing the plots changed my mind, this is obviously better.  Great work Cameron. I agree it would be cool if we could figure out a way to indicate the grid level.  One possible way to do it, and I'm not sure how this would look, would be a small inset colorbar that uses a discrete colormap.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T05:07:51.464800+00:00",
+            "updated_on": "2013-08-16T05:07:51.473181+00:00",
+            "id": 473828
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473868"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473868"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473828"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473828"
+                    }
+                },
+                "id": 473828
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "I'll poke around in trying to get this to work.  If it does, it might make sense to include it in the VR grid overplot too.  \n\nI always seem to have problems getting colorbars to work well.  Anyone else have experience with this and some tips?  Are we still expressly trying to avoid using MPL machinery here?",
+                "html": "<p>I'll poke around in trying to get this to work.  If it does, it might make sense to include it in the VR grid overplot too.  </p>\n<p>I always seem to have problems getting colorbars to work well.  Anyone else have experience with this and some tips?  Are we still expressly trying to avoid using MPL machinery here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T05:41:44.954694+00:00",
+            "updated_on": "2013-08-16T05:41:44.964992+00:00",
+            "id": 473868
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473878"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473878"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473868"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473868"
+                    }
+                },
+                "id": 473868
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Oh no, this is all using matplotlib.  Go nuts with the matplotlib.\n\nYou would need to create a new axis.  You do this by calling figure.add_axes, supplying an list that defines the bbox rectangle for the colorbar axes.  You'd then call figure.colorbar, setting ax and cax appropriately. You'd probably also have to construct a ContourSet mappable from the grid colormap values to pass to colorbar.\n\nThat also doesn't need to happen now, we can always come back to this later. I'd also be happy to help out with this since it would also be a nice addition for the contour callback.\n\nFWIW there's a ton of low-hanging fruit in plot_modifications.py. I'd love it if we had more contributions like this.",
+                "html": "<p>Oh no, this is all using matplotlib.  Go nuts with the matplotlib.</p>\n<p>You would need to create a new axis.  You do this by calling figure.add_axes, supplying an list that defines the bbox rectangle for the colorbar axes.  You'd then call figure.colorbar, setting ax and cax appropriately. You'd probably also have to construct a ContourSet mappable from the grid colormap values to pass to colorbar.</p>\n<p>That also doesn't need to happen now, we can always come back to this later. I'd also be happy to help out with this since it would also be a nice addition for the contour callback.</p>\n<p>FWIW there's a ton of low-hanging fruit in plot_modifications.py. I'd love it if we had more contributions like this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T05:54:10.747331+00:00",
+            "updated_on": "2013-08-16T05:54:10.755676+00:00",
+            "id": 473878
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473888"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473888"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473878"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473878"
+                    }
+                },
+                "id": 473878
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Well, I guess I should clarify that while you should go nuts with matplotlib, we can't use pyplot or pylab. Unfortunately pyplot and pylab break in headless environments.\n\nInstead, go thourgh matplotlib's object oriented interface, which is backend agnostic. Since PlotWindow uses the Agg backend to do everything, plotting works as expected on compute nodes and over display-less SSH connections. I think PlotCollection does the same thing, but there's still some pylab and pyplot scattered throughout the codebase.\n\nIMHO, the notebook *almost* obviates the need to include native plotting via pyplot and pylab. WebAgg looks really cool and I'm looking forward to seeing it integrated better with the notebook.",
+                "html": "<p>Well, I guess I should clarify that while you should go nuts with matplotlib, we can't use pyplot or pylab. Unfortunately pyplot and pylab break in headless environments.</p>\n<p>Instead, go thourgh matplotlib's object oriented interface, which is backend agnostic. Since PlotWindow uses the Agg backend to do everything, plotting works as expected on compute nodes and over display-less SSH connections. I think PlotCollection does the same thing, but there's still some pylab and pyplot scattered throughout the codebase.</p>\n<p>IMHO, the notebook <em>almost</em> obviates the need to include native plotting via pyplot and pylab. WebAgg looks really cool and I'm looking forward to seeing it integrated better with the notebook.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T06:01:39.873112+00:00",
+            "updated_on": "2013-08-16T06:01:39.885257+00:00",
+            "id": 473888
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/474793"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-474793"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/473868"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-473868"
+                    }
+                },
+                "id": 473868
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "I think adding a colorbar is probably out of scope, since they bring attendant difficulties and a number of places (specifically non-unitary aspect ratios) where they cause substantial problems.",
+                "html": "<p>I think adding a colorbar is probably out of scope, since they bring attendant difficulties and a number of places (specifically non-unitary aspect ratios) where they cause substantial problems.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T12:31:37.395195+00:00",
+            "updated_on": "2013-08-16T12:31:37.406470+00:00",
+            "id": 474793
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571/comments/475659"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571/_/diff#comment-475659"
+                }
+            },
+            "pullrequest": {
+                "title": "Adding shaded_level kwarg to annotate_grids",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/571"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/571"
+                    }
+                },
+                "id": 571
+            },
+            "content": {
+                "raw": "Hi @chummels other than Nathan's comment about restoring the docstring, I think this is good to go!\n\nAs a sidenote, for non-exported variables (i.e., `temp`) usually it's better to prefix them with an underscore.  That's not a necessary change here, however.",
+                "html": "<p>Hi <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> other than Nathan's comment about restoring the docstring, I think this is good to go!</p>\n<p>As a sidenote, for non-exported variables (i.e., <code>temp</code>) usually it's better to prefix them with an underscore.  That's not a necessary change here, however.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-16T17:01:53.214273+00:00",
+            "updated_on": "2013-08-16T17:01:53.226495+00:00",
+            "id": 475659
+        }
+    ]
+}

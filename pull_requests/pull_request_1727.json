@@ -1,0 +1,345 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-09-03T17:28:43.584568+00:00",
+    "comment_count": 4,
+    "description": "This avoids an issue pointed out by @chummels on IRC that is illustrated by this test script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nfrom time import sleep\r\nyt.enable_parallelism()\r\nfrom mpi4py import MPI\r\n\r\nts = yt.load('enzo_tiny_cosmology/DD????/DD????')\r\n\r\nprint type(ts)\r\n\r\nfor ds in ts.piter():\r\n    print ds, MPI.COMM_WORLD.rank\r\n```\r\n\r\nRight now if you run this script you will see by looking at the logging output that all of the datasets are passed to the `load()` function on all processors. This isn't a *huge* deal because the actual dataset is correctly yielded to only one processor, but could be annoying particularly on slow filesystems or large processor counts.\r\n\r\nThis reimplements the logic in `TimeSeriesData.__iter__ ` to avoid this situation. I think a little bit of repeating ourselves is ok in this situation. I can also refactor the copy/pasted bits into a small function if people want me to do that.\r\n\r\nSince we don't have good tests for yt's parallelism, I'd very much appreciate some hands-on tests from reviewers before hitting the approve button.",
+    "created_on": "2015-08-27T02:12:02.532835+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a7c319c1f87d"
+            }
+        },
+        "hash": "a7c319c1f87d"
+    },
+    "title": "Explicitly implement parallel loop for TimeSeriesData.piter()",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 1727,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/e98e563f64ea"
+                }
+            },
+            "hash": "e98e563f64ea"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7d5ab03e0df9"
+                }
+            },
+            "hash": "7d5ab03e0df9"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/comments/9419332"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727/_/diff#comment-9419332"
+                }
+            },
+            "pullrequest": {
+                "title": "Explicitly implement parallel loop for TimeSeriesData.piter()",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727"
+                    }
+                },
+                "id": 1727
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/470/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/470/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/470/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-27T03:28:14.435491+00:00",
+            "updated_on": "2015-08-27T03:28:14.507505+00:00",
+            "id": 9419332
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/comments/9420048"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727/_/diff#comment-9420048"
+                }
+            },
+            "pullrequest": {
+                "title": "Explicitly implement parallel loop for TimeSeriesData.piter()",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727"
+                    }
+                },
+                "id": 1727
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-27T04:35:17.049902+00:00",
+            "updated_on": "2015-08-27T04:35:17.114457+00:00",
+            "id": 9420048
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/comments/9420437"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727/_/diff#comment-9420437"
+                }
+            },
+            "pullrequest": {
+                "title": "Explicitly implement parallel loop for TimeSeriesData.piter()",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727"
+                    }
+                },
+                "id": 1727
+            },
+            "content": {
+                "raw": "I tried this out tonight, and it looks like it works to me. That is, it doesn't load the datasets redundantly across tasks, but TimeSeries scripts run in parallel still give the same results as before. ",
+                "html": "<p>I tried this out tonight, and it looks like it works to me. That is, it doesn't load the datasets redundantly across tasks, but TimeSeries scripts run in parallel still give the same results as before. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-27T05:11:31.769834+00:00",
+            "updated_on": "2015-08-27T05:11:31.775342+00:00",
+            "id": 9420437
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727/comments/9449349"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727/_/diff#comment-9449349"
+                }
+            },
+            "pullrequest": {
+                "title": "Explicitly implement parallel loop for TimeSeriesData.piter()",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1727"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1727"
+                    }
+                },
+                "id": 1727
+            },
+            "content": {
+                "raw": "I've tested this, and it works like a charm.  Thanks for addressing this issue, @ngoldbaum !  My scripts with 1200 outputs and 64 processors were generating ungodly amounts of stdout!",
+                "html": "<p>I've tested this, and it works like a charm.  Thanks for addressing this issue, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> !  My scripts with 1200 outputs and 64 processors were generating ungodly amounts of stdout!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-27T19:12:09.100548+00:00",
+            "updated_on": "2015-08-27T19:12:09.120061+00:00",
+            "id": 9449349
+        }
+    ]
+}

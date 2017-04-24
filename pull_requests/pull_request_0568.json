@@ -1,0 +1,198 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-08-14T13:40:11.127928+00:00",
+    "comment_count": 1,
+    "description": "The way I overrode `__repr__` in [PR 555](https://bitbucket.org/yt_analysis/yt/pull-request/555/ipython-10-support-and-improved-plotting/) is a bit unsatisfactory in that it unnecessarily ships a bunch of data over zmq if called from a terminal IPython session. After looking into this issue a little bit more, it looks like I was badly misunderstanding best practices for fancy display in IPython. After asking [a question](http://stackoverflow.com/questions/18176050/programatically-determine-if-a-user-is-calling-code-from-the-notebook/) about this on StackOverflow, Matthias Bussonnier was kind enough to answer and clear up my misunderstanding. \r\n\r\nThis PR eliminates the short circuit I added to the `ImagePlotMPL` `__repr__` and instead relies on IPython's display hooks to only render the images as appropriate. This is done by adding a `_repr_png_` to ImagePlotMPL and a `_repr_html_` to `ImagePlotMPL`.  The `_repr_html_` uses the base plot object's `_repr_png_` method to compose a short html snippet made up of `<img>` tags that straightforwardly combines the png images. As a nice side effect, one can do something like:\r\n\r\n```\r\n#!python\r\n\r\nfrom yt.mods import *\r\npf = load(..)\r\nslc = SlicePlot(pf, 0, 'Density')\r\nslc.plots['Density']\r\n```\r\nand see the a png image of the plot in the notebook. This is currently impossible in 2.X, although it looks like someone added it to 3.0 a while back.\r\n\r\nThis exercise has shown me some of the zen of IPython's display capabilities.  I'm excited to try using `_repr_html_` or `_repr_javascript_` for cool stuff like this in the future.  More details about all of this is in the [IPython docs](http://ipython.org/ipython-doc/rel-1.0.0/api/generated/IPython.core.formatters.html?highlight=_repr_png_).\r\n\r\nUpdate: Adding a fix for `show()` to get it to work correctly with IPython 1.0.0.",
+    "created_on": "2013-08-12T05:36:54.894422+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ed0606519b9e"
+            }
+        },
+        "hash": "ed0606519b9e"
+    },
+    "title": "Formatting plots for the notebook in a display independent manner",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/568"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 568,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/2464e8f034b1"
+                }
+            },
+            "hash": "2464e8f034b1"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b4963f863671"
+                }
+            },
+            "hash": "b4963f863671"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568/comments/467763"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/568/_/diff#comment-467763"
+                }
+            },
+            "pullrequest": {
+                "title": "Formatting plots for the notebook in a display independent manner",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/568"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/568"
+                    }
+                },
+                "id": 568
+            },
+            "content": {
+                "raw": "Nice work, @ngoldbaum !",
+                "html": "<p>Nice work, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> !</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-08-14T13:40:11.110572+00:00",
+            "updated_on": "2013-08-14T13:40:11.124268+00:00",
+            "id": 467763
+        }
+    ]
+}

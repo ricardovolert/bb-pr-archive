@@ -1,0 +1,469 @@
+{
+    "reason": "I opened the pull request from the wrong branch.",
+    "state": "DECLINED",
+    "updated_on": "2016-01-06T00:01:20.091074+00:00",
+    "comment_count": 6,
+    "description": "On MacOS X 10.8, with Python 3.4 and Numpy 1.10.2, I get thousands of test failures due to this error:\r\n\r\n```python\r\n======================================================================\r\nERROR: Failure: TypeError (Cannot cast ufunc multiply output from dtype('float64') to dtype('int64') with casting rule 'same_kind')\r\n----------------------------------------------------------------------\r\nTraceback (most recent call last):\r\n  File \"/Users/tom/miniconda3/envs/ytdev3/lib/python3.4/site-packages/nose/failure.py\", line 39, in runTest\r\n    raise self.exc_val.with_traceback(self.tb)\r\n  File \"/Users/tom/miniconda3/envs/ytdev3/lib/python3.4/site-packages/nose/loader.py\", line 252, in generate\r\n    for test in g():\r\n  File \"/Users/tom/miniconda3/envs/ytdev3/lib/python3.4/site-packages/yt-3.2.2-py3.4-macosx-10.5-x86_64.egg/yt/visualization/tests/test_export_frb.py\", line 31, in test_export_frb\r\n    frb_ds = frb.export_dataset(fields=[\"density\"], nprocs=8)\r\n  File \"/Users/tom/miniconda3/envs/ytdev3/lib/python3.4/site-packages/yt-3.2.2-py3.4-macosx-10.5-x86_64.egg/yt/visualization/fixed_resolution.py\", line 379, in export_dataset\r\n    nprocs=nprocs)\r\n  File \"/Users/tom/miniconda3/envs/ytdev3/lib/python3.4/site-packages/yt-3.2.2-py3.4-macosx-10.5-x86_64.egg/yt/frontends/stream/data_structures.py\", line 640, in load_uniform_grid\r\n    psize = get_psize(np.array(data[key].shape), nprocs)\r\n  File \"/Users/tom/miniconda3/envs/ytdev3/lib/python3.4/site-packages/yt-3.2.2-py3.4-macosx-10.5-x86_64.egg/yt/utilities/decompose.py\", line 95, in get_psize\r\n    ldom *= fac[nfac, 0] ** np.array([i, j, k])\r\nTypeError: Cannot cast ufunc multiply output from dtype('float64') to dtype('int64') with casting rule 'same_kind'\r\n```\r\n\r\nI tracked this down to the fact that factorize_number sometimes returned a float array in Python 3, which then causes issues in get_psize with Numpy 1.10 and later since it is now more strict about implicit casting.\r\n\r\nWith this fix, all test failures disappear.\r\n\r\nAny idea why this wasn't picked up by the yt CI? (I saw it on Travis too while testing a package on GitHub that relies on yt).\r\n\r\nThis time I hope I didn't mess up the branch vs bookmark thing :-/\r\n\r\nEDIT: I opened this from/to the wrong branch, fixing",
+    "created_on": "2016-01-05T23:44:26.192685+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Fix use of integer division in decompose.py",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/astrofrog"
+            },
+            "html": {
+                "href": "https://bitbucket.org/astrofrog/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/astrofrog/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "astrofrog",
+        "uuid": "{bcaaba2f-d294-45d4-850a-00ce6b0d3e54}",
+        "username": "astrofrog"
+    },
+    "id": 1925,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/astrofrog"
+            },
+            "html": {
+                "href": "https://bitbucket.org/astrofrog/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/astrofrog/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "astrofrog",
+        "uuid": "{bcaaba2f-d294-45d4-850a-00ce6b0d3e54}",
+        "username": "astrofrog"
+    },
+    "source": {
+        "branch": {
+            "name": "stable"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/astrofrog/yt/commit/9d7c6de9a27d"
+                }
+            },
+            "hash": "9d7c6de9a27d"
+        },
+        "repository": {
+            "full_name": "astrofrog/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/astrofrog/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/astrofrog/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/astrofrog/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{5406c69e-dd22-4aa4-917c-951234227370}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "stable"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d7acb82ef450"
+                }
+            },
+            "hash": "d7acb82ef450"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200551"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200551"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix use of integer division in decompose.py",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925"
+                    }
+                },
+                "id": 1925
+            },
+            "content": {
+                "raw": "I think I might have run into this back into November? https://bitbucket.org/yt_analysis/yt/commits/069715baac70d5f0b186293b518eaf3802798370",
+                "html": "<p>I think I might have run into this back into November? <a href=\"https://bitbucket.org/yt_analysis/yt/commits/069715baac70d5f0b186293b518eaf3802798370\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/commits/069715baac70d5f0b186293b518eaf3802798370</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-05T23:50:01.890956+00:00",
+            "updated_on": "2016-01-05T23:50:01.893243+00:00",
+            "id": 13200551
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200562"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200562"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200551"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200551"
+                    }
+                },
+                "id": 13200551
+            },
+            "pullrequest": {
+                "title": "Fix use of integer division in decompose.py",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925"
+                    }
+                },
+                "id": 1925
+            },
+            "content": {
+                "raw": "We also don't have python3.4 tests up quite yet, @xarthisius is working on this right now. The test infrastructure is there, we just need to resolve a few issues that came up related to I/O efficiency before we switch over.",
+                "html": "<p>We also don't have python3.4 tests up quite yet, <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> is working on this right now. The test infrastructure is there, we just need to resolve a few issues that came up related to I/O efficiency before we switch over.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-05T23:50:51.346450+00:00",
+            "updated_on": "2016-01-05T23:50:51.352162+00:00",
+            "id": 13200562
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/astrofrog"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/astrofrog/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/astrofrog/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "astrofrog",
+                "uuid": "{bcaaba2f-d294-45d4-850a-00ce6b0d3e54}",
+                "username": "astrofrog"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200636"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200636"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix use of integer division in decompose.py",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925"
+                    }
+                },
+                "id": 1925
+            },
+            "content": {
+                "raw": "I didn't realize I was on the stable branch... It was indeed fixed in the yt branch. However, the solution here is (I think) cleaner than the solution currently in the yt branch. I'll try and fix the branches of this PR first.",
+                "html": "<p>I didn't realize I was on the stable branch... It was indeed fixed in the yt branch. However, the solution here is (I think) cleaner than the solution currently in the yt branch. I'll try and fix the branches of this PR first.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-05T23:55:30.762213+00:00",
+            "updated_on": "2016-01-05T23:55:30.815677+00:00",
+            "id": 13200636
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200701"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200701"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200636"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200636"
+                    }
+                },
+                "id": 13200636
+            },
+            "pullrequest": {
+                "title": "Fix use of integer division in decompose.py",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925"
+                    }
+                },
+                "id": 1925
+            },
+            "content": {
+                "raw": "OK, fair enough. You should be able to rebase the change onto the correct branch if you have the rebase extension enabled.\n\nI guess we're due for a bugfix release?",
+                "html": "<p>OK, fair enough. You should be able to rebase the change onto the correct branch if you have the rebase extension enabled.</p>\n<p>I guess we're due for a bugfix release?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-06T00:00:00.671083+00:00",
+            "updated_on": "2016-01-06T00:00:00.673765+00:00",
+            "id": 13200701
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200708"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200708"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix use of integer division in decompose.py",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925"
+                    }
+                },
+                "id": 1925
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1050/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1050/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1050/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-06T00:00:19.989785+00:00",
+            "updated_on": "2016-01-06T00:00:20.058687+00:00",
+            "id": 13200708
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200709"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200709"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925/comments/13200701"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925/_/diff#comment-13200701"
+                    }
+                },
+                "id": 13200701
+            },
+            "pullrequest": {
+                "title": "Fix use of integer division in decompose.py",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1925"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1925"
+                    }
+                },
+                "id": 1925
+            },
+            "content": {
+                "raw": "You might have to decline and reissue this pull request as well.",
+                "html": "<p>You might have to decline and reissue this pull request as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-06T00:00:22.934662+00:00",
+            "updated_on": "2016-01-06T00:00:22.939518+00:00",
+            "id": 13200709
+        }
+    ]
+}

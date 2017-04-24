@@ -1,0 +1,871 @@
+{
+    "reason": "",
+    "state": "OPEN",
+    "updated_on": "2017-04-21T11:36:51.550191+00:00",
+    "comment_count": 13,
+    "description": "This is an attempt at fixing #941. The idea is to select cells in the cut_region object based on the morton indices of those cells.\r\n\r\nThis seems to do a better job of selecting the correct cells, but is still not perfect - there are still artifacts for FLASH data for some reason. It seems to continue to work just as well as the old solution for Enzo data.\r\n\r\nUpdate: I've removed the WIP marker as I now think this is ready for review. Here's the image I get when I run the test script in the issue using this pull request:\r\n\r\n![sloshing_nomag2_hdf5_plt_cnt_0150_Slice_z_density.png](https://bitbucket.org/repo/BXbAb/images/3490992504-sloshing_nomag2_hdf5_plt_cnt_0150_Slice_z_density.png)",
+    "created_on": "2016-10-01T23:59:07.985745+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "make CutRegionSelector use morton indices",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments"
+        }
+    },
+    "closed_by": null,
+    "id": 2405,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/84b51edbf8ac"
+                }
+            },
+            "hash": "84b51edbf8ac"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/634cc55bf066"
+                }
+            },
+            "hash": "634cc55bf066"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573047"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:4a72b555d5b6..1d70bf412499?path=yt%2Fgeometry%2Fselection_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573047"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "this should be removed as it's not used anymore in this version of the pull request",
+                "html": "<p>this should be removed as it's not used anymore in this version of the pull request</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T00:10:10.737328+00:00",
+            "updated_on": "2016-10-02T00:10:10.742656+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/selection_routines.pyx",
+                "to": 20
+            },
+            "id": 24573047
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573117"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:9cb68826e8c6..aae37ab0285f?path=yt%2Fgeometry%2Fselection_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573117"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "Do we need to do an `ensure_code` here?",
+                "html": "<p>Do we need to do an <code>ensure_code</code> here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T00:55:09.380127+00:00",
+            "updated_on": "2016-10-02T00:55:09.385062+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/selection_routines.pyx",
+                "to": 982
+            },
+            "id": 24573117
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573122"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:9cb68826e8c6..aae37ab0285f?path=yt%2Fgeometry%2Fselection_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573122"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "There might be a way to jump a layer up, into the `select_grid` function, and do a numpy intersection, which may be a bit faster.",
+                "html": "<p>There might be a way to jump a layer up, into the <code>select_grid</code> function, and do a numpy intersection, which may be a bit faster.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T00:56:06.388033+00:00",
+            "updated_on": "2016-10-02T00:56:06.392777+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/selection_routines.pyx",
+                "to": 995
+            },
+            "id": 24573122
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573126"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:9cb68826e8c6..aae37ab0285f?path=yt%2Fgeometry%2Fselection_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573126"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "If this isn't fast enough, one idea might be to sort these, then do a bisection search.",
+                "html": "<p>If this isn't fast enough, one idea might be to sort these, then do a bisection search.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T00:56:52.044085+00:00",
+            "updated_on": "2016-10-02T00:56:52.049434+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/selection_routines.pyx",
+                "to": 980
+            },
+            "id": 24573126
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573130"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:9cb68826e8c6..aae37ab0285f?path=yt%2Futilities%2Flib%2Fgeometry_utils.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573130"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "Heh, for some reason I thought we already had this function.  :smile: ",
+                "html": "<p>Heh, for some reason I thought we already had this function.  <img src=\"https://d301sr5gafysq2.cloudfront.net/87002ef24cff/emoji/img/smile.svg\" alt=\"smile\" title=\"smile\" class=\"emoji\"> </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T00:57:32.439536+00:00",
+            "updated_on": "2016-10-02T00:57:32.445185+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/geometry_utils.pyx",
+                "to": 394
+            },
+            "id": 24573130
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573133"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:9cb68826e8c6..aae37ab0285f?path=yt%2Futilities%2Flib%2Fgeometry_utils.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573133"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "Can you say (here, doesn't need to be in a comment) why you changed this?",
+                "html": "<p>Can you say (here, doesn't need to be in a comment) why you changed this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T00:58:18.158869+00:00",
+            "updated_on": "2016-10-02T00:58:18.161303+00:00",
+            "inline": {
+                "from": 371,
+                "path": "yt/utilities/lib/geometry_utils.pyx",
+                "to": null
+            },
+            "id": 24573133
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573134"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573134"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "This is a really clever, effective solution.  I like it a lot.  I'm happy to help out if you like on the FLASH artifacts.",
+                "html": "<p>This is a really clever, effective solution.  I like it a lot.  I'm happy to help out if you like on the FLASH artifacts.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T00:58:44.515578+00:00",
+            "updated_on": "2016-10-02T00:58:44.517450+00:00",
+            "id": 24573134
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573188"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:9cb68826e8c6..aae37ab0285f?path=yt%2Futilities%2Flib%2Fgeometry_utils.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573188"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573133"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573133"
+                    }
+                },
+                "id": 24573133
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "Maybe this is the source of the issue actually. I'm pretty sure all three elements of the DD array are just `1 << ORDER_MAX`. Is that wrong?",
+                "html": "<p>Maybe this is the source of the issue actually. I'm pretty sure all three elements of the DD array are just <code>1 &lt;&lt; ORDER_MAX</code>. Is that wrong?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T01:25:21.962220+00:00",
+            "updated_on": "2016-10-02T01:25:21.967444+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/geometry_utils.pyx",
+                "to": null
+            },
+            "id": 24573188
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24576148"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:9cb68826e8c6..aae37ab0285f?path=yt%2Futilities%2Flib%2Fgeometry_utils.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24576148"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24573188"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24573188"
+                    }
+                },
+                "id": 24573188
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "So `DD` here is supposed to be the domain dimensions.  The idea there is that we're figuring out where the wrapping occurs.  I don't think this is the problem for FLASH, but it's supposed to set it up so that we know the maximum integer value on this level -- I *think* this is okay to do, instead of `ORDER_MAX`, but in principle it shouldn't really matter regardless except if you're right on the edge of the domain.",
+                "html": "<p>So <code>DD</code> here is supposed to be the domain dimensions.  The idea there is that we're figuring out where the wrapping occurs.  I don't think this is the problem for FLASH, but it's supposed to set it up so that we know the maximum integer value on this level -- I <em>think</em> this is okay to do, instead of <code>ORDER_MAX</code>, but in principle it shouldn't really matter regardless except if you're right on the edge of the domain.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-02T17:01:47.615840+00:00",
+            "updated_on": "2016-10-02T17:01:47.619305+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/geometry_utils.pyx",
+                "to": null
+            },
+            "id": 24576148
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24706162"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24706162"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "I'm getting test failures because the number of cells being selected is now different for some cases:\n\n```\nimport yt\n\nds = yt.load('MHDBlast/id0/Blast.0100.vtk')\n\nsph = ds.sphere('max', (0.1, 'unitary'))\n\nprint sph['velocity_magnitude'].shape[0], sph['radius'].max().v - 0.15\n```\n\nCurrently this prints `14092, 5.5511151231257827e-17`, with my PR it prints `14131, 2.7755575615628914e-17`, so we're selecting about 40 more cells than we were before for this athena dataset. The difference in the residuals between the maximum computed cell radius in the selected data and 0.15 reflects the difference in round-off error influencing the selection. These 40 cells just happen to be right on the cut-off for being included or not, so for this one particular dataset we're sensitive to round-off error.\n\nGiven that this PR changes the way cell positions are calculated inside the selection API (i.e. we're changing how positions that are passed to the SphereSelector are calculated), I don't think it should be surprising that in some cases more or fewer cells might be selected, if the selection criteria is or is not satisfied at the level of round-off error.\n\nI'll go ahead and update this pull request to increment the Athena answers unless anyone has an objection. I'll go ahead and leave this for a little while so others can take a look.",
+                "html": "<p>I'm getting test failures because the number of cells being selected is now different for some cases:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"kn\">import</span> <span class=\"nn\">yt</span>\n\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"s1\">&#39;MHDBlast/id0/Blast.0100.vtk&#39;</span><span class=\"p\">)</span>\n\n<span class=\"n\">sph</span> <span class=\"o\">=</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">sphere</span><span class=\"p\">(</span><span class=\"s1\">&#39;max&#39;</span><span class=\"p\">,</span> <span class=\"p\">(</span><span class=\"mf\">0.1</span><span class=\"p\">,</span> <span class=\"s1\">&#39;unitary&#39;</span><span class=\"p\">))</span>\n\n<span class=\"k\">print</span> <span class=\"n\">sph</span><span class=\"p\">[</span><span class=\"s1\">&#39;velocity_magnitude&#39;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">shape</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">],</span> <span class=\"n\">sph</span><span class=\"p\">[</span><span class=\"s1\">&#39;radius&#39;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">max</span><span class=\"p\">()</span><span class=\"o\">.</span><span class=\"n\">v</span> <span class=\"o\">-</span> <span class=\"mf\">0.15</span>\n</pre></div>\n\n\n<p>Currently this prints <code>14092, 5.5511151231257827e-17</code>, with my PR it prints <code>14131, 2.7755575615628914e-17</code>, so we're selecting about 40 more cells than we were before for this athena dataset. The difference in the residuals between the maximum computed cell radius in the selected data and 0.15 reflects the difference in round-off error influencing the selection. These 40 cells just happen to be right on the cut-off for being included or not, so for this one particular dataset we're sensitive to round-off error.</p>\n<p>Given that this PR changes the way cell positions are calculated inside the selection API (i.e. we're changing how positions that are passed to the SphereSelector are calculated), I don't think it should be surprising that in some cases more or fewer cells might be selected, if the selection criteria is or is not satisfied at the level of round-off error.</p>\n<p>I'll go ahead and update this pull request to increment the Athena answers unless anyone has an objection. I'll go ahead and leave this for a little while so others can take a look.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-05T03:23:04.047928+00:00",
+            "updated_on": "2016-10-05T03:28:51.601321+00:00",
+            "id": 24706162
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24911603"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24911603"
+                }
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "Just as a note, @hyschive pointed out that this will run into issues when selecting cells at higher than (effective) level 21 resolution.  I think this is a fixable issue by going to higher precision in the morton indices, but it may not work at the time being.",
+                "html": "<p>Just as a note, <a href=\"/hyschive/\" rel=\"nofollow\" title=\"@hyschive\" class=\"mention\">Hsi-Yu Schive</a> pointed out that this will run into issues when selecting cells at higher than (effective) level 21 resolution.  I think this is a fixable issue by going to higher precision in the morton indices, but it may not work at the time being.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-09T22:07:53.935624+00:00",
+            "updated_on": "2016-10-09T22:07:53.975135+00:00",
+            "id": 24911603
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/27210805"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-27210805"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/24911603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-24911603"
+                    }
+                },
+                "id": 24911603
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "The more I think about this, the more I think that this is the *right* solution, but the implementation is not sufficient as of yet.  The breakage at high resolutions is worrisome, and would be a really nasty, hidden side effect.  That being said, I believe that this is tractable.  I can think of two possible ways around this.  I suspect either or both will have unseen difficulties if we tried to implement them in a *generic* way, but for the purposes here, we are much more interested in implementing them in very specific ways.\n\nOne would be to implement a higher-order morton system; the obvious (and maybe wrong?) way to store this would be in a complex128 array.  This is made up of two float64 values, each of which could be viewed as a uint64.  Bitshifting each of these values would still be equivalent to bitshifting an int64; assuming the imaginary part is the \"least significant\" half, you would have to manually \"catch\" digits as they bitshifted off the left edge of that bit, and then place them happily in the lower part of the higher-order.  This would not be too bad, I think.  Here's a sketch of what I mean:\n\n```\nTRANSFER_BITS = (1 << 63 | 1 << 62 | 1 << 61)\n\n# Now when we bitshift to the left, which we do whenever we go \"down\" a level in resolution, we need to:\n\nleast_sig <<= 3\nmost_sig <<= 3\nmost_sig_edge = least_sig & TRANSFER_BITS\ntransferred &= ~TRANSFER_BITS # get rid of them; we don't want them double-represented\nmost_sig <<= 3\nmost_sig |= transferred\n```\n\nI *think* that would do it.  What you'd end up with, if you transferred these values back into the `complex128` array, would be *atomic* values that could be compared against in the same way you're currently doing -- even thought internally the elements are two distinct 64-bit values, they'd externally be viewed as atomic units for the purposes of sets.\n\nThe other way would be to mandate that you can only do higher-order morton on systems that are `int128_t` capable.  (More info: http://stackoverflow.com/questions/16088282/is-there-a-128-bit-integer-in-gcc )  Personally, I like this a lot more, because it's (IMO) much less prone to error, although it would probably mean that some operations wouldn't work on non-standard compilers; I think clang would work, and GCC definitely does.  This would require doing a `ctypedef`, making a view of a C-allocated array (as a `complex128` should work) and transferring ownership of that array back to python.\n\nSome examples on the second route: http://paste.yt-project.org/show/6935/\n\nI brought this into Cython with this patch to yt:\n\nhttp://paste.yt-project.org/show/6936/\n\nand this test script:\n\nhttp://paste.yt-project.org/show/6937/\n\nI *believe* this is showing that one can do a 128 bit integer manipulation; doing `arr.view(\"u1\")` shows an everywhere-255 array, which is what I would expect.  I think that, given appropriate compiler checks, this will be a viable approach.  (I based some of this on this answer: http://stackoverflow.com/questions/27582001/how-to-use-128-bit-integers-in-cython )\n\nRelated: numpy actually does define `npy_int128_t` and `npy_uint128_t` types, but there are a host of problems with getting to use them.",
+                "html": "<p>The more I think about this, the more I think that this is the <em>right</em> solution, but the implementation is not sufficient as of yet.  The breakage at high resolutions is worrisome, and would be a really nasty, hidden side effect.  That being said, I believe that this is tractable.  I can think of two possible ways around this.  I suspect either or both will have unseen difficulties if we tried to implement them in a <em>generic</em> way, but for the purposes here, we are much more interested in implementing them in very specific ways.</p>\n<p>One would be to implement a higher-order morton system; the obvious (and maybe wrong?) way to store this would be in a complex128 array.  This is made up of two float64 values, each of which could be viewed as a uint64.  Bitshifting each of these values would still be equivalent to bitshifting an int64; assuming the imaginary part is the \"least significant\" half, you would have to manually \"catch\" digits as they bitshifted off the left edge of that bit, and then place them happily in the lower part of the higher-order.  This would not be too bad, I think.  Here's a sketch of what I mean:</p>\n<div class=\"codehilite\"><pre><span></span>TRANSFER_BITS = (1 &lt;&lt; 63 | 1 &lt;&lt; 62 | 1 &lt;&lt; 61)\n\n# Now when we bitshift to the left, which we do whenever we go &quot;down&quot; a level in resolution, we need to:\n\nleast_sig &lt;&lt;= 3\nmost_sig &lt;&lt;= 3\nmost_sig_edge = least_sig &amp; TRANSFER_BITS\ntransferred &amp;= ~TRANSFER_BITS # get rid of them; we don&#39;t want them double-represented\nmost_sig &lt;&lt;= 3\nmost_sig |= transferred\n</pre></div>\n\n\n<p>I <em>think</em> that would do it.  What you'd end up with, if you transferred these values back into the <code>complex128</code> array, would be <em>atomic</em> values that could be compared against in the same way you're currently doing -- even thought internally the elements are two distinct 64-bit values, they'd externally be viewed as atomic units for the purposes of sets.</p>\n<p>The other way would be to mandate that you can only do higher-order morton on systems that are <code>int128_t</code> capable.  (More info: <a href=\"http://stackoverflow.com/questions/16088282/is-there-a-128-bit-integer-in-gcc\" rel=\"nofollow\">http://stackoverflow.com/questions/16088282/is-there-a-128-bit-integer-in-gcc</a> )  Personally, I like this a lot more, because it's (IMO) much less prone to error, although it would probably mean that some operations wouldn't work on non-standard compilers; I think clang would work, and GCC definitely does.  This would require doing a <code>ctypedef</code>, making a view of a C-allocated array (as a <code>complex128</code> should work) and transferring ownership of that array back to python.</p>\n<p>Some examples on the second route: <a href=\"http://paste.yt-project.org/show/6935/\" rel=\"nofollow\">http://paste.yt-project.org/show/6935/</a></p>\n<p>I brought this into Cython with this patch to yt:</p>\n<p><a href=\"http://paste.yt-project.org/show/6936/\" rel=\"nofollow\">http://paste.yt-project.org/show/6936/</a></p>\n<p>and this test script:</p>\n<p><a href=\"http://paste.yt-project.org/show/6937/\" rel=\"nofollow\">http://paste.yt-project.org/show/6937/</a></p>\n<p>I <em>believe</em> this is showing that one can do a 128 bit integer manipulation; doing <code>arr.view(\"u1\")</code> shows an everywhere-255 array, which is what I would expect.  I think that, given appropriate compiler checks, this will be a viable approach.  (I based some of this on this answer: <a href=\"http://stackoverflow.com/questions/27582001/how-to-use-128-bit-integers-in-cython\" rel=\"nofollow\">http://stackoverflow.com/questions/27582001/how-to-use-128-bit-integers-in-cython</a> )</p>\n<p>Related: numpy actually does define <code>npy_int128_t</code> and <code>npy_uint128_t</code> types, but there are a host of problems with getting to use them.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T16:44:39.901934+00:00",
+            "updated_on": "2016-11-22T16:44:39.905218+00:00",
+            "id": 27210805
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/27229645"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-27229645"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405/comments/27210805"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405/_/diff#comment-27210805"
+                    }
+                },
+                "id": 27210805
+            },
+            "pullrequest": {
+                "title": "make CutRegionSelector use morton indices",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2405"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2405"
+                    }
+                },
+                "id": 2405
+            },
+            "content": {
+                "raw": "Another possible solution, which would be a lot simpler, would be to use tuples of integer-valued local positions (like `icoords`) as the set contents.  Something like `tuple( (ires, icoord[0], icoord[1], icoord[2] ) )` would work.",
+                "html": "<p>Another possible solution, which would be a lot simpler, would be to use tuples of integer-valued local positions (like <code>icoords</code>) as the set contents.  Something like <code>tuple( (ires, icoord[0], icoord[1], icoord[2] ) )</code> would work.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T22:16:43.794081+00:00",
+            "updated_on": "2016-11-22T22:16:43.796015+00:00",
+            "id": 27229645
+        }
+    ]
+}

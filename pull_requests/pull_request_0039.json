@@ -1,0 +1,235 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2011-12-12T12:54:19.066686+00:00",
+    "comment_count": 2,
+    "description": "Request testing by EJT on field parameters inside contour finding.\r\n\r\nThis is a pull request for a modification to how smoothed covering grids calculate and save their various field values.  Smoothed covering grids *used* to be calculated this way prior to a modification by MJT about a week ago.  He modified code (not just smoothed covering grids) to allow fields to be recalculated for each grid cell within different physical objects.  This was necessary for accuracy purposes.  Unfortunately, when you're using redundant ghost zones, you have to calculate and recalculate the same information for the zones each time they're accessed (because after each calculation, the information is thrown away to retain memory conservation).  I found that for my purposes, this slowed down my partitioning of a physical object before an off-axis volume rendering by a factor of 50 (as compared to how the code used to function).\r\n\r\nAfter talking to MJT, I modified the smoothed covering grids calculation to *not* throw away the old calculation for grids (and ghost zones).  I tested it, and it brings back the speed and performance from before MJT's modification as well as yielding identical results.\r\n\r\nI want to make sure this modification doesn't screw up anyone else's data.  Specifically, MJT said that the original reason he made his modifications was to address a problem EJT was experiencing when calculating field parameters inside contour finding processes.  EJT, can you test this and confirm that you get the same results with the new code?\r\n\r\nThank you!",
+    "created_on": "2011-12-07T19:35:45.617417+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/64193e58036c"
+            }
+        },
+        "hash": "64193e58036c"
+    },
+    "title": "Modification to how Field Values in Smoothed Covering Grids are calculated/saved",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/39"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 39,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": null,
+        "repository": null
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/40ea2908895f"
+                }
+            },
+            "hash": "40ea2908895f"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ejtasker"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ejtasker/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ejtasker/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Elizabeth  Tasker",
+                "uuid": "{aa8ac3ec-47a3-49e3-bee3-ac13adde60e8}",
+                "username": "ejtasker"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/comments/1384"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/39/_/diff#comment-1384"
+                }
+            },
+            "pullrequest": {
+                "title": "Modification to how Field Values in Smoothed Covering Grids are calculated/saved",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/39"
+                    }
+                },
+                "id": 39
+            },
+            "content": {
+                "raw": "This seems to be fine with my current version of the code and the previous version. Possibly, a super early incarnation still had problems, but since I live in hope that my newer codes are superior, we can chalk that up to bad coding I did beforehand! ",
+                "html": "<p>This seems to be fine with my current version of the code and the previous version. Possibly, a super early incarnation still had problems, but since I live in hope that my newer codes are superior, we can chalk that up to bad coding I did beforehand! </p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2011-12-12T08:27:44.159731+00:00",
+            "updated_on": "2011-12-12T08:27:44.403860+00:00",
+            "id": 1384
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ejtasker"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ejtasker/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ejtasker/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Elizabeth  Tasker",
+                "uuid": "{aa8ac3ec-47a3-49e3-bee3-ac13adde60e8}",
+                "username": "ejtasker"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/comments/1385"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/39/_/diff#comment-1385"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39/comments/1384"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/39/_/diff#comment-1384"
+                    }
+                },
+                "id": 1384
+            },
+            "pullrequest": {
+                "title": "Modification to how Field Values in Smoothed Covering Grids are calculated/saved",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/39"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/39"
+                    }
+                },
+                "id": 39
+            },
+            "content": {
+                "raw": "(I also notice it is significantly faster)",
+                "html": "<p>(I also notice it is significantly faster)</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2011-12-12T08:28:57.947183+00:00",
+            "updated_on": "2011-12-12T08:28:58.091655+00:00",
+            "id": 1385
+        }
+    ]
+}

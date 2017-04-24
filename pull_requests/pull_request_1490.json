@@ -1,0 +1,1262 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-03-13T14:28:30.877359+00:00",
+    "comment_count": 20,
+    "description": "This PR is a set of changes intended to move toward a unified codebase for Python 2 and 3. \r\n\r\nMost of the changes involve the expected sorts of things, for example:\r\n\r\n1. Changing `print` to be a function\r\n2. `xrange` replaced by `range`\r\n3. Turning dictionary views (e.g., `keys()`) into lists\r\n4. `basestring` replaced by `string_types`\r\n\r\nNote the change to setup.py where we *do not* run `2to3` on files--the goal is to have a single codebase without having to run `2to3`.\r\n\r\nAlso, previously we did not build any analysis modules when running setup with Python 3--this PR isolates the build restriction to `halo_finding`, which is temporary until we can figure out why it won't build. \r\n\r\nI've run the unittests (but not the answer tests) locally in Python 2 and they all pass. Most of the unittests pass with Python 3, but a handful (~20) are still failing. \r\n\r\nThese changes should bring us a substantial way forward towards supporting 2 and 3 with a single codebase. Suggestions for better ways of doing this are most welcome. I most certainly haven't caught everything yet, either. \r\n\r\nI also fixed various whitespace and indentation problems. \r\n\r\nUPDATES: \r\n\r\n1. I found some issues I introduced with command-line options that were not caught by the tests.\r\n2. I merged in @xarthisius's commits.\r\n3. Made changes according to @ngoldbaum's suggestions. ",
+    "created_on": "2015-03-10T05:02:56.927082+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/508c10038785"
+            }
+        },
+        "hash": "508c10038785"
+    },
+    "title": "Steps toward a unified Python 2/3 codebase",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1490,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/377bad072faa"
+                }
+            },
+            "hash": "377bad072faa"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt-3.x",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
+                }
+            },
+            "name": "yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/8fa97793c5e6"
+                }
+            },
+            "hash": "8fa97793c5e6"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5572512"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5572512"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-10T14:14:22.490342+00:00",
+            "updated_on": "2015-03-10T14:14:22.664182+00:00",
+            "id": 5572512
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5572750"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5572750"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Contrary to what I said previously in IRC, this is not WIP. We'll do this in stages, which I'll only consider to be finished when we have Python 3 testing and they all pass. ",
+                "html": "<p>Contrary to what I said previously in IRC, this is not WIP. We'll do this in stages, which I'll only consider to be finished when we have Python 3 testing and they all pass. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-10T14:21:27.804850+00:00",
+            "updated_on": "2015-03-10T14:21:27.815608+00:00",
+            "id": 5572750
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5575593"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5575593"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite/40/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite/40/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite/40/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-10T15:44:47.692389+00:00",
+            "updated_on": "2015-03-10T15:44:47.736342+00:00",
+            "id": 5575593
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5576900"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5576900"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5575593"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5575593"
+                    }
+                },
+                "id": 5575593
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "This appears to be a weird Jenkins error -- @xarthisius?",
+                "html": "<p>This appears to be a weird Jenkins error -- <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-10T16:24:41.657966+00:00",
+            "updated_on": "2015-03-10T16:24:41.674540+00:00",
+            "id": 5576900
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5580324"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5580324"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5576900"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5576900"
+                    }
+                },
+                "id": 5576900
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Yeah, I'm working on it",
+                "html": "<p>Yeah, I'm working on it</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-10T18:42:09.743081+00:00",
+            "updated_on": "2015-03-10T18:42:09.750048+00:00",
+            "id": 5580324
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5625946"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5625946"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T13:56:42.474604+00:00",
+            "updated_on": "2015-03-12T13:56:42.592762+00:00",
+            "id": 5625946
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632326"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:ffe4fd53d2cb..569c909eee41?path=setup.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632326"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "While I think I understand why you left this in, can you go ahead and remove these commented out lines? I don't think it makes much sense to commit commented out lines, especially when we have the VCS history available.",
+                "html": "<p>While I think I understand why you left this in, can you go ahead and remove these commented out lines? I don't think it makes much sense to commit commented out lines, especially when we have the VCS history available.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:29:17.804880+00:00",
+            "updated_on": "2015-03-12T17:29:17.814046+00:00",
+            "inline": {
+                "from": null,
+                "path": "setup.py",
+                "to": 24
+            },
+            "id": 5632326
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632351"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=setup.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632351"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632326"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632326"
+                    }
+                },
+                "id": 5632326
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Sorry, this is just me being lazy--will fix. ",
+                "html": "<p>Sorry, this is just me being lazy--will fix. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:30:23.316740+00:00",
+            "updated_on": "2015-03-12T17:30:23.325960+00:00",
+            "inline": {
+                "from": null,
+                "path": "setup.py",
+                "to": null
+            },
+            "id": 5632351
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632388"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:ffe4fd53d2cb..569c909eee41?path=yt%2Ffrontends%2Fenzo%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632388"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Here too",
+                "html": "<p>Here too</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:31:51.512928+00:00",
+            "updated_on": "2015-03-12T17:31:51.520333+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/enzo/data_structures.py",
+                "to": 371
+            },
+            "id": 5632388
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632433"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fenzo%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632433"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632388"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632388"
+                    }
+                },
+                "id": 5632388
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "This line was already commented--I was just replacing the xrange -> range in it. Should I just yank it? No idea why it was still there. ",
+                "html": "<p>This line was already commented--I was just replacing the xrange -&gt; range in it. Should I just yank it? No idea why it was still there. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:33:35.713987+00:00",
+            "updated_on": "2015-03-12T17:33:35.719556+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/enzo/data_structures.py",
+                "to": null
+            },
+            "id": 5632433
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632435"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:377bad072faa..8fa97793c5e6?path=yt%2Funits%2Funit_object.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632435"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "I think this would also work if you used string_types instead of `(str, bytes, unicode)`, but I haven't thought carefully about why it's written this way right now.",
+                "html": "<p>I think this would also work if you used string_types instead of <code>(str, bytes, unicode)</code>, but I haven't thought carefully about why it's written this way right now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:33:45.571545+00:00",
+            "updated_on": "2015-03-12T17:33:45.581928+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_object.py",
+                "to": 149
+            },
+            "id": 5632435
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632457"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fenzo%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632457"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632433"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632433"
+                    }
+                },
+                "id": 5632433
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Yeah, I think it's silly to modify a commented out line, might as well delete it.",
+                "html": "<p>Yeah, I think it's silly to modify a commented out line, might as well delete it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:34:34.862702+00:00",
+            "updated_on": "2015-03-12T17:34:34.869425+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/enzo/data_structures.py",
+                "to": null
+            },
+            "id": 5632457
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632695"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632695"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite/53/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite/53/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite/53/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:46:22.961549+00:00",
+            "updated_on": "2015-03-12T17:46:23.090138+00:00",
+            "id": 5632695
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632807"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632807"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5632695"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5632695"
+                    }
+                },
+                "id": 5632695
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Disregard that",
+                "html": "<p>Disregard that</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T17:50:37.176741+00:00",
+            "updated_on": "2015-03-12T17:50:37.185350+00:00",
+            "id": 5632807
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5634044"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5634044"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T18:42:55.653032+00:00",
+            "updated_on": "2015-03-12T18:42:55.770563+00:00",
+            "id": 5634044
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5634180"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5634180"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "This looks ready to go now--there will be another iteration on this theme forthcoming. ",
+                "html": "<p>This looks ready to go now--there will be another iteration on this theme forthcoming. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T18:47:39.355149+00:00",
+            "updated_on": "2015-03-12T18:47:39.365013+00:00",
+            "id": 5634180
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5634299"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5634299"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5634180"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5634180"
+                    }
+                },
+                "id": 5634180
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Hold on--I'll run the python 3 tests again first and report back ",
+                "html": "<p>Hold on--I'll run the python 3 tests again first and report back </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T18:52:48.968260+00:00",
+            "updated_on": "2015-03-12T18:52:48.974760+00:00",
+            "id": 5634299
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5634807"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5634807"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Currently, with python 3 we have 8/7453 unittests failing. I'm happy with that for now, so unless anyone objects I think we are ok to merge. ",
+                "html": "<p>Currently, with python 3 we have 8/7453 unittests failing. I'm happy with that for now, so unless anyone objects I think we are ok to merge. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T19:19:21.188071+00:00",
+            "updated_on": "2015-03-12T19:19:21.194321+00:00",
+            "id": 5634807
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5635309"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5635309"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Looking good, @jzuhone .\n\nThis doesn't have to be done for accepting this PR, but it might be good to have a small document somewhere that tells us developers/users who mostly use python 2.x what changes we should account for in making sure our code works with the new codebase.  I'm not asking for a big summary of the changes from python 2->3, but more just the small changes that you're applying in these PRs for updating to python 3.  I'm sort of envisioning something like this:\n\nhttp://yt-project.org/docs/dev/yt3differences.html#converting-old-scripts-to-work-with-yt-3-0",
+                "html": "<p>Looking good, <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> .</p>\n<p>This doesn't have to be done for accepting this PR, but it might be good to have a small document somewhere that tells us developers/users who mostly use python 2.x what changes we should account for in making sure our code works with the new codebase.  I'm not asking for a big summary of the changes from python 2-&gt;3, but more just the small changes that you're applying in these PRs for updating to python 3.  I'm sort of envisioning something like this:</p>\n<p><a href=\"http://yt-project.org/docs/dev/yt3differences.html#converting-old-scripts-to-work-with-yt-3-0\" rel=\"nofollow\">http://yt-project.org/docs/dev/yt3differences.html#converting-old-scripts-to-work-with-yt-3-0</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T19:44:23.193876+00:00",
+            "updated_on": "2015-03-12T19:44:23.212717+00:00",
+            "id": 5635309
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490/comments/5648118"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:377bad072faa..8fa97793c5e6?path=yt%2Fanalysis_modules%2Fsunyaev_zeldovich%2Fprojection.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490/_/diff#comment-5648118"
+                }
+            },
+            "pullrequest": {
+                "title": "Steps toward a unified Python 2/3 codebase",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1490"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1490"
+                    }
+                },
+                "id": 1490
+            },
+            "content": {
+                "raw": "Nice catch.",
+                "html": "<p>Nice catch.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T11:30:01.998289+00:00",
+            "updated_on": "2015-03-13T11:30:02.007339+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/sunyaev_zeldovich/projection.py",
+                "to": 266
+            },
+            "id": 5648118
+        }
+    ]
+}

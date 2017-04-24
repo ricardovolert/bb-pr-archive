@@ -1,0 +1,1026 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-09-21T18:47:47.262539+00:00",
+    "comment_count": 16,
+    "description": "Previously @chummels, @mzingale and I agreed that reversing ``north_vector`` can fix LHR in VR. However, a considerable amount of changes (such as camera movement and off-axis projection) would be involved if we altered ``unit_vectors``.\r\n\r\nSo I found that to modify ``finalize_image`` in ``volume_rendering/render_source.py`` is much easier. If the call is from VR, we simply flip the image to get RHS.\r\n\r\nTest script (again, stolen from @mzingale) for generating on-axis projection, off-axis projection and VR images, shows consistency.\r\n\r\nOn axis projection\r\n\r\n![on.png](https://bitbucket.org/repo/qnRMen/images/2943879022-on.png)\r\n\r\nOff axis projection\r\n\r\n![off.png](https://bitbucket.org/repo/qnRMen/images/506620656-off.png)\r\n\r\nVR\r\n\r\n![test_perspective.png](https://bitbucket.org/repo/BXbAb/images/324002254-test_perspective.png)\r\n\r\n```\r\n#!python\r\nimport pylab\r\nimport yt\r\nimport numpy as np\r\nimport sys\r\n\r\nN = 96\r\n\r\nxmin = ymin = zmin = -1.0\r\nxmax = ymax = zmax = 1.0\r\n\r\ndcoord = (xmax - xmin)/N\r\n\r\narr = np.zeros((N,N,N), dtype=np.float64)\r\narr[:,:,:] = 1.e-4\r\n\r\nbbox = np.array([ [xmin, xmax], [ymin, ymax], [zmin, zmax] ])\r\n\r\n# coordinates -- in the notation data[i, j, k]\r\nx = (np.arange(N) + 0.5)*(xmax - xmin)/N + xmin\r\ny = (np.arange(N) + 0.5)*(ymax - ymin)/N + ymin\r\nz = (np.arange(N) + 0.5)*(zmax - zmin)/N + zmin\r\n\r\nx3d, y3d, z3d = np.meshgrid(x, y, z, indexing=\"ij\")\r\n\r\n# sphere at the origin\r\nc = np.array( [0.5*(xmin + xmax), 0.5*(ymin + ymax), 0.5*(zmin + zmax) ] )\r\n\r\nr = np.sqrt((x3d - c[0])**2 + (y3d - c[1])**2 + (z3d - c[2])**2)\r\narr[r < 0.05] = 1.0\r\n\r\n\r\n# coordinate planes\r\nixy = np.logical_and(x3d > 0.0, y3d > 0.0)\r\niyz = np.logical_and(y3d > 0.0, z3d > 0.0)\r\nixz = np.logical_and(x3d > 0.0, z3d > 0.0)\r\n\r\narr[abs(x3d - xmin) < 2*dcoord] = 0.3\r\narr[abs(y3d - ymin) < 2*dcoord] = 0.3\r\narr[abs(z3d - zmin) < 2*dcoord] = 0.3\r\n\r\n# single cube on +x\r\nxc = 0.75\r\ndx = 0.05\r\nidx = np.logical_and(np.logical_and(x3d > xc-dx, x3d < xc+dx),\r\n                     np.logical_and(np.logical_and(y3d > -dx, y3d < dx),\r\n                                    np.logical_and(z3d > -dx, z3d < dx)) )\r\n\r\narr[idx] = 1.0\r\n\r\n\r\n# two cubes on +y\r\ndy = 0.05\r\nfor yc in [0.65, 0.85]:\r\n\r\n    idx = np.logical_and(np.logical_and(y3d > yc-dy, y3d < yc+dy),\r\n                         np.logical_and(np.logical_and(x3d > -dy, x3d < dy),\r\n                                        np.logical_and(z3d > -dy, z3d < dy)) )\r\n\r\n    arr[idx] = 0.8\r\n\r\n# three cubes on +z\r\ndz = 0.05\r\nfor zc in [0.5, 0.7, 0.9]:\r\n\r\n    idx = np.logical_and(np.logical_and(z3d > zc-dz, z3d < zc+dz),\r\n                         np.logical_and(np.logical_and(x3d > -dz, x3d < dz),\r\n                                        np.logical_and(y3d > -dz, y3d < dz)) )\r\n\r\n    arr[idx] = 0.6\r\n\r\n\r\n\r\n\r\ndata = dict(Density = arr)\r\nds = yt.load_uniform_grid(data, arr.shape, bbox=bbox)\r\n\r\nfrom yt.visualization.volume_rendering.api import Scene, Camera, VolumeSource, \\\r\n                                                  ColorTransferFunction\r\n\r\nnormal_vector=[1., 0., 0.]\r\nnorth_vector=[0., 0., 1.]\r\n\r\nsc = Scene()\r\ncam = Camera(ds, lens_type='perspective')\r\ncam.position = ds.arr(np.array([-4. ,0., 0.]), 'code_length')\r\ncam.switch_orientation(normal_vector=normal_vector,\r\n                       north_vector=north_vector)\r\ncam.set_width(ds.domain_width*4.)\r\n\r\nvol = VolumeSource(ds, field=('gas', 'Density'))\r\n\r\ntf = vol.transfer_function\r\ntf = ColorTransferFunction((0.1,1.0))\r\ntf.sample_colormap(1.0, 0.01, colormap=\"coolwarm\")\r\ntf.sample_colormap(0.8, 0.01, colormap=\"coolwarm\")\r\ntf.sample_colormap(0.6, 0.01, colormap=\"coolwarm\")\r\ntf.sample_colormap(0.3, 0.01, colormap=\"coolwarm\")\r\n\r\nsc.camera = cam\r\nsc.add_source(vol)\r\nsc.render('test_perspective.png', clip_ratio=6.0)\r\n\r\n# On axis projection, normal vec is x, east vec is -y, north vec is z\r\nyt.ProjectionPlot(ds, 'x', 'Density').save('on.png')\r\n\r\n# Off axis projection, normal vec is x, east vec is -y, north vec is z\r\nyt.OffAxisProjectionPlot(ds, normal_vector, 'Density', \r\n                         north_vector=north_vector).save('off.png')\r\n```",
+    "created_on": "2015-09-04T07:12:27.382223+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/767fa44cb564"
+            }
+        },
+        "hash": "767fa44cb564"
+    },
+    "title": "[BUGFIX] Change VR to RHS, fix #758",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "id": 1736,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jisuoqing"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jisuoqing/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jisuoqing/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Suoqing Ji",
+        "uuid": "{7ef4ff60-41f7-4600-87bc-df06261680b4}",
+        "username": "jisuoqing"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jisuoqing/yt/commit/37bacc221379"
+                }
+            },
+            "hash": "37bacc221379"
+        },
+        "repository": {
+            "full_name": "jisuoqing/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jisuoqing/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jisuoqing/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jisuoqing/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{dc15744d-e256-4d81-94ff-2281a2f38f64}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/08729e09892c"
+                }
+            },
+            "hash": "08729e09892c"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9650066"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9650066"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/498/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/498/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/498/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-04T08:28:17.963586+00:00",
+            "updated_on": "2015-09-04T08:28:18.032267+00:00",
+            "id": 9650066
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9893799"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jisuoqing/yt:2663b2457d33..fceb5ab0e3c6?path=yt%2Fvisualization%2Fvolume_rendering%2Frender_source.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9893799"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Why add this keyword argument? Is there a possible issue with *always* calling `fliplr`?",
+                "html": "<p>Why add this keyword argument? Is there a possible issue with <em>always</em> calling <code>fliplr</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T18:23:02.183923+00:00",
+            "updated_on": "2015-09-14T18:23:02.189465+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/render_source.py",
+                "to": 240
+            },
+            "id": 9893799
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9894132"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9894132"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Can you do one with an annotation, like a line from two known places, so we can verify no additional changes need to be made?",
+                "html": "<p>Can you do one with an annotation, like a line from two known places, so we can verify no additional changes need to be made?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T18:32:49.318381+00:00",
+            "updated_on": "2015-09-14T18:32:49.321004+00:00",
+            "id": 9894132
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9894485"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9894485"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Hey @jisuoqing , Thanks for putting this together to fix a long-standing problem in the code!  During the PR Triage, we talked a lot about this, and the general consensus was the following (and I say this as much for posterity here as to keep you abreast of the discussion):\n\nFor visualizations without a well-defined camera (ie PlotWindow Slices, Projections, and OffAxisProjections), we should hold to the right-handed system defined by the `center` or `focus` of the image. \n\nFor visualizations with a well-defined camera (ie most Volume Rendering applications except for OffAxisProjections), we should hold to the right-handed system defined by the camera location.  Switching to a LHS would result in weird camera manipulations that would likely be counter-intuitive.  As you know, this means that VR will be a left-handed system relative to the other visualizations, but we all think this is OK, as long as we're very clear about documenting this so people don't get confused.\n\nI *think* this means that we should only apply the `fliplr()` call on OffAxisProjection instances and not on other VR instances.\n\nWhat do you think about this?  What do others think about this?",
+                "html": "<p>Hey <a href=\"/jisuoqing/\" rel=\"nofollow\" title=\"@jisuoqing\" class=\"mention\">Suoqing Ji</a> , Thanks for putting this together to fix a long-standing problem in the code!  During the PR Triage, we talked a lot about this, and the general consensus was the following (and I say this as much for posterity here as to keep you abreast of the discussion):</p>\n<p>For visualizations without a well-defined camera (ie PlotWindow Slices, Projections, and OffAxisProjections), we should hold to the right-handed system defined by the <code>center</code> or <code>focus</code> of the image. </p>\n<p>For visualizations with a well-defined camera (ie most Volume Rendering applications except for OffAxisProjections), we should hold to the right-handed system defined by the camera location.  Switching to a LHS would result in weird camera manipulations that would likely be counter-intuitive.  As you know, this means that VR will be a left-handed system relative to the other visualizations, but we all think this is OK, as long as we're very clear about documenting this so people don't get confused.</p>\n<p>I <em>think</em> this means that we should only apply the <code>fliplr()</code> call on OffAxisProjection instances and not on other VR instances.</p>\n<p>What do you think about this?  What do others think about this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T18:43:08.434521+00:00",
+            "updated_on": "2015-09-14T18:43:08.447067+00:00",
+            "id": 9894485
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9897060"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9897060"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Does this mean that when people make a VR of their simulation, the default will be for it to come out flipped?  I think that we should always show things as righthanded.  For cosmology simulations, it may not matter if it is flipped, but for simulations where gravity points in a specific direction (like plane-parallel domains) and where there may be rotation, etc., having a left-handed system will be very confusing to users, and if they are not aware of it, their conclusions about their simulations may be wrong.",
+                "html": "<p>Does this mean that when people make a VR of their simulation, the default will be for it to come out flipped?  I think that we should always show things as righthanded.  For cosmology simulations, it may not matter if it is flipped, but for simulations where gravity points in a specific direction (like plane-parallel domains) and where there may be rotation, etc., having a left-handed system will be very confusing to users, and if they are not aware of it, their conclusions about their simulations may be wrong.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T19:42:23.343912+00:00",
+            "updated_on": "2015-09-14T19:42:23.352314+00:00",
+            "id": 9897060
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9897487"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9897487"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9897060"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9897060"
+                    }
+                },
+                "id": 9897060
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Well, if we do what you suggest, then *all* VR operations will be flipped relative to the coordinate system defined by the vector joining the camera lens and the focal point. I'd prefer to have the VR machinery be internally consistent, and have everything be a right hand system defined by a positive z axis pointing toward the focal point.",
+                "html": "<p>Well, if we do what you suggest, then <em>all</em> VR operations will be flipped relative to the coordinate system defined by the vector joining the camera lens and the focal point. I'd prefer to have the VR machinery be internally consistent, and have everything be a right hand system defined by a positive z axis pointing toward the focal point.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T19:54:10.430442+00:00",
+            "updated_on": "2015-09-14T19:54:10.436766+00:00",
+            "id": 9897487
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jisuoqing"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jisuoqing/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jisuoqing/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Suoqing Ji",
+                "uuid": "{7ef4ff60-41f7-4600-87bc-df06261680b4}",
+                "username": "jisuoqing"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9897854"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9897854"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "I agree with @chummels 's interpretation about the consensus we have reached. I now recalled that to fix LHS VR, ``fliplr`` will not work (still in LHS) but flip the ``north_vector`` will. I'll update the PR later today when I got the chance.",
+                "html": "<p>I agree with <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> 's interpretation about the consensus we have reached. I now recalled that to fix LHS VR, <code>fliplr</code> will not work (still in LHS) but flip the <code>north_vector</code> will. I'll update the PR later today when I got the chance.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T20:06:07.246825+00:00",
+            "updated_on": "2015-09-14T20:06:07.256639+00:00",
+            "id": 9897854
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9899281"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9899281"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9897854"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9897854"
+                    }
+                },
+                "id": 9897854
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "I like this solution.",
+                "html": "<p>I like this solution.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T20:57:56.375409+00:00",
+            "updated_on": "2015-09-14T20:57:56.378180+00:00",
+            "id": 9899281
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jisuoqing"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jisuoqing/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jisuoqing/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Suoqing Ji",
+                "uuid": "{7ef4ff60-41f7-4600-87bc-df06261680b4}",
+                "username": "jisuoqing"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9900643"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9900643"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Off-axis projection and VR do give different results, since they have different definitions of ``normal_vector`` and are both in RHS from their own perspective.\n\nThe only problem is due to different ``normal_vector`` definitions, the ``north_vector`` is flipped in VR. So instead of flipping it back which requires considerable changes, I just rotate (not fliplr) the final image to get correct \"up\" direction.\n\n@chummels Do you think I interpret your opinion correctly? And hope to hear from others also!",
+                "html": "<p>Off-axis projection and VR do give different results, since they have different definitions of <code>normal_vector</code> and are both in RHS from their own perspective.</p>\n<p>The only problem is due to different <code>normal_vector</code> definitions, the <code>north_vector</code> is flipped in VR. So instead of flipping it back which requires considerable changes, I just rotate (not fliplr) the final image to get correct \"up\" direction.</p>\n<p><a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> Do you think I interpret your opinion correctly? And hope to hear from others also!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T21:48:23.667489+00:00",
+            "updated_on": "2015-09-14T21:48:23.676755+00:00",
+            "id": 9900643
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jisuoqing"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jisuoqing/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jisuoqing/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Suoqing Ji",
+                "uuid": "{7ef4ff60-41f7-4600-87bc-df06261680b4}",
+                "username": "jisuoqing"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9900677"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9900677"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9894132"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9894132"
+                    }
+                },
+                "id": 9894132
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Sorry I did not get what you mean...",
+                "html": "<p>Sorry I did not get what you mean...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T21:50:14.514108+00:00",
+            "updated_on": "2015-09-14T21:50:14.517597+00:00",
+            "id": 9900677
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jisuoqing"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jisuoqing/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jisuoqing/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Suoqing Ji",
+                "uuid": "{7ef4ff60-41f7-4600-87bc-df06261680b4}",
+                "username": "jisuoqing"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9900706"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jisuoqing/yt:None..None?path=yt%2Fvisualization%2Fvolume_rendering%2Frender_source.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9900706"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9893799"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9893799"
+                    }
+                },
+                "id": 9893799
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "This is because off-axis plot does give correct results, and nothing needs to be changed if the call is not from VR.",
+                "html": "<p>This is because off-axis plot does give correct results, and nothing needs to be changed if the call is not from VR.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T21:51:15.689416+00:00",
+            "updated_on": "2015-09-14T21:51:15.697509+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/render_source.py",
+                "to": null
+            },
+            "id": 9900706
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9900711"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9900711"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9900677"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9900677"
+                    }
+                },
+                "id": 9900677
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "I mean, a \"line\" annotation or something, just to make sure that it works properly.  I was more concerned with this during the fliplr than now that it's transposing, but I still want to make sure that the *other* render sources finalize the image the same way.",
+                "html": "<p>I mean, a \"line\" annotation or something, just to make sure that it works properly.  I was more concerned with this during the fliplr than now that it's transposing, but I still want to make sure that the <em>other</em> render sources finalize the image the same way.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T21:51:22.217079+00:00",
+            "updated_on": "2015-09-14T21:51:22.219475+00:00",
+            "id": 9900711
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9901388"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9901388"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/526/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/526/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/526/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T22:28:39.692929+00:00",
+            "updated_on": "2015-09-14T22:28:39.765617+00:00",
+            "id": 9901388
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jisuoqing"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jisuoqing/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jisuoqing/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Suoqing Ji",
+                "uuid": "{7ef4ff60-41f7-4600-87bc-df06261680b4}",
+                "username": "jisuoqing"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9902030"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9902030"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9900711"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9900711"
+                    }
+                },
+                "id": 9900711
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "I've tested the ``annotate_axes`` in plane parallel lens (in perspective lens it does not show up, and I'll explore it later). It's hard to set the clip_ratio right, but it's clear to see the difference.\n\nBefore fix:\n\n![before.png](https://bitbucket.org/repo/BXbAb/images/3144994166-before.png)\n\nAfter fix:\n\n![after.png](https://bitbucket.org/repo/BXbAb/images/387441945-after.png)",
+                "html": "<p>I've tested the <code>annotate_axes</code> in plane parallel lens (in perspective lens it does not show up, and I'll explore it later). It's hard to set the clip_ratio right, but it's clear to see the difference.</p>\n<p>Before fix:</p>\n<p><img alt=\"before.png\" src=\"https://bitbucket.org/repo/BXbAb/images/3144994166-before.png\" /></p>\n<p>After fix:</p>\n<p><img alt=\"after.png\" src=\"https://bitbucket.org/repo/BXbAb/images/387441945-after.png\" /></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-14T23:08:05.818635+00:00",
+            "updated_on": "2015-09-14T23:08:05.821428+00:00",
+            "id": 9902030
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9904836"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9904836"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "I've tested out this PR, and I think this will for once and for all solve the ongoing problems we've experienced trying to keep the VR and Plot Window infrastructures returning logical results.  As @jisuoqing demonstrates in the script and images associated with this PR, when you specify the `normal_vector` for on- and off-axis projections, you get the same results (RHS) and when you specify it for VR you get reversed results, since the `normal_vector` is specified from the camera location and not from the dataset center as it is for projections.  This is the desired behavior.\n\nAs an additional check, I ran this script which demonstrates the change on a test dataset of a galaxy.  The on- and off-axis projections yield identical results, and when we specify the camera position as just the superposition of our `normal_vector` and the camera position, it gives matching results.  Keep in mind that here the *true* `normal_vector` of the VR is the reverse of the `normal_vector` I'm providing, but everything behaves in an intuitive way and everybody gets to be RHS in their own frame and there is internal consistency.  Big win here!\n\nHere is the script:\n\n```\n#!python\n\nimport yt\n\nds = yt.load(\"IsolatedGalaxy/galaxy0030/galaxy0030\")\nx_vector = ds.arr([1,0,0], 'code_length') # x\nz_vector = ds.arr([0,0,1], 'code_length') # z\n\n# On axis projection, normal vec is x, east vec is -y, north vec is z\non = yt.ProjectionPlot(ds, 'x', 'density', width=(25, 'kpc'))\non.hide_colorbar()\non.hide_axes()\non.save('on.png')\n\n# Off axis projection, normal vec is x, east vec is -y, north vec is z\noff = yt.OffAxisProjectionPlot(ds, x_vector, 'density', width=(25, 'kpc'),\n                               north_vector=z_vector)\noff.hide_colorbar()\noff.hide_axes()\noff.save('off.png')\n\n# Volume rendering, camera is positioned at x unit_vector relative to focus,\n# with north vec = z\nx_vector = ds.arr([1,0,0], 'code_length') # x; needs redefining because changed\nim, sc = yt.volume_render(ds, 'density')\nsc.camera.set_width(ds.arr([25, 25, 25], 'kpc'))\nsc.camera.set_position(sc.camera.focus + x_vector, north_vector=z_vector)\nsc.camera.resolution = (800, 800)\ntf = sc.get_source(0).transfer_function\ntf.clear()\ntf.add_layers(3, 0.01, col_bounds=[-26,-23], colormap = 'RdBu_r')\nsc.render('vr.png', clip_ratio=4)\n```\nHere are the results from using this PR (the results from before the PR are the same for on- and off-axis projections, but flipped for VR):\n\n![on.png](https://bitbucket.org/repo/BXbAb/images/2486770789-on.png)\n\n![off.png](https://bitbucket.org/repo/BXbAb/images/2633397787-off.png)\n\n![vr.png](https://bitbucket.org/repo/BXbAb/images/3991653973-vr.png)",
+                "html": "<p>I've tested out this PR, and I think this will for once and for all solve the ongoing problems we've experienced trying to keep the VR and Plot Window infrastructures returning logical results.  As <a href=\"/jisuoqing/\" rel=\"nofollow\" title=\"@jisuoqing\" class=\"mention\">Suoqing Ji</a> demonstrates in the script and images associated with this PR, when you specify the <code>normal_vector</code> for on- and off-axis projections, you get the same results (RHS) and when you specify it for VR you get reversed results, since the <code>normal_vector</code> is specified from the camera location and not from the dataset center as it is for projections.  This is the desired behavior.</p>\n<p>As an additional check, I ran this script which demonstrates the change on a test dataset of a galaxy.  The on- and off-axis projections yield identical results, and when we specify the camera position as just the superposition of our <code>normal_vector</code> and the camera position, it gives matching results.  Keep in mind that here the <em>true</em> <code>normal_vector</code> of the VR is the reverse of the <code>normal_vector</code> I'm providing, but everything behaves in an intuitive way and everybody gets to be RHS in their own frame and there is internal consistency.  Big win here!</p>\n<p>Here is the script:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"kn\">import</span> <span class=\"nn\">yt</span>\n\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"s2\">&quot;IsolatedGalaxy/galaxy0030/galaxy0030&quot;</span><span class=\"p\">)</span>\n<span class=\"n\">x_vector</span> <span class=\"o\">=</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">arr</span><span class=\"p\">([</span><span class=\"mi\">1</span><span class=\"p\">,</span><span class=\"mi\">0</span><span class=\"p\">,</span><span class=\"mi\">0</span><span class=\"p\">],</span> <span class=\"s1\">&#39;code_length&#39;</span><span class=\"p\">)</span> <span class=\"c1\"># x</span>\n<span class=\"n\">z_vector</span> <span class=\"o\">=</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">arr</span><span class=\"p\">([</span><span class=\"mi\">0</span><span class=\"p\">,</span><span class=\"mi\">0</span><span class=\"p\">,</span><span class=\"mi\">1</span><span class=\"p\">],</span> <span class=\"s1\">&#39;code_length&#39;</span><span class=\"p\">)</span> <span class=\"c1\"># z</span>\n\n<span class=\"c1\"># On axis projection, normal vec is x, east vec is -y, north vec is z</span>\n<span class=\"n\">on</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">ProjectionPlot</span><span class=\"p\">(</span><span class=\"n\">ds</span><span class=\"p\">,</span> <span class=\"s1\">&#39;x&#39;</span><span class=\"p\">,</span> <span class=\"s1\">&#39;density&#39;</span><span class=\"p\">,</span> <span class=\"n\">width</span><span class=\"o\">=</span><span class=\"p\">(</span><span class=\"mi\">25</span><span class=\"p\">,</span> <span class=\"s1\">&#39;kpc&#39;</span><span class=\"p\">))</span>\n<span class=\"n\">on</span><span class=\"o\">.</span><span class=\"n\">hide_colorbar</span><span class=\"p\">()</span>\n<span class=\"n\">on</span><span class=\"o\">.</span><span class=\"n\">hide_axes</span><span class=\"p\">()</span>\n<span class=\"n\">on</span><span class=\"o\">.</span><span class=\"n\">save</span><span class=\"p\">(</span><span class=\"s1\">&#39;on.png&#39;</span><span class=\"p\">)</span>\n\n<span class=\"c1\"># Off axis projection, normal vec is x, east vec is -y, north vec is z</span>\n<span class=\"n\">off</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">OffAxisProjectionPlot</span><span class=\"p\">(</span><span class=\"n\">ds</span><span class=\"p\">,</span> <span class=\"n\">x_vector</span><span class=\"p\">,</span> <span class=\"s1\">&#39;density&#39;</span><span class=\"p\">,</span> <span class=\"n\">width</span><span class=\"o\">=</span><span class=\"p\">(</span><span class=\"mi\">25</span><span class=\"p\">,</span> <span class=\"s1\">&#39;kpc&#39;</span><span class=\"p\">),</span>\n                               <span class=\"n\">north_vector</span><span class=\"o\">=</span><span class=\"n\">z_vector</span><span class=\"p\">)</span>\n<span class=\"n\">off</span><span class=\"o\">.</span><span class=\"n\">hide_colorbar</span><span class=\"p\">()</span>\n<span class=\"n\">off</span><span class=\"o\">.</span><span class=\"n\">hide_axes</span><span class=\"p\">()</span>\n<span class=\"n\">off</span><span class=\"o\">.</span><span class=\"n\">save</span><span class=\"p\">(</span><span class=\"s1\">&#39;off.png&#39;</span><span class=\"p\">)</span>\n\n<span class=\"c1\"># Volume rendering, camera is positioned at x unit_vector relative to focus,</span>\n<span class=\"c1\"># with north vec = z</span>\n<span class=\"n\">x_vector</span> <span class=\"o\">=</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">arr</span><span class=\"p\">([</span><span class=\"mi\">1</span><span class=\"p\">,</span><span class=\"mi\">0</span><span class=\"p\">,</span><span class=\"mi\">0</span><span class=\"p\">],</span> <span class=\"s1\">&#39;code_length&#39;</span><span class=\"p\">)</span> <span class=\"c1\"># x; needs redefining because changed</span>\n<span class=\"n\">im</span><span class=\"p\">,</span> <span class=\"n\">sc</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">volume_render</span><span class=\"p\">(</span><span class=\"n\">ds</span><span class=\"p\">,</span> <span class=\"s1\">&#39;density&#39;</span><span class=\"p\">)</span>\n<span class=\"n\">sc</span><span class=\"o\">.</span><span class=\"n\">camera</span><span class=\"o\">.</span><span class=\"n\">set_width</span><span class=\"p\">(</span><span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">arr</span><span class=\"p\">([</span><span class=\"mi\">25</span><span class=\"p\">,</span> <span class=\"mi\">25</span><span class=\"p\">,</span> <span class=\"mi\">25</span><span class=\"p\">],</span> <span class=\"s1\">&#39;kpc&#39;</span><span class=\"p\">))</span>\n<span class=\"n\">sc</span><span class=\"o\">.</span><span class=\"n\">camera</span><span class=\"o\">.</span><span class=\"n\">set_position</span><span class=\"p\">(</span><span class=\"n\">sc</span><span class=\"o\">.</span><span class=\"n\">camera</span><span class=\"o\">.</span><span class=\"n\">focus</span> <span class=\"o\">+</span> <span class=\"n\">x_vector</span><span class=\"p\">,</span> <span class=\"n\">north_vector</span><span class=\"o\">=</span><span class=\"n\">z_vector</span><span class=\"p\">)</span>\n<span class=\"n\">sc</span><span class=\"o\">.</span><span class=\"n\">camera</span><span class=\"o\">.</span><span class=\"n\">resolution</span> <span class=\"o\">=</span> <span class=\"p\">(</span><span class=\"mi\">800</span><span class=\"p\">,</span> <span class=\"mi\">800</span><span class=\"p\">)</span>\n<span class=\"n\">tf</span> <span class=\"o\">=</span> <span class=\"n\">sc</span><span class=\"o\">.</span><span class=\"n\">get_source</span><span class=\"p\">(</span><span class=\"mi\">0</span><span class=\"p\">)</span><span class=\"o\">.</span><span class=\"n\">transfer_function</span>\n<span class=\"n\">tf</span><span class=\"o\">.</span><span class=\"n\">clear</span><span class=\"p\">()</span>\n<span class=\"n\">tf</span><span class=\"o\">.</span><span class=\"n\">add_layers</span><span class=\"p\">(</span><span class=\"mi\">3</span><span class=\"p\">,</span> <span class=\"mf\">0.01</span><span class=\"p\">,</span> <span class=\"n\">col_bounds</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"o\">-</span><span class=\"mi\">26</span><span class=\"p\">,</span><span class=\"o\">-</span><span class=\"mi\">23</span><span class=\"p\">],</span> <span class=\"n\">colormap</span> <span class=\"o\">=</span> <span class=\"s1\">&#39;RdBu_r&#39;</span><span class=\"p\">)</span>\n<span class=\"n\">sc</span><span class=\"o\">.</span><span class=\"n\">render</span><span class=\"p\">(</span><span class=\"s1\">&#39;vr.png&#39;</span><span class=\"p\">,</span> <span class=\"n\">clip_ratio</span><span class=\"o\">=</span><span class=\"mi\">4</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>Here are the results from using this PR (the results from before the PR are the same for on- and off-axis projections, but flipped for VR):</p>\n<p><img alt=\"on.png\" src=\"https://bitbucket.org/repo/BXbAb/images/2486770789-on.png\" /></p>\n<p><img alt=\"off.png\" src=\"https://bitbucket.org/repo/BXbAb/images/2633397787-off.png\" /></p>\n<p><img alt=\"vr.png\" src=\"https://bitbucket.org/repo/BXbAb/images/3991653973-vr.png\" /></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-15T02:25:12.631910+00:00",
+            "updated_on": "2015-09-15T02:25:12.641656+00:00",
+            "id": 9904836
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9904838"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9904838"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736/comments/9900643"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736/_/diff#comment-9900643"
+                    }
+                },
+                "id": 9900643
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Change VR to RHS, fix #758",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1736"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1736"
+                    }
+                },
+                "id": 1736
+            },
+            "content": {
+                "raw": "Yes, this is the right interpretation.  More on this below.",
+                "html": "<p>Yes, this is the right interpretation.  More on this below.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-15T02:25:22.739764+00:00",
+            "updated_on": "2015-09-15T02:25:22.742043+00:00",
+            "id": 9904838
+        }
+    ]
+}

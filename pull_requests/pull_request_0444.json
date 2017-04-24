@@ -1,0 +1,908 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-02-25T18:54:34.550758+00:00",
+    "comment_count": 13,
+    "description": "This reworks the way we set fonts for plot window plots, leveraging the [FontProperty](http://matplotlib.org/api/font_manager_api.html#matplotlib.font_manager.FontProperties) object defined in recent versions of matplotlib.\r\n\r\nI've added a new method that allows finer control over the fonts.  I tried to allow additional control over the axis labels and colorbar labels, but that's not possible for MathText, which always use a computer modern font as far as I can tell.  It's still possible to adjust the font size for the MathText labels, just not the actual font its self.  I've changed the default font to a STIX font that looks a lot like the computer modern font used by the MathText parser.  Unfortunately we can't use the exact same font for [obscure reasons](http://matplotlib.1069221.n5.nabble.com/MPL-uses-character-not-defined-by-cmr10-td22780.html).\r\n\r\n* The new plots look like this: http://i.imgur.com/yNGEPh3.png\r\n\r\n* While the old plots look like: http://i.imgur.com/BzOtVhv.png\r\n\r\nThese changes make a totally subjective, but, in my opinion, significant improvement to the readability of the axes and tick labels, bringing them closer to publication quality.\r\n\r\nEdit: anticipating Matt's objections ;)\r\n\r\nEdit 2: Updating per stephen's suggestion.\r\n\r\nEdit 3: Removing the fontsize attribute from the base plot window class.  Using _font_properties exclusively instead.\r\n\r\nEdit 4: Updating to address comments.",
+    "created_on": "2013-02-22T02:37:57.615373+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/fb86a365aa71"
+            }
+        },
+        "hash": "fb86a365aa71"
+    },
+    "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 444,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/7598cb8b7438"
+                }
+            },
+            "hash": "7598cb8b7438"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/409b3134745b"
+                }
+            },
+            "hash": "409b3134745b"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/sskory"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/sskory/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/sskory/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Stephen Skory",
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
+                "username": "sskory"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128347"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:f1d0c42163a5..9b309d23df19?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128347"
+                }
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "It would be super useful if there was an example of how to set the font for a plot here. Can you add that to this docstring?",
+                "html": "<p>It would be super useful if there was an example of how to set the font for a plot here. Can you add that to this docstring?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-22T17:56:28.045522+00:00",
+            "updated_on": "2013-02-22T17:56:28.056644+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 992
+            },
+            "id": 128347
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128776"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128776"
+                }
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "Hi Nathan,\n\nSo it's not entirely clear to me from reading this code where the fontsize is specified, where it gets set, and how that gets threaded through.  In general I worry that if we continue to add additional constructor arguments, we'll be back in the place we were with the `PlotCollection`, at an unmanageable set of wrappers around matplotlib.  It looks like in some areas you're using `font_properties`, which would be a nice change, and in others not.\n\nCould you briefly outline in a comment what the actual changes here do, and how they shift interaction?\n\nIn the future I would like to start thinking about pushing back toward much simpler object creation, with fewer keyword arguments, and enabling more getters and setters.  One problem with trying to retain backwards API compatibility is that if you add an argument, you can't really take it away.\n\nThank you for doing this, by the way.  The images are markedly improved!",
+                "html": "<p>Hi Nathan,</p>\n<p>So it's not entirely clear to me from reading this code where the fontsize is specified, where it gets set, and how that gets threaded through.  In general I worry that if we continue to add additional constructor arguments, we'll be back in the place we were with the <code>PlotCollection</code>, at an unmanageable set of wrappers around matplotlib.  It looks like in some areas you're using <code>font_properties</code>, which would be a nice change, and in others not.</p>\n<p>Could you briefly outline in a comment what the actual changes here do, and how they shift interaction?</p>\n<p>In the future I would like to start thinking about pushing back toward much simpler object creation, with fewer keyword arguments, and enabling more getters and setters.  One problem with trying to retain backwards API compatibility is that if you add an argument, you can't really take it away.</p>\n<p>Thank you for doing this, by the way.  The images are markedly improved!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-23T11:21:32.785902+00:00",
+            "updated_on": "2013-02-23T11:21:32.794289+00:00",
+            "id": 128776
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128944"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128944"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128776"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128776"
+                    }
+                },
+                "id": 128776
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "Hi Matt,\n\nThis doesn't actually define any new keyword arguments, so no worries on that front.  I did touch the initializers in several places, but that was only to add spaces between the arguments for code readability.\n\nBefore this PR, the only way to control the fonts was via the fontsize keyword.  Now, I allow further customization beyond just the size via set_font.  At initialization, set_font gets called on line 811 to set the font size following the user-supplied fontsize keyword and set the font to the STIX font I locate on line 809.  These fonts are bundled with matplotlib, so no need to worry about not being able to find them.\n\nPreviously it wasn't possible to set the font size after the plot is created, so this makes it possible to do so, along with several other font customizations.\n\nI think this goes along with your desire to reduce the number of keyword arguments.  I guess I'm confused about why you think this adds additional complexity to the initializers.",
+                "html": "<p>Hi Matt,</p>\n<p>This doesn't actually define any new keyword arguments, so no worries on that front.  I did touch the initializers in several places, but that was only to add spaces between the arguments for code readability.</p>\n<p>Before this PR, the only way to control the fonts was via the fontsize keyword.  Now, I allow further customization beyond just the size via set_font.  At initialization, set_font gets called on line 811 to set the font size following the user-supplied fontsize keyword and set the font to the STIX font I locate on line 809.  These fonts are bundled with matplotlib, so no need to worry about not being able to find them.</p>\n<p>Previously it wasn't possible to set the font size after the plot is created, so this makes it possible to do so, along with several other font customizations.</p>\n<p>I think this goes along with your desire to reduce the number of keyword arguments.  I guess I'm confused about why you think this adds additional complexity to the initializers.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-23T20:00:15.327786+00:00",
+            "updated_on": "2013-02-23T20:00:15.335170+00:00",
+            "id": 128944
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128946"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128946"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128776"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128776"
+                    }
+                },
+                "id": 128776
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "Would you prefer I not carry around the fontsize attribute any longer?  I think I could figure out a way to do that.",
+                "html": "<p>Would you prefer I not carry around the fontsize attribute any longer?  I think I could figure out a way to do that.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-23T20:06:01.155460+00:00",
+            "updated_on": "2013-02-23T20:06:01.165348+00:00",
+            "id": 128946
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128961"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128961"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/128946"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-128946"
+                    }
+                },
+                "id": 128946
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "I've gone ahead and done this.  Let me know what you think of the updated PR.",
+                "html": "<p>I've gone ahead and done this.  Let me know what you think of the updated PR.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-23T21:51:16.305026+00:00",
+            "updated_on": "2013-02-23T21:51:16.321087+00:00",
+            "id": 128961
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/129964"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-129964"
+                }
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "This looks good to me, and I think the balance between having `fontsize` in the initializer, and the `set_fonts` function, is good.  I've only made a few comments below, and then it should be set.",
+                "html": "<p>This looks good to me, and I think the balance between having <code>fontsize</code> in the initializer, and the <code>set_fonts</code> function, is good.  I've only made a few comments below, and then it should be set.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T11:47:59.599247+00:00",
+            "updated_on": "2013-02-25T11:47:59.606909+00:00",
+            "id": 129964
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/129965"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:c070d328e5b9..409b3134745b?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-129965"
+                }
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "font_size = kwargs.pop(\"fontsize\", 18)",
+                "html": "<p>font_size = kwargs.pop(\"fontsize\", 18)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T11:48:24.710902+00:00",
+            "updated_on": "2013-02-25T11:48:24.718075+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 802
+            },
+            "id": 129965
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/129968"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:c070d328e5b9..409b3134745b?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-129968"
+                }
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "    fp = self._font_properties or FontProperties()\n\nshould do this.",
+                "html": "<div class=\"codehilite\"><pre><span></span>fp = self._font_properties or FontProperties()\n</pre></div>\n\n\n<p>should do this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T11:50:09.621066+00:00",
+            "updated_on": "2013-02-25T11:50:09.628607+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 910
+            },
+            "id": 129968
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/129969"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-129969"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/129968"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-129968"
+                    }
+                },
+                "id": 129968
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "And, do we want to *set* `self._font_properties` ?",
+                "html": "<p>And, do we want to <em>set</em> <code>self._font_properties</code> ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T11:50:27.203458+00:00",
+            "updated_on": "2013-02-25T11:50:27.210672+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 129969
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jwise77"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jwise77/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jwise77/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John Wise",
+                "uuid": "{1268c7fc-4f69-4585-8c0c-960c8f6543f7}",
+                "username": "jwise77"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/130313"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:c070d328e5b9..409b3134745b?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-130313"
+                }
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "typo... sans-serif",
+                "html": "<p>typo... sans-serif</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T16:21:20.845900+00:00",
+            "updated_on": "2013-02-25T16:21:20.856642+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 990
+            },
+            "id": 130313
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/130483"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-130483"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/129969"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-129969"
+                    }
+                },
+                "id": 129969
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "Yes, otherwise they will get reset to the default every time the plot gets regenerated.",
+                "html": "<p>Yes, otherwise they will get reset to the default every time the plot gets regenerated.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T18:36:30.262334+00:00",
+            "updated_on": "2013-02-25T18:36:30.271880+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 130483
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/130494"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-130494"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/130483"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-130483"
+                    }
+                },
+                "id": 130483
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "Actually, that's wrong.  All this checking for None business is completely unnecessary.",
+                "html": "<p>Actually, that's wrong.  All this checking for None business is completely unnecessary.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T18:44:47.178348+00:00",
+            "updated_on": "2013-02-25T18:44:47.188186+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 130494
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444/comments/130512"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444/_/diff#comment-130512"
+                }
+            },
+            "pullrequest": {
+                "title": "Making tick labels use a serif font by default, bumping the default font size to 18.",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/444"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/444"
+                    }
+                },
+                "id": 444
+            },
+            "content": {
+                "raw": "LGTM!  Thanks, Nathan.",
+                "html": "<p>LGTM!  Thanks, Nathan.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-25T18:54:27.015546+00:00",
+            "updated_on": "2013-02-25T18:54:27.021616+00:00",
+            "id": 130512
+        }
+    ]
+}

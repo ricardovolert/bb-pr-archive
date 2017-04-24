@@ -1,0 +1,1332 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-07-09T16:45:38.746876+00:00",
+    "comment_count": 22,
+    "description": "Currently, the derived quantities return different outputs that vary significantly between each quantity.  For example, `ds.quantities.center_of_mass()` returns a YTArray, whereas `ds.quantities.angular_momentum_vector()` returns a tuple of YTQuantity objects.  This is problematic, because if you want to use the `.in_units('blah')` functionality, it will fail on a tuple.  \r\n\r\nI've updated a few of the quantities to now return YTArrays:\r\n\r\n* `AngularMomentumVector` now return a YTArray\r\n* `WeightedVariance` now returns a YTArray of the variance and mean for each field listed\r\n* `Extrema` now returns a YTArray of the min/max for each field instead of a tuple\r\n* `TotalMass` now returns a YTArray of the [gas, particle, total], instead of a tuple of (gas, particle). \r\n\r\nThis isn't a huge API change for the user since tuples and YTArrays are typically indexed in the same way.  As an example, I didn't have to tweak the tests to make this PR pass them.\r\n\r\nLastly, I modified the AngularMomentumVector quantity to fix a bug where it wouldn't work with certain data objects like `ds.all_data()`.\r\n\r\nHere is a [script](http://paste.yt-project.org/show/5508/) demonstrating the behavior [before](http://paste.yt-project.org/show/5510/) and [after](http://paste.yt-project.org/show/5509/) this PR.\r\n\r\nUPDATE1: I've returned the `TotalMass` derived quantity to only give [gas_mass, particle_mass] as discussed in the comments below.  The output of the above script is now [this](http://paste.yt-project.org/show/5610/).",
+    "created_on": "2015-04-08T03:30:29.010778+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/832060c8ef25"
+            }
+        },
+        "hash": "832060c8ef25"
+    },
+    "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1543,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/661d8ad11efb"
+                }
+            },
+            "hash": "661d8ad11efb"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7ec5b0eb2127"
+                }
+            },
+            "hash": "7ec5b0eb2127"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6116749"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6116749"
+                }
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "I'm fine with `AngularMomentumVector` returning a `YTArray` since the return value is a vector and it makes sense to group the components of the vector into a single array.\n\nI'm -1 on the other changes. I don't think it makes sense to return arrays made up of values corresponding to unrelated quantities.  Instead, the current behavior of returning tuples of quantities should be retained.",
+                "html": "<p>I'm fine with <code>AngularMomentumVector</code> returning a <code>YTArray</code> since the return value is a vector and it makes sense to group the components of the vector into a single array.</p>\n<p>I'm -1 on the other changes. I don't think it makes sense to return arrays made up of values corresponding to unrelated quantities.  Instead, the current behavior of returning tuples of quantities should be retained.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-08T03:38:04.704444+00:00",
+            "updated_on": "2015-04-08T03:38:04.712382+00:00",
+            "id": 6116749
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6117136"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6117136"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6116749"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6116749"
+                    }
+                },
+                "id": 6116749
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "Perhaps you didn't look at the change in behavior before/after, but it isn't always just tuples that get returned.  The `WeightedVariance` output for a list of fields is a flat list of [Variance_of_field1, mean_of_field2, variance_of_field2, mean_of_field2], which unnecessarily links two separate fields together as a list.\n\nAlso, `TotalMass` is somewhat problematic in that it returns a tuple.  I don't know how many times I've been burned by running:\n\n\n```\n#!python\n\nmass = ad.quantities.total_mass().in_units('Msun')\n\n```\n\nonly to have it yell at me that tuples don't have a function `in_units()`.  This change would fix that behavior as well as provide the actual value that most people are seeking: the *total* mass in the object.",
+                "html": "<p>Perhaps you didn't look at the change in behavior before/after, but it isn't always just tuples that get returned.  The <code>WeightedVariance</code> output for a list of fields is a flat list of [Variance_of_field1, mean_of_field2, variance_of_field2, mean_of_field2], which unnecessarily links two separate fields together as a list.</p>\n<p>Also, <code>TotalMass</code> is somewhat problematic in that it returns a tuple.  I don't know how many times I've been burned by running:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">mass</span> <span class=\"o\">=</span> <span class=\"n\">ad</span><span class=\"o\">.</span><span class=\"n\">quantities</span><span class=\"o\">.</span><span class=\"n\">total_mass</span><span class=\"p\">()</span><span class=\"o\">.</span><span class=\"n\">in_units</span><span class=\"p\">(</span><span class=\"s1\">&#39;Msun&#39;</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>only to have it yell at me that tuples don't have a function <code>in_units()</code>.  This change would fix that behavior as well as provide the actual value that most people are seeking: the <em>total</em> mass in the object.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-08T04:26:39.589085+00:00",
+            "updated_on": "2015-04-08T04:26:39.594636+00:00",
+            "id": 6117136
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6117248"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6117248"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6117136"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6117136"
+                    }
+                },
+                "id": 6117136
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "While it's nice to have the total mass appended as a third value as you've added for the `TotalMass` quantity, changing the number of elements in the return value will likely cause unpacking errors in people's scripts.  I'd also prefer to keep the elements tuples, but I'm less wedded to that.\n\nThe output format of `WeightedVariance` is certainly debatable, but again I don't think changing changing the shape of the output is worth breaking people's scripts.\n\nChanging `Extrema` to return a list of `YTArray`s is less controversial.  That said, I like the current behavior of returning a list of tuples since the min and max are unrelated quantities and it doesn't make sense to me to group them as a single array.",
+                "html": "<p>While it's nice to have the total mass appended as a third value as you've added for the <code>TotalMass</code> quantity, changing the number of elements in the return value will likely cause unpacking errors in people's scripts.  I'd also prefer to keep the elements tuples, but I'm less wedded to that.</p>\n<p>The output format of <code>WeightedVariance</code> is certainly debatable, but again I don't think changing changing the shape of the output is worth breaking people's scripts.</p>\n<p>Changing <code>Extrema</code> to return a list of <code>YTArray</code>s is less controversial.  That said, I like the current behavior of returning a list of tuples since the min and max are unrelated quantities and it doesn't make sense to me to group them as a single array.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-08T04:38:23.209338+00:00",
+            "updated_on": "2015-04-08T04:41:31.568349+00:00",
+            "id": 6117248
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6117264"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6117264"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6117248"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6117248"
+                    }
+                },
+                "id": 6117248
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "Lastly, if we're going to change this stuff, we need to make sure the tests are updated.  It would be great if we could expand coverage of the derived quantities tests.",
+                "html": "<p>Lastly, if we're going to change this stuff, we need to make sure the tests are updated.  It would be great if we could expand coverage of the derived quantities tests.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-08T04:39:51.066433+00:00",
+            "updated_on": "2015-04-08T04:39:51.073280+00:00",
+            "id": 6117264
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6125177"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6125177"
+                }
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "I think the biggest plus of this PR is standardizing the output of the derived quantities.  Returning a flat list in some occasions and a list of tuples in others is bad practice and I think we need to consider how this behavior appears to new users as much as backward compatibility.  I like most of these changes, but I can also see @ngoldbaum's points as well.  If what we're trying to do is create the best user experience, then I think we should get feedback from more people.  @chummels, what do you think about bringing this up on yt-dev or even yt-users?",
+                "html": "<p>I think the biggest plus of this PR is standardizing the output of the derived quantities.  Returning a flat list in some occasions and a list of tuples in others is bad practice and I think we need to consider how this behavior appears to new users as much as backward compatibility.  I like most of these changes, but I can also see <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>'s points as well.  If what we're trying to do is create the best user experience, then I think we should get feedback from more people.  <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>, what do you think about bringing this up on yt-dev or even yt-users?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-08T11:43:39.671008+00:00",
+            "updated_on": "2015-04-08T11:43:39.687683+00:00",
+            "id": 6125177
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6125898"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6125898"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6125177"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6125177"
+                    }
+                },
+                "id": 6125177
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "I can bring this up on the list.  This is a problem that I saw in the callbacks and other areas of the code.  Callbacks or quantities or whatever get added without much mind to previous callbacks or quantities, so that general consistency in behavior is lacking.  So we end up with an API that is inconsistent, and we do everything possible to retain backwards compatibility.  While I certainly understand not wanting to break people's scripts, I think having consistent behavior is import too (for the reasons Britton mentioned).  I guess the main solution is to be more careful about allowing code additions that break previous standards to go into the codebase in the first place.",
+                "html": "<p>I can bring this up on the list.  This is a problem that I saw in the callbacks and other areas of the code.  Callbacks or quantities or whatever get added without much mind to previous callbacks or quantities, so that general consistency in behavior is lacking.  So we end up with an API that is inconsistent, and we do everything possible to retain backwards compatibility.  While I certainly understand not wanting to break people's scripts, I think having consistent behavior is import too (for the reasons Britton mentioned).  I guess the main solution is to be more careful about allowing code additions that break previous standards to go into the codebase in the first place.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-08T12:13:04.741810+00:00",
+            "updated_on": "2015-04-08T12:13:04.747450+00:00",
+            "id": 6125898
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6126000"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6126000"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6125898"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6125898"
+                    }
+                },
+                "id": 6125898
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "For what it's worth, when we put into 3.0 the derived quantities, @brittonsmith and I went over very carefully the notion of changing it so that we wouldn't return length-1 lists of tuples for things like \"extrema of one field.\"  This broke backwards compat, but I think in a positive way.  I think that if we are consistent about changing things to match user expectation, there is a strong reason to change.  We shouldn't wed ourselves to backwards compat with something that we have to constantly explain or justify.  I'd like to see this discussed with (inline) before/after on yt-dev and/or yt-users -- I think we can certainly find ways to improve the code to match expectations.",
+                "html": "<p>For what it's worth, when we put into 3.0 the derived quantities, <a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> and I went over very carefully the notion of changing it so that we wouldn't return length-1 lists of tuples for things like \"extrema of one field.\"  This broke backwards compat, but I think in a positive way.  I think that if we are consistent about changing things to match user expectation, there is a strong reason to change.  We shouldn't wed ourselves to backwards compat with something that we have to constantly explain or justify.  I'd like to see this discussed with (inline) before/after on yt-dev and/or yt-users -- I think we can certainly find ways to improve the code to match expectations.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-08T12:17:21.263392+00:00",
+            "updated_on": "2015-04-08T12:17:21.284260+00:00",
+            "id": 6126000
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545030"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545030"
+                }
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "So having reviewed the two pastes @xarthisius sent:\n\nbefore: http://paste.yt-project.org/show/5510/\nafter: http://paste.yt-project.org/show/5509/\n\nI rescind my earlier objections.  I don't like that we're changing BC, but every single item is an improvement.  We should notify people.",
+                "html": "<p>So having reviewed the two pastes <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> sent:</p>\n<p>before: <a href=\"http://paste.yt-project.org/show/5510/\" rel=\"nofollow\">http://paste.yt-project.org/show/5510/</a>\nafter: <a href=\"http://paste.yt-project.org/show/5509/\" rel=\"nofollow\">http://paste.yt-project.org/show/5509/</a></p>\n<p>I rescind my earlier objections.  I don't like that we're changing BC, but every single item is an improvement.  We should notify people.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T19:53:45.818208+00:00",
+            "updated_on": "2015-04-28T19:53:45.829381+00:00",
+            "id": 6545030
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545065"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545065"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545030"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545030"
+                    }
+                },
+                "id": 6545030
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "FTR I took them from @chummels description :-)",
+                "html": "<p>FTR I took them from <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> description :-)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T19:54:48.647173+00:00",
+            "updated_on": "2015-04-28T19:54:48.657897+00:00",
+            "id": 6545065
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545116"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545116"
+                }
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "I'm still -1 on changing the number of outputs from the TotalMass derived quantity.  That *will* break user scripts.\n\nThe other issues are less important.",
+                "html": "<p>I'm still -1 on changing the number of outputs from the TotalMass derived quantity.  That <em>will</em> break user scripts.</p>\n<p>The other issues are less important.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T19:57:10.088984+00:00",
+            "updated_on": "2015-04-28T19:57:10.098838+00:00",
+            "id": 6545116
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545120"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545120"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545116"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545116"
+                    }
+                },
+                "id": 6545116
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "It would also be nice to have more tests!",
+                "html": "<p>It would also be nice to have more tests!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T19:57:21.029200+00:00",
+            "updated_on": "2015-04-28T19:57:21.035490+00:00",
+            "id": 6545120
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545207"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545207"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545120"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545120"
+                    }
+                },
+                "id": 6545120
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "I can make more tests before this goes in, but I still think the TotalMass should change in some capacity.  I'm not sure it is going to break too many user scripts, because typically people have to grab one element or another of the tuple to do what they want, which means they're probably just doing `ds.quantities.total_mass()[0]` anyway, right?  This should still yield the same result, it just adds an additional *actual* total mass as the 3rd element.",
+                "html": "<p>I can make more tests before this goes in, but I still think the TotalMass should change in some capacity.  I'm not sure it is going to break too many user scripts, because typically people have to grab one element or another of the tuple to do what they want, which means they're probably just doing <code>ds.quantities.total_mass()[0]</code> anyway, right?  This should still yield the same result, it just adds an additional <em>actual</em> total mass as the 3rd element.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T20:00:55.753200+00:00",
+            "updated_on": "2015-04-28T20:00:55.769196+00:00",
+            "id": 6545207
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545242"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545242"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545207"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545207"
+                    }
+                },
+                "id": 6545207
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "Well, it would break the case: `gas_mass, part_mass = ds.quantities.total_mass()`",
+                "html": "<p>Well, it would break the case: <code>gas_mass, part_mass = ds.quantities.total_mass()</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T20:02:20.117535+00:00",
+            "updated_on": "2015-04-28T20:02:20.124827+00:00",
+            "id": 6545242
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545278"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545278"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/6545242"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-6545242"
+                    }
+                },
+                "id": 6545242
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "My mistake: you're right.",
+                "html": "<p>My mistake: you're right.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T20:03:32.683504+00:00",
+            "updated_on": "2015-04-28T20:03:32.692596+00:00",
+            "id": 6545278
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7191480"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7191480"
+                }
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "Where are we at with this one? What needs to happen next so it can go forward? @ngoldbaum, @chummels ",
+                "html": "<p>Where are we at with this one? What needs to happen next so it can go forward? <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>, <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T18:54:46.442718+00:00",
+            "updated_on": "2015-05-29T18:54:46.459094+00:00",
+            "id": 7191480
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7191529"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7191529"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7191480"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7191480"
+                    }
+                },
+                "id": 7191480
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "I think just the issue with possible unpacking errors for users of the total mass derived quantity.",
+                "html": "<p>I think just the issue with possible unpacking errors for users of the total mass derived quantity.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T18:56:42.534413+00:00",
+            "updated_on": "2015-05-29T18:56:42.542102+00:00",
+            "id": 7191529
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7346725"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7346725"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7191480"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7191480"
+                    }
+                },
+                "id": 7191480
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "I've now addressed this issue in the last update.",
+                "html": "<p>I've now addressed this issue in the last update.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-06T00:45:37.455878+00:00",
+            "updated_on": "2015-06-06T00:45:37.461198+00:00",
+            "id": 7346725
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7346930"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7346930"
+                }
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-06T02:00:55.916051+00:00",
+            "updated_on": "2015-06-06T02:00:55.971775+00:00",
+            "id": 7346930
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7492661"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7492661"
+                }
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "Ok to merge this one? @chummels, @ngoldbaum, @matthewturk?",
+                "html": "<p>Ok to merge this one? <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>, <a href=\"/matthewturk/\" rel=\"nofollow\" title=\"@matthewturk\" class=\"mention\">Matthew Turk</a>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-12T14:46:23.575956+00:00",
+            "updated_on": "2015-06-12T14:46:23.591652+00:00",
+            "id": 7492661
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7492703"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7492703"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7492661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7492661"
+                    }
+                },
+                "id": 7492661
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "Yes from me, but @ngoldbaum should push the button.",
+                "html": "<p>Yes from me, but <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> should push the button.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-12T14:47:38.535653+00:00",
+            "updated_on": "2015-06-12T14:47:38.544498+00:00",
+            "id": 7492703
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7492918"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7492918"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543/comments/7492661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543/_/diff#comment-7492661"
+                    }
+                },
+                "id": 7492661
+            },
+            "pullrequest": {
+                "title": "slight [API_CHANGE] Generalizing derived quantity outputs to all be YTArrays or lists of YTArrays as appropriate",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1543"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1543"
+                    }
+                },
+                "id": 1543
+            },
+            "content": {
+                "raw": "Same from me.  I looked at trying to add more derived quantities tests, but they are really a pain in the butt to add for some of these things, and they'd ultimately just rely on other derived quantities, so the utility is lessened.",
+                "html": "<p>Same from me.  I looked at trying to add more derived quantities tests, but they are really a pain in the butt to add for some of these things, and they'd ultimately just rely on other derived quantities, so the utility is lessened.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-12T14:54:08.466372+00:00",
+            "updated_on": "2015-06-12T14:54:08.474274+00:00",
+            "id": 7492918
+        }
+    ]
+}

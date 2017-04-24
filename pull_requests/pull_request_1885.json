@@ -1,0 +1,1273 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-12-08T02:57:39.269954+00:00",
+    "comment_count": 21,
+    "description": "This implements argmin and argmax, and also refactors the max location and min\nlocation quantities to allow for field sampling.\n\nThis closes #1147.\n\nOne issue up for bikeshedding is the arguments to argmin and argmax.  Should\naxis be the field to minimize, and the first argument be the field to sample?\nIf so, axis can't be optional anymore.  If not, then this is ready to go in.\n\n",
+    "created_on": "2015-11-24T03:21:55.615672+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/753456ba481f"
+            }
+        },
+        "hash": "753456ba481f"
+    },
+    "title": "Implement argmin and argmax",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1885,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/af8ef441266e"
+                }
+            },
+            "hash": "af8ef441266e"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/4a8fa18eaf11"
+                }
+            },
+            "hash": "4a8fa18eaf11"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12096229"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:9f99620e708a..5cbfdce0652c?path=yt%2Fdata_objects%2Fderived_quantities.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12096229"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "I guess we can't change the return value?  It would be good to get a bit more text here explaining why this is the case.",
+                "html": "<p>I guess we can't change the return value?  It would be good to get a bit more text here explaining why this is the case.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-24T04:10:50.241531+00:00",
+            "updated_on": "2015-11-24T04:10:50.243899+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/derived_quantities.py",
+                "to": 580
+            },
+            "id": 12096229
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12097231"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12097231"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://tests.yt-project.org/job/yt_docs/444/\nDocs build visible at http://tests.yt-project.org/job/yt_docs/444/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://tests.yt-project.org/job/yt_docs/444/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_docs/444/</a>\nDocs build visible at <a href=\"http://tests.yt-project.org/job/yt_docs/444/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_docs/444/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-24T05:12:42.522307+00:00",
+            "updated_on": "2015-11-24T05:12:42.670127+00:00",
+            "id": 12097231
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12097447"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12097447"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Whoa--this is great work, @MatthewTurk .  I didn't expect such a full and thorough solution to the issue, but the code is definitely better because of it.  Thank you!",
+                "html": "<p>Whoa--this is great work, <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> .  I didn't expect such a full and thorough solution to the issue, but the code is definitely better because of it.  Thank you!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-24T05:29:08.910828+00:00",
+            "updated_on": "2015-11-24T15:18:07.829297+00:00",
+            "id": 12097447
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12098830"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12098830"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-24T06:51:51.343849+00:00",
+            "updated_on": "2015-11-24T06:51:51.481536+00:00",
+            "id": 12098830
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12117457"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12117457"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12097447"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12097447"
+                    }
+                },
+                "id": 12097447
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "I think you meant @MatthewTurk :)",
+                "html": "<p>I think you meant <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-24T14:42:15.922219+00:00",
+            "updated_on": "2015-11-24T14:42:15.932231+00:00",
+            "id": 12117457
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12119437"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12119437"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12117457"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12117457"
+                    }
+                },
+                "id": 12117457
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Oops!  Yes, I definitely did mean @MatthewTurk !",
+                "html": "<p>Oops!  Yes, I definitely did mean <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> !</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-24T15:18:26.042247+00:00",
+            "updated_on": "2015-11-24T15:18:26.049372+00:00",
+            "id": 12119437
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12120270"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12120270"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Just as a quick note, getting clarity on what the right API is would be really helpful -- I don't want to change the arguments to `argmin` and `argmax` once they go in, so making sure they're correct right now would be helpful.",
+                "html": "<p>Just as a quick note, getting clarity on what the right API is would be really helpful -- I don't want to change the arguments to <code>argmin</code> and <code>argmax</code> once they go in, so making sure they're correct right now would be helpful.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-24T15:31:30.034975+00:00",
+            "updated_on": "2015-11-24T15:31:30.037796+00:00",
+            "id": 12120270
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12145173"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12145173"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "API looks fine to me!",
+                "html": "<p>API looks fine to me!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-25T06:18:43.362910+00:00",
+            "updated_on": "2015-11-25T06:18:43.368090+00:00",
+            "id": 12145173
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295379"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295379"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_docs/452/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_docs/452/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_docs/452/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T19:34:09.605122+00:00",
+            "updated_on": "2015-11-30T19:34:09.755648+00:00",
+            "id": 12295379
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295542"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:a7969e4e99c4..64675f402d50?path=yt%2Fdata_objects%2Fdata_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295542"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Can you elaborate here a bit more on how the return values depend on the `axis` keyword and also what they are?",
+                "html": "<p>Can you elaborate here a bit more on how the return values depend on the <code>axis</code> keyword and also what they are?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T19:38:58.494598+00:00",
+            "updated_on": "2015-11-30T19:38:58.497564+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/data_containers.py",
+                "to": 670
+            },
+            "id": 12295542
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295771"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:7b7ef534c1b2..64675f402d50?path=yt%2Fdata_objects%2Fdata_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295771"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Maybe add an example for `axis=None`?",
+                "html": "<p>Maybe add an example for <code>axis=None</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T19:44:45.851677+00:00",
+            "updated_on": "2015-11-30T19:44:45.854626+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/data_containers.py",
+                "to": 678
+            },
+            "id": 12295771
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295793"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Fdata_objects%2Fdata_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295793"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295771"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295771"
+                    }
+                },
+                "id": 12295771
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "It might also be good to clarify that you can do `axis='x'`, but that `axis=0` won't work (I think?).",
+                "html": "<p>It might also be good to clarify that you can do <code>axis='x'</code>, but that <code>axis=0</code> won't work (I think?).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T19:45:35.611720+00:00",
+            "updated_on": "2015-11-30T19:45:35.614216+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/data_containers.py",
+                "to": null
+            },
+            "id": 12295793
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295830"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:7b7ef534c1b2..64675f402d50?path=doc%2Fsource%2Fanalyzing%2Fobjects.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295830"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Can you move this before the preceding sentence, then add an example here where you don't specify `axis`?",
+                "html": "<p>Can you move this before the preceding sentence, then add an example here where you don't specify <code>axis</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T19:46:47.050941+00:00",
+            "updated_on": "2015-11-30T19:46:47.053239+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/analyzing/objects.rst",
+                "to": 476
+            },
+            "id": 12295830
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295848"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295848"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "I'm +1 on changing the API. Should we mail yt-users to alert people on the dev branch about the change? Of course we'll also make a big deal about this on the mailing list.",
+                "html": "<p>I'm +1 on changing the API. Should we mail yt-users to alert people on the dev branch about the change? Of course we'll also make a big deal about this on the mailing list.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T19:47:32.800085+00:00",
+            "updated_on": "2015-11-30T19:47:32.803040+00:00",
+            "id": 12295848
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295856"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295856"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12295848"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12295848"
+                    }
+                },
+                "id": 12295848
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "err, release notes, not mailing list.",
+                "html": "<p>err, release notes, not mailing list.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T19:47:41.283339+00:00",
+            "updated_on": "2015-11-30T19:47:41.285763+00:00",
+            "id": 12295856
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12298497"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12298497"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/900/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/900/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/900/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T21:00:24.602018+00:00",
+            "updated_on": "2015-11-30T21:00:24.659088+00:00",
+            "id": 12298497
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12299628"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12299628"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://tests.yt-project.org/job/yt_docs/453/\nDocs build visible at http://tests.yt-project.org/job/yt_docs/453/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://tests.yt-project.org/job/yt_docs/453/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_docs/453/</a>\nDocs build visible at <a href=\"http://tests.yt-project.org/job/yt_docs/453/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_docs/453/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T21:32:33.893712+00:00",
+            "updated_on": "2015-11-30T21:32:34.033899+00:00",
+            "id": 12299628
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12301435"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12301435"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/901/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/901/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/901/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-30T22:23:58.260781+00:00",
+            "updated_on": "2015-11-30T22:23:58.397457+00:00",
+            "id": 12301435
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12526989"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12526989"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-07T23:10:55.171326+00:00",
+            "updated_on": "2015-12-07T23:10:55.223902+00:00",
+            "id": 12526989
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12527033"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12527033"
+                }
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "@matt is this ready to go in? Should we make a big deal about the API changing on the ML?",
+                "html": "<p><a href=\"/matt/\" rel=\"nofollow\" title=\"@matt\" class=\"mention\">Matt Haley</a> is this ready to go in? Should we make a big deal about the API changing on the ML?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-07T23:12:25.499102+00:00",
+            "updated_on": "2015-12-07T23:12:25.532530+00:00",
+            "id": 12527033
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12530228"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12530228"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885/comments/12527033"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885/_/diff#comment-12527033"
+                    }
+                },
+                "id": 12527033
+            },
+            "pullrequest": {
+                "title": "Implement argmin and argmax",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1885"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1885"
+                    }
+                },
+                "id": 1885
+            },
+            "content": {
+                "raw": "I think you mean @MatthewTurk .",
+                "html": "<p>I think you mean <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> .</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-08T01:49:55.215853+00:00",
+            "updated_on": "2015-12-08T01:49:55.223960+00:00",
+            "id": 12530228
+        }
+    ]
+}

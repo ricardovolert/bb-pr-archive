@@ -1,0 +1,470 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-12-04T20:54:39.825176+00:00",
+    "comment_count": 6,
+    "description": "These changesets extend eps_writer's compatibility with PhasePlots and updates its multiplot capabilities to handle a single PlotWindow or a list of PlotWindows (for example, if you want to plot a slice, projection, off-axis projection, and phase plots in one figure).  Also, the colorbar placement in multiplot routine can now be specified in cb_location as a dict of strings (\"left\", \"right\", \"top\", \"bottom\") with the keys as the fields.  However, this only works if a single PlotWindow is given.\r\n\r\nUpdate 1: using tuples in plot isinstance calls.  Thanks, Kacper!\r\n\r\nUpdate 2: Minor bugfix that I happened to stumble upon when transferring the image to PyX.\r\n\r\nExample code:\r\n\r\n```\r\n#!python\r\n\r\nfrom yt.mods import *\r\nimport yt.visualization.eps_writer as eps\r\n\r\npf = load(\"galaxy0030/galaxy0030\")\r\nslc_fields = [\"Density\", \"Temperature\"]\r\nslc_cmaps = {\"Density\": \"algae\", \"Temperature\": \"hot\"}\r\nplots = []\r\nfor f in slc_fields:\r\n    slc = SlicePlot(pf, 'z', f)\r\n    slc.set_width(25, 'kpc')\r\n    slc.set_cmap(f, slc_cmaps[f])\r\n    plots.append(slc)\r\n\r\nproj = ProjectionPlot(pf, 'z', \"Density\")\r\nproj.set_width(25, \"kpc\")\r\nproj.set_cmap(\"Density\", \"algae\")\r\nplots.append(proj)\r\n\r\nad = pf.h.all_data()\r\nphase = PhasePlot(ad, \"Density\", \"Temperature\", [\"CellMassMsun\"],\r\n                  weight_field=None)\r\nphase.set_cmap(\"CellMassMsun\", \"jet\")\r\nplots.append(phase)\r\n\r\nmp = eps.multiplot_yt(2, 2, plots, bare_axes=False, margins=(0.75,0.75))\r\nmp.save_fig('multi', format='eps')\r\n```",
+    "created_on": "2013-12-03T13:02:11.933975+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/235c3b3d90ae"
+            }
+        },
+        "hash": "235c3b3d90ae"
+    },
+    "title": "eps_writer updates (PhasePlot compatibility and multiplot updates) ",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 661,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jwise77"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jwise77/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jwise77/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John Wise",
+        "uuid": "{1268c7fc-4f69-4585-8c0c-960c8f6543f7}",
+        "username": "jwise77"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jwise77/yt/commit/762ef5f55246"
+                }
+            },
+            "hash": "762ef5f55246"
+        },
+        "repository": {
+            "full_name": "jwise77/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jwise77/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jwise77/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jwise77/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{a33f27e6-7d72-481c-8bbe-e841bd0849dc}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/efb0f8978343"
+                }
+            },
+            "hash": "efb0f8978343"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments/895860"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jwise77/yt:e7aebae21e2d..d85c1291287f?path=yt%2Fvisualization%2Feps_writer.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661/_/diff#comment-895860"
+                }
+            },
+            "pullrequest": {
+                "title": "eps_writer updates (PhasePlot compatibility and multiplot updates) ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661"
+                    }
+                },
+                "id": 661
+            },
+            "content": {
+                "raw": "`isinstance` can handle tuples. `isinstance(plot, (PlotWindow, PhasePlot))` should also work",
+                "html": "<p><code>isinstance</code> can handle tuples. <code>isinstance(plot, (PlotWindow, PhasePlot))</code> should also work</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-12-03T13:06:28.472451+00:00",
+            "updated_on": "2013-12-03T13:06:28.481079+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/eps_writer.py",
+                "to": 63
+            },
+            "id": 895860
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jwise77"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jwise77/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jwise77/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John Wise",
+                "uuid": "{1268c7fc-4f69-4585-8c0c-960c8f6543f7}",
+                "username": "jwise77"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments/895875"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jwise77/yt:None..None?path=yt%2Fvisualization%2Feps_writer.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661/_/diff#comment-895875"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments/895860"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661/_/diff#comment-895860"
+                    }
+                },
+                "id": 895860
+            },
+            "pullrequest": {
+                "title": "eps_writer updates (PhasePlot compatibility and multiplot updates) ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661"
+                    }
+                },
+                "id": 661
+            },
+            "content": {
+                "raw": "Nice.  I didn't know that.  That will make the code a lot cleaner.",
+                "html": "<p>Nice.  I didn't know that.  That will make the code a lot cleaner.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-12-03T13:09:01.603516+00:00",
+            "updated_on": "2013-12-03T13:09:01.615736+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/eps_writer.py",
+                "to": null
+            },
+            "id": 895875
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments/896078"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661/_/diff#comment-896078"
+                }
+            },
+            "pullrequest": {
+                "title": "eps_writer updates (PhasePlot compatibility and multiplot updates) ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661"
+                    }
+                },
+                "id": 661
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-12-03T13:46:49.729426+00:00",
+            "updated_on": "2013-12-03T13:46:49.832322+00:00",
+            "id": 896078
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments/896595"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661/_/diff#comment-896595"
+                }
+            },
+            "pullrequest": {
+                "title": "eps_writer updates (PhasePlot compatibility and multiplot updates) ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661"
+                    }
+                },
+                "id": 661
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-12-03T15:10:41.681573+00:00",
+            "updated_on": "2013-12-03T15:10:41.792670+00:00",
+            "id": 896595
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments/898684"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661/_/diff#comment-898684"
+                }
+            },
+            "pullrequest": {
+                "title": "eps_writer updates (PhasePlot compatibility and multiplot updates) ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661"
+                    }
+                },
+                "id": 661
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-12-03T20:25:50.217752+00:00",
+            "updated_on": "2013-12-03T20:25:50.365618+00:00",
+            "id": 898684
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661/comments/904830"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661/_/diff#comment-904830"
+                }
+            },
+            "pullrequest": {
+                "title": "eps_writer updates (PhasePlot compatibility and multiplot updates) ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/661"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/661"
+                    }
+                },
+                "id": 661
+            },
+            "content": {
+                "raw": "Looks good to me!  I've approved it for pulling.",
+                "html": "<p>Looks good to me!  I've approved it for pulling.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-12-04T19:21:30.115621+00:00",
+            "updated_on": "2013-12-04T19:21:30.124905+00:00",
+            "id": 904830
+        }
+    ]
+}

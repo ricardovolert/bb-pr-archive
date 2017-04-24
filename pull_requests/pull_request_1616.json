@@ -1,0 +1,1866 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-07-09T23:38:10.523208+00:00",
+    "comment_count": 32,
+    "description": "This PR has some dramatic speedup improvements for `photon_simulator`, as well as adding a couple new options and fixing a corner-case bug. \r\n\r\n1) The `ThermalPhotonModel` class, which is the main way to generate photons, has gained significant speedups.   \r\n2) Fixed a bug in `prepare_photons` where the angular diameter distance units were not being set correctly.   \r\n3) One can now bin a spectrum on user-defined channels, even if a response has not been provided. This allows one to fit the spectrum in XSPEC with a \"dummy\" identity matrix response.    \r\n4) The \"normal\" parameter now takes \"x\", \"y\", or \"z\", to project simply along one of the domain axes. Should result in some minor speedups for these cases.    \r\n5) `ThermalPhotonModel` now has a \"method\" keyword argument which controls how the photon energies are generated from the spectrum from one of two methods.     \r\n6) Made a minor internal change to `spectral_models` to get around some odd behavior in XSPEC when using it to generate photons.    \r\n7) General code cleanup.    \r\n\r\nI updated the `photon_simulator` docs to reflect the public-facing changes. ",
+    "created_on": "2015-06-18T13:53:40.081834+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/98c8bdfbc1e0"
+            }
+        },
+        "hash": "98c8bdfbc1e0"
+    },
+    "title": "Speedups and improvements for photon_simulator",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "id": 1616,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt/commit/8b398054b8fa"
+                }
+            },
+            "hash": "8b398054b8fa"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{aa71d2fb-24c5-4e74-8701-f32955348acf}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c66deb7d69ca"
+                }
+            },
+            "hash": "c66deb7d69ca"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7635580"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7635580"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/65/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/65/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/65/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T15:18:39.561751+00:00",
+            "updated_on": "2015-06-18T15:18:39.782991+00:00",
+            "id": 7635580
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7635885"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:e3d0784b7991..dc2467c4eae7?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_simulator.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7635885"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "`center in (\"center\", \"c\")`",
+                "html": "<p><code>center in (\"center\", \"c\")</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T15:27:27.784599+00:00",
+            "updated_on": "2015-06-18T15:27:27.795639+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_simulator.py",
+                "to": 285
+            },
+            "id": 7635885
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7635911"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:e3d0784b7991..dc2467c4eae7?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_simulator.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7635911"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Hmm, if we have a `ds` objects, `ds.coordinates` has lookups for the various axes.  Would that work?  It would also let them be more general in ordering.",
+                "html": "<p>Hmm, if we have a <code>ds</code> objects, <code>ds.coordinates</code> has lookups for the various axes.  Would that work?  It would also let them be more general in ordering.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T15:27:59.174365+00:00",
+            "updated_on": "2015-06-18T15:27:59.185657+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_simulator.py",
+                "to": 38
+            },
+            "id": 7635911
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7635991"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:e3d0784b7991..dc2467c4eae7?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_models.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7635991"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "What would you think about doing:\n`if cn <= 0: continue`\nand then lowering the indent level of the rest?",
+                "html": "<p>What would you think about doing:\n<code>if cn &lt;= 0: continue</code>\nand then lowering the indent level of the rest?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T15:29:52.802476+00:00",
+            "updated_on": "2015-06-18T15:29:52.810045+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_models.py",
+                "to": 200
+            },
+            "id": 7635991
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7636093"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:e3d0784b7991..dc2467c4eae7?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_models.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7636093"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "What do you think about strings instead of ints for method?",
+                "html": "<p>What do you think about strings instead of ints for method?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T15:32:35.496119+00:00",
+            "updated_on": "2015-06-18T15:32:35.511273+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_models.py",
+                "to": 77
+            },
+            "id": 7636093
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7636233"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:e3d0784b7991..dc2467c4eae7?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fspectral_models.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7636233"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "`if settings is None: settings = {}` and then you can avoid the `if self.settings is not None` conditional below.",
+                "html": "<p><code>if settings is None: settings = {}</code> and then you can avoid the <code>if self.settings is not None</code> conditional below.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T15:36:11.229101+00:00",
+            "updated_on": "2015-06-18T15:36:11.237112+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/spectral_models.py",
+                "to": 136
+            },
+            "id": 7636233
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7636335"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7636335"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T15:39:06.713225+00:00",
+            "updated_on": "2015-06-18T15:39:06.856945+00:00",
+            "id": 7636335
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7638010"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7638010"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/66/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/66/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/66/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T16:29:46.493346+00:00",
+            "updated_on": "2015-06-18T16:29:46.603862+00:00",
+            "id": 7638010
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7639105"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7639105"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T17:08:44.275416+00:00",
+            "updated_on": "2015-06-18T17:08:44.595423+00:00",
+            "id": 7639105
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7639931"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7639931"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/67/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/67/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/67/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-18T17:37:16.095638+00:00",
+            "updated_on": "2015-06-18T17:37:16.168174+00:00",
+            "id": 7639931
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7665931"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:None..None?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_models.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7665931"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7636093"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7636093"
+                    }
+                },
+                "id": 7636093
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "We can do that. ",
+                "html": "<p>We can do that. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T14:21:56.776184+00:00",
+            "updated_on": "2015-06-19T14:21:56.786381+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_models.py",
+                "to": null
+            },
+            "id": 7665931
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7665965"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:None..None?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_simulator.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7665965"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7635911"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7635911"
+                    }
+                },
+                "id": 7635911
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "That would be better, although I don't envision this supporting anything other than Cartesian coordinates any time soon (if that's what you meant).",
+                "html": "<p>That would be better, although I don't envision this supporting anything other than Cartesian coordinates any time soon (if that's what you meant).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T14:22:46.928902+00:00",
+            "updated_on": "2015-06-19T14:22:46.940812+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_simulator.py",
+                "to": null
+            },
+            "id": 7665965
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7666271"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:None..None?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_models.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7666271"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7635991"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7635991"
+                    }
+                },
+                "id": 7635991
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Will this mess with the progress bar? I'll try it out and see. ",
+                "html": "<p>Will this mess with the progress bar? I'll try it out and see. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T14:31:29.553373+00:00",
+            "updated_on": "2015-06-19T14:31:29.562543+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_models.py",
+                "to": null
+            },
+            "id": 7666271
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7666508"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt:None..None?path=yt%2Fanalysis_modules%2Fphoton_simulator%2Fphoton_simulator.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7666508"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7635911"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7635911"
+                    }
+                },
+                "id": 7635911
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Actually, this isn't guaranteed to work--you can store the photons to an HDF5 file and then use them later, in which case we no longer have a `ds` object. We don't even make it an attribute of the class, for that reason. ",
+                "html": "<p>Actually, this isn't guaranteed to work--you can store the photons to an HDF5 file and then use them later, in which case we no longer have a <code>ds</code> object. We don't even make it an attribute of the class, for that reason. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T14:38:43.987718+00:00",
+            "updated_on": "2015-06-19T14:38:43.995757+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/photon_simulator/photon_simulator.py",
+                "to": null
+            },
+            "id": 7666508
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7668685"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7668685"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T15:38:36.636071+00:00",
+            "updated_on": "2015-06-19T15:38:36.692872+00:00",
+            "id": 7668685
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7669686"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7669686"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/69/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/69/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/69/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T16:11:04.477341+00:00",
+            "updated_on": "2015-06-19T16:11:04.548004+00:00",
+            "id": 7669686
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7670033"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7670033"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T16:23:27.524546+00:00",
+            "updated_on": "2015-06-19T16:23:27.570294+00:00",
+            "id": 7670033
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7671270"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7671270"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/70/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/70/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/70/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-19T17:17:17.069828+00:00",
+            "updated_on": "2015-06-19T17:17:17.139945+00:00",
+            "id": 7671270
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7755652"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7755652"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-24T05:50:05.434441+00:00",
+            "updated_on": "2015-06-24T05:50:05.511119+00:00",
+            "id": 7755652
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7756029"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7756029"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/85/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/85/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/85/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-24T06:16:47.355582+00:00",
+            "updated_on": "2015-06-24T06:16:47.459222+00:00",
+            "id": 7756029
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7756313"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7756313"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-24T06:33:13.344629+00:00",
+            "updated_on": "2015-06-24T06:33:13.468547+00:00",
+            "id": 7756313
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/7757258"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-7757258"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/86/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/86/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/86/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-06-24T07:23:20.154381+00:00",
+            "updated_on": "2015-06-24T07:23:20.335864+00:00",
+            "id": 7757258
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8141846"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8141846"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T15:08:55.329817+00:00",
+            "updated_on": "2015-07-09T15:08:55.401445+00:00",
+            "id": 8141846
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8142999"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8142999"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/111/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/111/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/111/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T15:36:57.167680+00:00",
+            "updated_on": "2015-07-09T15:36:57.236674+00:00",
+            "id": 8142999
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8145793"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8145793"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "I looked this over and don't see any line-by-line code issues. The one issue which we brought up in the hangout is the function with the API change needs to retain the deprecated keyword argument with a warning about how to migrate to the new API.",
+                "html": "<p>I looked this over and don't see any line-by-line code issues. The one issue which we brought up in the hangout is the function with the API change needs to retain the deprecated keyword argument with a warning about how to migrate to the new API.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T17:02:09.901008+00:00",
+            "updated_on": "2015-07-09T17:02:09.911329+00:00",
+            "id": 8145793
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8146158"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8146158"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8145793"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8145793"
+                    }
+                },
+                "id": 8145793
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "The format I used for doing this (here taken from line 422 of visualization/plot_modifications.py):\n\n```\n#!python\n\n\n        if label_args is not None:\n            text_args = label_args\n            warnings.warn(\"The label_args keyword is deprecated.  Please use \"\n                          \"the text_args keyword instead.\")\n```\n",
+                "html": "<p>The format I used for doing this (here taken from line 422 of visualization/plot_modifications.py):</p>\n<div class=\"codehilite\"><pre><span></span>        <span class=\"k\">if</span> <span class=\"n\">label_args</span> <span class=\"ow\">is</span> <span class=\"ow\">not</span> <span class=\"bp\">None</span><span class=\"p\">:</span>\n            <span class=\"n\">text_args</span> <span class=\"o\">=</span> <span class=\"n\">label_args</span>\n            <span class=\"n\">warnings</span><span class=\"o\">.</span><span class=\"n\">warn</span><span class=\"p\">(</span><span class=\"s2\">&quot;The label_args keyword is deprecated.  Please use &quot;</span>\n                          <span class=\"s2\">&quot;the text_args keyword instead.&quot;</span><span class=\"p\">)</span>\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T17:15:38.258518+00:00",
+            "updated_on": "2015-07-09T17:15:38.266251+00:00",
+            "id": 8146158
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8146214"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8146214"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8146158"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8146158"
+                    }
+                },
+                "id": 8146158
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Yup, saw that. I just updated the PR with the appropriate change. Thanks!",
+                "html": "<p>Yup, saw that. I just updated the PR with the appropriate change. Thanks!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T17:17:17.774594+00:00",
+            "updated_on": "2015-07-09T17:17:17.785185+00:00",
+            "id": 8146214
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8146228"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8146228"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8146214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8146214"
+                    }
+                },
+                "id": 8146214
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Then I think this is ready to go.",
+                "html": "<p>Then I think this is ready to go.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T17:17:38.955621+00:00",
+            "updated_on": "2015-07-09T17:17:39.043669+00:00",
+            "id": 8146228
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8146255"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8146255"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Unless there are any additional comments on this PR for people who did not attend the PR hangout, I will merge this at the end of today.",
+                "html": "<p>Unless there are any additional comments on this PR for people who did not attend the PR hangout, I will merge this at the end of today.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T17:18:34.239685+00:00",
+            "updated_on": "2015-07-09T17:18:34.247387+00:00",
+            "id": 8146255
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8148471"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8148471"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/112/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/112/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/112/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T18:38:22.199795+00:00",
+            "updated_on": "2015-07-09T18:38:22.354505+00:00",
+            "id": 8148471
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8148477"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8148477"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T18:38:44.278615+00:00",
+            "updated_on": "2015-07-09T18:38:44.326717+00:00",
+            "id": 8148477
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616/comments/8150563"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616/_/diff#comment-8150563"
+                }
+            },
+            "pullrequest": {
+                "title": "Speedups and improvements for photon_simulator",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1616"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1616"
+                    }
+                },
+                "id": 1616
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://hub.yt:8080/job/yt_docs/113/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://hub.yt:8080/job/yt_docs/113/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_docs/113/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-07-09T19:58:33.343709+00:00",
+            "updated_on": "2015-07-09T19:58:33.395980+00:00",
+            "id": 8150563
+        }
+    ]
+}

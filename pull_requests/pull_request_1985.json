@@ -1,0 +1,1249 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-07-09T21:49:20.320550+00:00",
+    "comment_count": 28,
+    "description": "## What is the feature?\r\nIn this PR, I plan to implement a feature enabling specifying the particle type (`index_ptype`) upon which to index the particles.\r\n\r\nFor example, the proposed feature will enable us to use\r\n\r\n```\r\n#!python\r\n\r\nds = yt.load(fn, index_ptype='PartType0')\r\n```\r\n\r\nto load a particle dataset, and construct the octree according to all the `'PartType0'` particles (instead of all the particles, which is the untunable default setting now). By default, `index_ptype='all'`, which shall leave the behavior of any function unchanged by default after this PR.\r\n\r\n## How do I implement the feature?\r\nI implement it in a semi-frontend-agnostic way so that enabling this feature in one frontend won't influence how other frontends work. But it's not truly frontend-agnostic in that in order to bring this feature to a new frontend, some frontend specific change must be made. Detailed procedures are provided in the next section.\r\n\r\nTo fully implement the feature, all the related frontends should be tweaked. But since I don't have the required knowledge of all the frontends, it might be better to lay out the general procedure and wait for an expert to do the work (or help me to do the work). Here I make a list of the frontends I plan to cover in this PR, and the working status:\r\n\r\n- [done] \u201cgadget_hdf5\": `GadgetHDF5Dataset` `IOHandlerGadgetHDF5`\r\n- [done] \"OWLS\": `OWLSDataset` `IOHandlerOWLS`\r\n\r\n## How to bring this feature to another frontend?\r\n- For the corresponding `XXXDataset` class, add a keyword argument `index_ptype=\"all\"` to the constructor, and set `self.index_ptype = index_ptype` in the constructor. If `n_ref` and `over_refine_factor` also appear in the constructor (which I believe is always true), it's a good idea to put `index_ptype` right after them. Because those three parameters determine how the octree will be constructed. (See the changes of `yt/frontends/gadget/data_structures.py` below as an example.)\r\n- For the corresponding `IOHandelerXXX` class, find the `_initialize_index` method, set `index_ptype = self.index_ptype` as the first line, and change the method so that it can handle different `index_ptype` correctly. The `index_ptype` attribute is guaranteed to have been set dynamically in the `ParticleIndex._initialize_indices` class. This is the part where a good knowledge of the frontend is required. (See the changes of `yt/frontends/owls/io.py` below as an example.)",
+    "created_on": "2016-02-05T09:30:15.687457+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/98f754270a40"
+            }
+        },
+        "hash": "98f754270a40"
+    },
+    "title": "Add particle type aware octree construction",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1985,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+            },
+            "html": {
+                "href": "https://bitbucket.org/qobilidop/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Bili Dong",
+        "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+        "username": "qobilidop"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/qobilidop/yt/commit/f340fedc4a2e"
+                }
+            },
+            "hash": "f340fedc4a2e"
+        },
+        "repository": {
+            "full_name": "qobilidop/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/qobilidop/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/qobilidop/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/qobilidop/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{d9c776ae-b43e-4866-bdfd-e86c6031ba81}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/142714a92cbb"
+                }
+            },
+            "hash": "142714a92cbb"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14252812"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14252812"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "I run a simple diagnostic [script](https://paste.yt-project.org/show/6627/) to show the effects of this PR. The following two projection plots show the difference:\n\n```\n#!python\n\nds = yt.load(fn)\n```\n![ptype_all.png](https://bitbucket.org/repo/BXbAb/images/2201307378-ptype_all.png)\n\n```\n#!python\n\nds = yt.load(fn, ptype='PartType0')\n```\n![ptype_0.png](https://bitbucket.org/repo/BXbAb/images/339065770-ptype_0.png)",
+                "html": "<p>I run a simple diagnostic <a href=\"https://paste.yt-project.org/show/6627/\">script</a> to show the effects of this PR. The following two projection plots show the difference:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"n\">fn</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p><img alt=\"ptype_all.png\" src=\"https://bitbucket.org/repo/BXbAb/images/2201307378-ptype_all.png\" /></p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"n\">fn</span><span class=\"p\">,</span> <span class=\"n\">ptype</span><span class=\"o\">=</span><span class=\"s1\">&#39;PartType0&#39;</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p><img alt=\"ptype_0.png\" src=\"https://bitbucket.org/repo/BXbAb/images/339065770-ptype_0.png\" /></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-05T09:40:52.398681+00:00",
+            "updated_on": "2016-06-21T23:31:40.896022+00:00",
+            "id": 14252812
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14255041"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:cf61b281a719..be66247e2a8a?path=yt%2Fgeometry%2Fparticle_geometry_handler.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14255041"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "I tweaked the log info a little, so that it also shows `ptype`.",
+                "html": "<p>I tweaked the log info a little, so that it also shows <code>ptype</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-05T10:32:45.832191+00:00",
+            "updated_on": "2016-02-05T10:32:45.873377+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/particle_geometry_handler.py",
+                "to": 77
+            },
+            "id": 14255041
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14267303"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:None..None?path=yt%2Fgeometry%2Fparticle_geometry_handler.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14267303"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14255041"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14255041"
+                    }
+                },
+                "id": 14255041
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "Can the message be `\"Allocating for %0.3e particles (particle type '%s')\"`?",
+                "html": "<p>Can the message be <code>\"Allocating for %0.3e particles (particle type '%s')\"</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-05T15:33:50.537323+00:00",
+            "updated_on": "2016-02-05T15:33:50.539881+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/particle_geometry_handler.py",
+                "to": null
+            },
+            "id": 14267303
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14267720"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14267720"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "@bwkeller might be able to help implementing this for the tipsy frontend.",
+                "html": "<p><a href=\"/bwkeller/\" rel=\"nofollow\" title=\"@bwkeller\" class=\"mention\">Ben Keller</a> might be able to help implementing this for the tipsy frontend.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-05T15:42:24.804660+00:00",
+            "updated_on": "2016-02-05T15:42:24.812365+00:00",
+            "id": 14267720
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14270072"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14270072"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1272/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1272/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1272/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-05T16:28:22.900626+00:00",
+            "updated_on": "2016-02-05T16:28:23.123920+00:00",
+            "id": 14270072
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14282130"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:0f8594985133..e1341764121a?path=yt%2Fgeometry%2Fparticle_geometry_handler.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14282130"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "Hopefully, this shall fix most of the failures in the previous test.",
+                "html": "<p>Hopefully, this shall fix most of the failures in the previous test.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-05T22:57:09.001334+00:00",
+            "updated_on": "2016-02-05T22:57:09.042003+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/particle_geometry_handler.py",
+                "to": 46
+            },
+            "id": 14282130
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14282913"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14282913"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1273/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1273/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1273/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-05T23:53:42.448595+00:00",
+            "updated_on": "2016-02-05T23:53:42.522222+00:00",
+            "id": 14282913
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14389391"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14389391"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "You can remove the [WIP] tag from the title if you think this is ready to be reviewed.\n\n\nOne other note: it would be nice to have a test for this.",
+                "html": "<p>You can remove the [WIP] tag from the title if you think this is ready to be reviewed.</p>\n<p>One other note: it would be nice to have a test for this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-10T04:14:53.687838+00:00",
+            "updated_on": "2016-02-10T04:14:53.689851+00:00",
+            "id": 14389391
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14389656"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14389656"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14389391"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14389391"
+                    }
+                },
+                "id": 14389391
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "Okay, I'll think about how to test it. And maybe remove [WIP] after adding the tests?",
+                "html": "<p>Okay, I'll think about how to test it. And maybe remove [WIP] after adding the tests?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-10T04:27:50.780569+00:00",
+            "updated_on": "2016-02-10T04:27:50.822904+00:00",
+            "id": 14389656
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14389775"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14389775"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14389656"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14389656"
+                    }
+                },
+                "id": 14389656
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "I think this is fine to go in once there's a test. It would also be nice to have support for this in `GadgetDataset` and `TipsyDataset` as well, but those can be added in a second pass.",
+                "html": "<p>I think this is fine to go in once there's a test. It would also be nice to have support for this in <code>GadgetDataset</code> and <code>TipsyDataset</code> as well, but those can be added in a second pass.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-10T04:32:53.135342+00:00",
+            "updated_on": "2016-02-10T04:32:53.140360+00:00",
+            "id": 14389775
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14867604"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14867604"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14389391"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14389391"
+                    }
+                },
+                "id": 14389391
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "I just started working on writing the tests. My current plan is to add a `test_particle_ptype` right after `test_particle_overrefine` in `yt/geometry/tests/test_particle_octree.py`. But my current impression is that only the `load_particles` method of the stream frontends is tested. Should we also add tests for other  frontends? If so, where should they be?\n\nBack to the stream frontends part, I think there's only one type of particles in the mock dataset generated in `test_particle_overrefine`. Is there a way to generate a mock particle dataset with multiple ptypes?",
+                "html": "<p>I just started working on writing the tests. My current plan is to add a <code>test_particle_ptype</code> right after <code>test_particle_overrefine</code> in <code>yt/geometry/tests/test_particle_octree.py</code>. But my current impression is that only the <code>load_particles</code> method of the stream frontends is tested. Should we also add tests for other  frontends? If so, where should they be?</p>\n<p>Back to the stream frontends part, I think there's only one type of particles in the mock dataset generated in <code>test_particle_overrefine</code>. Is there a way to generate a mock particle dataset with multiple ptypes?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-22T19:14:12.838648+00:00",
+            "updated_on": "2016-02-22T19:14:12.986420+00:00",
+            "id": 14867604
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14867906"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14867906"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14867604"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14867604"
+                    }
+                },
+                "id": 14867604
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "I'm not sure offhand if there's a way to create a stream particle dataset containing more than one particle type. The best way to check would be to experiment with it.\n\nIf it's more natural to do so, you could also write a test using one of the Gadget datasets we have on yt-project.org/data. Be sure to decorate your test function with the `requires_file` decorator from `yt.testing` so the test doesn't fail if the data file isn't available on someone's machine. All of the data files on yt-project.org/data are available on the continuous integration server, so you don't need to worry about the file being available there.",
+                "html": "<p>I'm not sure offhand if there's a way to create a stream particle dataset containing more than one particle type. The best way to check would be to experiment with it.</p>\n<p>If it's more natural to do so, you could also write a test using one of the Gadget datasets we have on <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>. Be sure to decorate your test function with the <code>requires_file</code> decorator from <code>yt.testing</code> so the test doesn't fail if the data file isn't available on someone's machine. All of the data files on <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a> are available on the continuous integration server, so you don't need to worry about the file being available there.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-22T19:22:30.925164+00:00",
+            "updated_on": "2016-02-22T19:22:30.932437+00:00",
+            "id": 14867906
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14868002"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14868002"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14867906"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14867906"
+                    }
+                },
+                "id": 14867906
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "Okay, thanks, I'll have a try.",
+                "html": "<p>Okay, thanks, I'll have a try.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-22T19:25:41.122283+00:00",
+            "updated_on": "2016-02-22T19:25:41.173876+00:00",
+            "id": 14868002
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14873367"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14873367"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite_dev/1309/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1309/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1309/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-22T21:44:42.072312+00:00",
+            "updated_on": "2016-02-22T21:44:42.341625+00:00",
+            "id": 14873367
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14882831"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14882831"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/14867906"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-14867906"
+                    }
+                },
+                "id": 14867906
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "When I read this snippet in `load_particles`:\n```\n#!python\n\n    pdata = {}\n    for key in data.keys() :\n        if not isinstance(key, tuple):\n            field = (\"io\", key)\n            mylog.debug(\"Reassigning '%s' to '%s'\", key, field)\n        else:\n            field = key\n        pdata[field] = data[key]\n        sfh._additional_fields += (field,)\n    data = pdata # Drop reference count\n    update_field_names(data)\n    particle_types = set_particle_types(data)\n```\nI think it's possible to create a stream particle dataset containing more than one particle type. But it turns out to be difficult, if not impossible. If I do (mostly copied from `test_particle_overrefine`):\n```\n#!python\n\nimport numpy as np\nfrom yt.frontends.stream.data_structures import load_particles\n\n_ORDER_MAX = 20\nNPART = 32**3\nDLE = np.array([0.0, 0.0, 0.0])\nDRE = np.array([10.0, 10.0, 10.0])\ndx = (DRE-DLE)/(2**_ORDER_MAX)\n\nnp.random.seed(int(0x4d3d3d3))\ndata = {}\nbbox = []\nfor i, ax in enumerate('xyz'):\n    DW = DRE[i] - DLE[i]\n    LE = DLE[i]\n    # I changed the following line to specify ptype\n    data[(\"PartType0\", \"particle_position_%s\" % ax)] = \\\n        np.random.normal(0.5, scale=0.05, size=(NPART)) * DW + LE\n    bbox.append( [DLE[i], DRE[i]] )\nbbox = np.array(bbox)\n\nds = load_particles(data, 1.0, bbox = bbox)\nds.derived_field_list\n```\nError would occur:\n```\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\n/Users/qobilidop/repos/yt/yt/frontends/stream/io.py in _count_particles(self, data_file)\n    198             try:\n--> 199                 pcount[ptype] = d[ptype, \"particle_position_x\"].size\n    200             except KeyError:\n\nKeyError: ('io', 'particle_position_x')\n```\nThe problem is that `self.ds.particle_types_raw` (over which `ptype` is iterating) is still set to the default value `('io',)`, even though specific ptype is provided. I guess codes need to be added somewhere to update  `self.ds.particle_types_raw`, but I'm not sure where is the best place.",
+                "html": "<p>When I read this snippet in <code>load_particles</code>:</p>\n<div class=\"codehilite\"><pre><span></span>    <span class=\"n\">pdata</span> <span class=\"o\">=</span> <span class=\"p\">{}</span>\n    <span class=\"k\">for</span> <span class=\"n\">key</span> <span class=\"ow\">in</span> <span class=\"n\">data</span><span class=\"o\">.</span><span class=\"n\">keys</span><span class=\"p\">()</span> <span class=\"p\">:</span>\n        <span class=\"k\">if</span> <span class=\"ow\">not</span> <span class=\"nb\">isinstance</span><span class=\"p\">(</span><span class=\"n\">key</span><span class=\"p\">,</span> <span class=\"nb\">tuple</span><span class=\"p\">):</span>\n            <span class=\"n\">field</span> <span class=\"o\">=</span> <span class=\"p\">(</span><span class=\"s2\">&quot;io&quot;</span><span class=\"p\">,</span> <span class=\"n\">key</span><span class=\"p\">)</span>\n            <span class=\"n\">mylog</span><span class=\"o\">.</span><span class=\"n\">debug</span><span class=\"p\">(</span><span class=\"s2\">&quot;Reassigning &#39;</span><span class=\"si\">%s</span><span class=\"s2\">&#39; to &#39;</span><span class=\"si\">%s</span><span class=\"s2\">&#39;&quot;</span><span class=\"p\">,</span> <span class=\"n\">key</span><span class=\"p\">,</span> <span class=\"n\">field</span><span class=\"p\">)</span>\n        <span class=\"k\">else</span><span class=\"p\">:</span>\n            <span class=\"n\">field</span> <span class=\"o\">=</span> <span class=\"n\">key</span>\n        <span class=\"n\">pdata</span><span class=\"p\">[</span><span class=\"n\">field</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"n\">key</span><span class=\"p\">]</span>\n        <span class=\"n\">sfh</span><span class=\"o\">.</span><span class=\"n\">_additional_fields</span> <span class=\"o\">+=</span> <span class=\"p\">(</span><span class=\"n\">field</span><span class=\"p\">,)</span>\n    <span class=\"n\">data</span> <span class=\"o\">=</span> <span class=\"n\">pdata</span> <span class=\"c1\"># Drop reference count</span>\n    <span class=\"n\">update_field_names</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">)</span>\n    <span class=\"n\">particle_types</span> <span class=\"o\">=</span> <span class=\"n\">set_particle_types</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>I think it's possible to create a stream particle dataset containing more than one particle type. But it turns out to be difficult, if not impossible. If I do (mostly copied from <code>test_particle_overrefine</code>):</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"kn\">import</span> <span class=\"nn\">numpy</span> <span class=\"kn\">as</span> <span class=\"nn\">np</span>\n<span class=\"kn\">from</span> <span class=\"nn\">yt.frontends.stream.data_structures</span> <span class=\"kn\">import</span> <span class=\"n\">load_particles</span>\n\n<span class=\"n\">_ORDER_MAX</span> <span class=\"o\">=</span> <span class=\"mi\">20</span>\n<span class=\"n\">NPART</span> <span class=\"o\">=</span> <span class=\"mi\">32</span><span class=\"o\">**</span><span class=\"mi\">3</span>\n<span class=\"n\">DLE</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">array</span><span class=\"p\">([</span><span class=\"mf\">0.0</span><span class=\"p\">,</span> <span class=\"mf\">0.0</span><span class=\"p\">,</span> <span class=\"mf\">0.0</span><span class=\"p\">])</span>\n<span class=\"n\">DRE</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">array</span><span class=\"p\">([</span><span class=\"mf\">10.0</span><span class=\"p\">,</span> <span class=\"mf\">10.0</span><span class=\"p\">,</span> <span class=\"mf\">10.0</span><span class=\"p\">])</span>\n<span class=\"n\">dx</span> <span class=\"o\">=</span> <span class=\"p\">(</span><span class=\"n\">DRE</span><span class=\"o\">-</span><span class=\"n\">DLE</span><span class=\"p\">)</span><span class=\"o\">/</span><span class=\"p\">(</span><span class=\"mi\">2</span><span class=\"o\">**</span><span class=\"n\">_ORDER_MAX</span><span class=\"p\">)</span>\n\n<span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">random</span><span class=\"o\">.</span><span class=\"n\">seed</span><span class=\"p\">(</span><span class=\"nb\">int</span><span class=\"p\">(</span><span class=\"mh\">0x4d3d3d3</span><span class=\"p\">))</span>\n<span class=\"n\">data</span> <span class=\"o\">=</span> <span class=\"p\">{}</span>\n<span class=\"n\">bbox</span> <span class=\"o\">=</span> <span class=\"p\">[]</span>\n<span class=\"k\">for</span> <span class=\"n\">i</span><span class=\"p\">,</span> <span class=\"n\">ax</span> <span class=\"ow\">in</span> <span class=\"nb\">enumerate</span><span class=\"p\">(</span><span class=\"s1\">&#39;xyz&#39;</span><span class=\"p\">):</span>\n    <span class=\"n\">DW</span> <span class=\"o\">=</span> <span class=\"n\">DRE</span><span class=\"p\">[</span><span class=\"n\">i</span><span class=\"p\">]</span> <span class=\"o\">-</span> <span class=\"n\">DLE</span><span class=\"p\">[</span><span class=\"n\">i</span><span class=\"p\">]</span>\n    <span class=\"n\">LE</span> <span class=\"o\">=</span> <span class=\"n\">DLE</span><span class=\"p\">[</span><span class=\"n\">i</span><span class=\"p\">]</span>\n    <span class=\"c1\"># I changed the following line to specify ptype</span>\n    <span class=\"n\">data</span><span class=\"p\">[(</span><span class=\"s2\">&quot;PartType0&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;particle_position_</span><span class=\"si\">%s</span><span class=\"s2\">&quot;</span> <span class=\"o\">%</span> <span class=\"n\">ax</span><span class=\"p\">)]</span> <span class=\"o\">=</span> \\\n        <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">random</span><span class=\"o\">.</span><span class=\"n\">normal</span><span class=\"p\">(</span><span class=\"mf\">0.5</span><span class=\"p\">,</span> <span class=\"n\">scale</span><span class=\"o\">=</span><span class=\"mf\">0.05</span><span class=\"p\">,</span> <span class=\"n\">size</span><span class=\"o\">=</span><span class=\"p\">(</span><span class=\"n\">NPART</span><span class=\"p\">))</span> <span class=\"o\">*</span> <span class=\"n\">DW</span> <span class=\"o\">+</span> <span class=\"n\">LE</span>\n    <span class=\"n\">bbox</span><span class=\"o\">.</span><span class=\"n\">append</span><span class=\"p\">(</span> <span class=\"p\">[</span><span class=\"n\">DLE</span><span class=\"p\">[</span><span class=\"n\">i</span><span class=\"p\">],</span> <span class=\"n\">DRE</span><span class=\"p\">[</span><span class=\"n\">i</span><span class=\"p\">]]</span> <span class=\"p\">)</span>\n<span class=\"n\">bbox</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">array</span><span class=\"p\">(</span><span class=\"n\">bbox</span><span class=\"p\">)</span>\n\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">load_particles</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">,</span> <span class=\"mf\">1.0</span><span class=\"p\">,</span> <span class=\"n\">bbox</span> <span class=\"o\">=</span> <span class=\"n\">bbox</span><span class=\"p\">)</span>\n<span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">derived_field_list</span>\n</pre></div>\n\n\n<p>Error would occur:</p>\n<div class=\"codehilite\"><pre><span></span>---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\n/Users/qobilidop/repos/yt/yt/frontends/stream/io.py in _count_particles(self, data_file)\n    198             try:\n--&gt; 199                 pcount[ptype] = d[ptype, &quot;particle_position_x&quot;].size\n    200             except KeyError:\n\nKeyError: (&#39;io&#39;, &#39;particle_position_x&#39;)\n</pre></div>\n\n\n<p>The problem is that <code>self.ds.particle_types_raw</code> (over which <code>ptype</code> is iterating) is still set to the default value <code>('io',)</code>, even though specific ptype is provided. I guess codes need to be added somewhere to update  <code>self.ds.particle_types_raw</code>, but I'm not sure where is the best place.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-23T04:50:38.321804+00:00",
+            "updated_on": "2016-02-23T04:53:46.425972+00:00",
+            "id": 14882831
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/20050348"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-20050348"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "Since I've been stuck here for a really long time, I'm thinking wrapping up what I've already implemented and test those only. Other frontends and a more general test will be left as future work.",
+                "html": "<p>Since I've been stuck here for a really long time, I'm thinking wrapping up what I've already implemented and test those only. Other frontends and a more general test will be left as future work.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-21T20:39:15.037310+00:00",
+            "updated_on": "2016-06-21T20:39:15.075858+00:00",
+            "id": 20050348
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/20055534"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-20055534"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/20050348"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-20050348"
+                    }
+                },
+                "id": 20050348
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "I've added a test for an OWLS snapshot `snapshot_033/snap_033.0.hdf5`.",
+                "html": "<p>I've added a test for an OWLS snapshot <code>snapshot_033/snap_033.0.hdf5</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-21T23:03:37.648936+00:00",
+            "updated_on": "2016-06-21T23:03:37.707423+00:00",
+            "id": 20055534
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/20056602"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-20056602"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/631/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/631/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/631/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-21T23:44:19.848778+00:00",
+            "updated_on": "2016-06-21T23:44:19.903554+00:00",
+            "id": 20056602
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/20057041"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/qobilidop/yt:42da1fd6f5ed..27783a435b49?path=yt%2Ffrontends%2Fstream%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-20057041"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "This one is purely white space diffs.",
+                "html": "<p>This one is purely white space diffs.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-22T00:03:30.190557+00:00",
+            "updated_on": "2016-06-22T00:03:30.236083+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/stream/data_structures.py",
+                "to": null
+            },
+            "id": 20057041
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985/comments/20057540"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985/_/diff#comment-20057540"
+                }
+            },
+            "pullrequest": {
+                "title": "Add particle type aware octree construction",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1985"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1985"
+                    }
+                },
+                "id": 1985
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/632/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/632/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/632/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-22T00:28:37.538874+00:00",
+            "updated_on": "2016-06-22T00:28:37.613566+00:00",
+            "id": 20057540
+        }
+    ]
+}

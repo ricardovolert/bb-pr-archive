@@ -1,0 +1,935 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-12-05T19:24:58.228977+00:00",
+    "comment_count": 13,
+    "description": "There seems to be a conflict in the sdf interface. self.parameters.get(\"a\", 1.0) returns a np.float64, self.domain_left_edge returns numpy array with dtype as int64. This is a problem with numpy 1.10.1, but works okay with the previous numpy 1.9.2 version that I was using. A simple cast before the multiplication fixes this.\r\n\r\n```\r\n#!python\r\n\r\n---------------------------------------------------------------------------\r\nTypeError                                 Traceback (most recent call last)\r\n<ipython-input-5-a485ba5f5c14> in <module>()\r\n----> 1 halo = darksky['ds14_a']['halos_a_1.0000'].load(bounding_box = \"None\", midx = 7)\r\n      2 type(halo)\r\n\r\n/global/project/projectdirs/astro250/doris/halo/darksky_catalog/darksky_catalog/dataset.pyc in load(self, bounding_box, midx)\r\n     77             midx = self.index_files[0]\r\n     78         index_file = _get_midx_filename(self.index_files, midx)\r\n---> 79         ds = yt.load(self.url, midx_filename = index_file)\r\n     80         return ds\r\n     81 \r\n\r\n/global/homes/d/dorislee/anaconda/lib/python2.7/site-packages/yt/convenience.pyc in load(*args, **kwargs)\r\n     82     candidates = find_lowest_subclasses(candidates)\r\n     83     if len(candidates) == 1:\r\n---> 84         return candidates[0](*args, **kwargs)\r\n     85     if len(candidates) == 0:\r\n     86         if ytcfg.get(\"yt\", \"enzo_db\") != '' \\\r\n\r\n/global/homes/d/dorislee/anaconda/lib/python2.7/site-packages/yt/frontends/sdf/data_structures.py in __init__(self, filename, dataset_type, n_ref, over_refine_factor, bounding_box, sdf_header, midx_filename, midx_header, midx_level, field_map, units_override)\r\n    113         dataset_type = prefix + 'sdf_particles'\r\n    114         super(SDFDataset, self).__init__(filename, dataset_type,\r\n--> 115                                          units_override=units_override)\r\n    116 \r\n    117     def _parse_parameter_file(self):\r\n\r\n/global/homes/d/dorislee/anaconda/lib/python2.7/site-packages/yt/data_objects/static_output.pyc in __init__(self, filename, dataset_type, file_style, units_override)\r\n    188 \r\n    189         self._create_unit_registry()\r\n--> 190         self._parse_parameter_file()\r\n    191         self.set_units()\r\n    192         self._setup_coordinate_handler()\r\n\r\n/global/homes/d/dorislee/anaconda/lib/python2.7/site-packages/yt/frontends/sdf/data_structures.py in _parse_parameter_file(self)\r\n    147                 self.domain_right_edge = np.array([\r\n    148                     +self.parameters.get(\"R%s\" % ax, R0) for ax in 'xyz'],dtype=np.int64)\r\n--> 149             self.domain_left_edge *= self.parameters.get(\"a\", 1.0)\r\n    150             self.domain_right_edge *= self.parameters.get(\"a\", 1.0)\r\n    151 \r\n\r\nTypeError: Cannot cast ufunc multiply output from dtype('float64') to dtype('int64') with casting rule 'same_kind'\r\n```\r\n",
+    "created_on": "2015-11-26T04:01:29.408879+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/64675f402d50709159e5400b0a64873f2fc7400a"
+            }
+        },
+        "hash": "64675f402d50709159e5400b0a64873f2fc7400a"
+    },
+    "title": "fixed casting error for float and int64 multiplication in sdf class",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1890,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/dorislee0309"
+            },
+            "html": {
+                "href": "https://bitbucket.org/dorislee0309/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/dorislee0309/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Doris Lee",
+        "uuid": "{eb8b251f-b540-454b-aade-8e50c8c4cea8}",
+        "username": "dorislee0309"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/dorislee0309/yt/commit/e26493b973e7"
+                }
+            },
+            "hash": "e26493b973e7"
+        },
+        "repository": {
+            "full_name": "dorislee0309/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/dorislee0309/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/dorislee0309/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/dorislee0309/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{08ce75d6-3a24-4479-a94a-d9ca5875ccaf}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5cbfdce0652c"
+                }
+            },
+            "hash": "5cbfdce0652c"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187251"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:a812c8e6bbaf..03a54b627189?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187251"
+                }
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "I think all of the new imports above will need to be deleted as they aren't used in the rest of the file.",
+                "html": "<p>I think all of the new imports above will need to be deleted as they aren't used in the rest of the file.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T04:04:09.003191+00:00",
+            "updated_on": "2015-11-26T04:04:09.005523+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": 42
+            },
+            "id": 12187251
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187302"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:a812c8e6bbaf..03a54b627189?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187302"
+                }
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "Is \"a\" here the hubble expansion factor (e.g. 1/(1+z))? If so I don't think it should be an int. Is domain_left_edge an int? I don't think that's right either...",
+                "html": "<p>Is \"a\" here the hubble expansion factor (e.g. 1/(1+z))? If so I don't think it should be an int. Is domain_left_edge an int? I don't think that's right either...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T04:08:23.220881+00:00",
+            "updated_on": "2015-11-26T04:08:23.222698+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": 148
+            },
+            "id": 12187302
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187318"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:2e3a9b236d04..03a54b627189?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187318"
+                }
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "Is \"a\" here the hubble expansion factor (e.g. 1/(1+z))? If so I don't think it should be an int. Is domain_left_edge an int? I don't think that's right either...",
+                "html": "<p>Is \"a\" here the hubble expansion factor (e.g. 1/(1+z))? If so I don't think it should be an int. Is domain_left_edge an int? I don't think that's right either...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T04:09:31.523481+00:00",
+            "updated_on": "2015-11-26T04:09:31.525724+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": 137
+            },
+            "id": 12187318
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/dorislee0309"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/dorislee0309/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/dorislee0309/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Doris Lee",
+                "uuid": "{eb8b251f-b540-454b-aade-8e50c8c4cea8}",
+                "username": "dorislee0309"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187359"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:None..None?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187359"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187318"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187318"
+                    }
+                },
+                "id": 12187318
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "I am not too sure what \"a\" is. When I printed it out domain_left_edge is an array [0,0,0] that seem to have dtype of an int.",
+                "html": "<p>I am not too sure what \"a\" is. When I printed it out domain_left_edge is an array [0,0,0] that seem to have dtype of an int.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T04:12:59.804045+00:00",
+            "updated_on": "2015-11-26T04:12:59.855945+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": null
+            },
+            "id": 12187359
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187548"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:None..None?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187548"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187359"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187359"
+                    }
+                },
+                "id": 12187359
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "So I'm not able to reproduce the error you ran into using the following test script:\n\n```\nfrom yt.frontends.sdf.api import SDFDataset\nscivis_data = \"http://darksky.slac.stanford.edu/scivis2015/data/ds14_scivis_0128/ds14_scivis_0128_e4_dt04_1.0000\"\nds = SDFDataset(scivis_data)\nds.index\n```\n\nWhich definitely does hit the lines you're patching. When I stepped through in a debugger, `domain_left_edge` and `domain_right_edge` were floats.\n\nThat said, on the lines above the ones you patch, we don't explicitly set the `dtype` of `domain_left_edge` and `domain_right_edge`, so maybe the correct thing to do do is to make sure when we create them using `np.array`, we explicitly say `dtype='float64'` on lines 128, 129, 132, and 134.\n\nI'm not 100% sure what \"a\" is, but from context I'd guess it's the hubble expansion factor, which should definitely be a float. `domain_left_edge` and `domain_right_edge` should also definitely be floats to follow the other frontends.\n\nIt would be great if we could get @samskillman, @mswarren, or @matthewturk to chime in here, since I believe they originally wrote this code.",
+                "html": "<p>So I'm not able to reproduce the error you ran into using the following test script:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"kn\">from</span> <span class=\"nn\">yt.frontends.sdf.api</span> <span class=\"kn\">import</span> <span class=\"n\">SDFDataset</span>\n<span class=\"n\">scivis_data</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;http://darksky.slac.stanford.edu/scivis2015/data/ds14_scivis_0128/ds14_scivis_0128_e4_dt04_1.0000&quot;</span>\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">SDFDataset</span><span class=\"p\">(</span><span class=\"n\">scivis_data</span><span class=\"p\">)</span>\n<span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">index</span>\n</pre></div>\n\n\n<p>Which definitely does hit the lines you're patching. When I stepped through in a debugger, <code>domain_left_edge</code> and <code>domain_right_edge</code> were floats.</p>\n<p>That said, on the lines above the ones you patch, we don't explicitly set the <code>dtype</code> of <code>domain_left_edge</code> and <code>domain_right_edge</code>, so maybe the correct thing to do do is to make sure when we create them using <code>np.array</code>, we explicitly say <code>dtype='float64'</code> on lines 128, 129, 132, and 134.</p>\n<p>I'm not 100% sure what \"a\" is, but from context I'd guess it's the hubble expansion factor, which should definitely be a float. <code>domain_left_edge</code> and <code>domain_right_edge</code> should also definitely be floats to follow the other frontends.</p>\n<p>It would be great if we could get <a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a>, <a href=\"/mswarren/\" rel=\"nofollow\" title=\"@mswarren\" class=\"mention\">Michael Warren</a>, or <a href=\"/matthewturk/\" rel=\"nofollow\" title=\"@matthewturk\" class=\"mention\">Matthew Turk</a> to chime in here, since I believe they originally wrote this code.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T04:27:57.164386+00:00",
+            "updated_on": "2015-11-26T04:27:57.202287+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": null
+            },
+            "id": 12187548
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/dorislee0309"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/dorislee0309/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/dorislee0309/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Doris Lee",
+                "uuid": "{eb8b251f-b540-454b-aade-8e50c8c4cea8}",
+                "username": "dorislee0309"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187642"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:None..None?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187642"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187548"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187548"
+                    }
+                },
+                "id": 12187548
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "For more info, this was the code that resulted in the original  error  : \n\n```\n#!python\n\nfrom darksky_catalog import darksky\ncenter = np.array([-2505805.31114929,  -3517306.7572399, -1639170.70554688])\nwidth = 50.0e3 # 5 Mpc\nbbox = np.array([center-width/2, center+width/2])\nds = darksky['ds14_a']\nhalo = darksky['ds14_a']['halos_a_1.0000'].load(bounding_box = \"None\", midx = 7)\n```\n",
+                "html": "<p>For more info, this was the code that resulted in the original  error  : </p>\n<div class=\"codehilite\"><pre><span></span><span class=\"kn\">from</span> <span class=\"nn\">darksky_catalog</span> <span class=\"kn\">import</span> <span class=\"n\">darksky</span>\n<span class=\"n\">center</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">array</span><span class=\"p\">([</span><span class=\"o\">-</span><span class=\"mf\">2505805.31114929</span><span class=\"p\">,</span>  <span class=\"o\">-</span><span class=\"mf\">3517306.7572399</span><span class=\"p\">,</span> <span class=\"o\">-</span><span class=\"mf\">1639170.70554688</span><span class=\"p\">])</span>\n<span class=\"n\">width</span> <span class=\"o\">=</span> <span class=\"mf\">50.0e3</span> <span class=\"c1\"># 5 Mpc</span>\n<span class=\"n\">bbox</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">array</span><span class=\"p\">([</span><span class=\"n\">center</span><span class=\"o\">-</span><span class=\"n\">width</span><span class=\"o\">/</span><span class=\"mi\">2</span><span class=\"p\">,</span> <span class=\"n\">center</span><span class=\"o\">+</span><span class=\"n\">width</span><span class=\"o\">/</span><span class=\"mi\">2</span><span class=\"p\">])</span>\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">darksky</span><span class=\"p\">[</span><span class=\"s1\">&#39;ds14_a&#39;</span><span class=\"p\">]</span>\n<span class=\"n\">halo</span> <span class=\"o\">=</span> <span class=\"n\">darksky</span><span class=\"p\">[</span><span class=\"s1\">&#39;ds14_a&#39;</span><span class=\"p\">][</span><span class=\"s1\">&#39;halos_a_1.0000&#39;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"n\">bounding_box</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;None&quot;</span><span class=\"p\">,</span> <span class=\"n\">midx</span> <span class=\"o\">=</span> <span class=\"mi\">7</span><span class=\"p\">)</span>\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T04:35:32.054214+00:00",
+            "updated_on": "2015-11-26T04:35:32.100392+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": null
+            },
+            "id": 12187642
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187746"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:None..None?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187746"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187642"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187642"
+                    }
+                },
+                "id": 12187642
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "Ah ok, I *am* able to reproduce it now using your script. However, I still think the correct thing to do is to create `domain_left_edge` and `domain_right_edge` with `dtype='float64'` on the lines above the ones you've modified. It looks like we're relying on NumPy to guess the type of these arrays right now, which is incorrect when (for example) the array is [0, 0, 0], which NumPy guesses to be an array of ints.",
+                "html": "<p>Ah ok, I <em>am</em> able to reproduce it now using your script. However, I still think the correct thing to do is to create <code>domain_left_edge</code> and <code>domain_right_edge</code> with <code>dtype='float64'</code> on the lines above the ones you've modified. It looks like we're relying on NumPy to guess the type of these arrays right now, which is incorrect when (for example) the array is [0, 0, 0], which NumPy guesses to be an array of ints.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T04:42:00.693955+00:00",
+            "updated_on": "2015-11-26T04:42:00.699696+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": null
+            },
+            "id": 12187746
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/dorislee0309"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/dorislee0309/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/dorislee0309/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Doris Lee",
+                "uuid": "{eb8b251f-b540-454b-aade-8e50c8c4cea8}",
+                "username": "dorislee0309"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12188089"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:None..None?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12188089"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12187746"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12187746"
+                    }
+                },
+                "id": 12187746
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "I agree, that is probably better since its a less arbitrary way of doing it. I just tested what you proposed and it works too. ",
+                "html": "<p>I agree, that is probably better since its a less arbitrary way of doing it. I just tested what you proposed and it works too. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T05:07:31.830753+00:00",
+            "updated_on": "2015-11-26T05:07:31.876618+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": null
+            },
+            "id": 12188089
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12188383"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/dorislee0309/yt:None..None?path=yt%2Ffrontends%2Fsdf%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12188383"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12188089"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12188089"
+                    }
+                },
+                "id": 12188089
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "Ok great. Feel free to commit your changes and update the pull request at your leisure :)",
+                "html": "<p>Ok great. Feel free to commit your changes and update the pull request at your leisure :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T05:26:27.519868+00:00",
+            "updated_on": "2015-11-26T05:26:27.523575+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/sdf/data_structures.py",
+                "to": null
+            },
+            "id": 12188383
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12188797"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12188797"
+                }
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/897/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/897/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/897/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T05:55:01.786265+00:00",
+            "updated_on": "2015-11-26T05:55:01.859140+00:00",
+            "id": 12188797
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12190298"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12190298"
+                }
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/898/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/898/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/898/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T07:16:39.759351+00:00",
+            "updated_on": "2015-11-26T07:16:39.854995+00:00",
+            "id": 12190298
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12205288"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12205288"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12190298"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12190298"
+                    }
+                },
+                "id": 12190298
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "So this test failure is happening because the indentation in your patches mixes tabs and spaces (specifically on line 138 and 139). While this is OK in python2, this will actually cause a TabError to be raised in python 3. See e.g. http://stackoverflow.com/questions/18225712/taberror-in-python-3",
+                "html": "<p>So this test failure is happening because the indentation in your patches mixes tabs and spaces (specifically on line 138 and 139). While this is OK in python2, this will actually cause a TabError to be raised in python 3. See e.g. <a href=\"http://stackoverflow.com/questions/18225712/taberror-in-python-3\" rel=\"nofollow\">http://stackoverflow.com/questions/18225712/taberror-in-python-3</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-26T13:57:15.443719+00:00",
+            "updated_on": "2015-11-26T13:57:15.446291+00:00",
+            "id": 12205288
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890/comments/12481424"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890/_/diff#comment-12481424"
+                }
+            },
+            "pullrequest": {
+                "title": "fixed casting error for float and int64 multiplication in sdf class",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1890"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1890"
+                    }
+                },
+                "id": 1890
+            },
+            "content": {
+                "raw": "LGTM once the space/tab issue is resolved.",
+                "html": "<p>LGTM once the space/tab issue is resolved.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-12-05T19:24:52.477102+00:00",
+            "updated_on": "2015-12-05T19:24:52.479190+00:00",
+            "id": 12481424
+        }
+    ]
+}

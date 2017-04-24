@@ -1,0 +1,636 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-01-27T17:28:13.643051+00:00",
+    "comment_count": 9,
+    "description": "This makes the yt's unstructured mesh renderings work more like the rest of the refactored volume rendering code. Essentially, many things that used to be handled at the RenderSource level are now handled at the Scene level in this PR. \r\n\r\nFor example, users can now use the \"yt.create_scene\" and \"yt.volume_rendering\" functions to a default rendering, which can then be modified, saved, and displayed in the notebook as usual. \r\n\r\nAlso, the way the colormap is set is now more like the way transfer functions are handled for VolumeSources. \r\n\r\nFinally, mesh line annotation can now be handled at the Scene level, instead of at the level of the individual MeshSources. \r\n\r\nTo get an idea of how this works, compare an old example script:\r\n\r\n```\r\n#!python\r\n\r\n   import yt\r\n   from yt.visualization.volume_rendering.api import MeshSource, Camera\r\n   import yt.utilities.png_writer as pw\r\n\r\n   ds = yt.load(\"MOOSE_sample_data/out.e-s010\")\r\n\r\n   ms = MeshSource(ds, ('connect1', 'diffused'))\r\n\r\n   # setup the camera\r\n   cam = Camera(ds)\r\n   cam.focus = ds.arr([0.0, 0.0, 0.0], 'code_length')  # point we're looking at\r\n\r\n   cam_pos = ds.arr([-3.0, 3.0, -3.0], 'code_length')  # the camera location\r\n   north_vector = ds.arr([0.0, -1.0, 0.0], 'dimensionless')  # down is the new up\r\n   cam.set_position(cam_pos, north_vector)\r\n\r\n   im = ms.render(cam, cmap='Eos A', color_bounds=(0.0, 2.0))\r\n   pw.write_png(im, 'hex_mesh_render.png')\r\n```\r\n\r\nTo a new one:\r\n\r\n```\r\n#!python\r\n\r\n   import yt\r\n\r\n   ds = yt.load(\"MOOSE_sample_data/out.e-s010\")\r\n\r\n   # create a default scene\r\n   sc = yt.create_scene(ds)\r\n\r\n   # override the default colormap\r\n   ms = sc.get_source(0)\r\n   ms.cmap = 'Eos A'\r\n\r\n   # adjust the camera position and orientation\r\n   cam = sc.camera\r\n   cam.focus = ds.arr([0.0, 0.0, 0.0], 'code_length')\r\n   cam_pos = ds.arr([-3.0, 3.0, -3.0], 'code_length')\r\n   north_vector = ds.arr([0.0, 1.0, 1.0], 'dimensionless')\r\n   cam.set_position(cam_pos, north_vector)\r\n\r\n   # increase the default resolution\r\n   cam.resolution = (800, 800)\r\n\r\n   # render and save\r\n   sc.save()\r\n\r\n```",
+    "created_on": "2016-01-12T23:02:33.212190+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5eb209b48f9a"
+            }
+        },
+        "hash": "5eb209b48f9a"
+    },
+    "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1936,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt/commit/3f4859b5c748"
+                }
+            },
+            "hash": "3f4859b5c748"
+        },
+        "repository": {
+            "full_name": "atmyers/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/atmyers/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/atmyers/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{14866916-6c53-4d06-95e1-89d30c798c08}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ccd5c2bf28d0"
+                }
+            },
+            "hash": "ccd5c2bf28d0"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13417809"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13417809"
+                }
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-13T00:39:31.798078+00:00",
+            "updated_on": "2016-01-13T00:39:31.854489+00:00",
+            "id": 13417809
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13417960"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13417960"
+                }
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/524/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/524/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/524/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/524/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/524/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/524/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-13T00:47:31.829961+00:00",
+            "updated_on": "2016-01-13T00:47:31.906415+00:00",
+            "id": 13417960
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13681608"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:c12248f54205..db80e4d8d927?path=doc%2Fsource%2Fvisualizing%2Funstructured_mesh_rendering.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13681608"
+                }
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "The indentation in this example needs an extra space I think",
+                "html": "<p>The indentation in this example needs an extra space I think</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T17:34:26.279261+00:00",
+            "updated_on": "2016-01-20T17:34:26.281409+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/unstructured_mesh_rendering.rst",
+                "to": 272
+            },
+            "id": 13681608
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13681650"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:c12248f54205..db80e4d8d927?path=yt%2Fvisualization%2Fvolume_rendering%2Frender_source.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13681650"
+                }
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "What does this line do?",
+                "html": "<p>What does this line do?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T17:35:35.098871+00:00",
+            "updated_on": "2016-01-20T17:35:35.102813+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/render_source.py",
+                "to": 502
+            },
+            "id": 13681650
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13682995"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:None..None?path=yt%2Fvisualization%2Fvolume_rendering%2Frender_source.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13682995"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13681650"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13681650"
+                    }
+                },
+                "id": 13681650
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "Er... nothing I guess. I should have just removed this entire line, instead of just the \"astype('unit8')\" part.",
+                "html": "<p>Er... nothing I guess. I should have just removed this entire line, instead of just the \"astype('unit8')\" part.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T18:07:22.668363+00:00",
+            "updated_on": "2016-01-20T18:07:22.671167+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/render_source.py",
+                "to": null
+            },
+            "id": 13682995
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13688559"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13688559"
+                }
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/545/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/545/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/545/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/545/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/545/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/545/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T20:39:34.391084+00:00",
+            "updated_on": "2016-01-20T20:39:34.464911+00:00",
+            "id": 13688559
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13690351"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13690351"
+                }
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1116/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1116/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1116/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T21:31:20.522276+00:00",
+            "updated_on": "2016-01-20T21:31:20.583317+00:00",
+            "id": 13690351
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13690389"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13690389"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13690351"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13690351"
+                    }
+                },
+                "id": 13690351
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "This is the somewhat annoying seg fault in the artio frontend. I've triggered another build.",
+                "html": "<p>This is the somewhat annoying seg fault in the artio frontend. I've triggered another build.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T21:32:48.543711+00:00",
+            "updated_on": "2016-01-20T21:32:48.545868+00:00",
+            "id": 13690389
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936/comments/13693595"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936/_/diff#comment-13693595"
+                }
+            },
+            "pullrequest": {
+                "title": "Making the unstructured mesh rendering API consistent with the other Volume Renderings",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1936"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1936"
+                    }
+                },
+                "id": 1936
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-01-20T23:11:41.065832+00:00",
+            "updated_on": "2016-01-20T23:11:41.123935+00:00",
+            "id": 13693595
+        }
+    ]
+}

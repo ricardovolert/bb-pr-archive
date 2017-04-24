@@ -1,0 +1,394 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-04-29T18:58:45.178216+00:00",
+    "comment_count": 5,
+    "description": "This avoids an exception that the current version triggers using the following test script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nfrom yt.units import Mpc\r\n\r\nds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\np = yt.SlicePlot(ds, 2, 'density')\r\np.annotate_particles(0.3*Mpc)\r\np.save()\r\n```\r\n\r\n(which itself indicates another bug that isn't fixed here).  In python2, This currently raises the rather unhelpful traceback:\r\n\r\n```\r\nTraceback (most recent call last):\r\n  File \"test.py\", line 7, in <module>\r\n    p.save()\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_container.py\", line 74, in newfunc\r\n    args[0].run_callbacks()\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 1003, in run_callbacks\r\n    sys.exc_info()[2])\r\nTypeError: __init__() takes exactly 3 arguments (1 given)\r\n```\r\n\r\nI have no idea what's raising the TypeError, I think it's coming from python's error handling machinery.\r\n\r\nRegardless, this change fixes it, producing the following traceback in both python2 and python3:\r\n\r\n\r\n```\r\n#!python\r\n\r\nTraceback (most recent call last):\r\n  File \"test.py\", line 7, in <module>\r\n    p.save()\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_container.py\", line 74, in newfunc\r\n    args[0].run_callbacks()\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 1003, in run_callbacks\r\n    sys.exc_info()[2])\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 999, in run_callbacks\r\n    callback(cbw)\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_modifications.py\", line 1440, in __call__\r\n    reg = self._get_region((x0,x1), (y0,y1), plot.data.axis, data)\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_modifications.py\", line 1472, in _get_region\r\n    LE[zax] = data.center[zax].ndarray_view() - self.width*0.5\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/units/yt_array.py\", line 750, in __rsub__\r\n    lo = sanitize_units_add(self, left_object, \"subtraction\")\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/units/yt_array.py\", line 134, in sanitize_units_add\r\n    raise YTUnitOperationError(op_string, inp.units, dimensionless)\r\nyt.utilities.exceptions.YTPlotCallbackError: annotate_particles callback failed with the following error: The subtraction operator for YTArrays with units (Mpc) and (1) is not well defined.\r\n\r\n```\r\n",
+    "created_on": "2015-04-28T20:15:13.899552+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/65efc04f5b1c"
+            }
+        },
+        "hash": "65efc04f5b1c"
+    },
+    "title": "callbacks: raise callback errors using six.reraise",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1567,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/7adc02b5b8ea"
+                }
+            },
+            "hash": "7adc02b5b8ea"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/1a51101e021e"
+                }
+            },
+            "hash": "1a51101e021e"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/comments/6545716"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567/_/diff#comment-6545716"
+                }
+            },
+            "pullrequest": {
+                "title": "callbacks: raise callback errors using six.reraise",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567"
+                    }
+                },
+                "id": 1567
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/11/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/11/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/11/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T20:23:05.586562+00:00",
+            "updated_on": "2015-04-28T20:23:05.642316+00:00",
+            "id": 6545716
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/comments/6545725"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567/_/diff#comment-6545725"
+                }
+            },
+            "pullrequest": {
+                "title": "callbacks: raise callback errors using six.reraise",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567"
+                    }
+                },
+                "id": 1567
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/12/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/12/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/12/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T20:23:22.191186+00:00",
+            "updated_on": "2015-04-28T20:23:22.323945+00:00",
+            "id": 6545725
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/comments/6545926"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567/_/diff#comment-6545926"
+                }
+            },
+            "pullrequest": {
+                "title": "callbacks: raise callback errors using six.reraise",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567"
+                    }
+                },
+                "id": 1567
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/13/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/13/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/13/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T20:32:38.944874+00:00",
+            "updated_on": "2015-04-28T20:32:38.992354+00:00",
+            "id": 6545926
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/comments/6546906"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567/_/diff#comment-6546906"
+                }
+            },
+            "pullrequest": {
+                "title": "callbacks: raise callback errors using six.reraise",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567"
+                    }
+                },
+                "id": 1567
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-28T21:18:24.484840+00:00",
+            "updated_on": "2015-04-28T21:18:24.642408+00:00",
+            "id": 6546906
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567/comments/6562746"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567/_/diff#comment-6562746"
+                }
+            },
+            "pullrequest": {
+                "title": "callbacks: raise callback errors using six.reraise",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1567"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1567"
+                    }
+                },
+                "id": 1567
+            },
+            "content": {
+                "raw": "This is the same error I got yesterday.",
+                "html": "<p>This is the same error I got yesterday.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-04-29T13:40:51.006681+00:00",
+            "updated_on": "2015-04-29T13:40:51.017250+00:00",
+            "id": 6562746
+        }
+    ]
+}

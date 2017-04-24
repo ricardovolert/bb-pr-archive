@@ -1,0 +1,3105 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-03-19T19:43:04.768016+00:00",
+    "comment_count": 50,
+    "description": "Consistent with the discussion I started on the mailing list a couple weeks ago, this PR makes a universal method for defining/setting the coordinate system associated with plot window callbacks (e.g. annotate_marker()) that is backwards compatible.  \r\n\r\nPreviously, when you set a coordinate in a callback, it was largely undefined in what coordinate system you were operating--different callbacks operated in different coordinate systems.  Some expected things in MPL axis coordinates, some expected them in 3D data coordinates, some in 2D projected data coordinates, others in the plot coordinate system defined by the axis limits.  Furthermore, the 3D data coordinates would not work for off-axis projections or off-axis slices.\r\n\r\nThis PR resolves all of those problems and does so with the addition of a data_coord keyword argument to the relevant callback.  data_coord defaults to whatever the previous coordinate system was for that callback to keep with backwards compatibility, even though this makes it less consistent for new users.  perhaps we should set them all to 'data' coordinates for consistency at the expense of slightly breaking backwards compatibility?\r\n\r\nThe coord_system kwarg is defined as follows:\r\n\r\ncoord_system : string, optional\r\n\r\n    This string defines the coordinate system of the coordinates of pos\r\n    Valid coordinates are:\r\n        \"data\" -- the 3D dataset coordinates\r\n        \"plot\" -- the 2D coordinates defined by the actual plot limits\r\n        \"axis\" -- the MPL axis coordinates: (0,0) is lower left; (1,1) is\r\n                  upper right\r\n        \"figure\" -- the MPL figure coordinates: (0,0) is lower left, (1,1)\r\n                    is upper right\r\n\r\nAnd here is a demonstration of it in action for on-axis and off-axis projections:\r\n\r\nhttp://nbviewer.ipython.org/gist/anonymous/d823f670e91b223b946f\r\n\r\nIn addition, I took this opportunity to clean up the docstrings for the relevant callbacks.  This change also enabled me to combine the annotate_line() and annotate_image_line() callbacks into a single callback, and the annotate_point() and annotate_text() callbacks into a single callback.  \r\n\r\nLastly, I fixed the annotate_axis_label() callback which was broken and did not work.  It now sets the x *or* the y axis label as defined in the callback.\r\n\r\nI know this PR still needs updates to the callback docs and to add tests, but I wanted to see what people thought so far.\r\n\r\nUPDATE1: Added suggestions by @ngoldbaum .  Deprecated `code_size` kwarg in `annotate_arrow()`.  Edited docstrings.  Changed function name of `sanitize_coord_system()`.  Removed extraneous `AxisLabelCallback` since similar functionality exists as PlotContainer functions and the callback was broken anyway. Removed inactive callbacks from the ignored callback list in `setup_callbacks()`.\r\n\r\nUPDATE2: Moved dictionaries containing default keyword arguments from the class level down to the __init__() level so as to avoid repeatability issues of having mutables defined at class level.\r\n\r\nUPDATE3: Deprecating (still work, but issue deprecation warning, and removed from docstrings) a few kwargs for sending additional attributes to the underlying MPL commands.  \r\n\r\nUPDATE4: I've now updated the docs for these callbacks, added tests, and added a cookbook recipe to show off some of the callbacks.  This PR is ready for full review.\r\n\r\nUPDATE5: Removing detailed descriptions from callback docs consistent with suggestions by @ngoldbaum .  Moving the _cb_docstrings.inc file into the callbacks.rst file.",
+    "created_on": "2015-03-12T20:13:38.691711+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Updating callbacks to consistently define coordinate system",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "id": 1499,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/2da8f7ac67a3"
+                }
+            },
+            "hash": "2da8f7ac67a3"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/2c8f907a5bc9"
+                }
+            },
+            "hash": "2c8f907a5bc9"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5635877"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:ace31e1c3adf..0362bf986604?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5635877"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "bikeshed: maybe call this `sanitize_coord_system`?",
+                "html": "<p>bikeshed: maybe call this <code>sanitize_coord_system</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:15:18.478590+00:00",
+            "updated_on": "2015-03-12T20:15:18.486962+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 131
+            },
+            "id": 5635877
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5635915"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:ace31e1c3adf..0362bf986604?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5635915"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "I think it makes more sense to define this as a member function on the `PlotContainer` class.  Not a big deal.",
+                "html": "<p>I think it makes more sense to define this as a member function on the <code>PlotContainer</code> class.  Not a big deal.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:17:21.182780+00:00",
+            "updated_on": "2015-03-12T20:17:21.188385+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 683
+            },
+            "id": 5635915
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5635963"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:ace31e1c3adf..0362bf986604?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5635963"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Not that the old version was necessarily particularly useful, but doesn't this change the semantics of the callback?  Before it would do a (not necessarily straight) line plot - basically passing the x and y arrays to `ax.plot`.  Now it plots a straight line between two points.",
+                "html": "<p>Not that the old version was necessarily particularly useful, but doesn't this change the semantics of the callback?  Before it would do a (not necessarily straight) line plot - basically passing the x and y arrays to <code>ax.plot</code>.  Now it plots a straight line between two points.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:19:51.549681+00:00",
+            "updated_on": "2015-03-12T20:19:51.557708+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 740
+            },
+            "id": 5635963
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5635989"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:ace31e1c3adf..0362bf986604?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5635989"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "You accidentally removed `code_size` here.",
+                "html": "<p>You accidentally removed <code>code_size</code> here.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:21:07.950047+00:00",
+            "updated_on": "2015-03-12T20:21:07.962556+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 890
+            },
+            "id": 5635989
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636003"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:ace31e1c3adf..0362bf986604?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636003"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "What is the difference between `length` and `code_size`.  Do we need both?",
+                "html": "<p>What is the difference between <code>length</code> and <code>code_size</code>.  Do we need both?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:22:10.260255+00:00",
+            "updated_on": "2015-03-12T20:22:10.269440+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 906
+            },
+            "id": 5636003
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636044"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:ace31e1c3adf..0362bf986604?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636044"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "will be overplotted",
+                "html": "<p>will be overplotted</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:23:56.325872+00:00",
+            "updated_on": "2015-03-12T20:23:56.332199+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1016
+            },
+            "id": 5636044
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636071"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636071"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636044"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636044"
+                    }
+                },
+                "id": 5636044
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "You do this a couple other places in this diff.",
+                "html": "<p>You do this a couple other places in this diff.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:25:20.338150+00:00",
+            "updated_on": "2015-03-12T20:25:20.348882+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636071
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636091"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636091"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636003"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636003"
+                    }
+                },
+                "id": 5636003
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Good point!  I actually struggled for a while on this very problem.  `code_size` was previously defined, so I wanted to leave it in for backwards compatibility, however, it seems odd to me to define the length of arrows that are simply pointing out features in the plot in code units.  The `length` is simply just setting the length in axis units and defaults to 0.03 (1/30th of the axis size), whereas previously you had to set the `code_size` as a required argument.  \n\nI'm happy to get rid of one of them, but I'd just as soon get rid of `code_size` because I don't think it makes sense to require the user to define an arrow length when they just want to point to a feature.  But this breaks backwards compatibility.",
+                "html": "<p>Good point!  I actually struggled for a while on this very problem.  <code>code_size</code> was previously defined, so I wanted to leave it in for backwards compatibility, however, it seems odd to me to define the length of arrows that are simply pointing out features in the plot in code units.  The <code>length</code> is simply just setting the length in axis units and defaults to 0.03 (1/30th of the axis size), whereas previously you had to set the <code>code_size</code> as a required argument.  </p>\n<p>I'm happy to get rid of one of them, but I'd just as soon get rid of <code>code_size</code> because I don't think it makes sense to require the user to define an arrow length when they just want to point to a feature.  But this breaks backwards compatibility.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:26:42.019460+00:00",
+            "updated_on": "2015-03-12T20:26:42.034218+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636091
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636104"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636104"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5635877"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5635877"
+                    }
+                },
+                "id": 5635877
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "That's fine.  I can do this.",
+                "html": "<p>That's fine.  I can do this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:27:24.698402+00:00",
+            "updated_on": "2015-03-12T20:27:24.705030+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636104
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636114"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636114"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5635915"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5635915"
+                    }
+                },
+                "id": 5635915
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Maybe so, but I was simply updating a broken callback here already defined by someone else.",
+                "html": "<p>Maybe so, but I was simply updating a broken callback here already defined by someone else.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:27:51.411096+00:00",
+            "updated_on": "2015-03-12T20:27:51.421458+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636114
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636119"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636119"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636091"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636091"
+                    }
+                },
+                "id": 5636091
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "I'm fine with deprecating code_size.  Maybe throw an error if someone passes both `length` and `code_size`?",
+                "html": "<p>I'm fine with deprecating code_size.  Maybe throw an error if someone passes both <code>length</code> and <code>code_size</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:28:18.222128+00:00",
+            "updated_on": "2015-03-12T20:28:18.231793+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636119
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636160"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636160"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5635963"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5635963"
+                    }
+                },
+                "id": 5635963
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Good point.  I had not considered this.  You're right that this changes the overall semantics of this function and potentially breaks backwards compatibility.  I had always thought the more useful thing would be to accept two coords as the endpoints of a line and plot that line, but perhaps people want to give it a list of Xs and a list of Ys?  Although then if it is in `data` coords, we should give it a list of Zs too?  Hmm...",
+                "html": "<p>Good point.  I had not considered this.  You're right that this changes the overall semantics of this function and potentially breaks backwards compatibility.  I had always thought the more useful thing would be to accept two coords as the endpoints of a line and plot that line, but perhaps people want to give it a list of Xs and a list of Ys?  Although then if it is in <code>data</code> coords, we should give it a list of Zs too?  Hmm...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:29:59.567836+00:00",
+            "updated_on": "2015-03-12T20:29:59.576168+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636160
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636188"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636188"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636119"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636119"
+                    }
+                },
+                "id": 5636119
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Yeah, I can add in a deprecation warning and raise an exception if both get set.",
+                "html": "<p>Yeah, I can add in a deprecation warning and raise an exception if both get set.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:30:47.116182+00:00",
+            "updated_on": "2015-03-12T20:30:47.123180+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636188
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636193"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636193"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636114"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636114"
+                    }
+                },
+                "id": 5636114
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "If you take a look in the `setup_callbacks` member function of the `PWViewerMPL` class in `plot_window.py`, you'll see that the `LabelCallback` is explicitly disabled.  This callback actually is from the days of `PlotCollection` and has not been used since that code was removed from the codebase.\n\nIn other words, this is effectively a new feature and it would be nice if `PhasePlot` got this as well.",
+                "html": "<p>If you take a look in the <code>setup_callbacks</code> member function of the <code>PWViewerMPL</code> class in <code>plot_window.py</code>, you'll see that the <code>LabelCallback</code> is explicitly disabled.  This callback actually is from the days of <code>PlotCollection</code> and has not been used since that code was removed from the codebase.</p>\n<p>In other words, this is effectively a new feature and it would be nice if <code>PhasePlot</code> got this as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:30:55.078387+00:00",
+            "updated_on": "2015-03-12T20:32:34.650652+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636193
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636222"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636222"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636193"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636193"
+                    }
+                },
+                "id": 5636193
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "It occurs to me that while you're looking at the callbacks, it would be great if you could make sure that the lists of whitelisted callbacks in `setup_callbacks` is still accurate.",
+                "html": "<p>It occurs to me that while you're looking at the callbacks, it would be great if you could make sure that the lists of whitelisted callbacks in <code>setup_callbacks</code> is still accurate.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:32:09.939535+00:00",
+            "updated_on": "2015-03-12T20:32:16.877407+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636222
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636234"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636234"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636193"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636193"
+                    }
+                },
+                "id": 5636193
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Oh so *that* is why it wouldn't work when it was simply called LabelCallback.  I thought it was being overridden somewhere, but I couldn't find where.  Yeah, I can move it.",
+                "html": "<p>Oh so <em>that</em> is why it wouldn't work when it was simply called LabelCallback.  I thought it was being overridden somewhere, but I couldn't find where.  Yeah, I can move it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:32:58.435174+00:00",
+            "updated_on": "2015-03-12T20:32:58.442036+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636234
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636241"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636241"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636222"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636222"
+                    }
+                },
+                "id": 5636222
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "OK.",
+                "html": "<p>OK.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:33:18.058604+00:00",
+            "updated_on": "2015-03-12T20:33:18.064778+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5636241
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636291"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636291"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Overall I like the direction and think this is a big improvement.  If I have some time I'll pull this PR in locally and give it a test soon.",
+                "html": "<p>Overall I like the direction and think this is a big improvement.  If I have some time I'll pull this PR in locally and give it a test soon.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T20:35:37.514261+00:00",
+            "updated_on": "2015-03-12T20:35:37.522617+00:00",
+            "id": 5636291
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636861"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636861"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T21:04:31.119741+00:00",
+            "updated_on": "2015-03-12T21:04:31.178534+00:00",
+            "id": 5636861
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5638186"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5638186"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5636193"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5636193"
+                    }
+                },
+                "id": 5636193
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "I just checked, and it turns out that there are already `set_xlabel()` and `set_ylabel()` methods associated with the `PlotContainer` class, which cover this functionality.  I will remove this unnecessary callback.",
+                "html": "<p>I just checked, and it turns out that there are already <code>set_xlabel()</code> and <code>set_ylabel()</code> methods associated with the <code>PlotContainer</code> class, which cover this functionality.  I will remove this unnecessary callback.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-12T22:27:31.392364+00:00",
+            "updated_on": "2015-03-12T22:27:31.401279+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5638186
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5639790"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:73445f7a772a..8fa97793c5e6?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5639790"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Missed this earlier, you shouldn't define mutable objects at class level.",
+                "html": "<p>Missed this earlier, you shouldn't define mutable objects at class level.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T00:42:48.760254+00:00",
+            "updated_on": "2015-03-13T00:42:48.768695+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 953
+            },
+            "id": 5639790
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5639795"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:73445f7a772a..8fa97793c5e6?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5639795"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Same here.",
+                "html": "<p>Same here.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T00:43:01.733356+00:00",
+            "updated_on": "2015-03-13T00:43:01.740925+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1013
+            },
+            "id": 5639795
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5639868"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5639868"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5639795"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5639795"
+                    }
+                },
+                "id": 5639795
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "I don't understand why this is bad.  This is done throughout the code and seems like a reasonable way to set defaults.",
+                "html": "<p>I don't understand why this is bad.  This is done throughout the code and seems like a reasonable way to set defaults.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T00:48:12.052474+00:00",
+            "updated_on": "2015-03-13T00:48:12.057356+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5639868
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5639908"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5639908"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5639868"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5639868"
+                    }
+                },
+                "id": 5639868
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Because it persists across all instances of the class.  Consider the following:\n\n\n```\n>>> class MyClass:\n...     data = {}\n...\n>>> a = MyClass()\n>>> a.data[\"what's up?\"] = \"not much\"\n>>>\n>>> b = MyClass()\n>>> print b.data.items()\n[(\"what's up?\", 'not much')]\n```",
+                "html": "<p>Because it persists across all instances of the class.  Consider the following:</p>\n<div class=\"codehilite\"><pre><span></span>&gt;&gt;&gt; class MyClass:\n...     data = {}\n...\n&gt;&gt;&gt; a = MyClass()\n&gt;&gt;&gt; a.data[&quot;what&#39;s up?&quot;] = &quot;not much&quot;\n&gt;&gt;&gt;\n&gt;&gt;&gt; b = MyClass()\n&gt;&gt;&gt; print b.data.items()\n[(&quot;what&#39;s up?&quot;, &#39;not much&#39;)]\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T00:52:12.420343+00:00",
+            "updated_on": "2015-03-13T00:56:59.348151+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5639908
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5640271"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5640271"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T01:31:04.492456+00:00",
+            "updated_on": "2015-03-13T01:31:04.625759+00:00",
+            "id": 5640271
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5656277"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5656277"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5639908"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5639908"
+                    }
+                },
+                "id": 5639908
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Good call!",
+                "html": "<p>Good call!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T16:32:02.141543+00:00",
+            "updated_on": "2015-03-13T16:32:02.153006+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5656277
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5657507"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5657507"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite/68/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite/68/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite/68/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T17:29:03.888178+00:00",
+            "updated_on": "2015-03-13T17:29:03.948838+00:00",
+            "id": 5657507
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5662330"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5662330"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite/71/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite/71/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite/71/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T22:08:54.431419+00:00",
+            "updated_on": "2015-03-13T22:08:54.572228+00:00",
+            "id": 5662330
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5662461"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:b60ce9653848..a68e52ec7e5c?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5662461"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "It looks like this is an API change.  Can you leave label_args in but note that its deprecated?",
+                "html": "<p>It looks like this is an API change.  Can you leave label_args in but note that its deprecated?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T22:22:13.291321+00:00",
+            "updated_on": "2015-03-13T22:22:13.298097+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 405
+            },
+            "id": 5662461
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5662541"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5662541"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5662461"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5662461"
+                    }
+                },
+                "id": 5662461
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Yeah, this was causing the problems with the test, but it should be fixed now.  I simply changed a few places in the callbacks to have consistent naming of the `args` dicts.  I also did tweaked one that had `text_kwargs` or some such.  I'll leave them in and deprecate them as I've done elsewhere.  It's a minor API change, but I think it makes more sense for consistency between callbacks.",
+                "html": "<p>Yeah, this was causing the problems with the test, but it should be fixed now.  I simply changed a few places in the callbacks to have consistent naming of the <code>args</code> dicts.  I also did tweaked one that had <code>text_kwargs</code> or some such.  I'll leave them in and deprecate them as I've done elsewhere.  It's a minor API change, but I think it makes more sense for consistency between callbacks.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T22:29:54.672643+00:00",
+            "updated_on": "2015-03-13T22:29:54.680184+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5662541
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5662760"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5662760"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-13T22:59:37.097924+00:00",
+            "updated_on": "2015-03-13T22:59:37.147017+00:00",
+            "id": 5662760
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5663197"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5663197"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-14T00:23:29.858982+00:00",
+            "updated_on": "2015-03-14T00:23:29.909086+00:00",
+            "id": 5663197
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5722528"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5722528"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T03:23:03.873116+00:00",
+            "updated_on": "2015-03-18T03:23:03.923272+00:00",
+            "id": 5722528
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5723259"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5723259"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Rather than copy-pasting the docstrings into the docs, what do you think about linking to the autogenerated API docs?  I worry about the versions of the docstrings in the narrative docs not being updated when the docstrings in the callback code get updated in the future.",
+                "html": "<p>Rather than copy-pasting the docstrings into the docs, what do you think about linking to the autogenerated API docs?  I worry about the versions of the docstrings in the narrative docs not being updated when the docstrings in the callback code get updated in the future.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T04:57:59.629452+00:00",
+            "updated_on": "2015-03-18T04:57:59.636748+00:00",
+            "id": 5723259
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5730208"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5730208"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5723259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5723259"
+                    }
+                },
+                "id": 5723259
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "While I understand your concern of having two places to update in the future, I think in this case each doc location (API vs narrative docs) serves a unique location.  Obviously we need the API docs from the docstrings in the code, so those should stay.  But the narrative docs actually autogenerate the output images (sort of like the cookbook) to let the user know how things are going to look.  We cannot move this functionality inside the api docs without things getting really hard.",
+                "html": "<p>While I understand your concern of having two places to update in the future, I think in this case each doc location (API vs narrative docs) serves a unique location.  Obviously we need the API docs from the docstrings in the code, so those should stay.  But the narrative docs actually autogenerate the output images (sort of like the cookbook) to let the user know how things are going to look.  We cannot move this functionality inside the api docs without things getting really hard.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T12:01:02.152393+00:00",
+            "updated_on": "2015-03-18T12:01:02.159820+00:00",
+            "id": 5730208
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5730253"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5730253"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5730208"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5730208"
+                    }
+                },
+                "id": 5730208
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "And don't the `.inc` files have a script to generate them anyway?  I think it's fine -- as long as we stay up to date on that script, we're okay.",
+                "html": "<p>And don't the <code>.inc</code> files have a script to generate them anyway?  I think it's fine -- as long as we stay up to date on that script, we're okay.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T12:02:50.071351+00:00",
+            "updated_on": "2015-03-18T12:02:50.082545+00:00",
+            "id": 5730253
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5736063"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5736063"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://tests.yt-project.org/job/py2.7-yt-3.0_docs/20/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_docs/20/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_docs/20/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T15:20:15.255922+00:00",
+            "updated_on": "2015-03-18T15:20:15.310888+00:00",
+            "id": 5736063
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5738484"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5738484"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5730253"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5730253"
+                    }
+                },
+                "id": 5730253
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "They might have at one point, but that's not how they're generated now.",
+                "html": "<p>They might have at one point, but that's not how they're generated now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T16:33:38.008649+00:00",
+            "updated_on": "2015-03-18T16:33:38.018995+00:00",
+            "id": 5738484
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5738550"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5738550"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5730208"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5730208"
+                    }
+                },
+                "id": 5730208
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "I'm fine with the scripts that generate images in the narrative docs. The issue is with the detailed docs on they arguments and keyword arguments that you've added here that are copy/pasted from the docstrings.  I don't think it's a good idea to have this sort of information in two places.",
+                "html": "<p>I'm fine with the scripts that generate images in the narrative docs. The issue is with the detailed docs on they arguments and keyword arguments that you've added here that are copy/pasted from the docstrings.  I don't think it's a good idea to have this sort of information in two places.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T16:35:21.737799+00:00",
+            "updated_on": "2015-03-18T16:35:21.743689+00:00",
+            "id": 5738550
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5746395"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5746395"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5738484"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5738484"
+                    }
+                },
+                "id": 5738484
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Does anyone mind if I just pull the _cb_docstrings.inc file into the actual callbacks.rst file?  It seems unnecessarily complicated to have it divided.",
+                "html": "<p>Does anyone mind if I just pull the _cb_docstrings.inc file into the actual callbacks.rst file?  It seems unnecessarily complicated to have it divided.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T21:59:33.428259+00:00",
+            "updated_on": "2015-03-18T21:59:33.439859+00:00",
+            "id": 5746395
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5746417"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5746417"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5746395"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5746395"
+                    }
+                },
+                "id": 5746395
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Fine with me, it's less confusing that way.",
+                "html": "<p>Fine with me, it's less confusing that way.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T22:00:19.744720+00:00",
+            "updated_on": "2015-03-18T22:00:19.753725+00:00",
+            "id": 5746417
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5748042"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5748042"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-18T23:45:09.013125+00:00",
+            "updated_on": "2015-03-18T23:45:09.057931+00:00",
+            "id": 5748042
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5749126"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5749126"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Docs were built for this PR. See http://tests.yt-project.org/job/py2.7-yt-3.0_docs/21/",
+                "html": "<p>Docs were built for this PR. See <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_docs/21/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_docs/21/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T01:29:46.408124+00:00",
+            "updated_on": "2015-03-19T01:29:46.464643+00:00",
+            "id": 5749126
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5749241"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5749241"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5749126"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5749126"
+                    }
+                },
+                "id": 5749126
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "I noticed two small mistakes in the docs, which I've subsequently fixed.  These docs should be basically accurate.  Review away.",
+                "html": "<p>I noticed two small mistakes in the docs, which I've subsequently fixed.  These docs should be basically accurate.  Review away.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T01:45:20.053218+00:00",
+            "updated_on": "2015-03-19T01:45:20.058470+00:00",
+            "id": 5749241
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5749744"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5749744"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T02:35:11.809136+00:00",
+            "updated_on": "2015-03-19T02:35:11.959389+00:00",
+            "id": 5749744
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5764586"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5764586"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5749241"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5749241"
+                    }
+                },
+                "id": 5749241
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Quick link: http://tests.yt-project.org/job/py2.7-yt-3.0_docs/21/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Quick link: <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_docs/21/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_docs/21/artifact/sandbox/doc/build/html/index.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T15:33:43.530789+00:00",
+            "updated_on": "2015-03-19T15:33:43.543105+00:00",
+            "id": 5764586
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5764670"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5764670"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5749241"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5749241"
+                    }
+                },
+                "id": 5749241
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "Huge improvement -- I love the new callbacks page.  Thanks, @chummels!",
+                "html": "<p>Huge improvement -- I love the new callbacks page.  Thanks, <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T15:36:52.373060+00:00",
+            "updated_on": "2015-03-19T15:36:52.390204+00:00",
+            "id": 5764670
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5765003"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:2da8f7ac67a3..2c8f907a5bc9?path=doc%2Fsource%2Fvisualizing%2Fcallbacks.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5765003"
+                }
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "\"whatever it does it itself\" doesn't make sense to me",
+                "html": "<p>\"whatever it does it itself\" doesn't make sense to me</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T15:46:57.462147+00:00",
+            "updated_on": "2015-03-19T15:46:57.470753+00:00",
+            "inline": {
+                "from": 12,
+                "path": "doc/source/visualizing/callbacks.rst",
+                "to": null
+            },
+            "id": 5765003
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5765149"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5765149"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5764670"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5764670"
+                    }
+                },
+                "id": 5764670
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "I also really like the new callbacks page.  ",
+                "html": "<p>I also really like the new callbacks page.  </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T15:50:30.041346+00:00",
+            "updated_on": "2015-03-19T15:50:30.047022+00:00",
+            "id": 5765149
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5771523"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=doc%2Fsource%2Fvisualizing%2Fcallbacks.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5771523"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499/comments/5765003"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499/_/diff#comment-5765003"
+                    }
+                },
+                "id": 5765003
+            },
+            "pullrequest": {
+                "title": "Updating callbacks to consistently define coordinate system",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1499"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1499"
+                    }
+                },
+                "id": 1499
+            },
+            "content": {
+                "raw": "You're right.  I modified this section to make it clearer to the reader.",
+                "html": "<p>You're right.  I modified this section to make it clearer to the reader.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-03-19T19:39:45.945450+00:00",
+            "updated_on": "2015-03-19T19:39:45.952039+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/callbacks.rst",
+                "to": null
+            },
+            "id": 5771523
+        }
+    ]
+}

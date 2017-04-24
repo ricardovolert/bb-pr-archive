@@ -1,0 +1,623 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2012-09-05T02:07:00.980501+00:00",
+    "comment_count": 9,
+    "description": "This adds initial yt support for Athena vtk datadumps, through the AthenaStaticOutput.\r\n\r\nBoth serial and parallel runs are supported.  \r\nCommand line:\r\nyt load my_athena_run.0030.vtk\r\n\r\nFrom a script:\r\npf = load('my_athena_run.0030.vtk')\r\n\r\nParallel loads must be done from the directory containing the id%i/ processor directories:\r\n\r\nyt load id0/my_athena_run.0030.vtk\r\npf = load('id0/my_athena_run.0030.vtk')\r\n\r\nThings that have been tested:\r\nSlices\r\nProjections\r\npf.h.find_max\r\n\r\nThings that are not working:\r\nUnits\r\nSimulations with domain_left_edge != -domain_right_edge\r\n\r\nUpdate 1:\r\nNow can specifiy domain_right_edge in a parameters dictionary, handed to load().  This should allow for simulations with domain_right_edge != -domain_left_edge, but will need to be tested by users that have this type of simulation setup.  \r\n\r\nUpdate 2: This addresses all of @matthewturk's issues.  I also caught the same bug while on the plane in the parameters that @jzuhone had pointed out, and have pushed a fix for the CONSERVED thing. I haven't messed with the .copy() vs. .T, and the other pieces that still remain do turn out to be necessary for now.  There are a few corner cases that pop up. \r\n\r\nUpdate 3:\r\nFixes the issue pointed out by @jzuhone.  Turns out the wrong index was being used (1 instead of 0) to calculate the x position of the processor layout.",
+    "created_on": "2012-08-31T20:56:39.270151+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/0c844cb7df71"
+            }
+        },
+        "hash": "0c844cb7df71"
+    },
+    "title": "Athena Support",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "id": 259,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/samskillman"
+            },
+            "html": {
+                "href": "https://bitbucket.org/samskillman/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Sam Skillman",
+        "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+        "username": "samskillman"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt/commit/aaae6f8d3286"
+                }
+            },
+            "hash": "aaae6f8d3286"
+        },
+        "repository": {
+            "full_name": "samskillman/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/samskillman/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/samskillman/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{f1df6f31-13ed-4d98-a11d-1954f1f1fdfa}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/3e35b1adb541"
+                }
+            },
+            "hash": "3e35b1adb541"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16377"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16377"
+                }
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "Sam, can you explain the edges restriction?",
+                "html": "<p>Sam, can you explain the edges restriction?</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-01T20:05:42.825133+00:00",
+            "updated_on": "2012-09-01T20:05:42.832838+00:00",
+            "id": 16377
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16379"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16379"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16377"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16377"
+                    }
+                },
+                "id": 16377
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "Sure.  So right now the way this determines the left and right domain boundaries is by reading processor 0's vtk header, which contains the domain_left_edge, dx, and dimensions information.  It then uses this to determine the domain_dimensions and all the other stuff assuming that the domain_right_edge = -domain_left_edge.  \n\nOne way you could avoid this is by reading through every single vtk file and looking for the max right_edge for each grid, which could be slow(???) for large processor count runs.  I've been told that many Athena users use this type of setup, and was hoping that once we get Athena users up and going that they might have an idea of how to set these things up efficiently.",
+                "html": "<p>Sure.  So right now the way this determines the left and right domain boundaries is by reading processor 0's vtk header, which contains the domain_left_edge, dx, and dimensions information.  It then uses this to determine the domain_dimensions and all the other stuff assuming that the domain_right_edge = -domain_left_edge.  </p>\n<p>One way you could avoid this is by reading through every single vtk file and looking for the max right_edge for each grid, which could be slow(???) for large processor count runs.  I've been told that many Athena users use this type of setup, and was hoping that once we get Athena users up and going that they might have an idea of how to set these things up efficiently.</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-01T20:26:10.443857+00:00",
+            "updated_on": "2012-09-01T20:26:10.451294+00:00",
+            "id": 16379
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16509"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16509"
+                }
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "I'll give this a try (I hope) within the next two days or so. ",
+                "html": "<p>I'll give this a try (I hope) within the next two days or so. </p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-04T02:16:03.185243+00:00",
+            "updated_on": "2012-09-04T02:16:03.193998+00:00",
+            "id": 16509
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16536"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16536"
+                }
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "Thanks very much for adding this, Sam.  Athena could be a very cool new community to work with!\n\nMost of my comments are for style, but there are a few substantive ones -- particularly, that in the current setup I don't believe derived fields will work.\n\n* Please change all numpy imports to np, since this will not be affected by PR #258\n* (data_structures.py) remove pdb import\n* Line 59 -- make a single format string, not a combination of formatting and concatenating\n* setup_dx appears to be verbatim the superclass definition\n* Please add spaces after commas inside a set of arguments; for instance, lines 130-131\n* Continue on 147 is unnecessary\n* Line 160 is unnecessary\n* When will 165 trigger but 164 not?\n* Line 172: Please add a space and parenthesis to make this explicitly a tuple\n* Lines 177-182: Format strings and a short loop would make this clearer.  For instance:\n{{{\nfor ax in 'xyz':\n    field_map[\"%s_%s\" % (field, ax)] = ('vector', f.tell() - read_table_offset)\n}}}\n* Line 183 is unnecessary\n* Line 187 is unnecessary\n* Do both 215 and 207 stand a chance of being true in different files?\n* Line 216 is unnecessary\n* Line 219 is unnecessary\n* Is line 221 a correction for 1- and 2-D data?  If so, what does line 222 do?\n* Line 248: Can this be moved into the constructor?\n* Line 259 is unnecessary\n* Overriding _setup_derived_fields in this way will prevent any derived fields to be added.\n* get_box_grids_below_level is faster and accepts a min level.  Note that it is inclusive, so it would need to be fed GridLevel+1 to get children of that grid.\n* What are lines 313-337 for?  They look like duplicates of the field detection code.\n* Line 354 is unnecessary\n* Line 360 catches ALL exceptions, but throws a warning specifically for array issues.  Why is that?\n* Line 368: Earlier it looked like allowances were being made for 1- and 2-D data.  Maybe I misunderstood them.\n* Line 370: Set at least something as a unique identifier, even if it is a hash of the filename and C_TIME of the file.\n* Lines 378-383 look like vestigial remains; can they be removed?\n* Line 389 is unnecessary\n* (fields.py) There is a bug I recently discovered that prevents derived fields from being detected and used if the frontend-specific field system does not have at least one derived field; this would be at least one (real or fake) add_athena_field call.  You don't have to put it in, but if you are lacking derived fields (after fixing _setup_derived_fields above), this is why.\n* (io.py) Line 57 is unnecessary\n* The first half of line 59 is unnecessary\n* Is the sequence performed between 52 and 59 performed elsewhere?  If so, can't the result of that simply be stored, rather than combining the result of it with 'offset'?\n* Line 62 could be a relative seek instead of absolute.\n* Lines 62-77: the copy may be unnecessary if you need to transpose the data later anyway.  It may be better on memory for large grids to avoid the initial copy, then call transpose explicitly to get a copy, and to copy the non-transposed only as necessary.  You can specify the ordering of the copy as well.\n* Line 95 is unnecessary\n* The first half of line 97 is unnecessary\n* Why reimplement everything in read_data_slice, instead of doing what Orion does, which is just to read the dataset by calling _read_data_set and returning a slice of it?\n\nOtherwise, this looks good.  Please do let us know if you get feedback from Athena users.",
+                "html": "<p>Thanks very much for adding this, Sam.  Athena could be a very cool new community to work with!</p>\n<p>Most of my comments are for style, but there are a few substantive ones -- particularly, that in the current setup I don't believe derived fields will work.</p>\n<ul><li>Please change all numpy imports to np, since this will not be affected by PR <a href=\"/yt_analysis/yt/issues/258/openid-login-doesnt-work\" rel=\"nofollow\" title=\"OpenID login doesn&#39;t work\"><s>#258</s></a>\n</li><li>(data_structures.py) remove pdb import\n</li><li>Line 59 -- make a single format string, not a combination of formatting and concatenating\n</li><li>setup_dx appears to be verbatim the superclass definition\n</li><li>Please add spaces after commas inside a set of arguments; for instance, lines 130-131\n</li><li>Continue on 147 is unnecessary\n</li><li>Line 160 is unnecessary\n</li><li>When will 165 trigger but 164 not?\n</li><li>Line 172: Please add a space and parenthesis to make this explicitly a tuple\n</li><li>Lines 177-182: Format strings and a short loop would make this clearer.  For instance:\n</li></ul>\n<pre>for ax in 'xyz':\n    field_map[\"%s_%s\" % (field, ax)] = ('vector', f.tell() - read_table_offset)\n</pre>\n<ul><li>Line 183 is unnecessary\n</li><li>Line 187 is unnecessary\n</li><li>Do both 215 and 207 stand a chance of being true in different files?\n</li><li>Line 216 is unnecessary\n</li><li>Line 219 is unnecessary\n</li><li>Is line 221 a correction for 1- and 2-D data?  If so, what does line 222 do?\n</li><li>Line 248: Can this be moved into the constructor?\n</li><li>Line 259 is unnecessary\n</li><li>Overriding _setup_derived_fields in this way will prevent any derived fields to be added.\n</li><li>get_box_grids_below_level is faster and accepts a min level.  Note that it is inclusive, so it would need to be fed GridLevel+1 to get children of that grid.\n</li><li>What are lines 313-337 for?  They look like duplicates of the field detection code.\n</li><li>Line 354 is unnecessary\n</li><li>Line 360 catches ALL exceptions, but throws a warning specifically for array issues.  Why is that?\n</li><li>Line 368: Earlier it looked like allowances were being made for 1- and 2-D data.  Maybe I misunderstood them.\n</li><li>Line 370: Set at least something as a unique identifier, even if it is a hash of the filename and C_TIME of the file.\n</li><li>Lines 378-383 look like vestigial remains; can they be removed?\n</li><li>Line 389 is unnecessary\n</li><li>(fields.py) There is a bug I recently discovered that prevents derived fields from being detected and used if the frontend-specific field system does not have at least one derived field; this would be at least one (real or fake) add_athena_field call.  You don't have to put it in, but if you are lacking derived fields (after fixing _setup_derived_fields above), this is why.\n</li><li>(io.py) Line 57 is unnecessary\n</li><li>The first half of line 59 is unnecessary\n</li><li>Is the sequence performed between 52 and 59 performed elsewhere?  If so, can't the result of that simply be stored, rather than combining the result of it with 'offset'?\n</li><li>Line 62 could be a relative seek instead of absolute.\n</li><li>Lines 62-77: the copy may be unnecessary if you need to transpose the data later anyway.  It may be better on memory for large grids to avoid the initial copy, then call transpose explicitly to get a copy, and to copy the non-transposed only as necessary.  You can specify the ordering of the copy as well.\n</li><li>Line 95 is unnecessary\n</li><li>The first half of line 97 is unnecessary\n</li><li>Why reimplement everything in read_data_slice, instead of doing what Orion does, which is just to read the dataset by calling _read_data_set and returning a slice of it?\n</li></ul>\n<p>Otherwise, this looks good.  Please do let us know if you get feedback from Athena users.</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-04T10:53:38.657159+00:00",
+            "updated_on": "2012-09-04T10:54:00.816680+00:00",
+            "id": 16536
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16582"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16582"
+                }
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "Hi Sam,\n\nI have a few comments so far. Bear in mind, I am just a beginning Athena user, so I actually am not sure about some of these things myself. I have a dataset I generated using the Linear Wave 3d problem that is included with the source. \n\n1) In {{{AthenaStaticOutput.__init__}}}, I think the call to {{{StaticOutput.__init__}}} should go last, since otherwise self.specified_parameters will be undefined and you cannot override 'domain_right_edge' then. \n\n2) In parse_line:\n{{{\n#!python\nelif 'PRIMITIVE' in splitup:\n}}}\n\nshould be:\n\n{{{\n#!python\nelif any(x in ['PRIMITIVE','CONSERVED'] for x in splitup):\n}}}\n\nOnce I make these changes, I can make a slice using SlicePlot, but it looks a little off: http://i.imgur.com/0u4ru.png\n\nNot exactly sure what's happening there. ",
+                "html": "<p>Hi Sam,</p>\n<p>I have a few comments so far. Bear in mind, I am just a beginning Athena user, so I actually am not sure about some of these things myself. I have a dataset I generated using the Linear Wave 3d problem that is included with the source. </p>\n<p>1) In <code>AthenaStaticOutput.__init__</code>, I think the call to <code>StaticOutput.__init__</code> should go last, since otherwise self.specified_parameters will be undefined and you cannot override 'domain_right_edge' then. </p>\n<p>2) In parse_line:</p>\n<div class=\"codehilite highlight\"><pre><span></span><span class=\"k\">elif</span> <span class=\"s1\">&#39;PRIMITIVE&#39;</span> <span class=\"ow\">in</span> <span class=\"n\">splitup</span><span class=\"p\">:</span>\n</pre></div>\n\n<p>should be:</p>\n<div class=\"codehilite highlight\"><pre><span></span><span class=\"k\">elif</span> <span class=\"nb\">any</span><span class=\"p\">(</span><span class=\"n\">x</span> <span class=\"ow\">in</span> <span class=\"p\">[</span><span class=\"s1\">&#39;PRIMITIVE&#39;</span><span class=\"p\">,</span><span class=\"s1\">&#39;CONSERVED&#39;</span><span class=\"p\">]</span> <span class=\"k\">for</span> <span class=\"n\">x</span> <span class=\"ow\">in</span> <span class=\"n\">splitup</span><span class=\"p\">):</span>\n</pre></div>\n\n<p>Once I make these changes, I can make a slice using SlicePlot, but it looks a little off: <a href=\"http://i.imgur.com/0u4ru.png\">http://i.imgur.com/0u4ru.png</a></p>\n<p>Not exactly sure what's happening there. </p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-04T18:52:05.664628+00:00",
+            "updated_on": "2012-09-04T18:53:24.142635+00:00",
+            "id": 16582
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16583"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16583"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16582"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16582"
+                    }
+                },
+                "id": 16582
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "Sorry, the image is: http://i.imgur.com/tQEPM.png",
+                "html": "<p>Sorry, the image is: <a href=\"http://i.imgur.com/tQEPM.png\">http://i.imgur.com/tQEPM.png</a></p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-04T18:54:20.957073+00:00",
+            "updated_on": "2012-09-04T18:54:20.970213+00:00",
+            "id": 16583
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16591"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16591"
+                }
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "Hi Sam,\n\nSo I have done the same run in serial and the image looks sensible. So something to do with the way the domain is set up for a parallel run is likely the culprit. ",
+                "html": "<p>Hi Sam,</p>\n<p>So I have done the same run in serial and the image looks sensible. So something to do with the way the domain is set up for a parallel run is likely the culprit. </p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-04T20:12:48.551610+00:00",
+            "updated_on": "2012-09-04T20:12:48.560705+00:00",
+            "id": 16591
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16600"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16600"
+                }
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "Hey Sam, John -- should we wait on fixing the processor topology issue before accepting?  Sam's addressed what I had identified, so I'm fine with accepting now if it is at least functional enough for people to use the install script to try it out.",
+                "html": "<p>Hey Sam, John -- should we wait on fixing the processor topology issue before accepting?  Sam's addressed what I had identified, so I'm fine with accepting now if it is at least functional enough for people to use the install script to try it out.</p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-04T20:49:15.264404+00:00",
+            "updated_on": "2012-09-04T20:49:15.271614+00:00",
+            "id": 16600
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16602"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16602"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259/comments/16600"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259/_/diff#comment-16600"
+                    }
+                },
+                "id": 16600
+            },
+            "pullrequest": {
+                "title": "Athena Support",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/259"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/259"
+                    }
+                },
+                "id": 259
+            },
+            "content": {
+                "raw": "I suppose I can go either way on this, but it seems like the processor topology is fundamental enough that we should probably fix it first. I doubt it would take that long to figure out... right? I'd rather not have people trying this out on their data when we know that there's a bug and even something as simple as a slice doesn't work. ",
+                "html": "<p>I suppose I can go either way on this, but it seems like the processor topology is fundamental enough that we should probably fix it first. I doubt it would take that long to figure out... right? I'd rather not have people trying this out on their data when we know that there's a bug and even something as simple as a slice doesn't work. </p>\n",
+                "markup": "creole"
+            },
+            "created_on": "2012-09-04T20:51:42.502746+00:00",
+            "updated_on": "2012-09-04T20:51:42.508244+00:00",
+            "id": 16602
+        }
+    ]
+}

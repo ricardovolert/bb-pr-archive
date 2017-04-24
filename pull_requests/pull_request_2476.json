@@ -1,0 +1,349 @@
+{
+    "reason": "Migrating to https://github.com/yt-project/yt/pull/1348",
+    "state": "DECLINED",
+    "updated_on": "2017-04-20T20:54:45.818804+00:00",
+    "comment_count": 4,
+    "description": "This fixes up a bunch of issues with hammer-aitoff projections, and adds some niceties.\r\n\r\nAmong other things, it lets you set the xlim/ylim for hammer-aitoff, and it also helps get zoom and whatnot to work.  If you load up a partial dataset, it'll just center on that one.\r\n\r\nHere's a sample script, and the images it now produces.\r\n\r\n```\r\n#!python\r\nimport yt\r\nfrom netCDF4 import Dataset\r\nimport numpy as np\r\n\r\nd = Dataset(\"/home/mturk/Downloads/nrcan_canada_daily_pr_1950.nc\")\r\n\r\npr = d.variables[\"pr\"][:,::-1,:].astype(\"f8\")\r\npr.view(pr.dtype)[pr.mask] = 0.0\r\ndata = {'pr': (pr.data, \"mm/s\")}\r\nlat = d.variables[\"lat\"][:]\r\nlon = d.variables[\"lon\"][:]\r\n\r\nds = yt.load_uniform_grid(data, [365, 510, 1068], geometry=(\"geographic\", (\"altitude\", \"latitude\", \"longitude\")),\r\n                         bbox=np.array([ [0, 365], [lat.min(), lat.max()], [lon.min(), lon.max()] ]),\r\n                         nprocs = 32)\r\n\r\np = yt.SlicePlot(ds, \"altitude\", \"pr\")\r\np.save(\"rain1.png\"))\r\np.annotate_geographic_lines(line_width=0.2, alpha=0.5)\r\np.save(\"rain2.png\"))\r\n\r\nuq = p.bounds[0].uq\r\np.xlim = (-180.0 * uq, 180 * uq)\r\np.ylim = (-90 * uq, 90 * uq)\r\np._plot_valid = False\r\np._data_valid = False\r\np._recreate_frb()\r\np.save(\"rain3.png\")\r\n```\r\n\r\n![rain1.png](https://bitbucket.org/repo/BXbAb/images/622402049-rain1.png)\r\n\r\n![rain2.png](https://bitbucket.org/repo/BXbAb/images/2431761562-rain2.png)\r\n\r\n![rain3.png](https://bitbucket.org/repo/BXbAb/images/1457657248-rain3.png)\r\n\r\nI've tried to add extra comments, because in some places they were pretty light, and also make things more obvious as to what's going on where.",
+    "created_on": "2016-12-16T22:39:49.753404+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "More aitoff / geographic \"fixes\"",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 2476,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/fc6bcf45cc29"
+                }
+            },
+            "hash": "fc6bcf45cc29"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e0add337739c"
+                }
+            },
+            "hash": "e0add337739c"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/comments/28510162"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476/_/diff#comment-28510162"
+                }
+            },
+            "pullrequest": {
+                "title": "More aitoff / geographic \"fixes\"",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476"
+                    }
+                },
+                "id": 2476
+            },
+            "content": {
+                "raw": "When you come back to this, it would be nice to say that this is Hammer-Aitoff, not just Aitoff.",
+                "html": "<p>When you come back to this, it would be nice to say that this is Hammer-Aitoff, not just Aitoff.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-16T22:42:01.936899+00:00",
+            "updated_on": "2016-12-16T22:42:01.943156+00:00",
+            "id": 28510162
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/comments/28510241"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476/_/diff#comment-28510241"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/comments/28510162"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476/_/diff#comment-28510162"
+                    }
+                },
+                "id": 28510162
+            },
+            "pullrequest": {
+                "title": "More aitoff / geographic \"fixes\"",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476"
+                    }
+                },
+                "id": 2476
+            },
+            "content": {
+                "raw": "Good catch, thanks!",
+                "html": "<p>Good catch, thanks!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-16T22:45:11.903118+00:00",
+            "updated_on": "2016-12-16T22:45:11.924791+00:00",
+            "id": 28510241
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/comments/28666409"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476/_/diff#comment-28666409"
+                }
+            },
+            "pullrequest": {
+                "title": "More aitoff / geographic \"fixes\"",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476"
+                    }
+                },
+                "id": 2476
+            },
+            "content": {
+                "raw": "* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/470/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/517/\n",
+                "html": "<ul>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/470/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/470/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/517/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/517/</a></li>\n</ul>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-20T22:26:54.354637+00:00",
+            "updated_on": "2017-01-11T21:34:30.340387+00:00",
+            "id": 28666409
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476/comments/29552934"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476/_/diff#comment-29552934"
+                }
+            },
+            "pullrequest": {
+                "title": "More aitoff / geographic \"fixes\"",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2476"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2476"
+                    }
+                },
+                "id": 2476
+            },
+            "content": {
+                "raw": "Fixed conflicts!",
+                "html": "<p>Fixed conflicts!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-01-11T19:39:21.405683+00:00",
+            "updated_on": "2017-01-11T19:39:21.409256+00:00",
+            "id": 29552934
+        }
+    ]
+}

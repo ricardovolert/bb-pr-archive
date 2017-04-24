@@ -1,0 +1,778 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-09-10T00:12:01.536720+00:00",
+    "comment_count": 12,
+    "description": "This includes a number of improvements for the unit system. It also closes #1072 and closes #1074.\r\n\r\nFirst and foremost, the latex representation of unit objects is now stored as an attribute of the unit object. This is necessary to support saving and loading dynamically defined units (like comoving units)  and is a much more sensible design than the current one which uses a dictionary in a module in yt as a global variable to store the LaTeX unit labels. The cost is that unit objects now have another attribute and unit registry instances now record a 4-tuple per atomic unit instead of a 2-tuple. I expect the memory cost to be negligible but haven't done detailed tests yet.\r\n\r\nSecond, the quantities representing physical constants (defined in `yt.utilities.physical_constants`) are now imported into the `yt.units` namespace, making it possible to do something like `from yt.units import electron_mass`. My hope is that this change will make physical constants with predefined units easier to discover. This doesn't break any imports, just adds some alternate import paths via `yt.units`.  In addition, I've expanded the listing units objects defined in `yt.utilities.physical_constants` to include a number of aliases, which I'm hoping will also improve the discoverability of these constants. In both cases if there are objections I'm happy to revert these changes. I'm also happy to update the docs if people think we should deprecate the existing imports.\r\n\r\nI've added better error messages for bit twiddling ufuncs that are only defined for integers. Since we assume `YTArray` always holds floats, we just immediately raise an error if one of these ufuncs is called using a `YTArray`. This should hopefully be a clearer error message than the \"unsupported ufunc\" one they would get right now.\r\n\r\nI've added a new alias to `in_units` named `to`. This is mostly for compatibility with the astropy quantity duck type, but is also a useful shorthand.\r\n\r\nLast but not least, I've made a small tweak to the way latex labels are generated for dimensionless fields. The biggest impact is on plot labels. Plotting a dimensionless field used to look like this (focus on the colorbar label):\r\n\r\n![Unknown.png](https://bitbucket.org/repo/7EagBy/images/3142278782-Unknown.png)\r\n\r\nNow it looks like:\r\n\r\n![Unknown.png](https://bitbucket.org/repo/7EagBy/images/145305560-Unknown.png)\r\n\r\n(both plots were made with this script: http://paste.yt-project.org/show/5852/)",
+    "created_on": "2015-08-28T02:39:56.180312+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/47da0c1a0142"
+            }
+        },
+        "hash": "47da0c1a0142"
+    },
+    "title": "Unit improvements",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "id": 1728,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/cda9b13b76b0"
+                }
+            },
+            "hash": "cda9b13b76b0"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/415b19e3578b"
+                }
+            },
+            "hash": "415b19e3578b"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9458040"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9458040"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/473/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/473/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/473/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-28T03:38:31.144240+00:00",
+            "updated_on": "2015-08-28T03:38:31.218909+00:00",
+            "id": 9458040
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9458484"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9458484"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9458040"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9458040"
+                    }
+                },
+                "id": 9458040
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "So most of the answer test failures are because this breaks the pickle format for YTArray :(\n\nNo matter what, we're going to be changing the serialization format to include LaTeX representations at some level, so I think the answers will just need to be regenerated...",
+                "html": "<p>So most of the answer test failures are because this breaks the pickle format for YTArray :(</p>\n<p>No matter what, we're going to be changing the serialization format to include LaTeX representations at some level, so I think the answers will just need to be regenerated...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-28T04:19:07.543469+00:00",
+            "updated_on": "2015-08-28T04:19:07.549722+00:00",
+            "id": 9458484
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9459187"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9459187"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/474/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/474/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/474/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-28T05:21:06.371948+00:00",
+            "updated_on": "2015-08-28T05:21:06.435745+00:00",
+            "id": 9459187
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9477922"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9477922"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/475/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/475/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/475/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-28T15:58:22.610796+00:00",
+            "updated_on": "2015-08-28T15:58:22.679669+00:00",
+            "id": 9477922
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9479321"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:cee25d32f85d..798706bc587f?path=yt%2Funits%2Fyt_array.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9479321"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "`v` is undefined in this context. For python2 it retains last value from `lut.items()`, for python3 is removed and raises NameError",
+                "html": "<p><code>v</code> is undefined in this context. For python2 it retains last value from <code>lut.items()</code>, for python3 is removed and raises NameError</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-28T16:50:44.342769+00:00",
+            "updated_on": "2015-08-28T16:50:44.354951+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/yt_array.py",
+                "to": 1139
+            },
+            "id": 9479321
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9479434"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9479434"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-28T16:55:39.970332+00:00",
+            "updated_on": "2015-08-28T16:55:40.033979+00:00",
+            "id": 9479434
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9481378"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9481378"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-08-28T18:11:07.738711+00:00",
+            "updated_on": "2015-08-28T18:11:07.806411+00:00",
+            "id": 9481378
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/rthompson"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/rthompson/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/rthompson/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Robert Thompson",
+                "uuid": "{a1ae9158-0af0-4382-99bb-4bdade1d18de}",
+                "username": "rthompson"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9639872"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9639872"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "confirmed that one can now save/load UnitRegistry's with comoving units!",
+                "html": "<p>confirmed that one can now save/load UnitRegistry's with comoving units!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-03T21:41:58.679421+00:00",
+            "updated_on": "2015-09-03T21:41:58.735824+00:00",
+            "id": 9639872
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9646175"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9646175"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-04T05:31:01.550489+00:00",
+            "updated_on": "2015-09-04T05:31:01.613357+00:00",
+            "id": 9646175
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9769641"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9769641"
+                }
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "Ok to merge?",
+                "html": "<p>Ok to merge?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-09T15:04:09.442153+00:00",
+            "updated_on": "2015-09-09T15:04:09.445297+00:00",
+            "id": 9769641
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9769666"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9769666"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9769641"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9769641"
+                    }
+                },
+                "id": 9769641
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "It should be yes, unless anyone thinks this needs a docs pass.",
+                "html": "<p>It should be yes, unless anyone thinks this needs a docs pass.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-09T15:04:43.438504+00:00",
+            "updated_on": "2015-09-09T15:04:43.441528+00:00",
+            "id": 9769666
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9769857"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9769857"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728/comments/9769666"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728/_/diff#comment-9769666"
+                    }
+                },
+                "id": 9769666
+            },
+            "pullrequest": {
+                "title": "Unit improvements",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1728"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1728"
+                    }
+                },
+                "id": 1728
+            },
+            "content": {
+                "raw": "@xarthisius can we trigger a docs build for this one? ",
+                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> can we trigger a docs build for this one? </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-09-09T15:09:35.146280+00:00",
+            "updated_on": "2015-09-09T15:09:35.153326+00:00",
+            "id": 9769857
+        }
+    ]
+}

@@ -1,0 +1,2116 @@
+{
+    "reason": "We've done some fun history rewriting.",
+    "state": "DECLINED",
+    "updated_on": "2014-04-30T17:48:18.108404+00:00",
+    "comment_count": 36,
+    "description": "This is the very large PR summing up the work that @samskillman and I did last week on the FITS frontend, along with some changes to particle trajectories. I don't want this to go in just yet--it needs documentation and I wanted to start the discussion rolling on it first. \r\n\r\nFlagging for unitless datasets\r\n-------------------------------------------\r\n\r\nFirst, the small change that is the most important. There are a wide variety of FITS files, which may have different units along the axes of the data cube, including quantities which are not \"lengths\". The most natural length unit in a FITS cube (and the only universal one) is that of the pixel. For this reason, we decided to make it the \"code_length\" unit equal to the pixel unit. \r\n\r\nThis points up the fact that not all datasets will have a known cgs equivalent for \"code_length\", even though we nominally set 1 code_length = 1 cm in that case. I want to retain this behavior, but have some way of flagging that there is no known translation to centimeters for this dataset. \r\n\r\nThe way I implemented this is to add a `no_cgs_equiv_length` attribute to the `Dataset` object, which is always set to `False` by default. Only in the Athena and the FITS frontends is it set to `True`, and only if length unit information is not provided. PlotWindow plots will check the value of `no_cgs_equiv_length` and if found to be true will plot the axes in units of \"code length\" rather than \"cm\". My rationale behind this is rather pedantic: I feel that plots with the axes labeled in \"cm\" in this case are misleading, even if the values along the axes are \"correct\". I welcome alternative suggestions.\r\n\r\nFITS Files Support\r\n----------------------------\r\n\r\nSupport for FITS files has been greatly extended. This includes the following:\r\n\r\n1) Optimizations from reducing the number of times that the FITS data cube is accessed.   \r\n2) yt attempts to automatically decompose the single FITS \"grid\" into a number of grids based on the size of the dataset. This can be overridden by supplying the `nprocs` parameter to `load`.   \r\n3) Different image blocks within the FITS dataset are detected as different fields, and are given names based on keywords in the header.   \r\n4) More than one file can be supplied to include multiple fields, provided they are all on the same grid structure.   \r\n5) 4-dimensional FITS cubes, such as those including information about the Stokes parameters, are supported by accessing them as different fields.   \r\n6) Two special cases of FITS cubes, based on the WCS information in the header, are detected. The first is where the WCS indicates a rectilinear coordinate system based on known length units. The second is where the WCS indicates an RA/Dec coordinate system, which may be a 2D image or a \"PPV\" cube. In the latter case, the third axis (\"V\") is a quantity like line-of-sight velocity, or frequency, or wavelength.   \r\n7) WCS coordinates are supported by setting them up as fields. If the datacube is in the \"PPV\" format, setting up these fields is made more efficient by making the simplifying assumption that the X and Y coordinates are not dependent on V, and vice-versa.   \r\n8) @samskillman developed an implementation for creating fields of different spectral lines based on different offsets into the third axis for PPV cubes. He's got a notebook illustrating this which should go into the docs.   \r\n9) Two classes in `yt.utilities.fits_image`, `FITSSlice` and `FITSProjection`, take on-axis slices and projections of fields and write them to FITS files, with the WCS information included. This will enable derived fields generated in yt to be exported for use with other analysis tools.   \r\n\r\nPPVCube Analysis Module\r\n---------------------------------------\r\n\r\nIn tandem with the FITS frontend, and based on a suggestion from Peter Teuben, I have developed an analysis module to generate FITS cubes in \"position-position-velocity\" space from datasets loaded up in yt. The idea is that a normal vector is chosen along which a series of off-axis projections are made of a supplied field, where each projection is only made of that field which is associated with a particular velocity along the line of sight. This results in \"intensity cubes\" in position-position-velocity space that are similar to those generated from observations. An example notebook will be included in this PR as part of the docs. \r\n\r\nImprovements to Particle Trajectories\r\n------------------------------------------------------\r\n\r\nParticle trajectories have been unit-ified, and some of the earlier limitations placed on the algorithm have been removed. In particular, trajectories which start or stop in the middle of the time series (due to particles being created or leaving the domain) can now be included, and parallelization has been implemented. \r\n\r\nUPDATE 1: Responded to some suggestions, cleaned up `decompose_array`, added checking for consistent data shape between FITS images. Made `FITSSlice` and `FITSProjection` more general so that they can be used with any dataset, not just FITS. All tests pass on my end. Still writing docs.\r\n\r\nUPDATE 2: Added documentation. I still don't have example data that I have been given permission to use, so answer tests and cookbooks will unfortunately have to hold off until then. Also, @samskillman needs to document his contributions.   \r\n\r\nSome other things:   \r\n\r\n* Changed \"XYVCube\" --> \"PPVCube\" (position-position-velocity) since this is more in line with standard terminology. \r\n* Now set NaN masks for all fields to any desired value, or on a per-field basis.\r\n* Fixed a few bugs:    \r\n1. Off-axis SZ projections and input width units   \r\n2. Changed a stray \"mpc\" to \"Mpc\" in `get_smallest_appropriate_unit`   \r\n3. A couple of bugs in the Athena frontend.    \r\n\r\nI think that barring any other issues, this is ready to go in, but we obviously need more documentation. \r\n\r\nUPDATE 3: Forgot to set `self.nan_mask` to a dict if that's what was passed in. \r\n\r\nUPDATE 4: Added just a little more functionality.   \r\n\r\n1) Now supports event data as \"particle\" datasets, with options for creating deposited image fields in different energy bands.     \r\n2) Give an option to override field names and units, if necessary.   \r\n3) Add pixel, beam, counts units. Beam is now a solid angle, the value of which needs to be passed in as a parameter.    \r\n4) Various bug fixes and small refinements.   \r\n\r\nOutstanding issues:\r\n\r\na) @MatthewTurk and I have been thinking more about how to handle coordinates, particularly along the \"velocity\" axis, and issues related to plotting.  \r\nb) There is a bug with field cuts that is FITS-specific, that has to do with the way the data is decomposed into virtual grids. Somehow, the wrong cut ends up being taken, and the data limits of the resulting container are incorrect. \r\n\r\nUnfortunately we have to hold off on more documentation until these issues get sorted out, particularly issue b), since the docs I have devised depend on it. I have some test files that are ready to go for docs and answer testing. I would be happy to address the rest in a separate PR if people feel like this should go in now, or I'm happy to leave this open until then. ",
+    "created_on": "2014-04-14T01:09:08.091651+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 813,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/160047e3dd94"
+                }
+            },
+            "hash": "160047e3dd94"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt-3.x",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
+                }
+            },
+            "name": "yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5affa74d80f3"
+                }
+            },
+            "hash": "5affa74d80f3"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1647337"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1647337"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/441/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/441/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/441/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T01:15:18.749316+00:00",
+            "updated_on": "2014-04-14T01:15:18.892120+00:00",
+            "id": 1647337
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1647620"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1647620"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/442/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/442/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/442/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T03:15:19.878395+00:00",
+            "updated_on": "2014-04-14T03:15:20.043199+00:00",
+            "id": 1647620
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1647832"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..47cca121fc80?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1647832"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "What do you think about returning `(None, None)` instead?  I believe that will make a plot without unit labels.  `code_length` is also fine, but if there are no units then we shouldn't plot unit labels at all, I think.\n\n+1 on adding more support for truly unitless data.",
+                "html": "<p>What do you think about returning <code>(None, None)</code> instead?  I believe that will make a plot without unit labels.  <code>code_length</code> is also fine, but if there are no units then we shouldn't plot unit labels at all, I think.</p>\n<p>+1 on adding more support for truly unitless data.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T04:28:07.924246+00:00",
+            "updated_on": "2014-04-14T04:28:07.936493+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 208
+            },
+            "id": 1647832
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1648320"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1648320"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/443/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/443/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/443/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T06:47:16.779900+00:00",
+            "updated_on": "2014-04-14T06:47:16.910464+00:00",
+            "id": 1648320
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1648346"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:9f3e3bf21b95..87fe2e111e03?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1648346"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "yt-fido says `=` is missing here",
+                "html": "<p>yt-fido says <code>=</code> is missing here</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T06:51:10.469863+00:00",
+            "updated_on": "2014-04-14T06:51:10.476976+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": 135
+            },
+            "id": 1648346
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1650907"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1650907"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T12:32:19.268406+00:00",
+            "updated_on": "2014-04-14T12:32:19.409082+00:00",
+            "id": 1650907
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1651062"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1651062"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1647832"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1647832"
+                    }
+                },
+                "id": 1647832
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "I see the point, but then again there are numbers on the axes, so whatever is being plotted is being done over a range in *something*, which will always be defined as the code length. Also, this will be different for different datasets, e.g. for FITS it will always be one pixel, but for Athena datasets it could be the the width of the domain.",
+                "html": "<p>I see the point, but then again there are numbers on the axes, so whatever is being plotted is being done over a range in <em>something</em>, which will always be defined as the code length. Also, this will be different for different datasets, e.g. for FITS it will always be one pixel, but for Athena datasets it could be the the width of the domain.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T12:46:37.787454+00:00",
+            "updated_on": "2014-04-14T12:46:37.796332+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 1651062
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1651069"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Futilities%2Fdecompose.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1651069"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "@samskillman you said you wanted to refactor this?",
+                "html": "<p><a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a> you said you wanted to refactor this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T12:47:25.429482+00:00",
+            "updated_on": "2014-04-14T12:47:25.453104+00:00",
+            "inline": {
+                "from": 52,
+                "path": "yt/utilities/decompose.py",
+                "to": null
+            },
+            "id": 1651069
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1651099"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fdecompose.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1651099"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1651069"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1651069"
+                    }
+                },
+                "id": 1651069
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "I think it *is* refactored below. `fits/data_structures.py` uses `decompose_array_nocopy`. Old version can be removed and burned with fire.",
+                "html": "<p>I think it <em>is</em> refactored below. <code>fits/data_structures.py</code> uses <code>decompose_array_nocopy</code>. Old version can be removed and burned with fire.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T12:50:32.335814+00:00",
+            "updated_on": "2014-04-14T12:50:32.346810+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/decompose.py",
+                "to": null
+            },
+            "id": 1651099
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1652258"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fdecompose.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1652258"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1651099"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1651099"
+                    }
+                },
+                "id": 1651099
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Yes, but @samskillman wanted to simplify the code further and eliminate duplication. I think I've managed to do this now, and it will be in the next update of this PR. ",
+                "html": "<p>Yes, but <a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a> wanted to simplify the code further and eliminate duplication. I think I've managed to do this now, and it will be in the next update of this PR. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T14:35:44.639197+00:00",
+            "updated_on": "2014-04-14T14:35:44.667745+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/decompose.py",
+                "to": null
+            },
+            "id": 1652258
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1652930"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Fanalysis_modules%2Fparticle_trajectories%2Fparticle_trajectories.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1652930"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "This will mean the communicator is always the top at time of import, not at time of execution.  Is that intentional?",
+                "html": "<p>This will mean the communicator is always the top at time of import, not at time of execution.  Is that intentional?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:29:21.318585+00:00",
+            "updated_on": "2014-04-14T15:29:21.330469+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/particle_trajectories/particle_trajectories.py",
+                "to": 26
+            },
+            "id": 1652930
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1652969"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Fanalysis_modules%2Fxyv_cube%2Fxyv_cube.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1652969"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "If you replace this and the subsequent call to `field_info` with `ds._get_field_info` does it work?  I am not saying you have to update, I am just trying to understand for future refactoring of the field info container.",
+                "html": "<p>If you replace this and the subsequent call to <code>field_info</code> with <code>ds._get_field_info</code> does it work?  I am not saying you have to update, I am just trying to understand for future refactoring of the field info container.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:32:29.543986+00:00",
+            "updated_on": "2014-04-14T15:32:29.555047+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/xyv_cube/xyv_cube.py",
+                "to": 84
+            },
+            "id": 1652969
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1652977"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Fanalysis_modules%2Fxyv_cube%2Fxyv_cube.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1652977"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Would you mind changing this to `dd.quantities.extrema`?",
+                "html": "<p>Would you mind changing this to <code>dd.quantities.extrema</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:32:47.293490+00:00",
+            "updated_on": "2014-04-14T15:32:47.305899+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/xyv_cube/xyv_cube.py",
+                "to": 89
+            },
+            "id": 1652977
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1652989"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Fanalysis_modules%2Fxyv_cube%2Fxyv_cube.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1652989"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Do the units here and when setting `v_bnd` all work out okay?",
+                "html": "<p>Do the units here and when setting <code>v_bnd</code> all work out okay?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:33:21.325639+00:00",
+            "updated_on": "2014-04-14T15:33:21.333352+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/xyv_cube/xyv_cube.py",
+                "to": 95
+            },
+            "id": 1652989
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1652990"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fdecompose.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1652990"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1652258"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1652258"
+                    }
+                },
+                "id": 1652258
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Unless @jzuhone has already removed the duplication, I think the right way is to just leave both in for now, then I or anyone else can go through and eliminate the old version from the codebase and replace it with the nocopy versions. I think that can be done in a later PR.  I also think some of the parts could be refactored more for clarity, and the docstrings also need to be updated, both of which I'm happy to tackle in a subsequent PR.",
+                "html": "<p>Unless <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> has already removed the duplication, I think the right way is to just leave both in for now, then I or anyone else can go through and eliminate the old version from the codebase and replace it with the nocopy versions. I think that can be done in a later PR.  I also think some of the parts could be refactored more for clarity, and the docstrings also need to be updated, both of which I'm happy to tackle in a subsequent PR.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:33:24.760288+00:00",
+            "updated_on": "2014-04-14T15:33:24.774166+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/decompose.py",
+                "to": null
+            },
+            "id": 1652990
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1653046"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1653046"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Do we still need this one?",
+                "html": "<p>Do we still need this one?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:37:09.097517+00:00",
+            "updated_on": "2014-04-14T15:37:09.105565+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": 31
+            },
+            "id": 1653046
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1653054"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1653054"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Would you mind making this a comprehension?\n\n```\n'|'.join(re.escape(_) for _ in delimeters)\n```",
+                "html": "<p>Would you mind making this a comprehension?</p>\n<div class=\"codehilite\"><pre><span></span>&#39;|&#39;.join(re.escape(_) for _ in delimeters)\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:38:08.036306+00:00",
+            "updated_on": "2014-04-14T15:38:08.043245+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": 84
+            },
+            "id": 1653054
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1653063"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1653063"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Naked except?",
+                "html": "<p>Naked except?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:38:29.870433+00:00",
+            "updated_on": "2014-04-14T15:38:29.883159+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": 127
+            },
+            "id": 1653063
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1653168"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1653168"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Eventually -- not in this PR -- I want to see all of this wrapped into the `CoordinateHandler` as dynamically-created objects.",
+                "html": "<p>Eventually -- not in this PR -- I want to see all of this wrapped into the <code>CoordinateHandler</code> as dynamically-created objects.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:47:03.399627+00:00",
+            "updated_on": "2014-04-14T15:47:03.410189+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": 141
+            },
+            "id": 1653168
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1653214"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:72c9d17ec11f..5acca4b24803?path=yt%2Ffrontends%2Ffits%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1653214"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Oh, now I see the use of `mpc_conversion`.  Disregard above comment.",
+                "html": "<p>Oh, now I see the use of <code>mpc_conversion</code>.  Disregard above comment.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:50:50.870536+00:00",
+            "updated_on": "2014-04-14T15:50:50.882858+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/data_structures.py",
+                "to": 299
+            },
+            "id": 1653214
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1653264"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1653264"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "This is pretty awesome.  Other than my comments, I am +1.  Do we have files to test with?",
+                "html": "<p>This is pretty awesome.  Other than my comments, I am +1.  Do we have files to test with?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T15:54:35.422422+00:00",
+            "updated_on": "2014-04-14T15:54:35.430267+00:00",
+            "id": 1653264
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1654302"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1654302"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1653264"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1653264"
+                    }
+                },
+                "id": 1653264
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Working on that. I think we will probably be able to use the files we had from last week as part of the test suite. Waiting on confirmation from Adam Leroy.",
+                "html": "<p>Working on that. I think we will probably be able to use the files we had from last week as part of the test suite. Waiting on confirmation from Adam Leroy.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-14T17:20:15.539580+00:00",
+            "updated_on": "2014-04-14T17:20:15.549015+00:00",
+            "id": 1654302
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1671629"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1671629"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-16T10:16:35.855087+00:00",
+            "updated_on": "2014-04-16T10:16:35.973368+00:00",
+            "id": 1671629
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1695067"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1695067"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-18T23:01:32.862401+00:00",
+            "updated_on": "2014-04-18T23:01:32.969681+00:00",
+            "id": 1695067
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1695141"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1695141"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Thanks for the update, @jzuhone !  I will take a look but I agree, this is probably ready to go in once @samskillman can add a bit of docs.",
+                "html": "<p>Thanks for the update, <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> !  I will take a look but I agree, this is probably ready to go in once <a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a> can add a bit of docs.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-18T23:44:45.076205+00:00",
+            "updated_on": "2014-04-18T23:44:45.095443+00:00",
+            "id": 1695141
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1718678"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1718678"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-23T13:20:05.448103+00:00",
+            "updated_on": "2014-04-23T13:20:05.568400+00:00",
+            "id": 1718678
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1722044"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:04c949022477..2dd2d810e60c?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1722044"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Totally not a radio astronomer, but isn't \"beam\" a solid angle?",
+                "html": "<p>Totally not a radio astronomer, but isn't \"beam\" a solid angle?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-23T18:28:25.330386+00:00",
+            "updated_on": "2014-04-23T18:28:25.337566+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": 91
+            },
+            "id": 1722044
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1722072"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1722072"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1722044"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1722044"
+                    }
+                },
+                "id": 1722044
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Yes, that's correct, and it's bugged me. The problem is we don't know the beam size ahead of time. Probably the thing to do is to add the beam unit upon loading the file if it's needed, and make the conversion from beam to solid angle a passed parameter.",
+                "html": "<p>Yes, that's correct, and it's bugged me. The problem is we don't know the beam size ahead of time. Probably the thing to do is to add the beam unit upon loading the file if it's needed, and make the conversion from beam to solid angle a passed parameter.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-23T18:30:15.478505+00:00",
+            "updated_on": "2014-04-23T18:30:15.486828+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": null
+            },
+            "id": 1722072
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1724546"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1724546"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-23T23:31:33.627537+00:00",
+            "updated_on": "2014-04-23T23:31:33.731936+00:00",
+            "id": 1724546
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1734289"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1734289"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/528/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/528/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/528/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-24T21:47:01.412157+00:00",
+            "updated_on": "2014-04-24T21:47:01.526291+00:00",
+            "id": 1734289
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1734550"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1734550"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/529/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/529/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/529/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-24T22:31:46.619484+00:00",
+            "updated_on": "2014-04-24T22:31:47.159290+00:00",
+            "id": 1734550
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1740388"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1740388"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/532/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/532/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/532/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-25T14:46:49.210743+00:00",
+            "updated_on": "2014-04-25T14:46:49.321391+00:00",
+            "id": 1740388
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1745982"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1745982"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-27T15:31:42.999650+00:00",
+            "updated_on": "2014-04-27T15:31:43.124685+00:00",
+            "id": 1745982
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1763962"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1763962"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-29T18:17:18.452832+00:00",
+            "updated_on": "2014-04-29T18:17:18.586299+00:00",
+            "id": 1763962
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1767457"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1767457"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "This PR is awaiting history rewriting to eliminate a handful of new named branches.",
+                "html": "<p>This PR is awaiting history rewriting to eliminate a handful of new named branches.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-30T04:14:14.614860+00:00",
+            "updated_on": "2014-04-30T04:14:14.628014+00:00",
+            "id": 1767457
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813/comments/1773923"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813/_/diff#comment-1773923"
+                }
+            },
+            "pullrequest": {
+                "title": "FITS frontend work, XYVCube analysis module, updates to Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/813"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/813"
+                    }
+                },
+                "id": 813
+            },
+            "content": {
+                "raw": "I'm declining this PR, not because it's not good (it is) but because @jzuhone is going to issue one from a new history.",
+                "html": "<p>I'm declining this PR, not because it's not good (it is) but because <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> is going to issue one from a new history.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-04-30T17:47:46.402977+00:00",
+            "updated_on": "2014-04-30T17:47:46.415081+00:00",
+            "id": 1773923
+        }
+    ]
+}

@@ -1,0 +1,1460 @@
+{
+    "reason": "I'm declining this pull request, as I have ported most of the functionality to the yt-3.0 code base.  This will also make it considerably easier to maintain as well as to implement the varying refinement factors the Chris mentioned.  I will be opening a pull request shortly for yt 3.0.",
+    "state": "DECLINED",
+    "updated_on": "2013-09-25T22:38:40.860843+00:00",
+    "comment_count": 22,
+    "description": "This is a work-in-progress pull request for Boxlib rewrites.\r\n\r\nI have taken the Orion frontend as a starting point and rewritten essentially all of it, although using the original implementation as a guide.  I have implemented Maestro, Castro and Orion detection, although the Maestro/Castro division was only done via finding the fortran parameters.\r\n\r\nThere are several TODOs:\r\n\r\n * Check that Orion particles are working (I do not have a dataset with particles)\r\n * Port Nyx (I do not have a recent Nyx dataset, all of mine say 'Castro')\r\n * Additional cleanups to the code\r\n * Adding frontend-specific units and fields, which likely exist in the extant frontends\r\n * Remove the old frontend directories and imports in yt.mods\r\n\r\nNote that I am not sure that we should remove the old frontends in advance of the 2.6 release.\r\n\r\nI have added a few people as reviewers.  Here is a script that I have run on Orion, Maestro and Castro datasets:\r\n\r\nhttp://paste.yt-project.org/show/3464/\r\n\r\nThis should, without changing how things are loaded, check that the Boxlib frontend itself is working correctly.  To test \"load\" and getting the particles correct, you must comment out all of the lines that import any Boxlib frontends (Nyx, Maestro, Castro, Orion) in `yt/mods.py` and then you can run a script like this:\r\n\r\nhttp://paste.yt-project.org/show/3465/\r\n\r\nFor me, this works, but note that the Maestro detection relies on `probins` existing.  (This can be easily changed.)\r\n\r\nI believe that all of the non-Nyx frontends should see performance improvements with this change, both memory and IO-wise.  Nyx will see a memory improvement for large hierarchies.\r\n\r\nIf I could get some feedback on this, it would be greatly appreciated.  Furthermore, as long as we don't commit and changes to `yt/mods.py` this should be fine to pull from and use.  So I think a good strategy would be initial review and completing the first few steps (including porting Nyx) and then we can iterate on expanding support in the `boxlib` frontend for the specific code types.  Once that has completed, we can remove the old frontend code and standardize here.\r\n\r\nUPDATE 1: Addressing Andrew's comments and a few other minor changes.\r\n\r\nUPDATE 2: Merging from mainline yt development, although I intend to make this a part of yt 3.0 rather than 2.x.",
+    "created_on": "2013-05-17T19:09:01.617534+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Consolidation of Boxlib frontends",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 501,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/857371033baf"
+                }
+            },
+            "hash": "857371033baf"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b154dfce6acc"
+                }
+            },
+            "hash": "b154dfce6acc"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258713"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258713"
+                }
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "One thing I should note is that \"inputs\", \"probin\" and \"job_info\" are now optional.  If they are not provided, those parameters will not be available and the `load` operation will return a BoxlibStaticOutput.  So anything that needs the input file won't be available, but I found that was the vast minority of items used within yt itself.",
+                "html": "<p>One thing I should note is that \"inputs\", \"probin\" and \"job_info\" are now optional.  If they are not provided, those parameters will not be available and the <code>load</code> operation will return a BoxlibStaticOutput.  So anything that needs the input file won't be available, but I found that was the vast minority of items used within yt itself.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T19:44:54.400766+00:00",
+            "updated_on": "2013-05-17T19:44:54.406781+00:00",
+            "id": 258713
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258732"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:df481f0f2226..03c08d0a79ca?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258732"
+                }
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "This chokes on parsing the inputs file for me unless I also look for (lowercase) \"e+\" and \"e-\"",
+                "html": "<p>This chokes on parsing the inputs file for me unless I also look for (lowercase) \"e+\" and \"e-\"</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:08:24.329325+00:00",
+            "updated_on": "2013-05-17T20:08:24.342957+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": 407
+            },
+            "id": 258732
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258740"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258740"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258732"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258732"
+                    }
+                },
+                "id": 258732
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Oh, weird.  We should change to `sym in v.upper()` I think.",
+                "html": "<p>Oh, weird.  We should change to <code>sym in v.upper()</code> I think.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:11:35.708495+00:00",
+            "updated_on": "2013-05-17T20:11:35.715286+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 258740
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258741"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:df481f0f2226..03c08d0a79ca?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258741"
+                }
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "I need \"self.directory = pf.fullpath\" here as well.",
+                "html": "<p>I need \"self.directory = pf.fullpath\" here as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:11:38.216205+00:00",
+            "updated_on": "2013-05-17T20:11:38.223321+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": 113
+            },
+            "id": 258741
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258744"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258744"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258741"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258741"
+                    }
+                },
+                "id": 258741
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Can you point me to where the error pops up?  (I don't mind putting it here, but I wanted to make sure I am not missing other things.)",
+                "html": "<p>Can you point me to where the error pops up?  (I don't mind putting it here, but I wanted to make sure I am not missing other things.)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:15:01.055704+00:00",
+            "updated_on": "2013-05-17T20:15:01.064440+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 258744
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258749"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258749"
+                }
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Hi Matt,\n\nThanks a bunch for doing this. With the two changes below, I'm able to at least starting making projections through one of my datasets with your first script. I'll let you know how the particle testing goes.",
+                "html": "<p>Hi Matt,</p>\n<p>Thanks a bunch for doing this. With the two changes below, I'm able to at least starting making projections through one of my datasets with your first script. I'll let you know how the particle testing goes.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:15:50.952015+00:00",
+            "updated_on": "2013-05-17T20:15:50.959878+00:00",
+            "id": 258749
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258751"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258751"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258744"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258744"
+                    }
+                },
+                "id": 258744
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "The traceback was:\n\nTraceback (most recent call last):\n  File \"load_test.py\", line 7, in <module>\n    for field in pf_s.h.field_list:\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/data_objects/static_output.py\", line 193, in hierarchy\n    self, data_style=self.data_style)\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/frontends/boxlib/data_structures.py\", line 115, in __init__\n    AMRHierarchy.__init__(self, pf, data_style)\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/data_objects/hierarchy.py\", line 59, in __init__\n    self._initialize_data_storage()\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/data_objects/hierarchy.py\", line 232, in _initialize_data_storage\n    if os.path.isfile(os.path.join(self.directory,\nAttributeError: 'BoxlibHierarchy' object has no attribute 'directory'",
+                "html": "<p>The traceback was:</p>\n<p>Traceback (most recent call last):\n  File \"load_test.py\", line 7, in &lt;module&gt;\n    for field in pf_s.h.field_list:\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/data_objects/static_output.py\", line 193, in hierarchy\n    self, data_style=self.data_style)\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/frontends/boxlib/data_structures.py\", line 115, in <strong>init</strong>\n    AMRHierarchy.<strong>init</strong>(self, pf, data_style)\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/data_objects/hierarchy.py\", line 59, in <strong>init</strong>\n    self._initialize_data_storage()\n  File \"/home1/atmyers/yt-x86_64/src/yt-hg/yt/data_objects/hierarchy.py\", line 232, in _initialize_data_storage\n    if os.path.isfile(os.path.join(self.directory,\nAttributeError: 'BoxlibHierarchy' object has no attribute 'directory'</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:17:16.557900+00:00",
+            "updated_on": "2013-05-17T20:17:16.566643+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 258751
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258758"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258758"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258751"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258751"
+                    }
+                },
+                "id": 258751
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "@atmyers for future reference, you can put tracebacks in python code blocks and it makes them much more readable.",
+                "html": "<p><a href=\"/atmyers/\" rel=\"nofollow\" title=\"@atmyers\" class=\"mention\">Andrew Myers</a> for future reference, you can put tracebacks in python code blocks and it makes them much more readable.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:19:34.367728+00:00",
+            "updated_on": "2013-05-17T20:19:34.391010+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 258758
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258761"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258761"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258740"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258740"
+                    }
+                },
+                "id": 258740
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Yes, that works as well.",
+                "html": "<p>Yes, that works as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:21:51.901134+00:00",
+            "updated_on": "2013-05-17T20:21:51.909358+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 258761
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258764"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:None..None?path=yt%2Ffrontends%2Fboxlib%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258764"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258758"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258758"
+                    }
+                },
+                "id": 258758
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Hi Nathan,\n\nThanks, noted!",
+                "html": "<p>Hi Nathan,</p>\n<p>Thanks, noted!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T20:24:29.262424+00:00",
+            "updated_on": "2013-05-17T20:24:29.271681+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/boxlib/data_structures.py",
+                "to": null
+            },
+            "id": 258764
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258839"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258839"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258749"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258749"
+                    }
+                },
+                "id": 258749
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "I had to change some stuff get particles working in Orion with the new frontend. Checkout changeset 6718ba4280eb of my repo at https://bitbucket.org/atmyers/yt-clean ",
+                "html": "<p>I had to change some stuff get particles working in Orion with the new frontend. Checkout changeset <a href=\"/yt_analysis/yt/commits/6718ba4280eb\" rel=\"nofollow\">6718ba4280eb</a> of my repo at <a href=\"https://bitbucket.org/atmyers/yt-clean\" rel=\"nofollow\">https://bitbucket.org/atmyers/yt-clean</a> </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T21:32:15.108043+00:00",
+            "updated_on": "2013-05-17T21:32:15.127836+00:00",
+            "id": 258839
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258888"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258888"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258839"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258839"
+                    }
+                },
+                "id": 258839
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Hi @atmyers those mostly look good to me -- I will pull them in.  Do any of the small datasets have particles?  (is the format simple enough I could tack them on to the ones I have?)",
+                "html": "<p>Hi <a href=\"/atmyers/\" rel=\"nofollow\" title=\"@atmyers\" class=\"mention\">Andrew Myers</a> those mostly look good to me -- I will pull them in.  Do any of the small datasets have particles?  (is the format simple enough I could tack them on to the ones I have?)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-17T21:59:30.076416+00:00",
+            "updated_on": "2013-05-17T21:59:30.089443+00:00",
+            "id": 258888
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/259096"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-259096"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/258888"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-258888"
+                    }
+                },
+                "id": 258888
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Hi Matthew Turk,\n\nIt's pretty simple. I scaled the position data in [this StarParticle file](https://www.dropbox.com/s/0f2bgz7qw1ji6mi/StarParticles) to the domain boundaries of the RadTube dataset you already have. You should be able to put this file at pltXXXXX/StarParticles and read them in normally.\n",
+                "html": "<p>Hi Matthew Turk,</p>\n<p>It's pretty simple. I scaled the position data in <a href=\"https://www.dropbox.com/s/0f2bgz7qw1ji6mi/StarParticles\">this StarParticle file</a> to the domain boundaries of the RadTube dataset you already have. You should be able to put this file at pltXXXXX/StarParticles and read them in normally.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-18T06:26:12.627524+00:00",
+            "updated_on": "2013-05-18T06:26:12.638524+00:00",
+            "id": 259096
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261064"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261064"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/259096"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-259096"
+                    }
+                },
+                "id": 259096
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "@atmyers I had a few questions about your [changes](https://bitbucket.org/atmyers/yt-clean/commits/6718ba4280eb0a5439fc82b7377919b1ec51ef65).  You've added back in the definition of a `read` function -- is that necessary?  And do we need to do something about setting the IO handler class, which you've added but commented out?",
+                "html": "<p><a href=\"/atmyers/\" rel=\"nofollow\" title=\"@atmyers\" class=\"mention\">Andrew Myers</a> I had a few questions about your <a href=\"https://bitbucket.org/atmyers/yt-clean/commits/6718ba4280eb0a5439fc82b7377919b1ec51ef65\">changes</a>.  You've added back in the definition of a <code>read</code> function -- is that necessary?  And do we need to do something about setting the IO handler class, which you've added but commented out?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-20T15:51:47.617024+00:00",
+            "updated_on": "2013-05-20T15:51:47.631418+00:00",
+            "id": 261064
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261181"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261181"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261064"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261064"
+                    }
+                },
+                "id": 261064
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Matthew Turk,\n\nThe read function gets used in lines 93-95 of io.py. I'm fine with doing this differently if this is bad style, but I thought it made it those lines a bit more readable. \n\nOn the IO Handler, I added that in and and later realized we didn't we don't need it. It will actually get set in the base Hierarachy class as long as long as the data_style is correctly set to orion_native. We should probably just remove the line. \n\n\n\n",
+                "html": "<p>Matthew Turk,</p>\n<p>The read function gets used in lines 93-95 of io.py. I'm fine with doing this differently if this is bad style, but I thought it made it those lines a bit more readable. </p>\n<p>On the IO Handler, I added that in and and later realized we didn't we don't need it. It will actually get set in the base Hierarachy class as long as long as the data_style is correctly set to orion_native. We should probably just remove the line. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-20T16:39:48.840957+00:00",
+            "updated_on": "2013-05-20T16:39:48.849736+00:00",
+            "id": 261181
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261191"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261191"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261181"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261181"
+                    }
+                },
+                "id": 261181
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Oh, I missed the usage of the read function.  Thanks!\n\nI've received a recent Nyx file (although @caseywstark also told me it's very low priority to do work on yt+Nyx) so I will be able to test with this on it.  So I think what remains, once we perform cleanups:\n\n * Set up units uniformly as they were before, and then figure out units moving forward\n * Clean up any leftovers in the fields/definitions\n * Test Nyx\n\nOne question that came up: should we simply replace the old frontends, and have them import from and override boxlib?  Or should they all be located in the boxlib directory?  Initially I thought we should do the second (which is why it is that way in the code), but I am coming to think we should keep them all in their own directories and import from `yt.frontends.boxlib`.  @atmyers what do you think?",
+                "html": "<p>Oh, I missed the usage of the read function.  Thanks!</p>\n<p>I've received a recent Nyx file (although <a href=\"/caseywstark/\" rel=\"nofollow\" title=\"@caseywstark\" class=\"mention\">Casey Stark</a> also told me it's very low priority to do work on yt+Nyx) so I will be able to test with this on it.  So I think what remains, once we perform cleanups:</p>\n<ul>\n<li>Set up units uniformly as they were before, and then figure out units moving forward</li>\n<li>Clean up any leftovers in the fields/definitions</li>\n<li>Test Nyx</li>\n</ul>\n<p>One question that came up: should we simply replace the old frontends, and have them import from and override boxlib?  Or should they all be located in the boxlib directory?  Initially I thought we should do the second (which is why it is that way in the code), but I am coming to think we should keep them all in their own directories and import from <code>yt.frontends.boxlib</code>.  <a href=\"/atmyers/\" rel=\"nofollow\" title=\"@atmyers\" class=\"mention\">Andrew Myers</a> what do you think?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-20T16:42:50.052245+00:00",
+            "updated_on": "2013-05-20T16:42:50.087291+00:00",
+            "id": 261191
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/caseywstark"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/caseywstark/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/caseywstark/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Casey Stark",
+                "uuid": "{f4055fc4-bdcf-427f-8a5e-0a401f5bc756}",
+                "username": "caseywstark"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261220"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261220"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261191"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261191"
+                    }
+                },
+                "id": 261191
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "I would say replace and inherit from the boxlib data structures if possible. And it would make the most sense for those to be grouped with the main boxlib frontend. `yt.frontends.boxlib.code` looks right to me.",
+                "html": "<p>I would say replace and inherit from the boxlib data structures if possible. And it would make the most sense for those to be grouped with the main boxlib frontend. <code>yt.frontends.boxlib.code</code> looks right to me.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-20T16:56:14.139915+00:00",
+            "updated_on": "2013-05-20T16:56:14.268617+00:00",
+            "id": 261220
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261245"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261245"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/261191"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-261191"
+                    }
+                },
+                "id": 261191
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "I don't have a strong preference either way, but I think it's probably easier for a hypothetical newcomer interested in adding support for a new Boxlib code if everything is stored in the same directory. ",
+                "html": "<p>I don't have a strong preference either way, but I think it's probably easier for a hypothetical newcomer interested in adding support for a new Boxlib code if everything is stored in the same directory. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-20T17:09:35.158010+00:00",
+            "updated_on": "2013-05-20T17:09:35.167441+00:00",
+            "id": 261245
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ChrisMalone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ChrisMalone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ChrisMalone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Chris Malone",
+                "uuid": "{eab958cf-edbf-44db-8a2e-8b8ed90af67f}",
+                "username": "ChrisMalone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/266388"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-266388"
+                }
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "The following assertion in ```_parse_header_file()``` is causing a failure with one of my Castro datasets:\n\n\n```\n#!python\n\n# We can't vary refinement factors based on dimension, or whatever else \n# they are vaied on.  In one curious thing, I found that some Castro 3D \n# data has only two refinement factors, which I don't know how to       \n# understand.                                                           \nassert(np.unique(ref_factors).size == 1)     \n```\n\nI include the comment because I think there is some confusion here.  The refinement ratio is the jump in resolution between a coarse grid and a fine grid, and it is the same in all dimensions.  In the Header file, there is one value (either 2 or 4 in Castro; just 2 in Maestro, iirc) for each jump between levels.  In Castro, the jump does not have to be the same between all levels.  For instance, my particular problem set has \"2 4 4\" \n\nI'm not sure how this plays in with what other codes are doing.",
+                "html": "<p>The following assertion in <code>_parse_header_file()</code> is causing a failure with one of my Castro datasets:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"c1\"># We can&#39;t vary refinement factors based on dimension, or whatever else </span>\n<span class=\"c1\"># they are vaied on.  In one curious thing, I found that some Castro 3D </span>\n<span class=\"c1\"># data has only two refinement factors, which I don&#39;t know how to       </span>\n<span class=\"c1\"># understand.                                                           </span>\n<span class=\"k\">assert</span><span class=\"p\">(</span><span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">unique</span><span class=\"p\">(</span><span class=\"n\">ref_factors</span><span class=\"p\">)</span><span class=\"o\">.</span><span class=\"n\">size</span> <span class=\"o\">==</span> <span class=\"mi\">1</span><span class=\"p\">)</span>     \n</pre></div>\n\n\n<p>I include the comment because I think there is some confusion here.  The refinement ratio is the jump in resolution between a coarse grid and a fine grid, and it is the same in all dimensions.  In the Header file, there is one value (either 2 or 4 in Castro; just 2 in Maestro, iirc) for each jump between levels.  In Castro, the jump does not have to be the same between all levels.  For instance, my particular problem set has \"2 4 4\" </p>\n<p>I'm not sure how this plays in with what other codes are doing.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-22T18:56:23.264897+00:00",
+            "updated_on": "2013-05-22T18:56:23.272514+00:00",
+            "id": 266388
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/266395"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-266395"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/266388"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-266388"
+                    }
+                },
+                "id": 266388
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "Hi Chris, thanks for testing this.  Adding support for variable-by-level refinement is something I have thought about, but I did not realize any of the codes that we nominally support used that.  Right now, we have a global `refine_by` parameter, and the delta-size between levels is assumed to be `refine_by**delta_level`.  I have to think about where this comes in before changing the behavior, but it seems we need to now.",
+                "html": "<p>Hi Chris, thanks for testing this.  Adding support for variable-by-level refinement is something I have thought about, but I did not realize any of the codes that we nominally support used that.  Right now, we have a global <code>refine_by</code> parameter, and the delta-size between levels is assumed to be <code>refine_by**delta_level</code>.  I have to think about where this comes in before changing the behavior, but it seems we need to now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-22T18:58:24.057767+00:00",
+            "updated_on": "2013-05-22T18:58:24.069635+00:00",
+            "id": 266395
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ChrisMalone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ChrisMalone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ChrisMalone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Chris Malone",
+                "uuid": "{eab958cf-edbf-44db-8a2e-8b8ed90af67f}",
+                "username": "ChrisMalone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/266413"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-266413"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/266395"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-266395"
+                    }
+                },
+                "id": 266395
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "In principle I think all of BoxLib supports this, however it is up to the\nindividual codes whether or not they allow it. I know Maestro currently\nonly supports a jump of 2.  I also think mine is the only Castro simulation\nto really use this feature.\n\nSounds like it might be more of a headache to worry about implementing than\nwhat it is actually worth, currently.\n",
+                "html": "<p>In principle I think all of BoxLib supports this, however it is up to the\nindividual codes whether or not they allow it. I know Maestro currently\nonly supports a jump of 2.  I also think mine is the only Castro simulation\nto really use this feature.</p>\n<p>Sounds like it might be more of a headache to worry about implementing than\nwhat it is actually worth, currently.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-05-22T19:05:05.489339+00:00",
+            "updated_on": "2013-05-22T19:05:05.514061+00:00",
+            "id": 266413
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501/comments/606547"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501/_/diff#comment-606547"
+                }
+            },
+            "pullrequest": {
+                "title": "Consolidation of Boxlib frontends",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/501"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/501"
+                    }
+                },
+                "id": 501
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-09-25T19:08:54.346710+00:00",
+            "updated_on": "2013-09-25T19:08:54.470488+00:00",
+            "id": 606547
+        }
+    ]
+}

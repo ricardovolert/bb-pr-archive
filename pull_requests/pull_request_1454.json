@@ -1,0 +1,1257 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-02-13T18:47:35.236789+00:00",
+    "comment_count": 19,
+    "description": "The existing `hide_axes()` and `hide_colorbar()` functions on the `ImagePlotMPL` class are useful, but they shift the visible part of the plot around in order to hide the axis labels and colorbar, which sometimes results in lopsided images.  This is an attempt to clean this up by retaining some amount of the border around the image.  I also added docstrings and comments throughout this chunk of code as I went along.  \r\n\r\nThis does not change the old API, but it does slightly change the results you get out of the `hide_axes()` and `hide_colorbar()` functions.  \r\n\r\nBelow shows the difference between the old implementation and the new implementation (I include a gray facecolor so that you can easily see the boundaries of the image).  Here is the code I use:\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nds = yt.load(\"enzo_tiny_cosmology/DD0040/DD0040\")\r\n\r\np = yt.ProjectionPlot(ds, 'z', \"density\")\r\np.set_zlim('density', 1e-5, 1e0)\r\np.save(\"test_0.png\", mpl_kwargs={'facecolor':'gray'})\r\np.hide_axes()\r\np.save(\"test_1.png\", mpl_kwargs={'facecolor':'gray'})\r\np.hide_colorbar()\r\np.save(\"test_2.png\", mpl_kwargs={'facecolor':'gray'})\r\np.show_axes()\r\np.save(\"test_3.png\", mpl_kwargs={'facecolor':'gray'})\r\np.show_colorbar()\r\np.save(\"test_4.png\", mpl_kwargs={'facecolor':'gray'})\r\n```\r\n\r\nAnd the resulting images from the old way:\r\n![test_0.png](https://bitbucket.org/repo/MrnBzM/images/1177653451-test_0.png)\r\n![test_1.png](https://bitbucket.org/repo/MrnBzM/images/2784157799-test_1.png)\r\n![test_2.png](https://bitbucket.org/repo/MrnBzM/images/645027257-test_2.png)\r\n![test_3.png](https://bitbucket.org/repo/MrnBzM/images/1871544705-test_3.png)\r\n![test_4.png](https://bitbucket.org/repo/MrnBzM/images/1097468069-test_4.png)\r\n\r\nAnd the resulting images using the code from this PR:\r\n![test_0.png](https://bitbucket.org/repo/MrnBzM/images/2657977938-test_0.png)\r\n![test_1.png](https://bitbucket.org/repo/MrnBzM/images/1513528419-test_1.png)\r\n![test_2.png](https://bitbucket.org/repo/BXbAb/images/1956559999-test_2.png)\r\n![test_3.png](https://bitbucket.org/repo/MrnBzM/images/1353494771-test_3.png)\r\n![test_4.png](https://bitbucket.org/repo/MrnBzM/images/3260423894-test_4.png)\r\n\r\nUPDATE1:  Removed `hide_all()` and `show_all()` as per my discussion with @ngoldbaum .  This fucntionality goes back to occurring when you've hid both the colorbar and the axes.  Also exposed this functionality at the higher level of the PlotWindow.  I've updated the docstrings, the cookbook recipes, the narrative docs, and added tests for this functionality.\r\n\r\nUPDATE2: Modified docstrings for more accuracy thanks to @ngoldbaum .  Made tests save output figures according to suggestions from @ngoldbaum .  Thanks for the help to make this better!",
+    "created_on": "2015-02-11T22:22:41.069901+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 1454,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/7f23c2391830"
+                }
+            },
+            "hash": "7f23c2391830"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/9e13e78b271a"
+                }
+            },
+            "hash": "9e13e78b271a"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097621"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:2d72279e7ffb..9e13e78b271a?path=yt%2Fvisualization%2Fbase_plot_types.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097621"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Upper right?",
+                "html": "<p>Upper right?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:24:59.767648+00:00",
+            "updated_on": "2015-02-11T22:24:59.778691+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/base_plot_types.py",
+                "to": 204
+            },
+            "id": 5097621
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097635"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097635"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Well, I for one both didn't know we had these options *and* totally want to use them.  Nice work.",
+                "html": "<p>Well, I for one both didn't know we had these options <em>and</em> totally want to use them.  Nice work.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:25:34.580831+00:00",
+            "updated_on": "2015-02-11T22:25:34.595055+00:00",
+            "id": 5097635
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097639"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:2d72279e7ffb..9e13e78b271a?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097639"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Why is this new attribute necessary?  Isn't it the same as `_draw_axes` and `_draw_colorbar` being set to True?",
+                "html": "<p>Why is this new attribute necessary?  Isn't it the same as <code>_draw_axes</code> and <code>_draw_colorbar</code> being set to True?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:25:49.195816+00:00",
+            "updated_on": "2015-02-11T22:25:49.214098+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 1728
+            },
+            "id": 5097639
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097662"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097662"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "As the person who originally added this stuff, thanks for looking over and improving it. I'm not sure why the images are cut off right now - they shouldn't be and the last time I looked at this they weren't - but thanks for fixing it!\n\nWhat do you think about exposing this functionality at the level of the `PWViewerMPL` object?",
+                "html": "<p>As the person who originally added this stuff, thanks for looking over and improving it. I'm not sure why the images are cut off right now - they shouldn't be and the last time I looked at this they weren't - but thanks for fixing it!</p>\n<p>What do you think about exposing this functionality at the level of the <code>PWViewerMPL</code> object?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:27:17.381149+00:00",
+            "updated_on": "2015-02-11T22:27:17.390195+00:00",
+            "id": 5097662
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097733"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097733"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097639"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097639"
+                    }
+                },
+                "id": 5097639
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Not quite.  In the old way, to make a naked_image you would simply set `_draw_axes` and `_draw_colorbar` to True.  But by modifying `draw_axes()` and `draw_colorbar()` to now enable a small border space around the plot, it no longer allows you to have a totally naked image.  The `_naked_image` attribute makes sure the extra border around the figure is exactly 0.",
+                "html": "<p>Not quite.  In the old way, to make a naked_image you would simply set <code>_draw_axes</code> and <code>_draw_colorbar</code> to True.  But by modifying <code>draw_axes()</code> and <code>draw_colorbar()</code> to now enable a small border space around the plot, it no longer allows you to have a totally naked image.  The <code>_naked_image</code> attribute makes sure the extra border around the figure is exactly 0.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:30:07.959759+00:00",
+            "updated_on": "2015-02-11T22:30:07.978654+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 5097733
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097747"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fbase_plot_types.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097747"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097621"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097621"
+                    }
+                },
+                "id": 5097621
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Oh, maybe I'm messed up here.  I thought MPL was going from upper left to lower right in its axis range.",
+                "html": "<p>Oh, maybe I'm messed up here.  I thought MPL was going from upper left to lower right in its axis range.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:30:35.519812+00:00",
+            "updated_on": "2015-02-11T22:30:35.528577+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/base_plot_types.py",
+                "to": null
+            },
+            "id": 5097747
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097769"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097769"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097662"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097662"
+                    }
+                },
+                "id": 5097662
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "I only started using this functionality recently and found this problem, so I thought I'd just fix it up.  Thanks for originally putting this in the code, as it's super useful!\n\nI'm happy to expose this at a higher level, but I'll talk to you offline about doing this.",
+                "html": "<p>I only started using this functionality recently and found this problem, so I thought I'd just fix it up.  Thanks for originally putting this in the code, as it's super useful!</p>\n<p>I'm happy to expose this at a higher level, but I'll talk to you offline about doing this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:31:38.344418+00:00",
+            "updated_on": "2015-02-11T22:31:38.355740+00:00",
+            "id": 5097769
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097840"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097840"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097733"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097733"
+                    }
+                },
+                "id": 5097733
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "I see.  I'd personally prefer to not have the new `hide_all` and `show_all` methods and instead just set the borders to zero width when `_draw_axes` and `_draw_colorbar` are set.  I don't think the borders are particularly useful unless we need to make space for axes labels, and I prefer to minimize them as much as possible.  What do you think?",
+                "html": "<p>I see.  I'd personally prefer to not have the new <code>hide_all</code> and <code>show_all</code> methods and instead just set the borders to zero width when <code>_draw_axes</code> and <code>_draw_colorbar</code> are set.  I don't think the borders are particularly useful unless we need to make space for axes labels, and I prefer to minimize them as much as possible.  What do you think?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:35:56.414135+00:00",
+            "updated_on": "2015-02-11T22:35:56.424207+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 5097840
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097943"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fbase_plot_types.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097943"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097747"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097747"
+                    }
+                },
+                "id": 5097747
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "yup, it's upper right: http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure.add_axes",
+                "html": "<p>yup, it's upper right: <a href=\"http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure.add_axes\" rel=\"nofollow\">http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure.add_axes</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:40:37.857089+00:00",
+            "updated_on": "2015-02-11T22:40:37.869594+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/base_plot_types.py",
+                "to": null
+            },
+            "id": 5097943
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097969"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fbase_plot_types.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097969"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097943"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097943"
+                    }
+                },
+                "id": 5097943
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Thanks for the fix.",
+                "html": "<p>Thanks for the fix.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:42:02.645390+00:00",
+            "updated_on": "2015-02-11T22:42:02.656653+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/base_plot_types.py",
+                "to": null
+            },
+            "id": 5097969
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5098047"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5098047"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5097840"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5097840"
+                    }
+                },
+                "id": 5097840
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "I understand what you're saying, but setting the borders to zero width is what is currently being done, which as you can see, gives lopsided images and sometimes cuts off the colorbar labels and axis labels when they extend all the way to the edge.  Also, there is a `top_buff_size` attribute that always keeps some border space on the top (presumably for when you use the `annotate_title()` callback), which means you always have whitespace on the top but not elsewhere.  I just tried to keep the surrounding border to be the same width as the `top_buff_size` resulting in a minimal, yet clean-looking image.  Going super minimal is what the `hide_all()` function is all about.",
+                "html": "<p>I understand what you're saying, but setting the borders to zero width is what is currently being done, which as you can see, gives lopsided images and sometimes cuts off the colorbar labels and axis labels when they extend all the way to the edge.  Also, there is a <code>top_buff_size</code> attribute that always keeps some border space on the top (presumably for when you use the <code>annotate_title()</code> callback), which means you always have whitespace on the top but not elsewhere.  I just tried to keep the surrounding border to be the same width as the <code>top_buff_size</code> resulting in a minimal, yet clean-looking image.  Going super minimal is what the <code>hide_all()</code> function is all about.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T22:46:29.282084+00:00",
+            "updated_on": "2015-02-11T22:46:29.291795+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 5098047
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5098943"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5098943"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1974/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1974/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1974/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-11T23:54:56.847288+00:00",
+            "updated_on": "2015-02-11T23:54:57.133175+00:00",
+            "id": 5098943
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5099767"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:8b3539697990..9e13e78b271a?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5099767"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "string or list of strings",
+                "html": "<p>string or list of strings</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-12T01:04:25.753465+00:00",
+            "updated_on": "2015-02-12T01:04:25.763577+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 977
+            },
+            "id": 5099767
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5099771"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:8b3539697990..9e13e78b271a?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5099771"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "string or list of strings",
+                "html": "<p>string or list of strings</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-12T01:04:38.001369+00:00",
+            "updated_on": "2015-02-12T01:04:38.010694+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 1013
+            },
+            "id": 5099771
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5099789"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:8b3539697990..9e13e78b271a?path=yt%2Fvisualization%2Ftests%2Ftest_plotwindow.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5099789"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Can you save the plots after toggling?  You'll need to make sure you're running in a temporary folder that gets cleaned.  The worry is that some of the plotting code that checks whether matplotlib is getting a valid plots only gets triggered on the matplotlib side when the plot is actually saved to disk.",
+                "html": "<p>Can you save the plots after toggling?  You'll need to make sure you're running in a temporary folder that gets cleaned.  The worry is that some of the plotting code that checks whether matplotlib is getting a valid plots only gets triggered on the matplotlib side when the plot is actually saved to disk.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-12T01:05:52.621193+00:00",
+            "updated_on": "2015-02-12T01:05:52.634779+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/tests/test_plotwindow.py",
+                "to": 192
+            },
+            "id": 5099789
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5099794"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5099794"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Besides the nits this looks great!  Thanks for the awesome work Cameron.",
+                "html": "<p>Besides the nits this looks great!  Thanks for the awesome work Cameron.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-12T01:06:12.345729+00:00",
+            "updated_on": "2015-02-12T01:06:12.361797+00:00",
+            "id": 5099794
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5100339"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5100339"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-12T01:49:51.383085+00:00",
+            "updated_on": "2015-02-12T01:49:51.690945+00:00",
+            "id": 5100339
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5100341"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5100341"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5099767"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5099767"
+                    }
+                },
+                "id": 5099767
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "Now that I think about it, it's really \"string, field tuple, or list of strings or field tuples\".",
+                "html": "<p>Now that I think about it, it's really \"string, field tuple, or list of strings or field tuples\".</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-12T01:50:45.500523+00:00",
+            "updated_on": "2015-02-12T01:50:45.512502+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 5100341
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454/comments/5102564"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454/_/diff#comment-5102564"
+                }
+            },
+            "pullrequest": {
+                "title": "Modifying the .hide_axes() and .hide_colorbar() functionality to make cleaner looking images",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1454"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1454"
+                    }
+                },
+                "id": 1454
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-12T06:35:10.564583+00:00",
+            "updated_on": "2015-02-12T06:35:11.184839+00:00",
+            "id": 5102564
+        }
+    ]
+}

@@ -1,0 +1,1928 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-05-06T02:13:12.450134+00:00",
+    "comment_count": 30,
+    "description": "This implements round-trip unit conversions to [AstroPy's unit system](http://astropy.readthedocs.org/en/latest/units/). Examples:\r\n\r\n```\r\n#!python\r\n\r\nfrom astropy import units as u\r\nx = 42.0 * u.meter\r\ny = YTQuantity(x)\r\n\r\nprint x, type(x)\r\nprint y, type(y)\r\n```\r\n```\r\n#!pycon\r\n42.0 m <class \"astropy.units.quantity.Quantity\">\r\n42.0 m <class \"yt.units.yt_array.YTQuantity\">\r\n```\r\n```\r\n#!python\r\na = np.random.random(size=10) * u.km/u.s\r\nb = YTArray(a)\r\nprint a, type(a)\r\nprint b, type(b)\r\n```\r\n```\r\n#!pycon\r\n[ 0.22853881  0.02399465  0.1514152   0.23679105  0.24168075  0.42369629\r\n  0.63721029  0.04026126  0.57501992  0.79249175] km / s <class \"astropy.units.quantity.Quantity\">\r\n[ 0.22853881  0.02399465  0.1514152   0.23679105  0.24168075  0.42369629\r\n  0.63721029  0.04026126  0.57501992  0.79249175] km/s <class \"yt.units.yt_array.YTArray\">\r\n```\r\nI also added a short section about this to the unit docs and a simple test. For folks without AstroPy installed, all of this should be safe and shouldn't raise any errors (with the exception of running the units notebook, the last cells of which require AstroPy). \r\n\r\nA few other things:\r\n\r\n1) Because of the large number of places where AstroPy was being imported, I decided to move it from the FITS frontend to a new module for on-demand imports.    \r\n2) Added a `Dataset`-specific `add_field` method.  \r\n3) Cleaned up a few other FITS-specifc things.   \r\n\r\nUPDATE: Fixed some bugs from the previous PR and responded to Matt and Nathan's suggestions.\r\n\r\nUPDATE 2: Added a from_astropy classmethod that __new__ uses, but may also be used by itself. ",
+    "created_on": "2014-05-05T14:17:10.915717+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/907cb91838fe"
+            }
+        },
+        "hash": "907cb91838fe"
+    },
+    "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 879,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/917b239cc5cd"
+                }
+            },
+            "hash": "917b239cc5cd"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt-3.x",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
+                }
+            },
+            "name": "yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ffe8407ff931"
+                }
+            },
+            "hash": "ffe8407ff931"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/astrofrog"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/astrofrog/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/astrofrog/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "astrofrog",
+                "uuid": "{bcaaba2f-d294-45d4-850a-00ce6b0d3e54}",
+                "username": "astrofrog"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1799288"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1799288"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "This is great! :)",
+                "html": "<p>This is great! :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T14:19:42.902533+00:00",
+            "updated_on": "2014-05-05T14:19:43.049883+00:00",
+            "id": 1799288
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1799368"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:894dc99ff7e5..2baafb904700?path=yt%2Funits%2Fyt_array.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1799368"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Won't this always cause the demand import to be called?",
+                "html": "<p>Won't this always cause the demand import to be called?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T14:27:20.779053+00:00",
+            "updated_on": "2014-05-05T14:27:20.785984+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/yt_array.py",
+                "to": 254
+            },
+            "id": 1799368
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1799395"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Funits%2Fyt_array.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1799395"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1799368"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1799368"
+                    }
+                },
+                "id": 1799368
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Yes, but this was already happening when `ap` was in the FITS frontend. If AstroPy isn't installed `ap.units` will exist but simply be `None`, and shouldn't throw an error.",
+                "html": "<p>Yes, but this was already happening when <code>ap</code> was in the FITS frontend. If AstroPy isn't installed <code>ap.units</code> will exist but simply be <code>None</code>, and shouldn't throw an error.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T14:29:42.176477+00:00",
+            "updated_on": "2014-05-05T14:29:42.201553+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/yt_array.py",
+                "to": null
+            },
+            "id": 1799395
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1799599"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1799599"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T14:47:02.057226+00:00",
+            "updated_on": "2014-05-05T14:47:02.186125+00:00",
+            "id": 1799599
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1800081"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1800081"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T15:32:05.850853+00:00",
+            "updated_on": "2014-05-05T15:32:05.991027+00:00",
+            "id": 1800081
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802498"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:917b239cc5cd..ffe8407ff931?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802498"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "This is great.",
+                "html": "<p>This is great.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:49:44.929989+00:00",
+            "updated_on": "2014-05-05T19:49:44.936554+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": 656
+            },
+            "id": 1802498
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802525"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:894dc99ff7e5..2baafb904700?path=yt%2Ffrontends%2Ffits%2Fmisc.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802525"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Can you have `\"gas\"` be `ftype` and make `ftype` an optional argument defaulted to `\"gas\"`?",
+                "html": "<p>Can you have <code>\"gas\"</code> be <code>ftype</code> and make <code>ftype</code> an optional argument defaulted to <code>\"gas\"</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:52:37.828952+00:00",
+            "updated_on": "2014-05-05T19:52:37.838424+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/misc.py",
+                "to": 60
+            },
+            "id": 1802525
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802533"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:917b239cc5cd..ffe8407ff931?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802533"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Are these just whitespace changes?",
+                "html": "<p>Are these just whitespace changes?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:53:22.462870+00:00",
+            "updated_on": "2014-05-05T19:53:22.469752+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": 62
+            },
+            "id": 1802533
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802534"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802534"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802498"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802498"
+                    }
+                },
+                "id": 1802498
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "@jzuhone I guess this *has* to be called after the dataset is instantiated, for obvious reasons.  I guess this is complementary to the global `add_field` call in that that function *has* to be called *before* the dataset is instantiated.\n\nShould these fields be going into the 'user-defined' field registry or is that what `field_info.add_field` already does?",
+                "html": "<p><a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> I guess this <em>has</em> to be called after the dataset is instantiated, for obvious reasons.  I guess this is complementary to the global <code>add_field</code> call in that that function <em>has</em> to be called <em>before</em> the dataset is instantiated.</p>\n<p>Should these fields be going into the 'user-defined' field registry or is that what <code>field_info.add_field</code> already does?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:53:24.294787+00:00",
+            "updated_on": "2014-05-05T19:53:24.307669+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 1802534
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802543"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802543"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802534"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802534"
+                    }
+                },
+                "id": 1802534
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "So, the user-defined oen should be viewed as the default set that get added every time you instantiate.  These should be viewed as being very specific to an instance.",
+                "html": "<p>So, the user-defined oen should be viewed as the default set that get added every time you instantiate.  These should be viewed as being very specific to an instance.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:54:27.478659+00:00",
+            "updated_on": "2014-05-05T19:54:27.485854+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 1802543
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802544"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802544"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802533"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802533"
+                    }
+                },
+                "id": 1802533
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "PyCharm was making some PEP-8 complaints about the whitespace. I can revert if it you want. ",
+                "html": "<p>PyCharm was making some PEP-8 complaints about the whitespace. I can revert if it you want. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:54:51.036360+00:00",
+            "updated_on": "2014-05-05T19:54:51.046040+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": null
+            },
+            "id": 1802544
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802552"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Funits%2Funit_lookup_table.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802552"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802544"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802544"
+                    }
+                },
+                "id": 1802544
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "This is fine - we're striving for pep8 compliance.",
+                "html": "<p>This is fine - we're striving for pep8 compliance.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:55:51.617387+00:00",
+            "updated_on": "2014-05-05T19:55:51.628824+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/unit_lookup_table.py",
+                "to": null
+            },
+            "id": 1802552
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802565"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:894dc99ff7e5..2baafb904700?path=yt%2Funits%2Fyt_array.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802565"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "I guess this adds just one extra comparison to `__new__` if astropy isn't available and two if it is available but the `input_array` is not an astropy quantity - am I reading that correctly?  FWIW I think that's fine since our primary performance costs aren't here.",
+                "html": "<p>I guess this adds just one extra comparison to <code>__new__</code> if astropy isn't available and two if it is available but the <code>input_array</code> is not an astropy quantity - am I reading that correctly?  FWIW I think that's fine since our primary performance costs aren't here.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:57:36.339993+00:00",
+            "updated_on": "2014-05-05T19:57:53.814079+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/yt_array.py",
+                "to": 254
+            },
+            "id": 1802565
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802576"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:894dc99ff7e5..2baafb904700?path=yt%2Futilities%2Fon_demand_imports.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802576"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Can you give this a more descriptive name?",
+                "html": "<p>Can you give this a more descriptive name?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:58:23.124170+00:00",
+            "updated_on": "2014-05-05T19:58:23.134267+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/on_demand_imports.py",
+                "to": 74
+            },
+            "id": 1802576
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802580"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Funits%2Fyt_array.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802580"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802565"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802565"
+                    }
+                },
+                "id": 1802565
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "That's correct. ",
+                "html": "<p>That's correct. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:58:46.152414+00:00",
+            "updated_on": "2014-05-05T19:58:46.162158+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/yt_array.py",
+                "to": null
+            },
+            "id": 1802580
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802584"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Funits%2Fyt_array.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802584"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802565"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802565"
+                    }
+                },
+                "id": 1802565
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "The cost of `is` is *really* cheap -- it doesn't evaluate an equality, it only examines `id(obj)`, so this should be cheap.  Calling `ap.units`, with the dict lookup and then the property function evaluation, will be more expensive.  But I agree, this will not be the most expensive part; anything touching sympy in here will dominate, which is where most of the costs of `__new__` go right now.  (And we do spend a *lot* of time in `__new__`)",
+                "html": "<p>The cost of <code>is</code> is <em>really</em> cheap -- it doesn't evaluate an equality, it only examines <code>id(obj)</code>, so this should be cheap.  Calling <code>ap.units</code>, with the dict lookup and then the property function evaluation, will be more expensive.  But I agree, this will not be the most expensive part; anything touching sympy in here will dominate, which is where most of the costs of <code>__new__</code> go right now.  (And we do spend a <em>lot</em> of time in <code>__new__</code>)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T19:59:09.436970+00:00",
+            "updated_on": "2014-05-05T19:59:09.445428+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/units/yt_array.py",
+                "to": null
+            },
+            "id": 1802584
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802598"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802598"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "This is awesome John.  Please do continue to implement things before I get a chance!",
+                "html": "<p>This is awesome John.  Please do continue to implement things before I get a chance!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:00:13.898025+00:00",
+            "updated_on": "2014-05-05T20:00:13.906837+00:00",
+            "id": 1802598
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802603"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fon_demand_imports.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802603"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802576"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802576"
+                    }
+                },
+                "id": 1802576
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "I suppose there's no harm (and probably no danger of name collision) in calling it `astropy`?",
+                "html": "<p>I suppose there's no harm (and probably no danger of name collision) in calling it <code>astropy</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:00:49.956767+00:00",
+            "updated_on": "2014-05-05T20:00:49.964610+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/on_demand_imports.py",
+                "to": null
+            },
+            "id": 1802603
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802612"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fon_demand_imports.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802612"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802603"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802603"
+                    }
+                },
+                "id": 1802603
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "How about `astropy_import_container`?  I think importing `astropy` from `on_demand_imports` is a little confusing since you're not actually importing the real `astropy` module.",
+                "html": "<p>How about <code>astropy_import_container</code>?  I think importing <code>astropy</code> from <code>on_demand_imports</code> is a little confusing since you're not actually importing the real <code>astropy</code> module.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:02:00.357563+00:00",
+            "updated_on": "2014-05-05T20:02:00.367468+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/on_demand_imports.py",
+                "to": null
+            },
+            "id": 1802612
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802613"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802613"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802598"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802598"
+                    }
+                },
+                "id": 1802598
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Thanks. :) When this goes in I have another PR almost ready to go. ",
+                "html": "<p>Thanks. :) When this goes in I have another PR almost ready to go. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:02:02.037452+00:00",
+            "updated_on": "2014-05-05T20:02:02.044744+00:00",
+            "id": 1802613
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802622"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fon_demand_imports.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802622"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802612"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802612"
+                    }
+                },
+                "id": 1802612
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "The only problem with that is that it's a little long. Maybe `yt_astropy`?",
+                "html": "<p>The only problem with that is that it's a little long. Maybe <code>yt_astropy</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:03:18.673268+00:00",
+            "updated_on": "2014-05-05T20:03:18.681150+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/on_demand_imports.py",
+                "to": null
+            },
+            "id": 1802622
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802645"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fon_demand_imports.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802645"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802622"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802622"
+                    }
+                },
+                "id": 1802622
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "`deferred_astropy` or `_astropy` would be my preference, if we need to make it longer.  In principle, one could also do `from yt.utilities.on_demand_imports import astropy_imports as astropy`",
+                "html": "<p><code>deferred_astropy</code> or <code>_astropy</code> would be my preference, if we need to make it longer.  In principle, one could also do <code>from yt.utilities.on_demand_imports import astropy_imports as astropy</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:05:11.972840+00:00",
+            "updated_on": "2014-05-05T20:05:11.980536+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/on_demand_imports.py",
+                "to": null
+            },
+            "id": 1802645
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802659"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Futilities%2Fon_demand_imports.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802659"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1802645"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1802645"
+                    }
+                },
+                "id": 1802645
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Or even `from yt.utilities.on_demand_imports import astropy_imports as ap`.  I just want to make sure the name is clear and unambiguous at import time, even if it gets immediately renamed to something more compact.",
+                "html": "<p>Or even <code>from yt.utilities.on_demand_imports import astropy_imports as ap</code>.  I just want to make sure the name is clear and unambiguous at import time, even if it gets immediately renamed to something more compact.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:07:17.837606+00:00",
+            "updated_on": "2014-05-05T20:07:17.848704+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/on_demand_imports.py",
+                "to": null
+            },
+            "id": 1802659
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1803088"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1803088"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T20:47:03.009991+00:00",
+            "updated_on": "2014-05-05T20:47:03.164974+00:00",
+            "id": 1803088
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1803673"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1803673"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Just spitballing here, @MatthewTurk and @ngoldbaum , what do you think about having a `from_astropy` classmethod instead of having `__new__` handle it? It's symmetrical with `to_astropy` and reduces the extra checking in `__new__`.",
+                "html": "<p>Just spitballing here, <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> and <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> , what do you think about having a <code>from_astropy</code> classmethod instead of having <code>__new__</code> handle it? It's symmetrical with <code>to_astropy</code> and reduces the extra checking in <code>__new__</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T21:58:59.300971+00:00",
+            "updated_on": "2014-05-05T21:58:59.318886+00:00",
+            "id": 1803673
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1803712"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1803712"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1803673"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1803673"
+                    }
+                },
+                "id": 1803673
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "+1.  I think `__new__` should still be able to automagically convert to yt units, but it would certainly be cleaner to have the work farmed out to a member function.",
+                "html": "<p>+1.  I think <code>__new__</code> should still be able to automagically convert to yt units, but it would certainly be cleaner to have the work farmed out to a member function.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T22:04:50.000279+00:00",
+            "updated_on": "2014-05-05T22:04:50.007488+00:00",
+            "id": 1803712
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1803716"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1803716"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1803673"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1803673"
+                    }
+                },
+                "id": 1803673
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "I actually might prefer that. And then they can add a from_yt.",
+                "html": "<p>I actually might prefer that. And then they can add a from_yt.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-05T22:05:14.170221+00:00",
+            "updated_on": "2014-05-05T22:05:14.189824+00:00",
+            "id": 1803716
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1804322"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1804322"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-06T00:17:03.040918+00:00",
+            "updated_on": "2014-05-06T00:17:03.188658+00:00",
+            "id": 1804322
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1804336"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1804336"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "Is this good to go?  If so and if no one objects I will hit the merge button in 24 hours.",
+                "html": "<p>Is this good to go?  If so and if no one objects I will hit the merge button in 24 hours.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-06T00:20:16.842555+00:00",
+            "updated_on": "2014-05-06T00:20:16.850012+00:00",
+            "id": 1804336
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879/comments/1804376"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879/_/diff#comment-1804376"
+                }
+            },
+            "pullrequest": {
+                "title": "Round-trip unit conversions to AstroPy, on-demand imports module, Dataset-specific add_field",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/879"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/879"
+                    }
+                },
+                "id": 879
+            },
+            "content": {
+                "raw": "I think so, yes.",
+                "html": "<p>I think so, yes.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-06T00:27:51.991676+00:00",
+            "updated_on": "2014-05-06T00:27:51.999444+00:00",
+            "id": 1804376
+        }
+    ]
+}

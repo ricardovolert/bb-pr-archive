@@ -1,0 +1,1415 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-09-09T20:09:58.403746+00:00",
+    "comment_count": 23,
+    "description": "This PR addresses a number of problems with field detection and fixes Issue #887. It generally follows the philosophy that it's best to detect an error and raise an exception as early as possible, rather than relying on later logic to handle invalid state.\r\n\r\n - Moves chunking calls below error checks in several functions to avoid unnecessary I/O\r\n - `Index._split_fields` will reject any fields not explicitly in field_list or derived_field_list\r\n - `DataSet._get_field_info` will not return a cached field_info object when only the field name has been compared\r\n - `YTDataContainer._determine_fields` now checks that a given field type, field name pair (or naked field name) exists somewhere in field_list, derived_field_list, or _container_fields when the type is detected or changed\r\n\r\nTacked on PR:\r\nI noticed lately a rash of dead code/unused variables being removed in PRs and decided to try a pass through pylint.  This removes any unused variables caught by pylint that were obvious by eye (ignoring the frontends directory).\r\n\r\nSeveral fairly obvious bugs were caught, and a few calls to enumerate were removed.  Please double check if those were necessary for some non-obvious reason. ",
+    "created_on": "2014-08-29T20:57:22.664446+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "Field Detection bug fixes and dead code removal",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/drudd"
+            },
+            "html": {
+                "href": "https://bitbucket.org/drudd/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/drudd/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Douglas Rudd",
+        "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+        "username": "drudd"
+    },
+    "id": 1176,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/drudd"
+            },
+            "html": {
+                "href": "https://bitbucket.org/drudd/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/drudd/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Douglas Rudd",
+        "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+        "username": "drudd"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/drudd/yt/commit/9b28df7c4d71"
+                }
+            },
+            "hash": "9b28df7c4d71"
+        },
+        "repository": {
+            "full_name": "drudd/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/drudd/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/drudd/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/drudd/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{488b1028-87ac-4f2c-a7e0-85a74cb98960}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ecd32f6fc3d3"
+                }
+            },
+            "hash": "ecd32f6fc3d3"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2906289"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2906289"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-29T22:43:08.795171+00:00",
+            "updated_on": "2014-08-29T22:43:09.058946+00:00",
+            "id": 2906289
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2908024"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2908024"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-31T03:53:54.823809+00:00",
+            "updated_on": "2014-08-31T03:53:55.099178+00:00",
+            "id": 2908024
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2908071"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:198766f3730b..28f21e2e3926?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2908071"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "Can you delete this rather than leaving it commented?",
+                "html": "<p>Can you delete this rather than leaving it commented?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-31T05:28:03.230686+00:00",
+            "updated_on": "2014-08-31T05:28:03.240389+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": 465
+            },
+            "id": 2908071
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2908076"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2908076"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "I think these changes are good - failing early on field detection errors is clearly the way to go. I will give this more careful manual testing in the next day or two.",
+                "html": "<p>I think these changes are good - failing early on field detection errors is clearly the way to go. I will give this more careful manual testing in the next day or two.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-31T05:31:53.832520+00:00",
+            "updated_on": "2014-08-31T05:31:53.839535+00:00",
+            "id": 2908076
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2908966"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2908966"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-31T18:57:20.412736+00:00",
+            "updated_on": "2014-08-31T18:57:20.822876+00:00",
+            "id": 2908966
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2909076"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2909076"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-08-31T20:14:19.507424+00:00",
+            "updated_on": "2014-08-31T20:14:19.857460+00:00",
+            "id": 2909076
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2962858"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:bbb89c513752..4213eccc3637?path=yt%2Fdata_objects%2Fdata_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2962858"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "good catch",
+                "html": "<p>good catch</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-04T19:35:57.080019+00:00",
+            "updated_on": "2014-09-04T19:35:57.087748+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/data_containers.py",
+                "to": 636
+            },
+            "id": 2962858
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2977719"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2977719"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T18:57:43.601520+00:00",
+            "updated_on": "2014-09-05T18:57:44.275770+00:00",
+            "id": 2977719
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979456"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979456"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "Ugh, bookmarks are not the panacea one would hope for... different behavior if they end up making a new head. I'll need to recreate this one.",
+                "html": "<p>Ugh, bookmarks are not the panacea one would hope for... different behavior if they end up making a new head. I'll need to recreate this one.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T22:05:29.821538+00:00",
+            "updated_on": "2014-09-05T22:05:29.828582+00:00",
+            "id": 2979456
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979466"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979466"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979456"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979456"
+                    }
+                },
+                "id": 2979456
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "The field detection fixes were ready to go in, I think.  We can rename the PR and do a review of both?",
+                "html": "<p>The field detection fixes were ready to go in, I think.  We can rename the PR and do a review of both?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T22:07:31.978035+00:00",
+            "updated_on": "2014-09-05T22:07:31.985597+00:00",
+            "id": 2979466
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979474"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979474"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979466"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979466"
+                    }
+                },
+                "id": 2979466
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "Okay, the rest are numerous but should mostly be okay.  I'll update the description.",
+                "html": "<p>Okay, the rest are numerous but should mostly be okay.  I'll update the description.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T22:08:38.612644+00:00",
+            "updated_on": "2014-09-05T22:08:38.619707+00:00",
+            "id": 2979474
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979607"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:9b28df7c4d71..ecd32f6fc3d3?path=yt%2Fanalysis_modules%2Fhalo_mass_function%2Fhalo_mass_function.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979607"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "This variable is unused but looks like it might be helpful to keep around as an example of how to generate that transfer function.",
+                "html": "<p>This variable is unused but looks like it might be helpful to keep around as an example of how to generate that transfer function.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T22:21:19.463572+00:00",
+            "updated_on": "2014-09-05T22:21:19.471228+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/halo_mass_function/halo_mass_function.py",
+                "to": 791
+            },
+            "id": 2979607
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979620"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:9b28df7c4d71..ecd32f6fc3d3?path=yt%2Ffields%2Fvector_operations.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979620"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "This is an actual bug, the field `radial_[xyz]_absolute` was identical to `radial_[xyz]`",
+                "html": "<p>This is an actual bug, the field <code>radial_[xyz]_absolute</code> was identical to <code>radial_[xyz]</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T22:23:37.447453+00:00",
+            "updated_on": "2014-09-05T22:23:52.182214+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/fields/vector_operations.py",
+                "to": 134
+            },
+            "id": 2979620
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979633"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:e8929fed2c8d..793de33241a8?path=yt%2Futilities%2Fparallel_tools%2Fio_runner.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979633"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "I'm assuming this is the correct fix.",
+                "html": "<p>I'm assuming this is the correct fix.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T22:25:26.371364+00:00",
+            "updated_on": "2014-09-05T22:25:26.383671+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/parallel_tools/io_runner.py",
+                "to": 60
+            },
+            "id": 2979633
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979731"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:9b28df7c4d71..ecd32f6fc3d3?path=yt%2Ffields%2Fparticle_fields.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979731"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "Looking at this again I think the error was that the field wasn't created, not that the function was unnecessary.",
+                "html": "<p>Looking at this again I think the error was that the field wasn't created, not that the function was unnecessary.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T22:38:04.429862+00:00",
+            "updated_on": "2014-09-05T22:38:04.440073+00:00",
+            "inline": {
+                "from": 325,
+                "path": "yt/fields/particle_fields.py",
+                "to": null
+            },
+            "id": 2979731
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979876"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979876"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T23:02:54.342071+00:00",
+            "updated_on": "2014-09-05T23:02:54.741150+00:00",
+            "id": 2979876
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2980175"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2980175"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-05T23:49:53.143959+00:00",
+            "updated_on": "2014-09-05T23:49:53.458174+00:00",
+            "id": 2980175
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997136"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:None..None?path=yt%2Futilities%2Fparallel_tools%2Fio_runner.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997136"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2979633"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2979633"
+                    }
+                },
+                "id": 2979633
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "I think this should be dsfields - I don't think it makes sense to alter the dataset object in this function.",
+                "html": "<p>I think this should be dsfields - I don't think it makes sense to alter the dataset object in this function.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-08T21:52:36.693228+00:00",
+            "updated_on": "2014-09-08T21:52:36.700381+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/parallel_tools/io_runner.py",
+                "to": null
+            },
+            "id": 2997136
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997157"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:None..None?path=yt%2Futilities%2Fparallel_tools%2Fio_runner.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997157"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997136"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997136"
+                    }
+                },
+                "id": 2997136
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "Or maybe should just be deleted completely if it's not used.",
+                "html": "<p>Or maybe should just be deleted completely if it's not used.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-08T21:54:38.330819+00:00",
+            "updated_on": "2014-09-08T21:54:38.340461+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/parallel_tools/io_runner.py",
+                "to": null
+            },
+            "id": 2997157
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997162"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:None..None?path=yt%2Futilities%2Fparallel_tools%2Fio_runner.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997162"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997136"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997136"
+                    }
+                },
+                "id": 2997136
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "Since that variable is never used, should it simply be removed?",
+                "html": "<p>Since that variable is never used, should it simply be removed?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-08T21:54:59.581944+00:00",
+            "updated_on": "2014-09-08T21:54:59.591023+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/parallel_tools/io_runner.py",
+                "to": null
+            },
+            "id": 2997162
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/drudd"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/drudd/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/drudd/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Douglas Rudd",
+                "uuid": "{e77bd1fb-b3d9-4763-a121-43d2028b2bbd}",
+                "username": "drudd"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997184"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/drudd/yt:None..None?path=yt%2Futilities%2Fparallel_tools%2Fio_runner.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997184"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997136"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997136"
+                    }
+                },
+                "id": 2997136
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "Oh, I see what it was.  It was pfields and got caught by a pf -> ds regex.",
+                "html": "<p>Oh, I see what it was.  It was pfields and got caught by a pf -&gt; ds regex.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-08T21:56:40.689276+00:00",
+            "updated_on": "2014-09-08T21:56:40.696012+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/parallel_tools/io_runner.py",
+                "to": null
+            },
+            "id": 2997184
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/2997660"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-2997660"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-08T22:50:37.737024+00:00",
+            "updated_on": "2014-09-08T22:50:38.028630+00:00",
+            "id": 2997660
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176/comments/3009163"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176/_/diff#comment-3009163"
+                }
+            },
+            "pullrequest": {
+                "title": "Field Detection bug fixes and dead code removal",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1176"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1176"
+                    }
+                },
+                "id": 1176
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-09-09T16:12:44.942418+00:00",
+            "updated_on": "2014-09-09T16:12:45.365515+00:00",
+            "id": 3009163
+        }
+    ]
+}

@@ -1,0 +1,1697 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-03-16T16:12:21.611326+00:00",
+    "comment_count": 28,
+    "description": "It came to our attention that there was a bug in how I had previously implemented subgrid deposition of lines (lines narrower the spectral resolution of the AbsorptionSpectrum).  Effectively, the way I had implemented it was susceptible to numerical precision roundoff errors, resulting in a periodic wiggle in spectra.  An example of this effect can be seen here:\r\n\r\nhttp://i.imgur.com/6U8Wwqc.png and http://i.imgur.com/0mw5fDB.png\r\n\r\nThrough the sleuthing of @brittonsmith , we deduced the problem to be in a list comprehension step I'd added in the code as demonstrated here: http://nbviewer.jupyter.org/url/www.roe.ac.uk/~brs/notebooks/binning_error.ipynb\r\n\r\nSo I've gone ahead and corrected the issue by making the virtual bin deposition window fixed to an integral number of coarse spectral bins (instead of variable).  By removing the list comprehension step, it also makes the code significantly faster.  \r\n\r\nThe downside is that total opacity regardless of spectral resolution is now only conserved to 3 digits of precision instead of 5, so I had to change the test problem to account for this.  We will also have to regenerated answer tests before this is allowed to be accepted.  I can readily do that.\r\n\r\nI've also included plenty of comments through the code to demonstrate what I'm doing.\r\n\r\nUPDATE1: Addressing comments from @brittonsmith about missing features not centered in the spectral region probed.  I redid things and now the code can handle the situation where a broad absorption feature is centered outside the spectral window but bleeds over into it.  Previously, this would cause the code to hang, but it now handles it without problem.  As an example, see this DLA that is at 1216A outside the spectral window: http://i.imgur.com/nJItxhI.png .\r\n\r\nUPDATE2: Addressed comments by @brittonsmith and @ngoldbaum .\r\n\r\nUPDATE3: Merging with tip and modifying the answer tests file to update the answer tests for absorption spectrum as per @xarthisius 's suggestions.",
+    "created_on": "2016-02-07T09:55:29.822353+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/14ef9ac4f402fe9d0ce249c001683cd6b87a5643"
+            }
+        },
+        "hash": "14ef9ac4f402fe9d0ce249c001683cd6b87a5643"
+    },
+    "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 1986,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/14ef9ac4f402"
+                }
+            },
+            "hash": "14ef9ac4f402"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/2c4566405904"
+                }
+            },
+            "hash": "2c4566405904"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14289152"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14289152"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1274/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1274/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1274/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-07T10:58:19.632013+00:00",
+            "updated_on": "2016-02-07T10:58:19.701361+00:00",
+            "id": 14289152
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14290604"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14290604"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14289152"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14289152"
+                    }
+                },
+                "id": 14289152
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "This PR slightly changes the way in which lines are being deposited, and gives slightly different values in the answer tests.  We will have to regenerate new ones.",
+                "html": "<p>This PR slightly changes the way in which lines are being deposited, and gives slightly different values in the answer tests.  We will have to regenerate new ones.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-07T17:00:44.874810+00:00",
+            "updated_on": "2016-02-07T17:00:44.877030+00:00",
+            "id": 14290604
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14290639"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14290639"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14290604"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14290604"
+                    }
+                },
+                "id": 14290604
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Since these tests don't use the answer testing infrastructure, you're going to need to regnerate the necessary files manually.",
+                "html": "<p>Since these tests don't use the answer testing infrastructure, you're going to need to regnerate the necessary files manually.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-07T17:10:21.417954+00:00",
+            "updated_on": "2016-02-07T17:10:21.420335+00:00",
+            "id": 14290639
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14290976"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14290976"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1276/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1276/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1276/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-07T18:35:00.765633+00:00",
+            "updated_on": "2016-02-07T18:35:00.824592+00:00",
+            "id": 14290976
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14354310"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:240678087227..af128f1c867d?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14354310"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "I think the variable going into `pbar.update` should still be `i`, since it is the counter variable generated by the `enumerate` call in the loop.  It is the only variable going from 0 to `len(valid_lines)`.",
+                "html": "<p>I think the variable going into <code>pbar.update</code> should still be <code>i</code>, since it is the counter variable generated by the <code>enumerate</code> call in the loop.  It is the only variable going from 0 to <code>len(valid_lines)</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-09T12:10:29.704206+00:00",
+            "updated_on": "2016-02-09T12:10:29.706615+00:00",
+            "inline": {
+                "from": 410,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": null
+            },
+            "id": 14354310
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14354546"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:240678087227..af128f1c867d?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14354546"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "This is a duplicate calculation to what goes into `valid_lines` above.  Since `valid_lines` can be used as index values in the `thermal_width` array, I think you could just swap it in.  Alternately, you could do:\n\n```\n#!python\n\nfilter_lines = (lambda_obs > self.lambda_min) & \\\n                    (lambda_obs < self.lambda_max)\nvalid_lines = np.where(filter_lines)[0]\n```",
+                "html": "<p>This is a duplicate calculation to what goes into <code>valid_lines</code> above.  Since <code>valid_lines</code> can be used as index values in the <code>thermal_width</code> array, I think you could just swap it in.  Alternately, you could do:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">filter_lines</span> <span class=\"o\">=</span> <span class=\"p\">(</span><span class=\"n\">lambda_obs</span> <span class=\"o\">&gt;</span> <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">lambda_min</span><span class=\"p\">)</span> <span class=\"o\">&amp;</span> \\\n                    <span class=\"p\">(</span><span class=\"n\">lambda_obs</span> <span class=\"o\">&lt;</span> <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">lambda_max</span><span class=\"p\">)</span>\n<span class=\"n\">valid_lines</span> <span class=\"o\">=</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">where</span><span class=\"p\">(</span><span class=\"n\">filter_lines</span><span class=\"p\">)[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-09T12:18:22.951039+00:00",
+            "updated_on": "2016-02-09T12:18:41.240282+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": 329
+            },
+            "id": 14354546
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14354629"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:240678087227..af128f1c867d?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14354629"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "This could leave out lines where the line center is outside of the spectrum wavelength range, but still contribute absorption from the edge of the line that is within the range.",
+                "html": "<p>This could leave out lines where the line center is outside of the spectrum wavelength range, but still contribute absorption from the edge of the line that is within the range.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-09T12:21:24.184410+00:00",
+            "updated_on": "2016-02-09T12:21:24.187524+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": 327
+            },
+            "id": 14354629
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14355789"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:240678087227..af128f1c867d?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14355789"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "This is the heart of the change.  I've looked this over closely and it looks correct to me.",
+                "html": "<p>This is the heart of the change.  I've looked this over closely and it looks correct to me.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-09T12:54:13.709593+00:00",
+            "updated_on": "2016-02-09T12:54:13.716724+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": 398
+            },
+            "id": 14355789
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14355908"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14355908"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "@chummels, the change to the algorithm looks correct to me.  I left a couple other comments, but the changes directly concerning the bugfix look right.",
+                "html": "<p><a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>, the change to the algorithm looks correct to me.  I left a couple other comments, but the changes directly concerning the bugfix look right.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-09T12:57:17.525801+00:00",
+            "updated_on": "2016-02-09T12:57:17.534883+00:00",
+            "id": 14355908
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14673689"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14673689"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14354629"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14354629"
+                    }
+                },
+                "id": 14354629
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "@brittonsmith : I'm not sure how to get around this.  I totally agree that you're right that we will miss edge affects where the line centroid lies outside the wavelength range of the spectrum.  The proper way would then be to deposit *all lines* regardless of their position with respect to the spectrum to be deposited (and potentially subgrid deposited, which might get expensive) before seeing how much of it intersects the actual desired spectrum.  This seems like a lot of wasted overhead.  But it doesn't seem like we will know a priori how far the wings will extend in spectral space.  Thoughts?",
+                "html": "<p><a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> : I'm not sure how to get around this.  I totally agree that you're right that we will miss edge affects where the line centroid lies outside the wavelength range of the spectrum.  The proper way would then be to deposit <em>all lines</em> regardless of their position with respect to the spectrum to be deposited (and potentially subgrid deposited, which might get expensive) before seeing how much of it intersects the actual desired spectrum.  This seems like a lot of wasted overhead.  But it doesn't seem like we will know a priori how far the wings will extend in spectral space.  Thoughts?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-17T03:40:34.943475+00:00",
+            "updated_on": "2016-02-17T03:40:34.951061+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": null
+            },
+            "id": 14673689
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14673763"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14673763"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14354546"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14354546"
+                    }
+                },
+                "id": 14354546
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "I tried to do it as a single filter_lines mask as you suggested, but the problem is that `filter_lines` is a mask of length N booleans, whereas `valid_lines` is an array of length M indices.  But the code you give is the better solution.  Thanks!",
+                "html": "<p>I tried to do it as a single filter_lines mask as you suggested, but the problem is that <code>filter_lines</code> is a mask of length N booleans, whereas <code>valid_lines</code> is an array of length M indices.  But the code you give is the better solution.  Thanks!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-17T03:44:57.275219+00:00",
+            "updated_on": "2016-02-17T03:44:57.277311+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": null
+            },
+            "id": 14673763
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14674605"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14674605"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite_dev/1293/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite_dev/1293/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite_dev/1293/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-17T04:45:48.405241+00:00",
+            "updated_on": "2016-02-17T04:45:48.477974+00:00",
+            "id": 14674605
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14795918"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:4faa6a53d4bb..8f0006cf6b06?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14795918"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "@brittonsmith : I'm not sure how to get around this issue of not including lines outside of the wavelength range of the spectrum. I totally agree that you're right that we will miss edge affects where the line centroid lies outside the wavelength range of the spectrum. The proper way would then be to deposit all lines regardless of their position with respect to the spectrum to be deposited (and potentially subgrid deposited, which might get expensive) before seeing how much of it intersects the actual desired spectrum. This seems like a lot of wasted overhead. But it doesn't seem like we will know a priori how far the wings will extend in spectral space. Thoughts?",
+                "html": "<p><a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> : I'm not sure how to get around this issue of not including lines outside of the wavelength range of the spectrum. I totally agree that you're right that we will miss edge affects where the line centroid lies outside the wavelength range of the spectrum. The proper way would then be to deposit all lines regardless of their position with respect to the spectrum to be deposited (and potentially subgrid deposited, which might get expensive) before seeing how much of it intersects the actual desired spectrum. This seems like a lot of wasted overhead. But it doesn't seem like we will know a priori how far the wings will extend in spectral space. Thoughts?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-19T13:53:43.575010+00:00",
+            "updated_on": "2016-02-19T13:54:20.148530+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": 329
+            },
+            "id": 14795918
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14796442"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14796442"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14795918"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14795918"
+                    }
+                },
+                "id": 14795918
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "I think this is really the only way to do this.  In the while loop below where you determine the size of the window needed to capture all of the optical depth of the line, you can jump out as soon as you know that the whole of the line is outside of the wavelength range of the spectrum.  As soon as you establish that, you can skip the deposition step, which is probably the most expensive part.",
+                "html": "<p>I think this is really the only way to do this.  In the while loop below where you determine the size of the window needed to capture all of the optical depth of the line, you can jump out as soon as you know that the whole of the line is outside of the wavelength range of the spectrum.  As soon as you establish that, you can skip the deposition step, which is probably the most expensive part.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-02-19T14:02:41.476793+00:00",
+            "updated_on": "2016-02-19T14:02:41.483182+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": null
+            },
+            "id": 14796442
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15539607"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15539607"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Is this still being worked on? Is it OK to merge?",
+                "html": "<p>Is this still being worked on? Is it OK to merge?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-09T17:23:39.118407+00:00",
+            "updated_on": "2016-03-09T17:23:39.121578+00:00",
+            "id": 15539607
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15540606"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15540606"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Still being worked on.  Not yet OK to merge.",
+                "html": "<p>Still being worked on.  Not yet OK to merge.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-09T17:45:16.438165+00:00",
+            "updated_on": "2016-03-09T17:45:16.440510+00:00",
+            "id": 15540606
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15669419"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15669419"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/54/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/54/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/54/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-12T01:46:51.074373+00:00",
+            "updated_on": "2016-03-12T01:46:51.391735+00:00",
+            "id": 15669419
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15669970"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15669970"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/55/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/55/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/55/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-12T02:35:56.245325+00:00",
+            "updated_on": "2016-03-12T02:35:56.322206+00:00",
+            "id": 15669970
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15671502"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15671502"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/58/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/58/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/58/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-12T05:46:47.344599+00:00",
+            "updated_on": "2016-03-12T05:46:47.472628+00:00",
+            "id": 15671502
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/devinsilvia"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/devinsilvia/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/devinsilvia/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Devin Silvia",
+                "uuid": "{de10a23c-34a0-4f76-a031-b5ec3b2a34db}",
+                "username": "devinsilvia"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15717911"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15717911"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "This all looks good to me and seems to address the issues we were running into.  Awesome work, @chummels!",
+                "html": "<p>This all looks good to me and seems to address the issues we were running into.  Awesome work, <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T13:41:17.042150+00:00",
+            "updated_on": "2016-03-14T13:41:17.097820+00:00",
+            "id": 15717911
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15735388"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:828166b57860..9c26b9791511?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15735388"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "this commented out code can be removed",
+                "html": "<p>this commented out code can be removed</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T18:05:40.111210+00:00",
+            "updated_on": "2016-03-14T18:05:40.114184+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": 338
+            },
+            "id": 15735388
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15735530"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:828166b57860..9c26b9791511?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15735530"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Since we're doing all lines, this array is probably unnecessary as it's just an np.arange and is never referred to in the loop.  You can probably then just change the loop to\n\n```\n#!python\n\nfor i in parallel_objects(xrange(thermal_width.size)):\n```\n\nThat would save creation of the array, not that memory is an issue here.",
+                "html": "<p>Since we're doing all lines, this array is probably unnecessary as it's just an np.arange and is never referred to in the loop.  You can probably then just change the loop to</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"k\">for</span> <span class=\"n\">i</span> <span class=\"ow\">in</span> <span class=\"n\">parallel_objects</span><span class=\"p\">(</span><span class=\"nb\">xrange</span><span class=\"p\">(</span><span class=\"n\">thermal_width</span><span class=\"o\">.</span><span class=\"n\">size</span><span class=\"p\">)):</span>\n</pre></div>\n\n\n<p>That would save creation of the array, not that memory is an issue here.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T18:08:09.011068+00:00",
+            "updated_on": "2016-03-14T18:08:09.013482+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": 343
+            },
+            "id": 15735530
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15735556"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15735556"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Couple comments below, but the new changes look good.  I re-approve.",
+                "html": "<p>Couple comments below, but the new changes look good.  I re-approve.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T18:08:41.913637+00:00",
+            "updated_on": "2016-03-14T18:08:41.915881+00:00",
+            "id": 15735556
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15735617"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15735617"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15735530"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15735530"
+                    }
+                },
+                "id": 15735530
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "xrange isn't py3 compatible and shouldn't be used in yt - you can use six.moves.range to get the same behavior in py2 and py3.",
+                "html": "<p>xrange isn't py3 compatible and shouldn't be used in yt - you can use six.moves.range to get the same behavior in py2 and py3.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T18:10:21.573296+00:00",
+            "updated_on": "2016-03-14T18:10:21.575733+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
+                "to": null
+            },
+            "id": 15735617
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15745674"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15745674"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/14290639"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-14290639"
+                    }
+                },
+                "id": 14290639
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "So if I regenerate the answer test outputs manually and send to @xarthisius for inclusion in the main tests, I think this is all ready to be merged.",
+                "html": "<p>So if I regenerate the answer test outputs manually and send to <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> for inclusion in the main tests, I think this is all ready to be merged.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T22:02:41.904869+00:00",
+            "updated_on": "2016-03-14T22:02:41.909672+00:00",
+            "id": 15745674
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15746338"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15746338"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15745674"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15745674"
+                    }
+                },
+                "id": 15745674
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "If you could convert these tests to `GenericArrayTest` we could avoid manual upload every time ",
+                "html": "<p>If you could convert these tests to <code>GenericArrayTest</code> we could avoid manual upload every time </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T22:15:01.680643+00:00",
+            "updated_on": "2016-03-14T22:15:01.682808+00:00",
+            "id": 15746338
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15747276"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15747276"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/85/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/85/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/85/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-14T22:49:09.312366+00:00",
+            "updated_on": "2016-03-14T22:49:09.445420+00:00",
+            "id": 15747276
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986/comments/15809183"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986/_/diff#comment-15809183"
+                }
+            },
+            "pullrequest": {
+                "title": "[bugfix] Correcting issue with periodic \"wiggle\" in AbsorptionSpectrum instances",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1986"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1986"
+                    }
+                },
+                "id": 1986
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/90/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/90/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/90/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-03-15T23:47:43.906922+00:00",
+            "updated_on": "2016-03-15T23:47:44.227149+00:00",
+            "id": 15809183
+        }
+    ]
+}

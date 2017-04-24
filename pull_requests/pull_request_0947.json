@@ -1,0 +1,707 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-06-19T00:10:47.102195+00:00",
+    "comment_count": 11,
+    "description": "Following up from the discussion on the mailing list, this appears to completely fix the memory issues I was seeing when iterating over FLASH datasets.\r\n\r\nI haven't tested the modifications to chombo, pluto, and FITS so I'd very much appreciate it if you guys could test out the modifications I've made to those frontends.\r\n\r\nThere are two key fixes.  First, I've made it so the `Dataset`, `Index`, and `Grid` objects reference each other via weakref proxies.  Second, I've moved the `__del__` method from the Dataset classes over to a new class `FileHandler`, which wraps the h5py file object.  I've added some syntactic sugar to this class (`__getitem__` and `__contains__`) to avoid touching a bunch of of code that directly accessed the handle object. I'm not completely sure I've done this right for FITS, but I'm issuing this PR now in the interest of getting a fix out for FLASH.",
+    "created_on": "2014-06-12T05:45:25.998565+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/88bcdc5ae09c"
+            }
+        },
+        "hash": "88bcdc5ae09c"
+    },
+    "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 947,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/893fcf8cc1dc"
+                }
+            },
+            "hash": "893fcf8cc1dc"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5a31577825d9"
+                }
+            },
+            "hash": "5a31577825d9"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2118703"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2118703"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/712/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/712/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/712/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-12T06:07:59.998278+00:00",
+            "updated_on": "2014-06-12T06:08:00.154043+00:00",
+            "id": 2118703
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2118805"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2118805"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/713/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/713/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/713/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-12T06:22:58.502692+00:00",
+            "updated_on": "2014-06-12T06:22:58.615561+00:00",
+            "id": 2118805
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2118938"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2118938"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/714/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/714/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/714/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-12T06:46:51.231994+00:00",
+            "updated_on": "2014-06-12T06:46:51.395039+00:00",
+            "id": 2118938
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2119489"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2119489"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-12T07:46:37.339733+00:00",
+            "updated_on": "2014-06-12T07:46:37.484693+00:00",
+            "id": 2119489
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2126357"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2126357"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "Nathan, this is great, and is a big deal. I've always seen small issues here and there with dangling references, but was never sure what to do about it. \n\nThe FITS doc notebooks run without any issues, so I think we're ok for that frontend. ",
+                "html": "<p>Nathan, this is great, and is a big deal. I've always seen small issues here and there with dangling references, but was never sure what to do about it. </p>\n<p>The FITS doc notebooks run without any issues, so I think we're ok for that frontend. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-12T18:26:52.187482+00:00",
+            "updated_on": "2014-06-12T18:26:52.195660+00:00",
+            "id": 2126357
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2141180"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2141180"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "ping @MatthewTurk @xarthisius.  I think this is ready to go in.",
+                "html": "<p>ping <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a>.  I think this is ready to go in.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-15T18:08:27.291664+00:00",
+            "updated_on": "2014-06-15T18:08:27.314090+00:00",
+            "id": 2141180
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2141419"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2141419"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "I actually didn't review this yet, but I wanted to share with you why I'm not immediately rubber stamping.  I want to perform a few tests; we used to always use weak refs on grids (I think the VCS history will back me up) but I found that creating them was costing an inordinate amount of time, and they are also a bit more memory intensive, I believe.  So I wanted to take a minute or two to try to evaluate whether or not we could replace the call to `index` with a property in the grid object.  The other thing I was going to take a look at was whether or not we should be using the handle with the various proxy attributes, or if we should instead have a `.handle.handle` to make it more explicit that we're wrapping items.",
+                "html": "<p>I actually didn't review this yet, but I wanted to share with you why I'm not immediately rubber stamping.  I want to perform a few tests; we used to always use weak refs on grids (I think the VCS history will back me up) but I found that creating them was costing an inordinate amount of time, and they are also a bit more memory intensive, I believe.  So I wanted to take a minute or two to try to evaluate whether or not we could replace the call to <code>index</code> with a property in the grid object.  The other thing I was going to take a look at was whether or not we should be using the handle with the various proxy attributes, or if we should instead have a <code>.handle.handle</code> to make it more explicit that we're wrapping items.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-15T22:23:05.543205+00:00",
+            "updated_on": "2014-06-15T22:23:05.549546+00:00",
+            "id": 2141419
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2141473"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2141473"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2141419"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2141419"
+                    }
+                },
+                "id": 2141419
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "Regarding the second point - I originally had it using `handle.handle` everywhere but realized I would have had to reword a bunch of code in each of the frontends I had to touch.  The proxy objects allow me to avoid touching all the places the `handle` is referenced although I agree with you that it might be brittle.",
+                "html": "<p>Regarding the second point - I originally had it using <code>handle.handle</code> everywhere but realized I would have had to reword a bunch of code in each of the frontends I had to touch.  The proxy objects allow me to avoid touching all the places the <code>handle</code> is referenced although I agree with you that it might be brittle.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-15T22:52:27.116267+00:00",
+            "updated_on": "2014-06-15T22:52:27.122763+00:00",
+            "id": 2141473
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2163548"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2163548"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "I ran some tests and as near as I can tell, the cost of weakref versus property is about even.",
+                "html": "<p>I ran some tests and as near as I can tell, the cost of weakref versus property is about even.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-17T19:32:52.344547+00:00",
+            "updated_on": "2014-06-17T19:32:52.351799+00:00",
+            "id": 2163548
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2163553"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:b96e0aadaf8b..4e6992f76dfc?path=yt%2Ffrontends%2Fchombo%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2163553"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "Can we make this more explicitly an `HDF5FileHandler`?",
+                "html": "<p>Can we make this more explicitly an <code>HDF5FileHandler</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-17T19:33:32.082857+00:00",
+            "updated_on": "2014-06-17T19:33:32.092878+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/chombo/data_structures.py",
+                "to": 37
+            },
+            "id": 2163553
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947/comments/2167650"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947/_/diff#comment-2167650"
+                }
+            },
+            "pullrequest": {
+                "title": "Ensure Dataset and Index instances do not participate in reference cycles",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/947"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/947"
+                    }
+                },
+                "id": 947
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-06-18T07:10:17.046839+00:00",
+            "updated_on": "2014-06-18T07:10:17.181091+00:00",
+            "id": 2167650
+        }
+    ]
+}

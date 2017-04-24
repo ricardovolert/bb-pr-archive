@@ -1,0 +1,3196 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-02-07T20:07:57.223937+00:00",
+    "comment_count": 53,
+    "description": "This PR includes a complete rewrite of the AMRKDTree to allow for more arbitrary data sources, as well as upgrades to allow for MPI enabled, opaque renderings.  This comes with the change to have 4 channels instead of 3, to allow for more arbitrary ray integration.  \r\n\r\nOther changes:\r\n* A MosaicCamera, which utilizes multilevel parallelism\r\n* Annotated volume renders (uses matplotlib to overlay TF, etc)\r\n\r\nThis PR needs a lot of review, and I would like folks to, as a first pass, try it out, and see if it breaks a rendering script as is.  Please don't go through and comment line by line right now, since I already know of a lot of things that need fixing.  I'm PR'ing right now because this needs a catalyst for it to get going.  For example, I think a lot of the non-standard cameras might not work.\r\n\r\nSaving annotated images works like ::\r\n  \r\n    im = cam.snapshot()\r\n\r\n    if cam.comm.rank == 0:\r\n\r\n      # White background\r\n\r\n      cam.save_annotated('test_ab.png', im[:,:,:4])\r\n\r\n      # Black background\r\n\r\n      cam.save_annotated('test_bb.png', im[:,:,:3])\r\n\r\nUpdate #1: Fixing first round of comments.\r\n\r\nUpdate #2: More comments addressed. TF construction links alpha/rgb channels once again, should address blurriness seen by @xarthisius .\r\n\r\nUpdate #3: Restored find_neighbor functionality\r\n\r\nUpdate #4: Adding nosetest for amr_kdtree, generating a fake AMR sim using refine_amr and a cored sphere.\r\n\r\nUpdate #5: Few updates/cleanups for transfer function construction/showing in annotated image.",
+    "created_on": "2012-12-20T01:11:59.064293+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/31279a5570dd"
+            }
+        },
+        "hash": "31279a5570dd"
+    },
+    "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 383,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/samskillman"
+            },
+            "html": {
+                "href": "https://bitbucket.org/samskillman/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Sam Skillman",
+        "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+        "username": "samskillman"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt/commit/7e2a33401f08"
+                }
+            },
+            "hash": "7e2a33401f08"
+        },
+        "repository": {
+            "full_name": "samskillman/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/samskillman/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/samskillman/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{f1df6f31-13ed-4d98-a11d-1954f1f1fdfa}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5a379eb6dc53"
+                }
+            },
+            "hash": "5a379eb6dc53"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68599"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68599"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Could you please change it to avoid using id (a builtin which returns a memory location ID) to something else?",
+                "html": "<p>Could you please change it to avoid using id (a builtin which returns a memory location ID) to something else?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:01:15.743555+00:00",
+            "updated_on": "2012-12-20T03:01:15.749689+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 31
+            },
+            "id": 68599
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68600"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68600"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "id again",
+                "html": "<p>id again</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:01:38.671426+00:00",
+            "updated_on": "2012-12-20T03:01:38.686212+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 44
+            },
+            "id": 68600
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68602"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68602"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "What if this were collapsed into \"elif node.id - size == rank\" and a final, top-level \"return False\" ?",
+                "html": "<p>What if this were collapsed into \"elif node.id - size == rank\" and a final, top-level \"return False\" ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:02:50.166672+00:00",
+            "updated_on": "2012-12-20T03:02:50.179375+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 63
+            },
+            "id": 68602
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68604"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68604"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "`if not should_i_build(node, rank, size): return` then the rest at top level?",
+                "html": "<p><code>if not should_i_build(node, rank, size): return</code> then the rest at top level?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:03:21.723383+00:00",
+            "updated_on": "2012-12-20T03:03:21.734816+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 70
+            },
+            "id": 68604
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68607"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68607"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "This is the same as \"return node.id < size\" I think",
+                "html": "<p>This is the same as \"return node.id &lt; size\" I think</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:04:20.257639+00:00",
+            "updated_on": "2012-12-20T03:04:20.264878+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 85
+            },
+            "id": 68607
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68609"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68609"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "`if not should_i_build(node, rank, size): return` then the rest at top level",
+                "html": "<p><code>if not should_i_build(node, rank, size): return</code> then the rest at top level</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:05:06.636967+00:00",
+            "updated_on": "2012-12-20T03:05:06.646881+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 118
+            },
+            "id": 68609
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68611"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68611"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68609"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68609"
+                    }
+                },
+                "id": 68609
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "actually, it can also include an `or len(grid_ids) == 0`.  Is `grid_ids` an array?  Could it be a call to .size?",
+                "html": "<p>actually, it can also include an <code>or len(grid_ids) == 0</code>.  Is <code>grid_ids</code> an array?  Could it be a call to .size?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:05:40.442585+00:00",
+            "updated_on": "2012-12-20T03:05:40.452895+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": null
+            },
+            "id": 68611
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68614"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68614"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I think if this is just before the vars go out of scope it shouldn't be necessary.",
+                "html": "<p>I think if this is just before the vars go out of scope it shouldn't be necessary.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:07:11.838773+00:00",
+            "updated_on": "2012-12-20T03:07:11.847461+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 175
+            },
+            "id": 68614
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68617"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68617"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Could this be `new_right = Node.right_edge.copy()` ?",
+                "html": "<p>Could this be <code>new_right = Node.right_edge.copy()</code> ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:07:36.460549+00:00",
+            "updated_on": "2012-12-20T03:07:36.471563+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 180
+            },
+            "id": 68617
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68621"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68621"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I like this being an iterator.",
+                "html": "<p>I like this being an iterator.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:08:36.802186+00:00",
+            "updated_on": "2012-12-20T03:08:36.813244+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 249
+            },
+            "id": 68621
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68622"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68622"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Sam, I'm still looking it over, but I am +1 on integrating you new kD-tree.  Can you also include a note why we now have a bunch of items which seem to me could be methods, but which are now separate routines?  I am not saying they need to be methods, but your input is welcome on this.",
+                "html": "<p>Sam, I'm still looking it over, but I am +1 on integrating you new kD-tree.  Can you also include a note why we now have a bunch of items which seem to me could be methods, but which are now separate routines?  I am not saying they need to be methods, but your input is welcome on this.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:09:55.325976+00:00",
+            "updated_on": "2012-12-20T03:09:55.336463+00:00",
+            "id": 68622
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68628"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..4d1f97eb808e?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68628"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "This is an interesting approach.  Good to see this reuse!",
+                "html": "<p>This is an interesting approach.  Good to see this reuse!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:19:46.653837+00:00",
+            "updated_on": "2012-12-20T03:19:46.660870+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": 1227
+            },
+            "id": 68628
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68629"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68629"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "`print` => `mylog.info` ?",
+                "html": "<p><code>print</code> =&gt; <code>mylog.info</code> ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:21:11.548719+00:00",
+            "updated_on": "2012-12-20T03:21:11.557868+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": 1239
+            },
+            "id": 68629
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68630"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68630"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "As another note, I think now that we are moving into a new philosophy of kD-trees and the new VR is fully integrated, I think we should reconsider how we feed arguments to the sampler and get rid of the \"get args\" stuff.",
+                "html": "<p>As another note, I think now that we are moving into a new philosophy of kD-trees and the new VR is fully integrated, I think we should reconsider how we feed arguments to the sampler and get rid of the \"get args\" stuff.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:21:57.240017+00:00",
+            "updated_on": "2012-12-20T03:21:57.251121+00:00",
+            "id": 68630
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68631"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68631"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Is there a way to assign max_node, if it is None, to some value such that we can coalesce the loops?",
+                "html": "<p>Is there a way to assign max_node, if it is None, to some value such that we can coalesce the loops?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:30:30.087902+00:00",
+            "updated_on": "2012-12-20T03:30:30.097270+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 251
+            },
+            "id": 68631
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68634"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68634"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "This will make some big arrays.  Can you try:\n\n`np.maximum(ta, 0.0, ta)`\n\ninstead?",
+                "html": "<p>This will make some big arrays.  Can you try:</p>\n<p><code>np.maximum(ta, 0.0, ta)</code></p>\n<p>instead?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:34:09.411306+00:00",
+            "updated_on": "2012-12-20T03:34:09.428474+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 361
+            },
+            "id": 68634
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68635"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68635"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Thinking about really big images, what if this were:\n\n    image = back.copy()\n    np.multiply(image, ta, image)\n    np.add(image, front, image)",
+                "html": "<p>Thinking about really big images, what if this were:</p>\n<div class=\"codehilite\"><pre><span></span>image = back.copy()\nnp.multiply(image, ta, image)\nnp.add(image, front, image)\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:36:22.807988+00:00",
+            "updated_on": "2012-12-20T03:36:22.814968+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 366
+            },
+            "id": 68635
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68637"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtools.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68637"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "`.ravel()` makes a copy I think.  Can this be done without raveling at all, just sending the 2D array?",
+                "html": "<p><code>.ravel()</code> makes a copy I think.  Can this be done without raveling at all, just sending the 2D array?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:37:29.440015+00:00",
+            "updated_on": "2012-12-20T03:37:29.452915+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtools.py",
+                "to": 371
+            },
+            "id": 68637
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68639"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:393c54de7807..fa22322ff149?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68639"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Is there a way this could be the logical_and intersection of two arrays?  I ask because this is three iterators in a row that do an iteration over N grids, and for each one, compare it against M grids in self.grids.",
+                "html": "<p>Is there a way this could be the logical_and intersection of two arrays?  I ask because this is three iterators in a row that do an iteration over N grids, and for each one, compare it against M grids in self.grids.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T03:40:34.928818+00:00",
+            "updated_on": "2012-12-20T03:40:34.935413+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": 85
+            },
+            "id": 68639
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68688"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68688"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68622"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68622"
+                    }
+                },
+                "id": 68622
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Hi Matt, thanks for all the comments.  I'll start crossing them off when I get a chance.  As for the items in amr_kdtools.py, I decided to put them outside of the AMRKDTree class method so that they can later be profiled/optimized/converted to cython.  They deal almost entirely with numpy arrays, scalars, and booleans.  Even the communicator pieces like size and rank are now separated out. This was one of the primary differences from the old way, which all hung off the class itself, and made it difficult to determine dependencies on \"self\" so it seemed like a good intermediate move to split it all out, then figure out where the slow parts are.  A lot of the old stuff relied on having the actual Grid objects or pieces of the pf in order to get child masks, etc.",
+                "html": "<p>Hi Matt, thanks for all the comments.  I'll start crossing them off when I get a chance.  As for the items in amr_kdtools.py, I decided to put them outside of the AMRKDTree class method so that they can later be profiled/optimized/converted to cython.  They deal almost entirely with numpy arrays, scalars, and booleans.  Even the communicator pieces like size and rank are now separated out. This was one of the primary differences from the old way, which all hung off the class itself, and made it difficult to determine dependencies on \"self\" so it seemed like a good intermediate move to split it all out, then figure out where the slow parts are.  A lot of the old stuff relied on having the actual Grid objects or pieces of the pf in order to get child masks, etc.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T05:03:42.650893+00:00",
+            "updated_on": "2012-12-20T05:03:42.661476+00:00",
+            "id": 68688
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69028"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69028"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "mutables shouldn't be in class definition",
+                "html": "<p>mutables shouldn't be in class definition</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:19:19.989843+00:00",
+            "updated_on": "2012-12-20T11:19:19.998275+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": 127
+            },
+            "id": 69028
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69029"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69029"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "If you are going to have a default list of fields, it should be immutable (tuple)",
+                "html": "<p>If you are going to have a default list of fields, it should be immutable (tuple)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:19:45.130624+00:00",
+            "updated_on": "2012-12-20T11:19:45.137467+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": 130
+            },
+            "id": 69029
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69032"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69032"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I'm not hugely keen on losing the entire docstring.  And I would say that in principle if may be okay to not have a bunch of var definitions if they are always set in the constructor.",
+                "html": "<p>I'm not hugely keen on losing the entire docstring.  And I would say that in principle if may be okay to not have a bunch of var definitions if they are always set in the constructor.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:21:06.133084+00:00",
+            "updated_on": "2012-12-20T11:21:06.139773+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": 137
+            },
+            "id": 69032
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69033"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69033"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "If we don't use any of the routines in homogenized volume, do we still need to subclass?  And, are there any remaining uses for HV?",
+                "html": "<p>If we don't use any of the routines in homogenized volume, do we still need to subclass?  And, are there any remaining uses for HV?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:22:19.124107+00:00",
+            "updated_on": "2012-12-20T11:22:19.135472+00:00",
+            "inline": {
+                "from": 159,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": null
+            },
+            "id": 69033
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69034"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69034"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/68688"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-68688"
+                    }
+                },
+                "id": 68688
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Those are pretty good reasons.  This is a very nice change -- thank you for doing it.  If we end up needing the change in performance, moving to Cython is a good idea, but that may not be necessary for now.  It's nice to have that option!",
+                "html": "<p>Those are pretty good reasons.  This is a very nice change -- thank you for doing it.  If we end up needing the change in performance, moving to Cython is a good idea, but that may not be necessary for now.  It's nice to have that option!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:23:07.850423+00:00",
+            "updated_on": "2012-12-20T11:23:07.859904+00:00",
+            "id": 69034
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69038"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69038"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Any chance you could move this else to be the first thing checked, and have the rest of the loop at top-level indentation?\n\n    if owners[node.parent.id] != myrank:\n        send_to_parent(self.comm, owners[node.parent.id], image)\n        break",
+                "html": "<p>Any chance you could move this else to be the first thing checked, and have the rest of the loop at top-level indentation?</p>\n<div class=\"codehilite\"><pre><span></span>if owners[node.parent.id] != myrank:\n    send_to_parent(self.comm, owners[node.parent.id], image)\n    break\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:25:58.686593+00:00",
+            "updated_on": "2012-12-20T11:25:58.695008+00:00",
+            "inline": {
+                "from": 350,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": null
+            },
+            "id": 69038
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69039"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69039"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Is int32 enough here?  It looks to me like it may be, but I wanted to make sure.",
+                "html": "<p>Is int32 enough here?  It looks to me like it may be, but I wanted to make sure.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:26:40.357887+00:00",
+            "updated_on": "2012-12-20T11:26:40.365480+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": 250
+            },
+            "id": 69039
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69041"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69041"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "This is exceptionally useful.  We need to apply this type of functionality to the ghost zone locator and to the oct handler in 3.0.",
+                "html": "<p>This is exceptionally useful.  We need to apply this type of functionality to the ghost zone locator and to the oct handler in 3.0.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:28:38.412617+00:00",
+            "updated_on": "2012-12-20T11:28:38.421218+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": 339
+            },
+            "id": 69041
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69042"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69042"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "`self.initialized` ?  And, wouldn't `_initialized` be set during `initialize_source`?  One other thought I had was that maybe we just need a decorator like `requires_volume` or something.",
+                "html": "<p><code>self.initialized</code> ?  And, wouldn't <code>_initialized</code> be set during <code>initialize_source</code>?  One other thought I had was that maybe we just need a decorator like <code>requires_volume</code> or something.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:29:47.985630+00:00",
+            "updated_on": "2012-12-20T11:29:47.995425+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": 375
+            },
+            "id": 69042
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69044"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69044"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Hm, I know this bare exception was here before, but maybe we could try to figure out how to catch the right one here?  My guess is that it would show up during the h5py.File.  But regardless, this could cause a silent failure on basically anything going wrong, and we should probably avoid that.",
+                "html": "<p>Hm, I know this bare exception was here before, but maybe we could try to figure out how to catch the right one here?  My guess is that it would show up during the h5py.File.  But regardless, this could cause a silent failure on basically anything going wrong, and we should probably avoid that.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:31:24.245135+00:00",
+            "updated_on": "2012-12-20T11:31:24.253231+00:00",
+            "inline": {
+                "from": 1300,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": null
+            },
+            "id": 69044
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69047"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..4d1f97eb808e?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69047"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I understand your comments in IRC much better now, and I agree it would be a good idea to try to simplify the arguments to cameras.  That should be a different initiative.",
+                "html": "<p>I understand your comments in IRC much better now, and I agree it would be a good idea to try to simplify the arguments to cameras.  That should be a different initiative.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:33:25.705222+00:00",
+            "updated_on": "2012-12-20T11:33:25.713458+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": 1122
+            },
+            "id": 69047
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69051"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..4d1f97eb808e?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69051"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I am +2 on getting rid of any use or reference to homogenized volume.  I would also actually prefer that if someone wants to do something particularly clever with the kD-tree, they should be supplying an instantiated kD-tree object.  This prevents the need to thread every argument through every camera type.",
+                "html": "<p>I am +2 on getting rid of any use or reference to homogenized volume.  I would also actually prefer that if someone wants to do something particularly clever with the kD-tree, they should be supplying an instantiated kD-tree object.  This prevents the need to thread every argument through every camera type.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:36:14.011518+00:00",
+            "updated_on": "2012-12-20T11:36:14.020770+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": 1186
+            },
+            "id": 69051
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69053"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..f4347686c434?path=yt%2Futilities%2Flib%2Fgrid_traversal.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69053"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Good catch",
+                "html": "<p>Good catch</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:37:15.636248+00:00",
+            "updated_on": "2012-12-20T11:37:15.645644+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/grid_traversal.pyx",
+                "to": 40
+            },
+            "id": 69053
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69058"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69058"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Hey Sam -- I've finished with comments on style and so on.  Today I'll test these changes.  I had a couple additional thoughts.\n\n * It's not clear to me we can supply a data object just yet.  For instance, is it possible to use a data source for masking of data, in addition to the child masking?  If I wanted to, say, only VR a sphere?  Or if I had an earthquake simulation and wanted to use boolean objects to cut out the outer core, could I do that?\n * I'd like to propose eliminating the homogenized volume, as these changes address the remaining performance and functionality differences.  This should go to the list, though.\n\nI'm a big +1 on having this go in after edits + testing.\n\n...speaking of which, before we can accept, I think we need to start testing basic functionality.  In the tests right now we largely use unigrid.  But there is the functionality to create pfs wholecloth that are AMR, using `load_amr_grids`.  Right now we don't do that.  We can use @scopatz 's AMR hierarchy array generation, and from that build fake random AMR pfs, and then use that for testing.  I think we really need to at this point, and this PR is a great reason to do so.  What do you think?",
+                "html": "<p>Hey Sam -- I've finished with comments on style and so on.  Today I'll test these changes.  I had a couple additional thoughts.</p>\n<ul>\n<li>It's not clear to me we can supply a data object just yet.  For instance, is it possible to use a data source for masking of data, in addition to the child masking?  If I wanted to, say, only VR a sphere?  Or if I had an earthquake simulation and wanted to use boolean objects to cut out the outer core, could I do that?</li>\n<li>I'd like to propose eliminating the homogenized volume, as these changes address the remaining performance and functionality differences.  This should go to the list, though.</li>\n</ul>\n<p>I'm a big +1 on having this go in after edits + testing.</p>\n<p>...speaking of which, before we can accept, I think we need to start testing basic functionality.  In the tests right now we largely use unigrid.  But there is the functionality to create pfs wholecloth that are AMR, using <code>load_amr_grids</code>.  Right now we don't do that.  We can use <a href=\"/scopatz/\" rel=\"nofollow\" title=\"@scopatz\" class=\"mention\">Anthony Scopatz</a> 's AMR hierarchy array generation, and from that build fake random AMR pfs, and then use that for testing.  I think we really need to at this point, and this PR is a great reason to do so.  What do you think?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T11:40:52.859427+00:00",
+            "updated_on": "2012-12-20T11:40:52.880440+00:00",
+            "id": 69058
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69463"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..4d1f97eb808e?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69463"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "That line breaks my keen sense of symmetry",
+                "html": "<p>That line breaks my keen sense of symmetry</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T16:36:00.659005+00:00",
+            "updated_on": "2012-12-20T16:36:00.671602+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": 1217
+            },
+            "id": 69463
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69471"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..4d1f97eb808e?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69471"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "What does 1.0e6 stand for?",
+                "html": "<p>What does 1.0e6 stand for?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T16:42:46.653280+00:00",
+            "updated_on": "2012-12-20T16:42:56.549344+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": 334
+            },
+            "id": 69471
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69480"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:8c4814bc098b..4d1f97eb808e?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69480"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Is that line necessary? `self.rotation_vector` is overwritten in line 1172 and I don't see it being used anywhere in between",
+                "html": "<p>Is that line necessary? <code>self.rotation_vector</code> is overwritten in line 1172 and I don't see it being used anywhere in between</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T16:49:23.666429+00:00",
+            "updated_on": "2012-12-20T16:49:23.675788+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": 1152
+            },
+            "id": 69480
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69483"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69483"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69480"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69480"
+                    }
+                },
+                "id": 69480
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "And what happened to using the Orientation class from @ngoldbaum ?",
+                "html": "<p>And what happened to using the Orientation class from <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> ?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T16:50:28.420860+00:00",
+            "updated_on": "2012-12-20T16:50:28.455906+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": null
+            },
+            "id": 69483
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69487"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69487"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Sam, do you want line-by-line comments at this stage?  Your PR said that you did not.",
+                "html": "<p>Sam, do you want line-by-line comments at this stage?  Your PR said that you did not.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T16:55:44.514191+00:00",
+            "updated_on": "2012-12-20T16:55:44.522331+00:00",
+            "id": 69487
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69490"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69490"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Sam, after Britton's comment, I realized I misread your PR to say the opposite of what it does.  Sorry for the line-by-lines early on in the process!",
+                "html": "<p>Sam, after Britton's comment, I realized I misread your PR to say the opposite of what it does.  Sorry for the line-by-lines early on in the process!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T16:57:30.468036+00:00",
+            "updated_on": "2012-12-20T16:57:30.475328+00:00",
+            "id": 69490
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69562"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69562"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I've tested VR on my old script. I've noticed two things\n\n* imaged is flipped\n* old rendering seems to be sharper\n\nExample is [here](http://i.imgur.com/qGFR8.png) and here's the [script](https://paste.lugons.org/show/ENHSdYFP16YvqF5wbyHX/)",
+                "html": "<p>I've tested VR on my old script. I've noticed two things</p>\n<ul>\n<li>imaged is flipped</li>\n<li>old rendering seems to be sharper</li>\n</ul>\n<p>Example is <a href=\"http://i.imgur.com/qGFR8.png\">here</a> and here's the <a href=\"https://paste.lugons.org/show/ENHSdYFP16YvqF5wbyHX/\">script</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-20T17:35:19.158493+00:00",
+            "updated_on": "2012-12-20T17:35:19.164761+00:00",
+            "id": 69562
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69828"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69828"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69038"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69038"
+                    }
+                },
+                "id": 69038
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I think that's more confusing if you think about it as a tree, so for simplicity, I'm going to leave it.",
+                "html": "<p>I think that's more confusing if you think about it as a tree, so for simplicity, I'm going to leave it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-21T00:02:21.101153+00:00",
+            "updated_on": "2012-12-21T00:02:21.109997+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": null
+            },
+            "id": 69828
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69830"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Futilities%2Famr_kdtree%2Famr_kdtree.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69830"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69039"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69039"
+                    }
+                },
+                "id": 69039
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "yup, unless you have a single grid that is gigantic.",
+                "html": "<p>yup, unless you have a single grid that is gigantic.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-21T00:03:10.123346+00:00",
+            "updated_on": "2012-12-21T00:03:10.137434+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/amr_kdtree/amr_kdtree.py",
+                "to": null
+            },
+            "id": 69830
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69835"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69835"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69471"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69471"
+                    }
+                },
+                "id": 69471
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "infinity, basically.  puts it far enough away to make the traversal correct for plane-parallel renders.",
+                "html": "<p>infinity, basically.  puts it far enough away to make the traversal correct for plane-parallel renders.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-21T00:16:06.876434+00:00",
+            "updated_on": "2012-12-21T00:16:06.884965+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": null
+            },
+            "id": 69835
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69838"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/samskillman/yt:None..None?path=yt%2Fvisualization%2Fvolume_rendering%2Fcamera.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69838"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69483"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69483"
+                    }
+                },
+                "id": 69483
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "that would be line 1172 that Kacper mentioned. fixed now.",
+                "html": "<p>that would be line 1172 that Kacper mentioned. fixed now.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2012-12-21T00:19:16.470518+00:00",
+            "updated_on": "2012-12-21T00:19:16.479504+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/volume_rendering/camera.py",
+                "to": null
+            },
+            "id": 69838
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/89191"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-89191"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/69058"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-69058"
+                    }
+                },
+                "id": 69058
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Hi Matt,\n\nYou can not yet supply a data object yet.  All that it would need is a interface to iterate over the level sets of grids held by that data object. I am also not sure yet how to handle masking of data for things like spheres.  \n\nI haven't removed the HV yet, maybe PR it later?  In general I've tried to keep backwards compatibility in this change, to hold off on breaking until later (which we should definitely do!).  \n\nI have added a test that uses load_uniform_grid and refine_amr to build a fake AMR dataset. I didn't quite see how to make random pfs, but that is something we could add later.",
+                "html": "<p>Hi Matt,</p>\n<p>You can not yet supply a data object yet.  All that it would need is a interface to iterate over the level sets of grids held by that data object. I am also not sure yet how to handle masking of data for things like spheres.  </p>\n<p>I haven't removed the HV yet, maybe PR it later?  In general I've tried to keep backwards compatibility in this change, to hold off on breaking until later (which we should definitely do!).  </p>\n<p>I have added a test that uses load_uniform_grid and refine_amr to build a fake AMR dataset. I didn't quite see how to make random pfs, but that is something we could add later.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-01-18T21:45:12.835554+00:00",
+            "updated_on": "2013-01-18T21:45:12.841182+00:00",
+            "id": 89191
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/devinsilvia"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/devinsilvia/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/devinsilvia/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Devin Silvia",
+                "uuid": "{de10a23c-34a0-4f76-a031-b5ec3b2a34db}",
+                "username": "devinsilvia"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/103420"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-103420"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "I just thought I'd chime in on this pull request.  I just ran a test using a script that I know was working with the current tip of yt (rev: 0514b03), which produced this:\n\nhttp://i.imgur.com/kaN3Lhr.png\n\nRunning that exact same script with the version associated with this PR, I get:\n\nhttp://i.imgur.com/7GmEUm1.png\n\nIt looks like the way the scale keyword works has changed and the method for generating an opaque render is now different.  I'm may have missed an explanation somewhere as to how exactly opaque rendering has changed, but I thought it was worth documenting what I've encountered.\n\n\n\n",
+                "html": "<p>I just thought I'd chime in on this pull request.  I just ran a test using a script that I know was working with the current tip of yt (rev: <a href=\"/yt_analysis/yt/commits/0514b03\" rel=\"nofollow\">0514b03</a>), which produced this:</p>\n<p><a href=\"http://i.imgur.com/kaN3Lhr.png\" rel=\"nofollow\">http://i.imgur.com/kaN3Lhr.png</a></p>\n<p>Running that exact same script with the version associated with this PR, I get:</p>\n<p><a href=\"http://i.imgur.com/7GmEUm1.png\" rel=\"nofollow\">http://i.imgur.com/7GmEUm1.png</a></p>\n<p>It looks like the way the scale keyword works has changed and the method for generating an opaque render is now different.  I'm may have missed an explanation somewhere as to how exactly opaque rendering has changed, but I thought it was worth documenting what I've encountered.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-01T01:03:26.169675+00:00",
+            "updated_on": "2013-02-01T01:03:26.292312+00:00",
+            "id": 103420
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/samskillman"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/samskillman/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Sam Skillman",
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
+                "username": "samskillman"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/104466"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-104466"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/103420"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-103420"
+                    }
+                },
+                "id": 103420
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Thanks for testing @devinsilvia, I think this is due to how the opacity is calculated in the old version vs the new.  I've re-created this behavior locally.  I think the new method is more explicit and easily controlled, so if you were to bump up the scale factor from what it was to that value**2, I think you would see a similar behavior to before.  The nice thing with the new way is that if you have the opacity set to 10.0, then if you pass through 0.1 of the view depth at that value, it will be \"opaque\", so it has a better correspondence to optical depth than before.  Let me know if squaring the scale factor in that image returns it to something similar to before.",
+                "html": "<p>Thanks for testing <a href=\"/devinsilvia/\" rel=\"nofollow\" title=\"@devinsilvia\" class=\"mention\">Devin Silvia</a>, I think this is due to how the opacity is calculated in the old version vs the new.  I've re-created this behavior locally.  I think the new method is more explicit and easily controlled, so if you were to bump up the scale factor from what it was to that value**2, I think you would see a similar behavior to before.  The nice thing with the new way is that if you have the opacity set to 10.0, then if you pass through 0.1 of the view depth at that value, it will be \"opaque\", so it has a better correspondence to optical depth than before.  Let me know if squaring the scale factor in that image returns it to something similar to before.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-01T23:10:39.028071+00:00",
+            "updated_on": "2013-02-01T23:10:39.296190+00:00",
+            "id": 104466
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/devinsilvia"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/devinsilvia/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/devinsilvia/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Devin Silvia",
+                "uuid": "{de10a23c-34a0-4f76-a031-b5ec3b2a34db}",
+                "username": "devinsilvia"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/104472"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-104472"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/104466"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-104466"
+                    }
+                },
+                "id": 104466
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Thanks for digging into this @samskillman. When I square my scale factor, I get:\n\nhttp://i.imgur.com/JBu809o.png\n\nwhich is much closer to the original image, though still a bit less opaque.  I also see you point about the scale factor being a bit more intuitive and know that I know what the appropriate sorts of values are, this all looks good to me.",
+                "html": "<p>Thanks for digging into this <a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a>. When I square my scale factor, I get:</p>\n<p><a href=\"http://i.imgur.com/JBu809o.png\" rel=\"nofollow\">http://i.imgur.com/JBu809o.png</a></p>\n<p>which is much closer to the original image, though still a bit less opaque.  I also see you point about the scale factor being a bit more intuitive and know that I know what the appropriate sorts of values are, this all looks good to me.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-01T23:28:50.138911+00:00",
+            "updated_on": "2013-02-01T23:28:50.374000+00:00",
+            "id": 104472
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/105990"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-105990"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/104472"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-104472"
+                    }
+                },
+                "id": 104472
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "So I guess now that we have this cleared up, we'll need to make sure people understand the difference.  And overall, this seems like an improvement.  I think what we need is a reminder email to yt-dev, combined with a big notice that the images might be different and scripts need minor adjusting, and then have at it?",
+                "html": "<p>So I guess now that we have this cleared up, we'll need to make sure people understand the difference.  And overall, this seems like an improvement.  I think what we need is a reminder email to yt-dev, combined with a big notice that the images might be different and scripts need minor adjusting, and then have at it?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-04T19:15:19.580072+00:00",
+            "updated_on": "2013-02-04T19:15:19.588238+00:00",
+            "id": 105990
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/106015"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-106015"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/105990"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-105990"
+                    }
+                },
+                "id": 105990
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Perhaps we should also add an entry to the FAQ that we can link to if people e-mail the users list or drop in on IRC?",
+                "html": "<p>Perhaps we should also add an entry to the FAQ that we can link to if people e-mail the users list or drop in on IRC?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-04T19:24:47.096165+00:00",
+            "updated_on": "2013-02-04T19:24:47.103134+00:00",
+            "id": 106015
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/106016"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-106016"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/106015"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-106015"
+                    }
+                },
+                "id": 106015
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "Great idea.",
+                "html": "<p>Great idea.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-04T19:25:28.089604+00:00",
+            "updated_on": "2013-02-04T19:25:28.100128+00:00",
+            "id": 106016
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383/comments/110020"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383/_/diff#comment-110020"
+                }
+            },
+            "pullrequest": {
+                "title": "AMRKDTree rewrite, Volume Rendering Upgrades",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/383"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/383"
+                    }
+                },
+                "id": 383
+            },
+            "content": {
+                "raw": "So, are we ready to go on this?",
+                "html": "<p>So, are we ready to go on this?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-02-07T19:53:57.039579+00:00",
+            "updated_on": "2013-02-07T19:53:57.047776+00:00",
+            "id": 110020
+        }
+    ]
+}

@@ -1,0 +1,1483 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-05-29T20:00:30.090263+00:00",
+    "comment_count": 24,
+    "description": "When we developed the FITS frontend at NRAO, @samskillman included some code which allowed one to take line data from a spectral cube FITS file and implement the different lines as a series of fields, if the user provided a database of line names, locations, and widths. \r\n\r\nWhile this was a great demonstration of yt's capabilties, the logic that is required to make it work makes the FITS frontend a lot more complicated than it already is, especially in `FITSIOHandler`. I also think it's too specific a use case to be part of the frontend itself.\r\n\r\nThe purpose of this PR is to strip this logic out of the FITS frontend, in favor of re-implementing it at a later date as some kind of plugin. It's not clear to me that it's being used by anyone. Removing it makes what is going on with the FITS frontend more comprehensible. \r\n\r\nUPDATE:\r\n\r\nI've reimplemented this functionality in a new function, `create_spectral_slabs`. It uses the [spectral-cube](http://spectral-cube.readthedocs.org) package to create the fields. It writes a new FITS file which contains the different spectral slabs in different FITS images, in a format that yt readily understands. I also added info about this function to the docs (we did not document the previous functionality at all).\r\n\r\n@MatthewTurk I think that generalizing this to non-FITS-based data is straightforward when the time comes, and we won't have to change this much in order to do so. \r\n\r\nUPDATE 2: This now returns a `FITSDataset` instance directly instead of writing a file, which was a good suggestion from @keflavich.",
+    "created_on": "2015-05-13T22:49:22.562406+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d6983e51e584"
+            }
+        },
+        "hash": "d6983e51e584"
+    },
+    "title": "Removing line database stuff from the FITS frontend",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "id": 1588,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/ed58bda6ac61"
+                }
+            },
+            "hash": "ed58bda6ac61"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt-3.x",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
+                }
+            },
+            "name": "yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/718444346962"
+                }
+            },
+            "hash": "718444346962"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6854009"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6854009"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-13T23:42:38.795653+00:00",
+            "updated_on": "2015-05-13T23:42:38.872485+00:00",
+            "id": 6854009
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6872449"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6872449"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "So I will be putting together something in the short term to replace this, but I will probably issue it in a separate PR later. ",
+                "html": "<p>So I will be putting together something in the short term to replace this, but I will probably issue it in a separate PR later. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-14T17:17:55.885167+00:00",
+            "updated_on": "2015-05-14T17:17:55.896580+00:00",
+            "id": 6872449
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6932911"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6932911"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6872449"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6872449"
+                    }
+                },
+                "id": 6872449
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "Never mind, it's here now. Have a look. ",
+                "html": "<p>Never mind, it's here now. Have a look. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-18T18:10:06.396615+00:00",
+            "updated_on": "2015-05-18T18:10:06.408050+00:00",
+            "id": 6932911
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6933742"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6933742"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-18T18:47:25.851104+00:00",
+            "updated_on": "2015-05-18T18:47:25.893670+00:00",
+            "id": 6933742
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6934466"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6934466"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-18T19:24:10.521076+00:00",
+            "updated_on": "2015-05-18T19:24:10.576772+00:00",
+            "id": 6934466
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6950841"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:4862720ce973..369077df8a96?path=yt%2Ffrontends%2Ffits%2Fmisc.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6950841"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "slight (non-binding, non-dealbreaker) preference here for `filename.rsplit(\".\", 2)[0]`",
+                "html": "<p>slight (non-binding, non-dealbreaker) preference here for <code>filename.rsplit(\".\", 2)[0]</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-19T11:16:12.437243+00:00",
+            "updated_on": "2015-05-19T11:16:12.449996+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/misc.py",
+                "to": 140
+            },
+            "id": 6950841
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6950847"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:4862720ce973..369077df8a96?path=yt%2Ffrontends%2Ffits%2Fmisc.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6950847"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "similarly here",
+                "html": "<p>similarly here</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-19T11:16:23.644870+00:00",
+            "updated_on": "2015-05-19T11:16:23.655904+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/misc.py",
+                "to": 142
+            },
+            "id": 6950847
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6968662"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6968662"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-19T21:44:28.005698+00:00",
+            "updated_on": "2015-05-19T21:44:28.045205+00:00",
+            "id": 6968662
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6987892"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6987892"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "@keflavich do you have any thoughts on this PR?",
+                "html": "<p><a href=\"/keflavich/\" rel=\"nofollow\" title=\"@keflavich\" class=\"mention\">Adam Ginsburg</a> do you have any thoughts on this PR?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T14:43:59.632841+00:00",
+            "updated_on": "2015-05-20T14:43:59.651812+00:00",
+            "id": 6987892
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/keflavich"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/keflavich/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/keflavich/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Adam Ginsburg",
+                "uuid": "{f5c2fa81-d2e1-4412-8b7e-6182c7adf729}",
+                "username": "keflavich"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6988684"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6988684"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "It looks fine, but I am not sure I understand entirely yet.  Is it really necessary to write the new cubes to disk?  The big advantage of `SpectralCube` is that it is very cheap and easy to make new slabs (with new centers) without ever duplicating the data in memory or on disk.  What you have is useful, but it would be useful to also have direct access to in-memory cubes.",
+                "html": "<p>It looks fine, but I am not sure I understand entirely yet.  Is it really necessary to write the new cubes to disk?  The big advantage of <code>SpectralCube</code> is that it is very cheap and easy to make new slabs (with new centers) without ever duplicating the data in memory or on disk.  What you have is useful, but it would be useful to also have direct access to in-memory cubes.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T15:05:10.988088+00:00",
+            "updated_on": "2015-05-20T15:05:11.041333+00:00",
+            "id": 6988684
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6989207"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6989207"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6988684"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6988684"
+                    }
+                },
+                "id": 6988684
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "We don't have to write it to disk, no. But the idea is to create something that yt can load up as a dataset, and we want something where the different slabs become different yt fields on the _same_ grid, where everything is rescaled to a new spectral axis where the center is the origin. This is what the yt class `FITSImageBuffer` is used for in this case. Now, we can create a `FITSImageBuffer` instance in memory, and create a dataset instance out of it in yt, without having to write it to disk. But I think that the use case here goes beyond a little what `SpectralCube` is trying to do, and is more yt-centric (otherwise I would probably have implemented this in `SpectralCube`).\n\nThe only question, then, is if in the process of making the `FITSImageBuffer` instance it becomes necessary to copy data. ",
+                "html": "<p>We don't have to write it to disk, no. But the idea is to create something that yt can load up as a dataset, and we want something where the different slabs become different yt fields on the <em>same</em> grid, where everything is rescaled to a new spectral axis where the center is the origin. This is what the yt class <code>FITSImageBuffer</code> is used for in this case. Now, we can create a <code>FITSImageBuffer</code> instance in memory, and create a dataset instance out of it in yt, without having to write it to disk. But I think that the use case here goes beyond a little what <code>SpectralCube</code> is trying to do, and is more yt-centric (otherwise I would probably have implemented this in <code>SpectralCube</code>).</p>\n<p>The only question, then, is if in the process of making the <code>FITSImageBuffer</code> instance it becomes necessary to copy data. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T15:18:21.697397+00:00",
+            "updated_on": "2015-05-20T15:18:21.703667+00:00",
+            "id": 6989207
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6989656"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:3678a87c7c39..22a2033a43a7?path=yt%2Ffrontends%2Ffits%2Fmisc.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6989656"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "@keflavich I'm assuming that by grabbing the subcube data this way, I am making a copy, correct?",
+                "html": "<p><a href=\"/keflavich/\" rel=\"nofollow\" title=\"@keflavich\" class=\"mention\">Adam Ginsburg</a> I'm assuming that by grabbing the subcube data this way, I am making a copy, correct?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T15:28:48.412973+00:00",
+            "updated_on": "2015-05-20T15:28:48.423421+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/misc.py",
+                "to": 129
+            },
+            "id": 6989656
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6989828"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6989828"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6989207"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6989207"
+                    }
+                },
+                "id": 6989207
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "I would be interested in @astrofrog's thoughts on this as well. ",
+                "html": "<p>I would be interested in <a href=\"/astrofrog/\" rel=\"nofollow\" title=\"@astrofrog\" class=\"mention\">astrofrog</a>'s thoughts on this as well. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T15:33:12.368726+00:00",
+            "updated_on": "2015-05-20T15:33:12.480731+00:00",
+            "id": 6989828
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/keflavich"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/keflavich/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/keflavich/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Adam Ginsburg",
+                "uuid": "{f5c2fa81-d2e1-4412-8b7e-6182c7adf729}",
+                "username": "keflavich"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6991418"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Ffits%2Fmisc.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6991418"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6989656"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6989656"
+                    }
+                },
+                "id": 6989656
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "You're getting a copy of the `SpectralCube` object, but not the underlying data.  You'd need to use `subcube.filled_data[:,:,:]` to load it into memory.  I'm not sure which question you're asking",
+                "html": "<p>You're getting a copy of the <code>SpectralCube</code> object, but not the underlying data.  You'd need to use <code>subcube.filled_data[:,:,:]</code> to load it into memory.  I'm not sure which question you're asking</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T16:17:27.073995+00:00",
+            "updated_on": "2015-05-20T16:17:27.117619+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/misc.py",
+                "to": null
+            },
+            "id": 6991418
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6992099"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Ffits%2Fmisc.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6992099"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6991418"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6991418"
+                    }
+                },
+                "id": 6991418
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "What I'd like to do is get a NumPy array corresponding to the 3D array of the subcube's data without creating a copy, if that is possible. ",
+                "html": "<p>What I'd like to do is get a NumPy array corresponding to the 3D array of the subcube's data without creating a copy, if that is possible. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T16:41:06.738994+00:00",
+            "updated_on": "2015-05-20T16:41:06.753331+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/misc.py",
+                "to": null
+            },
+            "id": 6992099
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/keflavich"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/keflavich/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/keflavich/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Adam Ginsburg",
+                "uuid": "{f5c2fa81-d2e1-4412-8b7e-6182c7adf729}",
+                "username": "keflavich"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6992126"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Ffits%2Fmisc.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6992126"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6992099"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6992099"
+                    }
+                },
+                "id": 6992099
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "`filled_data[:]` will do that: no copy, but it will force loading the data into memory (if it was memmap'd before)",
+                "html": "<p><code>filled_data[:]</code> will do that: no copy, but it will force loading the data into memory (if it was memmap'd before)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T16:42:16.876271+00:00",
+            "updated_on": "2015-05-20T16:42:16.924573+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/fits/misc.py",
+                "to": null
+            },
+            "id": 6992126
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/6995541"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-6995541"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-20T19:03:57.960080+00:00",
+            "updated_on": "2015-05-20T19:03:58.001795+00:00",
+            "id": 6995541
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7043882"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7043882"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "@keflavich mind having another look, and if it's ok with you, hit the Approve button?",
+                "html": "<p><a href=\"/keflavich/\" rel=\"nofollow\" title=\"@keflavich\" class=\"mention\">Adam Ginsburg</a> mind having another look, and if it's ok with you, hit the Approve button?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-22T12:59:14.204101+00:00",
+            "updated_on": "2015-05-22T12:59:14.213415+00:00",
+            "id": 7043882
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/astrofrog"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/astrofrog/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/astrofrog/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "astrofrog",
+                "uuid": "{bcaaba2f-d294-45d4-850a-00ce6b0d3e54}",
+                "username": "astrofrog"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192611"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192611"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "A little late, but this looks good to me - just one suggestion though, it might be worth clarifying in the docstring what the benefits of doing this via yt are rather than using the spectral-cube package directly (we should implement a similar function in spectral-cube by the way)",
+                "html": "<p>A little late, but this looks good to me - just one suggestion though, it might be worth clarifying in the docstring what the benefits of doing this via yt are rather than using the spectral-cube package directly (we should implement a similar function in spectral-cube by the way)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T19:48:37.217368+00:00",
+            "updated_on": "2015-05-29T19:48:37.279043+00:00",
+            "id": 7192611
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192680"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192680"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192611"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192611"
+                    }
+                },
+                "id": 7192611
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "Good point. For me, I think the benefit is that you get a yt dataset as output, with all of these lines re-gridded to the same domain as fields. I think the \"multiple fields at once\" aspect of it is the strength that yt offers. ",
+                "html": "<p>Good point. For me, I think the benefit is that you get a yt dataset as output, with all of these lines re-gridded to the same domain as fields. I think the \"multiple fields at once\" aspect of it is the strength that yt offers. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T19:51:58.280175+00:00",
+            "updated_on": "2015-05-29T19:51:58.287711+00:00",
+            "id": 7192680
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/astrofrog"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/astrofrog/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/astrofrog/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "astrofrog",
+                "uuid": "{bcaaba2f-d294-45d4-850a-00ce6b0d3e54}",
+                "username": "astrofrog"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192741"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192741"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192680"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192680"
+                    }
+                },
+                "id": 7192680
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "That sounds good - maybe you could just add that in the docstring? (just in case users ask a similar question)",
+                "html": "<p>That sounds good - maybe you could just add that in the docstring? (just in case users ask a similar question)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T19:55:42.575870+00:00",
+            "updated_on": "2015-05-29T19:55:42.631899+00:00",
+            "id": 7192741
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/keflavich"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/keflavich/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/keflavich/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Adam Ginsburg",
+                "uuid": "{f5c2fa81-d2e1-4412-8b7e-6182c7adf729}",
+                "username": "keflavich"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192758"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192758"
+                }
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "Also, sorry I'm late reviewing, but it looks good; I don't have any major comments.  \n\nFollowing on astrofrog's question, what can you do with multiple fields?  And they're not really regridded, just approximately on the same grid, right? (regridding would require some interpolation)",
+                "html": "<p>Also, sorry I'm late reviewing, but it looks good; I don't have any major comments.  </p>\n<p>Following on astrofrog's question, what can you do with multiple fields?  And they're not really regridded, just approximately on the same grid, right? (regridding would require some interpolation)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T19:56:57.179335+00:00",
+            "updated_on": "2015-05-29T19:56:57.234142+00:00",
+            "id": 7192758
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192807"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192807"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192758"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192758"
+                    }
+                },
+                "id": 7192758
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "A couple of examples are:\n\n* If you wanted to make a phase plot of one line versus another\n* If you wanted to plot rays of the lines against each other at a given spatial location\n\n@samskillman showed some of these in a notebook at the NRAO meeting--I'll have to dig that up again and put it in the docs. ",
+                "html": "<p>A couple of examples are:</p>\n<ul>\n<li>If you wanted to make a phase plot of one line versus another</li>\n<li>If you wanted to plot rays of the lines against each other at a given spatial location</li>\n</ul>\n<p><a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a> showed some of these in a notebook at the NRAO meeting--I'll have to dig that up again and put it in the docs. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T20:00:12.547638+00:00",
+            "updated_on": "2015-05-29T20:00:12.562716+00:00",
+            "id": 7192807
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192820"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192820"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588/comments/7192807"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588/_/diff#comment-7192807"
+                    }
+                },
+                "id": 7192807
+            },
+            "pullrequest": {
+                "title": "Removing line database stuff from the FITS frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1588"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1588"
+                    }
+                },
+                "id": 1588
+            },
+            "content": {
+                "raw": "That notebook does work with the new way of doing it as well. ",
+                "html": "<p>That notebook does work with the new way of doing it as well. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-05-29T20:00:30.075725+00:00",
+            "updated_on": "2015-05-29T20:00:30.085308+00:00",
+            "id": 7192820
+        }
+    ]
+}

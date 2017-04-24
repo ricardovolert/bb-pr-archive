@@ -1,0 +1,3348 @@
+{
+    "reason": "",
+    "state": "OPEN",
+    "updated_on": "2017-04-21T11:36:51.178679+00:00",
+    "comment_count": 53,
+    "description": "# Overview #\r\n\r\n[SimulationIO](https://github.com/eschnett/SimulationIO) is a data format created by @eschnett for relativistic simulations that is designed to be extremely self-describing. SimulationIO uses a category theory graph to describe all parameters of the simulation, including manifold properties and topology, coordinate system, tensorial structure, coordinate systems and tangent spaces, etc. We have a converter from Carpet's native IO format to SimulationIO and we'd like to use SimulationIO as a target for the Einstein Toolkit and Carpet.\r\n\r\nThis pull request provides a reader for SimulationIO in yt that can handle many of the situations one encounters in the Einstein Toolkit. There are, unfortunately, missing features. However, I believe that SimulationIO and the frontend are now sufficiently mature that they can be released for Einstein Toolkit users to try and make use of.\r\n\r\n## Getting Everything to Work ##\r\n\r\nTo use the frontend, you must:\r\n\r\n* Install a version of yt with the frontend (obviously)\r\n*  install HDF5 version 1.8.16 or higher\r\n* Install the release-0.1 version of SimulationIO as per the instructions [here](https://github.com/eschnett/SimulationIO/tree/release-0.1).\r\n\r\n### Living Documents ###\r\n\r\n* This file is my to-do list. I will keep it up to date:\r\n```\r\nyt/frontends/simulationio/TODO.md\r\n```\r\n\r\n## Current Status ##\r\n\r\nThe frontend can successfully read Cartesian cell-centred AMR data. However the Einstein Toolkit supports semi-structured meshes via both a multiblock and discontinuous Galerkin infrastructure. It also supports vertex-centred AMR. Sadly, none of these features are compatible with the frontend.\r\n\r\n## Wish List ##\r\n\r\nThese are my long term goals, in rough order of priority.\r\n\r\n* vertex-centred data\r\n* Support for the Einstein Toolk's [multipatch infrastructure](http://llamacode.bitbucket.org/)\r\n* Support for the Einstein Toolkit's [operator-based discontinuous Galerkin methods](http://arxiv.org/abs/1604.00075)\r\n",
+    "created_on": "2016-10-07T21:01:03.255439+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "A SimulationIO Frontend",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments"
+        }
+    },
+    "closed_by": null,
+    "id": 2410,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+            },
+            "html": {
+                "href": "https://bitbucket.org/Yurlungur/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Jonah Miller",
+        "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+        "username": "Yurlungur"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/Yurlungur/yt-simulationio/commit/98431f9b6a19"
+                }
+            },
+            "hash": "98431f9b6a19"
+        },
+        "repository": {
+            "full_name": "Yurlungur/yt-simulationio",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/Yurlungur/yt-simulationio"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/Yurlungur/yt-simulationio"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/Yurlungur/yt-simulationio/avatar/32/"
+                }
+            },
+            "name": "yt-simulationio",
+            "uuid": "{6bfffe9e-ee89-436f-9cc3-2ad540668219}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/634cc55bf066"
+                }
+            },
+            "hash": "634cc55bf066"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24897308"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24897308"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1260/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1261/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1262/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1262/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/281/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1263/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1263/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/282/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1265/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1265/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/283/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1266/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1266/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1267/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/284/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1268/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1268/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/285/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/286/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1269/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1269/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/287/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1270/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1271/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1272/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/288/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/289/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1273/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1273/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/290/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/291/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1274/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1274/artifact/sandbox/doc/build/html/index.html\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/292/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/294/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1276/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1276/artifact/sandbox/doc/build/html/index.html\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/297/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1281/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1281/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/305/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/309/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1282/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1282/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1283/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1283/artifact/sandbox/doc/build/html/index.html\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/311/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/366/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1325/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1325/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/367/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1326/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1326/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/368/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1327/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1327/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/371/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1331/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1331/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/372/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1332/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1332/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/432/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/433/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1367/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1367/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1368/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1368/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/437/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/438/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1370/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1370/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/444/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1374/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1374/artifact/sandbox/doc/build/html/index.html\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/445/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1375/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1375/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/460/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1385/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1385/artifact/sandbox/doc/build/html/index.html\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/461/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1386/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1386/artifact/sandbox/doc/build/html/index.html\n",
+                "html": "<ul>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1260/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1260/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1261/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1261/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1262/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1262/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1262/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1262/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/281/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/281/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1263/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1263/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1263/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1263/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/282/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/282/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1265/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1265/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1265/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1265/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/283/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/283/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1266/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1266/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1266/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1266/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1267/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1267/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/284/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/284/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1268/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1268/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1268/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1268/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/285/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/285/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/286/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/286/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1269/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1269/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1269/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1269/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/287/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/287/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1270/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1270/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1271/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1271/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1272/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1272/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/288/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/288/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/289/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/289/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1273/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1273/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1273/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1273/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/290/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/290/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/291/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/291/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1274/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1274/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1274/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1274/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/292/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/292/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/294/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/294/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1276/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1276/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1276/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1276/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/297/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/297/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1281/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1281/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1281/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1281/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/305/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/305/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/309/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/309/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1282/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1282/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1282/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1282/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1283/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1283/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1283/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1283/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/311/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/311/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/366/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/366/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1325/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1325/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1325/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1325/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/367/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/367/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1326/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1326/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1326/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1326/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/368/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/368/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1327/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1327/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1327/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1327/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/371/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/371/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1331/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1331/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1331/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1331/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/372/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/372/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1332/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1332/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1332/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1332/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/432/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/432/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/433/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/433/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1367/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1367/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1367/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1367/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1368/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1368/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1368/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1368/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/437/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/437/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/438/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/438/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1370/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1370/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1370/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1370/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/444/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/444/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1374/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1374/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1374/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1374/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/445/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/445/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1375/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1375/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1375/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1375/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/460/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/460/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1385/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1385/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1385/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1385/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/461/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/461/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1386/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1386/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1386/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1386/artifact/sandbox/doc/build/html/index.html</a></li>\n</ul>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-07T21:08:26.082040+00:00",
+            "updated_on": "2016-12-16T00:15:50.933518+00:00",
+            "id": 24897308
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24898625"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:0ab8275dc9cb..7241a78e40e5?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24898625"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "In general we avoid using bare excepts, since it can lead to unintended consequences. See http://stackoverflow.com/questions/21553327/why-is-except-pass-a-bad-programming-practice for a detailed explanation.",
+                "html": "<p>In general we avoid using bare excepts, since it can lead to unintended consequences. See <a href=\"http://stackoverflow.com/questions/21553327/why-is-except-pass-a-bad-programming-practice\" rel=\"nofollow\">http://stackoverflow.com/questions/21553327/why-is-except-pass-a-bad-programming-practice</a> for a detailed explanation.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-07T21:53:27.311191+00:00",
+            "updated_on": "2016-10-07T21:53:27.313294+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 792
+            },
+            "id": 24898625
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24901514"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:edb9f1fb9893..7241a78e40e5?path=yt%2Ffrontends%2Fsimulationio%2Ftests%2Ftest_outputs.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24901514"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "this commented import can be deleted",
+                "html": "<p>this commented import can be deleted</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-08T02:18:43.385056+00:00",
+            "updated_on": "2016-10-08T02:18:43.390181+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/tests/test_outputs.py",
+                "to": 24
+            },
+            "id": 24901514
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24904599"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:6629fbd1a581..7241a78e40e5?path=yt%2Ffrontends%2Fexodus_ii%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24904599"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "This needs to be `except (IOErrror, ImportError)`, in case netCDF4 isn't importable.",
+                "html": "<p>This needs to be <code>except (IOErrror, ImportError)</code>, in case netCDF4 isn't importable.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-08T16:06:26.835891+00:00",
+            "updated_on": "2016-10-08T16:06:26.841118+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/exodus_ii/data_structures.py",
+                "to": 387
+            },
+            "id": 24904599
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24904602"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:6629fbd1a581..7241a78e40e5?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24904602"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Here as well, but in case `h5py` isn't importable.",
+                "html": "<p>Here as well, but in case <code>h5py</code> isn't importable.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-08T16:06:48.993091+00:00",
+            "updated_on": "2016-10-08T16:06:48.995239+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 795
+            },
+            "id": 24904602
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24904739"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24904739"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "@hyschive any chance you can look this over? You were the most recent person to write a new frontend, so hopefully you have possible issues fresh in your mind.",
+                "html": "<p><a href=\"/hyschive/\" rel=\"nofollow\" title=\"@hyschive\" class=\"mention\">Hsi-Yu Schive</a> any chance you can look this over? You were the most recent person to write a new frontend, so hopefully you have possible issues fresh in your mind.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-08T16:47:35.955951+00:00",
+            "updated_on": "2016-10-08T16:47:35.992844+00:00",
+            "id": 24904739
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24904787"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24904787"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24904739"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24904739"
+                    }
+                },
+                "id": 24904739
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "No problem. I'll look into it :)",
+                "html": "<p>No problem. I'll look into it :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-08T17:07:48.574019+00:00",
+            "updated_on": "2016-10-08T17:07:48.614865+00:00",
+            "id": 24904787
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/eschnett"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/eschnett/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/eschnett/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Erik Schnetter",
+                "uuid": "{3ece4af8-d803-48dc-9e22-ae23d00db131}",
+                "username": "eschnett"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24909650"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24909650"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Jonah\n\n   - install a current version of HDF5 (the one provided by Ubuntu, for\n   example, is too old).\n   - Install the release-0.1 version of SimulationIO as per the\n   instructions here\n   <https://github.com/eschnett/SimulationIO/tree/release-0.1>.\n\nRegarding these two items:\n\n- Why is a current version of HDF5 required? Is this something that could\nbe worked around? This requirement was fine for the development version of\nSimulationIO, but if it is now exposed to a larger audience, compatibility\nbecomes more important.\n- We need to ensure that SimulationIO remains sufficiently compatible with\nthe data formats produced by version 0.1 of SimulationIO. Since this is\nversion 0.1, we have some leeway, but we shouldn't be breaking things\naccidentally either. We should think about a mechanism (e.g. regression\ntests) to ensure compatibility. Maybe storing a few files produces by 0.1\nand ensuring we can continue to read them would be a way to go forward.\n\nWhat does it mean for me to be a reviewer of this pull request? Do all\nreviewers have to accept, or only one?\n",
+                "html": "<p>Jonah</p>\n<ul>\n<li>install a current version of HDF5 (the one provided by Ubuntu, for\n   example, is too old).</li>\n<li>Install the release-0.1 version of SimulationIO as per the\n   instructions here\n   <a href=\"https://github.com/eschnett/SimulationIO/tree/release-0.1\">https://github.com/eschnett/SimulationIO/tree/release-0.1</a>.</li>\n</ul>\n<p>Regarding these two items:</p>\n<ul>\n<li>Why is a current version of HDF5 required? Is this something that could\nbe worked around? This requirement was fine for the development version of\nSimulationIO, but if it is now exposed to a larger audience, compatibility\nbecomes more important.</li>\n<li>We need to ensure that SimulationIO remains sufficiently compatible with\nthe data formats produced by version 0.1 of SimulationIO. Since this is\nversion 0.1, we have some leeway, but we shouldn't be breaking things\naccidentally either. We should think about a mechanism (e.g. regression\ntests) to ensure compatibility. Maybe storing a few files produces by 0.1\nand ensuring we can continue to read them would be a way to go forward.</li>\n</ul>\n<p>What does it mean for me to be a reviewer of this pull request? Do all\nreviewers have to accept, or only one?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-09T15:55:06.206101+00:00",
+            "updated_on": "2016-10-09T15:55:06.235022+00:00",
+            "id": 24909650
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24909804"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24909804"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24909650"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24909650"
+                    }
+                },
+                "id": 24909650
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Three people need to review and approve the pill request before it can be accepted. If someone adds you as a reviewer it just means they think you would be a good person to do so, but you're under no obligation.",
+                "html": "<p>Three people need to review and approve the pill request before it can be accepted. If someone adds you as a reviewer it just means they think you would be a good person to do so, but you're under no obligation.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-09T16:22:43.552892+00:00",
+            "updated_on": "2016-10-09T16:22:43.557091+00:00",
+            "id": 24909804
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24910170"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24910170"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24909650"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24909650"
+                    }
+                },
+                "id": 24909650
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "@eschnett,\n\nIt's been too long, so I no longer remember what problems I had with HDF5 versions. The version that failed was 1.8.11. The version I installed successfully was 1.8.17. I'll try compiling against 1.8.11 and see if I can't figure out what feature is missing.\n\nRegarding forward compatibility, yes I agree. I have three such files which I use for the testing infrastructure in yt and provided to @xarthisius for yt's integration server. Perhaps we could use the same files in our own upstream testing infrastructure?\n\nAs a last minute thought, perhaps we should make one more change to release-0.1: we could add a \"version\" attribute to the root of the hdf5 file, saying it is a SimulationIO file version 0.1. I could regenerate the files with this property and give them to Kacper. It might make adding new features easier, since we'll be able to have the API check if they're present in the file.",
+                "html": "<p><a href=\"/eschnett/\" rel=\"nofollow\" title=\"@eschnett\" class=\"mention\">Erik Schnetter</a>,</p>\n<p>It's been too long, so I no longer remember what problems I had with HDF5 versions. The version that failed was 1.8.11. The version I installed successfully was 1.8.17. I'll try compiling against 1.8.11 and see if I can't figure out what feature is missing.</p>\n<p>Regarding forward compatibility, yes I agree. I have three such files which I use for the testing infrastructure in yt and provided to <a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> for yt's integration server. Perhaps we could use the same files in our own upstream testing infrastructure?</p>\n<p>As a last minute thought, perhaps we should make one more change to release-0.1: we could add a \"version\" attribute to the root of the hdf5 file, saying it is a SimulationIO file version 0.1. I could regenerate the files with this property and give them to Kacper. It might make adding new features easier, since we'll be able to have the API check if they're present in the file.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-09T17:40:11.802928+00:00",
+            "updated_on": "2016-10-09T17:44:03.617976+00:00",
+            "id": 24910170
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24911954"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24911954"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24909650"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24909650"
+                    }
+                },
+                "id": 24909650
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "It seems that the oldest version of HDF5 I can get to work is 1.8.16, which was released November 2015. The problems I encountered are listed below:\n\n1. In version 1.8.11, there is no H5Location abstract base class. This is used deep within SimulationIO's H5Helpers. This abstract base class was introduced in version 1.8.12.\n2. In version 1.8.12, there is no constructor for H5Files based on location ids. We use this constructor, which is introduced in 1.8.15. This piece of the API is hidden from the official doxygen documentation. So I'm not really sure we should be using it in the first place. (It makes no sense to me for this constructor to be private or low-level. It's an interface between the C and C++ APIs. Why on earth is it so obscure?)\n3. Version 1.8.15 seems to be suffering from some sort of nasty bug when compiled with the C++11 standard. I encounter hundreds of lines of errors similar to those encountered in [this stackoverflow question](http://stackoverflow.com/questions/19043109/gcc-4-8-1-combining-c-code-with-c11-code). Perhaps the headers or the build system are doing something that they shouldn't be.\n\nWhat do you think, @eschnett ? Should we stick with the requirement of 1.8.16? Or should we try to make SimulationIO compatible with an earlier version?",
+                "html": "<p>It seems that the oldest version of HDF5 I can get to work is 1.8.16, which was released November 2015. The problems I encountered are listed below:</p>\n<ol>\n<li>In version 1.8.11, there is no H5Location abstract base class. This is used deep within SimulationIO's H5Helpers. This abstract base class was introduced in version 1.8.12.</li>\n<li>In version 1.8.12, there is no constructor for H5Files based on location ids. We use this constructor, which is introduced in 1.8.15. This piece of the API is hidden from the official doxygen documentation. So I'm not really sure we should be using it in the first place. (It makes no sense to me for this constructor to be private or low-level. It's an interface between the C and C++ APIs. Why on earth is it so obscure?)</li>\n<li>Version 1.8.15 seems to be suffering from some sort of nasty bug when compiled with the C++11 standard. I encounter hundreds of lines of errors similar to those encountered in <a href=\"http://stackoverflow.com/questions/19043109/gcc-4-8-1-combining-c-code-with-c11-code\">this stackoverflow question</a>. Perhaps the headers or the build system are doing something that they shouldn't be.</li>\n</ol>\n<p>What do you think, <a href=\"/eschnett/\" rel=\"nofollow\" title=\"@eschnett\" class=\"mention\">Erik Schnetter</a> ? Should we stick with the requirement of 1.8.16? Or should we try to make SimulationIO compatible with an earlier version?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-09T22:57:36.109802+00:00",
+            "updated_on": "2016-10-09T22:59:13.081070+00:00",
+            "id": 24911954
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/eschnett"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/eschnett/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/eschnett/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Erik Schnetter",
+                "uuid": "{3ece4af8-d803-48dc-9e22-ae23d00db131}",
+                "username": "eschnett"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24912623"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24912623"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "HDF5's C++ interface is designed in a strange way. I mostly like it because the destructors automatically close all the respective HDF5 objects, which is otherwise tedious, and is exactly why C++ destructors were invented. I've dreamed about rewriting the HDF5 C++ interface myself.\n\nMaybe there's a simple solution -- a wrapper type for hid_t with a constructor that calls the respective \"close\" function, and a simple way to extract the actual hid_t when calling the C API.",
+                "html": "<p>HDF5's C++ interface is designed in a strange way. I mostly like it because the destructors automatically close all the respective HDF5 objects, which is otherwise tedious, and is exactly why C++ destructors were invented. I've dreamed about rewriting the HDF5 C++ interface myself.</p>\n<p>Maybe there's a simple solution -- a wrapper type for hid_t with a constructor that calls the respective \"close\" function, and a simple way to extract the actual hid_t when calling the C API.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T00:08:29.943749+00:00",
+            "updated_on": "2016-10-10T00:08:30.000693+00:00",
+            "id": 24912623
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24912702"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24912702"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24912623"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24912623"
+                    }
+                },
+                "id": 24912623
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "That certainly seems less tedious than using the bare C API.\n\nMy feeling is that hid_t wants to be a proxy for an object anyway and thus HDF5 very naturally fits into an object oriented paradigm. But as I discovered today, yes... they've done some very weird things.",
+                "html": "<p>That certainly seems less tedious than using the bare C API.</p>\n<p>My feeling is that hid_t wants to be a proxy for an object anyway and thus HDF5 very naturally fits into an object oriented paradigm. But as I discovered today, yes... they've done some very weird things.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T00:17:36.384786+00:00",
+            "updated_on": "2016-10-10T00:17:36.435175+00:00",
+            "id": 24912702
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24972753"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24972753"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Why is this check necessary?",
+                "html": "<p>Why is this check necessary?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T21:58:47.209837+00:00",
+            "updated_on": "2016-10-10T21:58:47.252897+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 113
+            },
+            "id": 24972753
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973313"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973313"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "How about using *get_dds* defined above to avoid duplicate code lines?\n",
+                "html": "<p>How about using <em>get_dds</em> defined above to avoid duplicate code lines?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:00:18.647302+00:00",
+            "updated_on": "2016-10-10T22:00:18.689796+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 127
+            },
+            "id": 24973313
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973359"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973359"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Aren't *grid_left_edge* and *grid_right_edge* already in code units?",
+                "html": "<p>Aren't <em>grid_left_edge</em> and <em>grid_right_edge</em> already in code units?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:01:29.834917+00:00",
+            "updated_on": "2016-10-10T22:01:29.874987+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 141
+            },
+            "id": 24973359
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973458"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973458"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Add the sentences *Only considered ... first active cell* to *doc/source/examining/loading_data.rst* as well.",
+                "html": "<p>Add the sentences <em>Only considered ... first active cell</em> to <em>doc/source/examining/loading_data.rst</em> as well.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:04:30.945905+00:00",
+            "updated_on": "2016-10-10T22:04:30.988912+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 218
+            },
+            "id": 24973458
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973502"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973502"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Mention in *doc/source/examining/loading_data.rst* that *domain_left_edge* and *domain_dds* must be provided at the same time.",
+                "html": "<p>Mention in <em>doc/source/examining/loading_data.rst</em> that <em>domain_left_edge</em> and <em>domain_dds</em> must be provided at the same time.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:06:25.164790+00:00",
+            "updated_on": "2016-10-10T22:06:25.203700+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 224
+            },
+            "id": 24973502
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973548"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973548"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I don't see this parameter set elsewhere. Does simulationio always assume non-periodic boundary condition?",
+                "html": "<p>I don't see this parameter set elsewhere. Does simulationio always assume non-periodic boundary condition?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:08:00.694681+00:00",
+            "updated_on": "2016-10-10T22:08:00.734138+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 264
+            },
+            "id": 24973548
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973646"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973646"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "These units are hard coded. Is there any chance that the datasets are actually in a different unit system? In addition, to support the *units_override* functionality when loading data, I think these units need to be set by *setdefaultattr*. Please refer to other frontends. On the other hands, if the units in simulationio are always fixed and should never be modified by users, you might want to issue a warning or error message if *units_override* gets set.",
+                "html": "<p>These units are hard coded. Is there any chance that the datasets are actually in a different unit system? In addition, to support the <em>units_override</em> functionality when loading data, I think these units need to be set by <em>setdefaultattr</em>. Please refer to other frontends. On the other hands, if the units in simulationio are always fixed and should never be modified by users, you might want to issue a warning or error message if <em>units_override</em> gets set.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:10:57.239887+00:00",
+            "updated_on": "2016-10-10T22:17:20.880428+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 288
+            },
+            "id": 24973646
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973919"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973919"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Not sure if this identifier is **unique** enough. Some frontends use ST_CTIME for this purpose.",
+                "html": "<p>Not sure if this identifier is <strong>unique</strong> enough. Some frontends use ST_CTIME for this purpose.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:18:21.902285+00:00",
+            "updated_on": "2016-10-10T22:18:21.942301+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 303
+            },
+            "id": 24973919
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24974013"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24974013"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "It seems that the frontend actually does not work with dimensionality other than 3 since you add a check *assert self.dimensionality == 3* below. For clarify, perhaps you could move that check here and add some comments?",
+                "html": "<p>It seems that the frontend actually does not work with dimensionality other than 3 since you add a check <em>assert self.dimensionality == 3</em> below. For clarify, perhaps you could move that check here and add some comments?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:21:23.603501+00:00",
+            "updated_on": "2016-10-10T22:21:23.640641+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 311
+            },
+            "id": 24974013
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24974107"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24974107"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I thought *domain_left_edge* and *domain_right_edge* have been set already. Why do we have to overwrite them?",
+                "html": "<p>I thought <em>domain_left_edge</em> and <em>domain_right_edge</em> have been set already. Why do we have to overwrite them?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-10T22:23:40.954672+00:00",
+            "updated_on": "2016-10-10T22:23:40.995803+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": 333
+            },
+            "id": 24974107
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979598"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979598"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24972753"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24972753"
+                    }
+                },
+                "id": 24972753
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "It isn't. I'm just paranoid about type safety. I'll remove it.",
+                "html": "<p>It isn't. I'm just paranoid about type safety. I'll remove it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T02:47:11.355502+00:00",
+            "updated_on": "2016-10-11T02:47:11.407502+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979598
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979619"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979619"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973313"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973313"
+                    }
+                },
+                "id": 24973313
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Good catch! Thanks!",
+                "html": "<p>Good catch! Thanks!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T02:48:22.538817+00:00",
+            "updated_on": "2016-10-11T02:48:22.581534+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979619
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979653"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979653"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973359"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973359"
+                    }
+                },
+                "id": 24973359
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Well, abstractly yes. But they're not YTArrays with a unit attribute. This is my lazy way of typecasting them into YTArrays instead of numpy arrays.",
+                "html": "<p>Well, abstractly yes. But they're not YTArrays with a unit attribute. This is my lazy way of typecasting them into YTArrays instead of numpy arrays.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T02:50:05.816777+00:00",
+            "updated_on": "2016-10-11T02:50:05.854874+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979653
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979686"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979686"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973458"
+                    }
+                },
+                "id": 24973458
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Good catch! Thanks!",
+                "html": "<p>Good catch! Thanks!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T02:52:31.060458+00:00",
+            "updated_on": "2016-10-11T02:52:31.087783+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979686
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979760"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979760"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973548"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973548"
+                    }
+                },
+                "id": 24973548
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "SimulationIO doesn't specify periodicity at the moment, so it must be provided by the user.\n\nOften times, SimulationIO explicitly provides the ghost zones, which must be cut out. It's on my to-do list to have yt read these in instead of generating it's own in these cases. If SimulationIO provides its own ghost zones, the periodicity parameter should always be set to false.\n\nAnother thing on my to-do list is to specify more complicated symmetry properties in SimulationIO, such as rotational or reflection symmetry. @ngoldbaum and I talked about that a while back. I think he has a mock implementation of this feature in yt somewhere. :)",
+                "html": "<p>SimulationIO doesn't specify periodicity at the moment, so it must be provided by the user.</p>\n<p>Often times, SimulationIO explicitly provides the ghost zones, which must be cut out. It's on my to-do list to have yt read these in instead of generating it's own in these cases. If SimulationIO provides its own ghost zones, the periodicity parameter should always be set to false.</p>\n<p>Another thing on my to-do list is to specify more complicated symmetry properties in SimulationIO, such as rotational or reflection symmetry. <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> and I talked about that a while back. I think he has a mock implementation of this feature in yt somewhere. :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T02:56:24.602920+00:00",
+            "updated_on": "2016-10-11T02:56:24.648034+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979760
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979814"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979814"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973646"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973646"
+                    }
+                },
+                "id": 24973646
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Yes, there's a chance that the default units could be different. At the moment, that's unlikely, but I can see it changing in the future. I hadn't paid attention to that. I'll look into `setdefaultattr`. Can you suggest a frontend to look at?",
+                "html": "<p>Yes, there's a chance that the default units could be different. At the moment, that's unlikely, but I can see it changing in the future. I hadn't paid attention to that. I'll look into <code>setdefaultattr</code>. Can you suggest a frontend to look at?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T02:59:08.556941+00:00",
+            "updated_on": "2016-10-11T02:59:08.606970+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979814
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979832"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979832"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973502"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973502"
+                    }
+                },
+                "id": 24973502
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Will do.",
+                "html": "<p>Will do.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T03:00:05.217371+00:00",
+            "updated_on": "2016-10-11T03:00:05.245723+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979832
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979895"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979895"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24973919"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24973919"
+                    }
+                },
+                "id": 24973919
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I like having the filename, so I'll concatenate it and ctime.",
+                "html": "<p>I like having the filename, so I'll concatenate it and ctime.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T03:02:39.738631+00:00",
+            "updated_on": "2016-10-11T03:02:39.778893+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979895
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979919"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979919"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24974013"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24974013"
+                    }
+                },
+                "id": 24974013
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Better yet, I'll move the check to here and raise an error.",
+                "html": "<p>Better yet, I'll move the check to here and raise an error.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T03:04:03.446534+00:00",
+            "updated_on": "2016-10-11T03:04:03.478570+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979919
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979970"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:4cb6e78c0006..a0b5472ce04d?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979970"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24974107"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24974107"
+                    }
+                },
+                "id": 24974107
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "It hasn't necessarily been set. It can be set explicitly by the user. But if it is not, then it is reconstructed in this line. Essentially if `_setup_coordinates_no_bbox` is called, this line is necessary. If `_setup_coordinates_bbox` is called instead, it's not necessary. But it felt cleaner to call it here in either case. It's a projective operation, so it can't do any harm and I like sanity checks.",
+                "html": "<p>It hasn't necessarily been set. It can be set explicitly by the user. But if it is not, then it is reconstructed in this line. Essentially if <code>_setup_coordinates_no_bbox</code> is called, this line is necessary. If <code>_setup_coordinates_bbox</code> is called instead, it's not necessary. But it felt cleaner to call it here in either case. It's a projective operation, so it can't do any harm and I like sanity checks.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T03:07:26.702417+00:00",
+            "updated_on": "2016-10-11T03:07:47.500291+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 24979970
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/eschnett"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/eschnett/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/eschnett/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Erik Schnetter",
+                "uuid": "{3ece4af8-d803-48dc-9e22-ae23d00db131}",
+                "username": "eschnett"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25012286"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25012286"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979598"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979598"
+                    }
+                },
+                "id": 24979598
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Shouldn't the question be \"why is this check superfluous?\"",
+                "html": "<p>Shouldn't the question be \"why is this check superfluous?\"</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T14:18:49.298739+00:00",
+            "updated_on": "2016-10-11T14:18:49.353141+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 25012286
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25012623"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25012623"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25012286"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25012286"
+                    }
+                },
+                "id": 25012286
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "We try to avoid bare asserts like this in yt; if this fails, a number of things have gone intensely wrong, and an `assert` at this point will provide essentially no useful information to the user.\n\nIf this needs to be done, it should be done by checking this conditional and raising a subclass of `YTException` that is defined in `yt/utilities/exceptions.py`.",
+                "html": "<p>We try to avoid bare asserts like this in yt; if this fails, a number of things have gone intensely wrong, and an <code>assert</code> at this point will provide essentially no useful information to the user.</p>\n<p>If this needs to be done, it should be done by checking this conditional and raising a subclass of <code>YTException</code> that is defined in <code>yt/utilities/exceptions.py</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T14:22:29.233876+00:00",
+            "updated_on": "2016-10-11T14:22:29.238019+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 25012623
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/eschnett"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/eschnett/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/eschnett/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Erik Schnetter",
+                "uuid": "{3ece4af8-d803-48dc-9e22-ae23d00db131}",
+                "username": "eschnett"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25016843"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25016843"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25012623"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25012623"
+                    }
+                },
+                "id": 25012623
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Good point about the bare assert. I'm apparently still in the mindset of batch applications where you want to fail early and hard, and am forgetting that that's no good in an interactive environment.",
+                "html": "<p>Good point about the bare assert. I'm apparently still in the mindset of batch applications where you want to fail early and hard, and am forgetting that that's no good in an interactive environment.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T15:11:17.426960+00:00",
+            "updated_on": "2016-10-11T15:11:17.476960+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 25016843
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25022456"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25022456"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25016843"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25016843"
+                    }
+                },
+                "id": 25016843
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Sorry if my question is confusing. I definitely support these sanity checks, and I'm just curious if there is any special concern about this check. Perhaps some comments on the code will be helpful for future developers. Also, thanks Matt Turk for the comments!",
+                "html": "<p>Sorry if my question is confusing. I definitely support these sanity checks, and I'm just curious if there is any special concern about this check. Perhaps some comments on the code will be helpful for future developers. Also, thanks Matt Turk for the comments!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T16:28:00.620913+00:00",
+            "updated_on": "2016-10-11T16:28:00.671737+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 25022456
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hyschive"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hyschive/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hyschive/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Hsi-Yu Schive",
+                "uuid": "{546998cc-8f7a-492a-8abf-fc1178e6d0fd}",
+                "username": "hyschive"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25022748"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25022748"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/24979760"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-24979760"
+                    }
+                },
+                "id": 24979760
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "So maybe we can add some descriptions about periodicity in *doc/source/examining/loading_data.rst* as well ~",
+                "html": "<p>So maybe we can add some descriptions about periodicity in <em>doc/source/examining/loading_data.rst</em> as well ~</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T16:32:52.012531+00:00",
+            "updated_on": "2016-10-11T16:32:52.050461+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 25022748
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25023245"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25023245"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25022748"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25022748"
+                    }
+                },
+                "id": 25022748
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Ah. Good point. Yes, I'll do that.",
+                "html": "<p>Ah. Good point. Yes, I'll do that.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T16:41:28.675124+00:00",
+            "updated_on": "2016-10-11T16:41:28.711953+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 25023245
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25023357"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25023357"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/25022456"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-25022456"
+                    }
+                },
+                "id": 25022456
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I would be surprised if this particular check needs to be here. However, I can add a check that raises an exception if people think that's a good idea.",
+                "html": "<p>I would be surprised if this particular check needs to be here. However, I can add a check that raises an exception if people think that's a good idea.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-10-11T16:43:07.958127+00:00",
+            "updated_on": "2016-10-11T16:43:07.991750+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/data_structures.py",
+                "to": null
+            },
+            "id": 25023357
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156194"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156194"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "It looks like a recent change updated the unit labels to be prettier in Python3, causing the python2.7 answer tests for this frontend to fail. You might need to bump the answer number. Please check to make sure that all of the failures are due to incorrect labels.",
+                "html": "<p>It looks like a recent change updated the unit labels to be prettier in Python3, causing the python2.7 answer tests for this frontend to fail. You might need to bump the answer number. Please check to make sure that all of the failures are due to incorrect labels.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:16:03.993839+00:00",
+            "updated_on": "2016-11-22T00:16:04.001812+00:00",
+            "id": 27156194
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156229"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156229"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "mileage",
+                "html": "<p>mileage</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:17:09.364173+00:00",
+            "updated_on": "2016-11-22T00:17:09.372567+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/examining/loading_data.rst",
+                "to": 1665
+            },
+            "id": 27156229
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156241"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156241"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "might be worthwhile to link to some summary page about `SimulationIO`",
+                "html": "<p>might be worthwhile to link to some summary page about <code>SimulationIO</code></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:17:45.366353+00:00",
+            "updated_on": "2016-11-22T00:17:45.374708+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/examining/loading_data.rst",
+                "to": 1668
+            },
+            "id": 27156241
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156287"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdefinitions.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156287"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I think you can just remove this file since you're not using it at the moment. If you do decide to keep the empty file please add a header and license blurb to match the other new files",
+                "html": "<p>I think you can just remove this file since you're not using it at the moment. If you do decide to keep the empty file please add a header and license blurb to match the other new files</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:19:29.797162+00:00",
+            "updated_on": "2016-11-22T00:19:29.802361+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/definitions.py",
+                "to": 1
+            },
+            "id": 27156287
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156358"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156358"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Can you give this an error message, just in case anyone ever actually hits it in practice? All python exceptions accept an error message as an argument.",
+                "html": "<p>Can you give this an error message, just in case anyone ever actually hits it in practice? All python exceptions accept an error message as an argument.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:22:07.928988+00:00",
+            "updated_on": "2016-11-22T00:22:07.933755+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/io.py",
+                "to": 62
+            },
+            "id": 27156358
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156417"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Futilities%2Fexceptions.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156417"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Any chance the error messages that get printed out by these new exceptions could have some indication of how to fix the issue?\n\nWill users actually hit them in practice? From my reading I think `SIONoTensorComponents` is always handled further up the stack, but that might be wrong.",
+                "html": "<p>Any chance the error messages that get printed out by these new exceptions could have some indication of how to fix the issue?</p>\n<p>Will users actually hit them in practice? From my reading I think <code>SIONoTensorComponents</code> is always handled further up the stack, but that might be wrong.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:25:07.577162+00:00",
+            "updated_on": "2016-11-22T00:25:07.581546+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/exceptions.py",
+                "to": 588
+            },
+            "id": 27156417
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156490"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156490"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I think this is extremely close to being mergeable. I've added some minor comments inline. The major issue right now is that the tests aren't passing, once that's cleared up I think we should be able to merge this in.",
+                "html": "<p>I think this is extremely close to being mergeable. I've added some minor comments inline. The major issue right now is that the tests aren't passing, once that's cleared up I think we should be able to merge this in.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:27:37.682860+00:00",
+            "updated_on": "2016-11-22T00:27:37.685379+00:00",
+            "id": 27156490
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156536"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156536"
+                }
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Do you think it's worthwhile to add some instructions on how to actually install SimulationIO and convert a carpet or einstein toolkit data to that format? Maybe there's a place in the SimulationIO docs you can link to that describes how to do that?\n\nOperationally, it should be clear from reading this document how to take some arbitrary Einstein Toolkit or Carpet data that the frontend you've written should support and convert it, then load it with yt.",
+                "html": "<p>Do you think it's worthwhile to add some instructions on how to actually install SimulationIO and convert a carpet or einstein toolkit data to that format? Maybe there's a place in the SimulationIO docs you can link to that describes how to do that?</p>\n<p>Operationally, it should be clear from reading this document how to take some arbitrary Einstein Toolkit or Carpet data that the frontend you've written should support and convert it, then load it with yt.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-11-22T00:29:09.757228+00:00",
+            "updated_on": "2016-11-22T00:29:09.759067+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/examining/loading_data.rst",
+                "to": 1673
+            },
+            "id": 27156536
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27852703"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27852703"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156194"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156194"
+                    }
+                },
+                "id": 27156194
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "The units labels don't seem to be the only problem... I'm also noticing some other things... possibly an error in units. I'm investigating.",
+                "html": "<p>The units labels don't seem to be the only problem... I'm also noticing some other things... possibly an error in units. I'm investigating.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-05T23:36:16.426800+00:00",
+            "updated_on": "2016-12-05T23:36:16.469174+00:00",
+            "id": 27852703
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27913340"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Futilities%2Fexceptions.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27913340"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156417"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156417"
+                    }
+                },
+                "id": 27156417
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Users should never hit these. However, I'll add some description anyway for the off chance somebody does. It'll probably help me in the distant future when I debug anyway.",
+                "html": "<p>Users should never hit these. However, I'll add some description anyway for the off chance somebody does. It'll probably help me in the distant future when I debug anyway.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-06T19:49:46.415903+00:00",
+            "updated_on": "2016-12-06T19:49:46.564776+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/exceptions.py",
+                "to": null
+            },
+            "id": 27913340
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27913370"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27913370"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156358"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156358"
+                    }
+                },
+                "id": 27156358
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "Yep I'll add something for the other NotImplementedErrors too.",
+                "html": "<p>Yep I'll add something for the other NotImplementedErrors too.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-06T19:50:19.069618+00:00",
+            "updated_on": "2016-12-06T19:50:19.109313+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/io.py",
+                "to": null
+            },
+            "id": 27913370
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27913449"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=yt%2Ffrontends%2Fsimulationio%2Fdefinitions.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27913449"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156287"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156287"
+                    }
+                },
+                "id": 27156287
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I'll delete it.",
+                "html": "<p>I'll delete it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-06T19:52:03.800332+00:00",
+            "updated_on": "2016-12-06T19:52:03.909994+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/simulationio/definitions.py",
+                "to": null
+            },
+            "id": 27913449
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/Yurlungur/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Jonah Miller",
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
+                "username": "Yurlungur"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27913517"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/Yurlungur/yt-simulationio:37d0384e1326..00e84c8e7bfa?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27913517"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410/comments/27156536"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410/_/diff#comment-27156536"
+                    }
+                },
+                "id": 27156536
+            },
+            "pullrequest": {
+                "title": "A SimulationIO Frontend",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2410"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2410"
+                    }
+                },
+                "id": 2410
+            },
+            "content": {
+                "raw": "I link to installation instructions at the moment. But conversion instructions are a good idea. I'll add that.",
+                "html": "<p>I link to installation instructions at the moment. But conversion instructions are a good idea. I'll add that.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-06T19:53:19.689473+00:00",
+            "updated_on": "2016-12-06T19:53:19.728234+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/examining/loading_data.rst",
+                "to": null
+            },
+            "id": 27913517
+        }
+    ]
+}

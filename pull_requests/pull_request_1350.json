@@ -1,0 +1,792 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-01-04T05:17:42.931290+00:00",
+    "comment_count": 12,
+    "description": "When doing things like isocontour fluxing, we can get a big speedup if we implement caching at the level of IO chunking.  This adds a new hook to allow grid systems (and potentially others, down the road) to implement a `preload` function that allows for accumulating grids in a chunk.\r\n\r\nNot yet implemented for non-Enzo codes.\r\n\r\nUPDATE 1: I have decided this is non-WIP since I have other optimizations I would like to work on that either depend on or obviate this.",
+    "created_on": "2014-12-09T20:15:29.819811+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/20d4fcc40283"
+            }
+        },
+        "hash": "20d4fcc40283"
+    },
+    "title": "Cache data for grid frontends in IO chunking",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 1350,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/74e0b4906416"
+                }
+            },
+            "hash": "74e0b4906416"
+        },
+        "repository": {
+            "full_name": "MatthewTurk/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ea716eba60f6"
+                }
+            },
+            "hash": "ea716eba60f6"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4228880"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4228880"
+                }
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "Ping @jnaiman. Once this has been implemented for FLASH, isocontour fluxes should be much faster.  Note that this includes a change I made a while back which makes it possible to use the flux extraction code in 3.0.",
+                "html": "<p>Ping <a href=\"/jnaiman/\" rel=\"nofollow\" title=\"@jnaiman\" class=\"mention\">Jill Naiman</a>. Once this has been implemented for FLASH, isocontour fluxes should be much faster.  Note that this includes a change I made a while back which makes it possible to use the flux extraction code in 3.0.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-09T20:35:17.873336+00:00",
+            "updated_on": "2014-12-09T20:35:17.937750+00:00",
+            "id": 4228880
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4228953"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4228953"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4228880"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4228880"
+                    }
+                },
+                "id": 4228880
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "Nathan, was the flux extraction code from the surface object ever broken?\nThat is indeed tested.",
+                "html": "<p>Nathan, was the flux extraction code from the surface object ever broken?\nThat is indeed tested.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-09T20:40:06.535220+00:00",
+            "updated_on": "2014-12-09T20:40:06.574980+00:00",
+            "id": 4228953
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4229014"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4229014"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4228953"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4228953"
+                    }
+                },
+                "id": 4228953
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "Yup, and I don't know why the tests are passing using the current code.\n\nSee issue 909.",
+                "html": "<p>Yup, and I don't know why the tests are passing using the current code.</p>\n<p>See issue 909.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-09T20:43:22.604861+00:00",
+            "updated_on": "2014-12-09T20:43:22.613809+00:00",
+            "id": 4229014
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4229033"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4229033"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4229014"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4229014"
+                    }
+                },
+                "id": 4229014
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "Oh, that's not from the surface object. I have no idea if that was ever broken.",
+                "html": "<p>Oh, that's not from the surface object. I have no idea if that was ever broken.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-09T20:44:41.567639+00:00",
+            "updated_on": "2014-12-09T20:44:41.589106+00:00",
+            "id": 4229033
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4230880"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4230880"
+                }
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-09T22:36:06.127588+00:00",
+            "updated_on": "2014-12-09T22:36:06.358976+00:00",
+            "id": 4230880
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4471746"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4471746"
+                }
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "@MatthewTurk can you merge with yt_analysis/yt?  Unless you think I should wait, I think we should merge if the tests pass.",
+                "html": "<p><a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> can you merge with <a href=\"/yt_analysis/yt\" rel=\"nofollow\">yt_analysis/yt</a>?  Unless you think I should wait, I think we should merge if the tests pass.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-31T02:50:36.137155+00:00",
+            "updated_on": "2014-12-31T02:50:36.150361+00:00",
+            "id": 4471746
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4471800"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4471800"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4471746"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4471746"
+                    }
+                },
+                "id": 4471746
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "Meged, and no objection to merging it!",
+                "html": "<p>Meged, and no objection to merging it!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-31T03:10:06.671263+00:00",
+            "updated_on": "2014-12-31T03:10:06.697438+00:00",
+            "id": 4471800
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4476347"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4476347"
+                }
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1804/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1804/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1804/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-31T17:51:09.159066+00:00",
+            "updated_on": "2014-12-31T17:51:09.402780+00:00",
+            "id": 4476347
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4476410"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4476410"
+                }
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "These look like more halo problems, unrelated to the PR.",
+                "html": "<p>These look like more halo problems, unrelated to the PR.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-31T18:00:17.518941+00:00",
+            "updated_on": "2014-12-31T18:00:17.544267+00:00",
+            "id": 4476410
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4477459"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4477459"
+                }
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "Just did some basic testing with the IsolatedGalaxy dataset.  This substantially improves the performance of isocontour fluxes and level set extraction for fields.  I think this should go in ASAP.",
+                "html": "<p>Just did some basic testing with the IsolatedGalaxy dataset.  This substantially improves the performance of isocontour fluxes and level set extraction for fields.  I think this should go in ASAP.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-31T20:49:25.277140+00:00",
+            "updated_on": "2014-12-31T20:49:37.631940+00:00",
+            "id": 4477459
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4477613"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4477613"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4477459"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4477459"
+                    }
+                },
+                "id": 4477459
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "For reference, I'm using the following test script:\n\n\n```\n#!python\n\nimport yt\nds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')\nad = ds.all_data()\nsurf = ds.surface(ad, 'density', 1e-28)\nprint surf['density']\nprint surf.calculate_flux(\"velocity_x\", \"velocity_y\", \"velocity_z\", \"density\")\n```\n\nRunning this on this PR:\n\n\n```\n$ time python test.py\n[  9.86282326e-29   9.87602412e-29   9.86861941e-29 ...,   1.00397037e-28\n   1.00045263e-28   1.00327207e-28]\n2.85734119504e-23\npython test.py  143.88s user 5.12s system 97% cpu 2:33.11 total\n```\n\nRunning this on the current version of the yt branch on yt_analysis/yt:\n\n\n```\n$ time python test.py\n[  9.86282326e-29   9.87602412e-29   9.86861941e-29 ...,   1.00397037e-28\n   1.00045263e-28   1.00327207e-28]\n2.85734119504e-23\npython test.py  591.46s user 12.96s system 96% cpu 10:23.98 total\n```\n",
+                "html": "<p>For reference, I'm using the following test script:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"kn\">import</span> <span class=\"nn\">yt</span>\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"s1\">&#39;IsolatedGalaxy/galaxy0030/galaxy0030&#39;</span><span class=\"p\">)</span>\n<span class=\"n\">ad</span> <span class=\"o\">=</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">all_data</span><span class=\"p\">()</span>\n<span class=\"n\">surf</span> <span class=\"o\">=</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">surface</span><span class=\"p\">(</span><span class=\"n\">ad</span><span class=\"p\">,</span> <span class=\"s1\">&#39;density&#39;</span><span class=\"p\">,</span> <span class=\"mf\">1e-28</span><span class=\"p\">)</span>\n<span class=\"k\">print</span> <span class=\"n\">surf</span><span class=\"p\">[</span><span class=\"s1\">&#39;density&#39;</span><span class=\"p\">]</span>\n<span class=\"k\">print</span> <span class=\"n\">surf</span><span class=\"o\">.</span><span class=\"n\">calculate_flux</span><span class=\"p\">(</span><span class=\"s2\">&quot;velocity_x&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;velocity_y&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;velocity_z&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;density&quot;</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>Running this on this PR:</p>\n<div class=\"codehilite\"><pre><span></span>$ <span class=\"nb\">time</span> python test.py\n<span class=\"o\">[</span>  9.86282326e-29   9.87602412e-29   9.86861941e-29 ...,   1.00397037e-28\n   1.00045263e-28   1.00327207e-28<span class=\"o\">]</span>\n2.85734119504e-23\npython test.py  143.88s user 5.12s system 97% cpu 2:33.11 total\n</pre></div>\n\n\n<p>Running this on the current version of the yt branch on <a href=\"/yt_analysis/yt\" rel=\"nofollow\">yt_analysis/yt</a>:</p>\n<div class=\"codehilite\"><pre><span></span>$ <span class=\"nb\">time</span> python test.py\n<span class=\"o\">[</span>  9.86282326e-29   9.87602412e-29   9.86861941e-29 ...,   1.00397037e-28\n   1.00045263e-28   1.00327207e-28<span class=\"o\">]</span>\n2.85734119504e-23\npython test.py  591.46s user 12.96s system 96% cpu 10:23.98 total\n</pre></div>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-31T21:16:25.300891+00:00",
+            "updated_on": "2014-12-31T21:16:25.309620+00:00",
+            "id": 4477613
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350/comments/4477648"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350/_/diff#comment-4477648"
+                }
+            },
+            "pullrequest": {
+                "title": "Cache data for grid frontends in IO chunking",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1350"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1350"
+                    }
+                },
+                "id": 1350
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-12-31T21:24:07.536060+00:00",
+            "updated_on": "2014-12-31T21:24:07.768594+00:00",
+            "id": 4477648
+        }
+    ]
+}

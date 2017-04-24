@@ -1,0 +1,1502 @@
+{
+    "reason": "",
+    "state": "OPEN",
+    "updated_on": "2017-04-21T11:36:57.654429+00:00",
+    "comment_count": 23,
+    "description": "This is a re-issue of PR 2127. I'm issuing it now so @qobilidop has a reference to build off of.\r\n\r\nHere's the description from the original pull request:\r\n\r\nThis adds an initial implementation of a smoothing kernel for pixelizing SPH fields and changes the field API for SPH data so 'gas' fields are returns at the locations of SPH particles. This code is still in implementation stage.\r\n\r\nUpdate 1: Initial work to integrate the pixelizer into the rest of yt\r\nUpdate 2: Added slice pixelizer, finished integrating into SlicePlot\r\nUpdate 3: projections work, lots of work to get local fields fully working\r\nUpdate 4 all data objects fully working. Merged with Meagan's bitmask index work.\r\n\r\nTODO:\r\n\r\n* fields that need spatial derivatives\r\n* YTEP",
+    "created_on": "2016-09-19T17:17:24.108820+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "[wip] SPH field refactor / kernel pixelizer",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments"
+        }
+    },
+    "closed_by": null,
+    "id": 2382,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/3898c3a4fbdd"
+                }
+            },
+            "hash": "3898c3a4fbdd"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/634cc55bf066"
+                }
+            },
+            "hash": "634cc55bf066"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24011372"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:421ba1dfde06..779b91714ae7?path=yt%2Futilities%2Flib%2Fpixelization_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24011372"
+                }
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Could we hide the following logic in the `SPHKernelInterpolationTable` class itself? Because currently when I need to use `SPHKernelInterpolationTable`, I need to repeat the following codes.",
+                "html": "<p>Could we hide the following logic in the <code>SPHKernelInterpolationTable</code> class itself? Because currently when I need to use <code>SPHKernelInterpolationTable</code>, I need to repeat the following codes.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-09-20T19:08:49.634116+00:00",
+            "updated_on": "2016-09-20T19:08:49.666636+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/pixelization_routines.pyx",
+                "to": 780
+            },
+            "id": 24011372
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24011502"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:421ba1dfde06..779b91714ae7?path=yt%2Futilities%2Flib%2Fpixelization_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24011502"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24011372"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24011372"
+                    }
+                },
+                "id": 24011372
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "I guess this wants to be a metaclass? I'm not sure how hard that is to set up with a cdef class. I'll take a look.",
+                "html": "<p>I guess this wants to be a metaclass? I'm not sure how hard that is to set up with a cdef class. I'll take a look.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-09-20T19:11:33.698308+00:00",
+            "updated_on": "2016-09-20T19:11:33.701407+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/pixelization_routines.pyx",
+                "to": null
+            },
+            "id": 24011502
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24077419"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d123a00e3bc3..743f56472b10?path=yt%2Fgeometry%2Fcoordinates%2Fcartesian_coordinates.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24077419"
+                }
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "I don't quite understand the following logic. I would think it might be more natural to use the SPH pixelizer when `field[0] == data_source.ds._sph_ptype`. And just use the normal pixelizer when `field[0] == 'gas'`. That way, there's no problem of finding corresponding ptype fields as discussed in slack. We can add more particle derived fields in the future, but the SlicePlot could be independent of that. I might have misunderstood things here. Correct me if I'm wrong.",
+                "html": "<p>I don't quite understand the following logic. I would think it might be more natural to use the SPH pixelizer when <code>field[0] == data_source.ds._sph_ptype</code>. And just use the normal pixelizer when <code>field[0] == 'gas'</code>. That way, there's no problem of finding corresponding ptype fields as discussed in slack. We can add more particle derived fields in the future, but the SlicePlot could be independent of that. I might have misunderstood things here. Correct me if I'm wrong.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-09-21T16:59:59.493224+00:00",
+            "updated_on": "2016-09-21T16:59:59.538244+00:00",
+            "inline": {
+                "from": 135,
+                "path": "yt/geometry/coordinates/cartesian_coordinates.py",
+                "to": null
+            },
+            "id": 24077419
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24078523"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:3898c3a4fbdd..634cc55bf066?path=yt%2Fgeometry%2Fcoordinates%2Fcartesian_coordinates.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24078523"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24077419"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24077419"
+                    }
+                },
+                "id": 24077419
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "I think there are a couple issues with that.\n\nIf the ultimate goal is to eliminate the global mesh, there will be no fallback. In addition, I'd prefer to go through the SPH pixelizer as much as possible as it creates higher quality visualizations.\n\nAs a stopgap, we can do this, but we'll need to resolve the issue I brought up eventually.",
+                "html": "<p>I think there are a couple issues with that.</p>\n<p>If the ultimate goal is to eliminate the global mesh, there will be no fallback. In addition, I'd prefer to go through the SPH pixelizer as much as possible as it creates higher quality visualizations.</p>\n<p>As a stopgap, we can do this, but we'll need to resolve the issue I brought up eventually.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-09-21T17:18:57.961988+00:00",
+            "updated_on": "2016-09-21T17:18:57.968301+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/coordinates/cartesian_coordinates.py",
+                "to": null
+            },
+            "id": 24078523
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24093378"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:3898c3a4fbdd..634cc55bf066?path=yt%2Fgeometry%2Fcoordinates%2Fcartesian_coordinates.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24093378"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/24078523"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-24078523"
+                    }
+                },
+                "id": 24078523
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Thanks for the explanation. I agree that ultimately we need to implement those derived fields for particles.",
+                "html": "<p>Thanks for the explanation. I agree that ultimately we need to implement those derived fields for particles.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-09-21T22:14:13.617586+00:00",
+            "updated_on": "2016-09-21T22:14:13.664754+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/geometry/coordinates/cartesian_coordinates.py",
+                "to": null
+            },
+            "id": 24093378
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31660544"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31660544"
+                }
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Currently the following script will raise errors:\n\n```python\nimport yt\n\nds = yt.load('FIRE_M12i_ref11/snapshot_600.hdf5')\nds.field_list\n```\n\nThe full tracebask is [here](http://paste.yt-project.org/show/7032/).",
+                "html": "<p>Currently the following script will raise errors:</p>\n<div class=\"codehilite language-python\"><pre><span></span><span class=\"kn\">import</span> <span class=\"nn\">yt</span>\n\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"s1\">&#39;FIRE_M12i_ref11/snapshot_600.hdf5&#39;</span><span class=\"p\">)</span>\n<span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">field_list</span>\n</pre></div>\n\n\n<p>The full tracebask is <a href=\"http://paste.yt-project.org/show/7032/\">here</a>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T03:40:14.113227+00:00",
+            "updated_on": "2017-02-17T03:40:14.115660+00:00",
+            "id": 31660544
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31661650"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31661650"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31660544"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31660544"
+                    }
+                },
+                "id": 31660544
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "I see where the issue is. In the [definition of `__coarse_index_data_file`](https://bitbucket.org/ngoldbaum/yt/src/c0e6ba60755912a9e079b26bcf39f33e286d682d/yt/geometry/particle_oct_container.pyx?at=sph-viz&fileviewer=file-view-default#particle_oct_container.pyx-486), although `np.ndarray[anyfloat, ndim=1] hsml` is assumed in the argument, there are computations involving `hsml` and other variables, for example in [this line](https://bitbucket.org/ngoldbaum/yt/src/c0e6ba60755912a9e079b26bcf39f33e286d682d/yt/geometry/particle_oct_container.pyx?at=sph-viz&fileviewer=file-view-default#particle_oct_container.pyx-539), where the other variable `rpos_min` is defined as `cdef np.float64_t rpos_min`, thus causing the error (because `hsml` is `float32` in this case).",
+                "html": "<p>I see where the issue is. In the <a href=\"https://bitbucket.org/ngoldbaum/yt/src/c0e6ba60755912a9e079b26bcf39f33e286d682d/yt/geometry/particle_oct_container.pyx?at=sph-viz&amp;fileviewer=file-view-default#particle_oct_container.pyx-486\">definition of <code>__coarse_index_data_file</code></a>, although <code>np.ndarray[anyfloat, ndim=1] hsml</code> is assumed in the argument, there are computations involving <code>hsml</code> and other variables, for example in <a href=\"https://bitbucket.org/ngoldbaum/yt/src/c0e6ba60755912a9e079b26bcf39f33e286d682d/yt/geometry/particle_oct_container.pyx?at=sph-viz&amp;fileviewer=file-view-default#particle_oct_container.pyx-539\">this line</a>, where the other variable <code>rpos_min</code> is defined as <code>cdef np.float64_t rpos_min</code>, thus causing the error (because <code>hsml</code> is <code>float32</code> in this case).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T04:28:36.452528+00:00",
+            "updated_on": "2017-02-17T04:28:36.454936+00:00",
+            "id": 31661650
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31661793"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31661793"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31660544"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31660544"
+                    }
+                },
+                "id": 31660544
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "It still feels weird to me that although `_yield_coordinates` and `_yield_smoothing_length`'s definitions look very similar, they yield different `dtype`s (`pos` is `float64`, while `hsml` is `float32`).",
+                "html": "<p>It still feels weird to me that although <code>_yield_coordinates</code> and <code>_yield_smoothing_length</code>'s definitions look very similar, they yield different <code>dtype</code>s (<code>pos</code> is <code>float64</code>, while <code>hsml</code> is <code>float32</code>).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T04:35:12.997402+00:00",
+            "updated_on": "2017-02-17T04:35:13.000333+00:00",
+            "id": 31661793
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31661888"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31661888"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31661793"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31661793"
+                    }
+                },
+                "id": 31661793
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Thanks for the report! I'll take a look at this sometime tomorrow. If I had to hazard a guess, the fix might involve use of cython fused types...",
+                "html": "<p>Thanks for the report! I'll take a look at this sometime tomorrow. If I had to hazard a guess, the fix might involve use of cython fused types...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T04:39:19.935540+00:00",
+            "updated_on": "2017-02-17T04:39:19.938064+00:00",
+            "id": 31661888
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31663439"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31663439"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31661650"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31661650"
+                    }
+                },
+                "id": 31661650
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "My analysis above is wrong. Currently I can only tell that the error raises when `pos` and `hsml` have different `dtype`s. When they are the same, even when both are `np.float32`, it works. I'm referring to `pos` and `hsml` in [this line](https://bitbucket.org/ngoldbaum/yt/src/c0e6ba60755912a9e079b26bcf39f33e286d682d/yt/geometry/particle_geometry_handler.py?at=sph-viz&fileviewer=file-view-default#particle_geometry_handler.py-152).",
+                "html": "<p>My analysis above is wrong. Currently I can only tell that the error raises when <code>pos</code> and <code>hsml</code> have different <code>dtype</code>s. When they are the same, even when both are <code>np.float32</code>, it works. I'm referring to <code>pos</code> and <code>hsml</code> in <a href=\"https://bitbucket.org/ngoldbaum/yt/src/c0e6ba60755912a9e079b26bcf39f33e286d682d/yt/geometry/particle_geometry_handler.py?at=sph-viz&amp;fileviewer=file-view-default#particle_geometry_handler.py-152\">this line</a>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T05:46:38.972290+00:00",
+            "updated_on": "2017-02-17T06:42:56.748602+00:00",
+            "id": 31663439
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31701257"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31701257"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31663439"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31663439"
+                    }
+                },
+                "id": 31663439
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Just to clarify, did you get this working using `cython.floating`?",
+                "html": "<p>Just to clarify, did you get this working using <code>cython.floating</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T15:39:56.038290+00:00",
+            "updated_on": "2017-02-17T15:39:56.041899+00:00",
+            "id": 31701257
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31709323"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31709323"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31701257"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31701257"
+                    }
+                },
+                "id": 31701257
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "No, with `cython.floating` the same errors are raised.",
+                "html": "<p>No, with <code>cython.floating</code> the same errors are raised.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:02:11.541854+00:00",
+            "updated_on": "2017-02-17T17:02:11.545451+00:00",
+            "id": 31709323
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710124"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710124"
+                }
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "The following script raises a [YTNonIndexedDataContainer error](http://paste.yt-project.org/show/7034/).\n\n```python\nimport yt\n\nds = yt.load('GadgetDiskGalaxy/snapshot_200.hdf5')\ndmax, center = ds.find_max(('gas', 'density'))\n```\n\nI changed the dataset to avoid the error mentioned above.",
+                "html": "<p>The following script raises a <a href=\"http://paste.yt-project.org/show/7034/\">YTNonIndexedDataContainer error</a>.</p>\n<div class=\"codehilite language-python\"><pre><span></span><span class=\"kn\">import</span> <span class=\"nn\">yt</span>\n\n<span class=\"n\">ds</span> <span class=\"o\">=</span> <span class=\"n\">yt</span><span class=\"o\">.</span><span class=\"n\">load</span><span class=\"p\">(</span><span class=\"s1\">&#39;GadgetDiskGalaxy/snapshot_200.hdf5&#39;</span><span class=\"p\">)</span>\n<span class=\"n\">dmax</span><span class=\"p\">,</span> <span class=\"n\">center</span> <span class=\"o\">=</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">find_max</span><span class=\"p\">((</span><span class=\"s1\">&#39;gas&#39;</span><span class=\"p\">,</span> <span class=\"s1\">&#39;density&#39;</span><span class=\"p\">))</span>\n</pre></div>\n\n\n<p>I changed the dataset to avoid the error mentioned above.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:13:56.211359+00:00",
+            "updated_on": "2017-02-17T17:13:56.214115+00:00",
+            "id": 31710124
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710126"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710126"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31709323"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31709323"
+                    }
+                },
+                "id": 31709323
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "OK, should be fixed now with the latest push. Not sure if my solution is necessarily the best one, let me know if you have alternate suggestions.",
+                "html": "<p>OK, should be fixed now with the latest push. Not sure if my solution is necessarily the best one, let me know if you have alternate suggestions.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:13:57.204434+00:00",
+            "updated_on": "2017-02-17T17:13:57.207033+00:00",
+            "id": 31710126
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710186"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710186"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710124"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710124"
+                    }
+                },
+                "id": 31710124
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Yes, derived quantities are broken right now. It's on my list of things to fix. If you want to take a stab at it feel free.",
+                "html": "<p>Yes, derived quantities are broken right now. It's on my list of things to fix. If you want to take a stab at it feel free.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:15:00.467256+00:00",
+            "updated_on": "2017-02-17T17:15:00.469609+00:00",
+            "id": 31710186
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710229"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710229"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710186"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710186"
+                    }
+                },
+                "id": 31710186
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Oh I see. I'll take a look at it.",
+                "html": "<p>Oh I see. I'll take a look at it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:15:48.219701+00:00",
+            "updated_on": "2017-02-17T17:15:48.222352+00:00",
+            "id": 31710229
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710927"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710927"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710126"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710126"
+                    }
+                },
+                "id": 31710126
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Yes, it works. I cannot come up with a better solution. Just wondering if you know the mechanism why there would be errors at the first place?",
+                "html": "<p>Yes, it works. I cannot come up with a better solution. Just wondering if you know the mechanism why there would be errors at the first place?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:27:45.991100+00:00",
+            "updated_on": "2017-02-17T17:27:45.994026+00:00",
+            "id": 31710927
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31711079"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31711079"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710927"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710927"
+                    }
+                },
+                "id": 31710927
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "I think it's a limitation of cython's fused types. We can make a function take two arrays with dtype `floating`, but then both arrays must have the *same* dtype. It *doesn't* combinatorially generate code for the case when both arrays have different dtypes that are members of the `cython.floating` fused type.",
+                "html": "<p>I think it's a limitation of cython's fused types. We can make a function take two arrays with dtype <code>floating</code>, but then both arrays must have the <em>same</em> dtype. It <em>doesn't</em> combinatorially generate code for the case when both arrays have different dtypes that are members of the <code>cython.floating</code> fused type.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:30:43.633354+00:00",
+            "updated_on": "2017-02-17T17:30:43.636903+00:00",
+            "id": 31711079
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31711236"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31711236"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31711079"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31711079"
+                    }
+                },
+                "id": 31711079
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Thanks. That's also what I was suspecting. Couldn't come up with another explanation.",
+                "html": "<p>Thanks. That's also what I was suspecting. Couldn't come up with another explanation.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T17:33:25.846662+00:00",
+            "updated_on": "2017-02-17T17:33:25.850881+00:00",
+            "id": 31711236
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31726998"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31726998"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31710186"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31710186"
+                    }
+                },
+                "id": 31710186
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "I've been looking at the source code for a while. I feel I don't have enough knowledge to work on this. One strange thing I find is that while `ds.find_max(('gas', 'density'))` raises error, `ds.all_data()[('gas', 'density')]` doesn't. Is this expected?",
+                "html": "<p>I've been looking at the source code for a while. I feel I don't have enough knowledge to work on this. One strange thing I find is that while <code>ds.find_max(('gas', 'density'))</code> raises error, <code>ds.all_data()[('gas', 'density')]</code> doesn't. Is this expected?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T22:55:22.363476+00:00",
+            "updated_on": "2017-02-17T22:55:22.366902+00:00",
+            "id": 31726998
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31727088"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31727088"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31726998"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31726998"
+                    }
+                },
+                "id": 31726998
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Yes, the former is indirectly invoking a derived quantity, the latter isn't.  Right now derived quantities are hitting a code path that assumes you can generate coordinates for a mesh that doesn't exist anymore now that we've removed the mesh. The fix is probably just to short-circuit that but I haven't sat down and tried to figure out how to do that yet.\n\nDon't waste too much time on fixing derived quantities, I am planning to do it soon and am probably more familiar with that part of the codebase.",
+                "html": "<p>Yes, the former is indirectly invoking a derived quantity, the latter isn't.  Right now derived quantities are hitting a code path that assumes you can generate coordinates for a mesh that doesn't exist anymore now that we've removed the mesh. The fix is probably just to short-circuit that but I haven't sat down and tried to figure out how to do that yet.</p>\n<p>Don't waste too much time on fixing derived quantities, I am planning to do it soon and am probably more familiar with that part of the codebase.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T22:58:31.298746+00:00",
+            "updated_on": "2017-02-17T22:58:31.301853+00:00",
+            "id": 31727088
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/qobilidop"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/qobilidop/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/qobilidop/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Bili Dong",
+                "uuid": "{3b9943d1-f045-4354-af1c-35efa961d7cd}",
+                "username": "qobilidop"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31727220"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31727220"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31727088"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31727088"
+                    }
+                },
+                "id": 31727088
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "Thanks for the explanation! I'm trying to make the demeshening code work with Trident and this is one road block. I'll continue the testing once this is fixed.",
+                "html": "<p>Thanks for the explanation! I'm trying to make the demeshening code work with Trident and this is one road block. I'll continue the testing once this is fixed.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-17T23:02:41.445589+00:00",
+            "updated_on": "2017-02-17T23:02:41.448116+00:00",
+            "id": 31727220
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31735817"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31735817"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382/comments/31727220"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382/_/diff#comment-31727220"
+                    }
+                },
+                "id": 31727220
+            },
+            "pullrequest": {
+                "title": "[wip] SPH field refactor / kernel pixelizer",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2382"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2382"
+                    }
+                },
+                "id": 2382
+            },
+            "content": {
+                "raw": "I took a quick look, and I think the issue is with `get_position_fields` in `derived_quantities.py`, which is somehow not picking up that the gas density is no longer a particle field.",
+                "html": "<p>I took a quick look, and I think the issue is with <code>get_position_fields</code> in <code>derived_quantities.py</code>, which is somehow not picking up that the gas density is no longer a particle field.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-02-18T20:19:15.904737+00:00",
+            "updated_on": "2017-02-18T20:19:15.907646+00:00",
+            "id": 31735817
+        }
+    ]
+}

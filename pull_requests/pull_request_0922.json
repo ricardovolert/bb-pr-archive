@@ -1,0 +1,732 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-05-24T22:07:28.709844+00:00",
+    "comment_count": 11,
+    "description": "When I plot a transfer function in my volume rendering, the tick labels are wrong.  Here's an example:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport pylab\r\nimport numpy as np\r\nfrom yt.mods import *\r\nimport yt.visualization.volume_rendering.api\r\n\r\nfig = pylab.figure(facecolor=\"black\")\r\n\r\n\r\nvals = [-1.e7, -5.e6, 5.e6, 1.e7]\r\nsigma = 0.1*max(abs(np.array(vals)))\r\n\r\nmi = min(vals)\r\nma = max(vals)\r\n    \r\ntf =  yt.visualization.volume_rendering.api.ColorTransferFunction((mi, ma))\r\n\r\nfor v in vals:\r\n    tf.sample_colormap(v, sigma**2) #, alpha=0.2)\r\n\r\ntf.vert_cbar()\r\npylab.savefig(\"test_cbar.png\", facecolor=fig.get_facecolor())\r\n\r\n```\r\n\r\nWith this patch, the limits in the colorbar for the transfer function are -1e7, 1.e7, as expected.  Without this, then the upper limit is ~9.8e6.  \r\n\r\nThe idea is that for an interval [a,b], by default we have 256 colors (0,...,255).  And a=0; b=255.  Now this means that there are 255 intervals between a and b, so when changing from the color index to a physical \"x\" for tick labeling, we need to divide by 255, not 256.  This fixes this.\r\n\r\nIt would be useful for others to test this to let me know if it is right for them.  I went ahead and editted two places outside of vert_cbar() that I thought had the same issue.",
+    "created_on": "2014-05-23T17:34:16.765880+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/3c7983a318d5"
+            }
+        },
+        "hash": "3c7983a318d5"
+    },
+    "title": "fix transfer function tick labels",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 922,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/mzingale"
+            },
+            "html": {
+                "href": "https://bitbucket.org/mzingale/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Michael  Zingale",
+        "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+        "username": "mzingale"
+    },
+    "source": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/mzingale/yt.old/commit/91a14a8d910d"
+                }
+            },
+            "hash": "91a14a8d910d"
+        },
+        "repository": {
+            "full_name": "mzingale/yt.old",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/mzingale/yt.old"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/mzingale/yt.old"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/mzingale/yt.old/avatar/32/"
+                }
+            },
+            "name": "yt.old",
+            "uuid": "{a2366d4c-3f63-4335-b81c-6b141249e3a7}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt-3.0"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/4702092b7f7d"
+                }
+            },
+            "hash": "4702092b7f7d"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1959979"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1959979"
+                }
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "btw, there is a second issue here in that the lowest tick value is being double plotted (see how it looks \"bold\").  I'll fix this shortly.",
+                "html": "<p>btw, there is a second issue here in that the lowest tick value is being double plotted (see how it looks \"bold\").  I'll fix this shortly.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T17:35:58.715352+00:00",
+            "updated_on": "2014-05-23T17:35:58.822692+00:00",
+            "id": 1959979
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1959989"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1959989"
+                }
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "Here's my dataset vis with this fix:\n\nhttp://bender.astro.sunysb.edu/random/xrb_vol_vz_new.png\n\nand here's the \"before\":\n\nhttp://bender.astro.sunysb.edu/random/xrb_vol_vz.png\n\n(you can see the \"bolding\" in the -1.00e7 label here that I didn't address yet)",
+                "html": "<p>Here's my dataset vis with this fix:</p>\n<p><a href=\"http://bender.astro.sunysb.edu/random/xrb_vol_vz_new.png\" rel=\"nofollow\">http://bender.astro.sunysb.edu/random/xrb_vol_vz_new.png</a></p>\n<p>and here's the \"before\":</p>\n<p><a href=\"http://bender.astro.sunysb.edu/random/xrb_vol_vz.png\" rel=\"nofollow\">http://bender.astro.sunysb.edu/random/xrb_vol_vz.png</a></p>\n<p>(you can see the \"bolding\" in the -1.00e7 label here that I didn't address yet)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T17:38:09.201420+00:00",
+            "updated_on": "2014-05-23T17:38:09.322305+00:00",
+            "id": 1959989
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960043"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960043"
+                }
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "Hmm.. I seem to have hit upon the BB behavior of merging later commits directly into this.  The line that is list(set(xticks)) removes the duplicates and does away with the bolding of the lowest tick value evident in the two plots linked above.  Meant for this to be separate, but BB thinks otherwise.",
+                "html": "<p>Hmm.. I seem to have hit upon the BB behavior of merging later commits directly into this.  The line that is list(set(xticks)) removes the duplicates and does away with the bolding of the lowest tick value evident in the two plots linked above.  Meant for this to be separate, but BB thinks otherwise.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T17:46:07.095574+00:00",
+            "updated_on": "2014-05-23T17:46:07.233513+00:00",
+            "id": 1960043
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960052"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960052"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960043"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960043"
+                    }
+                },
+                "id": 1960043
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "If you want to make a PR that doesn't include these commits, you'll need to create a different head in your mercurial repository.  Bitbucket's new auto-update feature will automatically append descendents of a PR head when you push new changes to your repo.",
+                "html": "<p>If you want to make a PR that doesn't include these commits, you'll need to create a different head in your mercurial repository.  Bitbucket's new auto-update feature will automatically append descendents of a PR head when you push new changes to your repo.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T17:47:11.312399+00:00",
+            "updated_on": "2014-05-23T17:47:11.322286+00:00",
+            "id": 1960052
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960055"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960055"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1959989"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1959989"
+                    }
+                },
+                "id": 1959989
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "Perhaps I'm not reading this correctly, but aren't the other three tick labels incorrect now?",
+                "html": "<p>Perhaps I'm not reading this correctly, but aren't the other three tick labels incorrect now?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T17:47:39.762127+00:00",
+            "updated_on": "2014-05-23T17:47:39.782463+00:00",
+            "id": 1960055
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960082"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960082"
+                }
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "I was just thinking about that too.  I believe that they are \"correct\", but not optimal.  I think that this is due to the discreteness of the color bins.  It may be that instead of thinking about [a,b] living at the bounds of the transfer function range, I should think about them as cell-centered values.  I agree that we should want something that gives [-1.e7. -6.e6, -2.e6, 2.e6, 6.e6, 1.e7], so maybe I haven't hit the right fix yet. \n\nI was obsessing on the top label.",
+                "html": "<p>I was just thinking about that too.  I believe that they are \"correct\", but not optimal.  I think that this is due to the discreteness of the color bins.  It may be that instead of thinking about [a,b] living at the bounds of the transfer function range, I should think about them as cell-centered values.  I agree that we should want something that gives [-1.e7. -6.e6, -2.e6, 2.e6, 6.e6, 1.e7], so maybe I haven't hit the right fix yet. </p>\n<p>I was obsessing on the top label.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T17:50:33.709403+00:00",
+            "updated_on": "2014-05-23T17:50:33.850942+00:00",
+            "id": 1960082
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960171"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960171"
+                }
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "I see the issue.  I'll fix my fix...",
+                "html": "<p>I see the issue.  I'll fix my fix...</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T18:03:33.052850+00:00",
+            "updated_on": "2014-05-23T18:03:33.162177+00:00",
+            "id": 1960171
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960208"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960208"
+                }
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "I didn't adjust the size in some places -- now here's what I get:\n\n http://bender.astro.sunysb.edu/random/xrb_vol_vz_new2.png\n\nthis looks right to me, but again, other's use-cases may be different.  Also note that this new plot has the \"bolding\" of the lowest index fixed (it was subtle before, but there).",
+                "html": "<p>I didn't adjust the size in some places -- now here's what I get:</p>\n<p><a href=\"http://bender.astro.sunysb.edu/random/xrb_vol_vz_new2.png\" rel=\"nofollow\">http://bender.astro.sunysb.edu/random/xrb_vol_vz_new2.png</a></p>\n<p>this looks right to me, but again, other's use-cases may be different.  Also note that this new plot has the \"bolding\" of the lowest index fixed (it was subtle before, but there).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T18:08:27.974342+00:00",
+            "updated_on": "2014-05-23T18:08:28.086803+00:00",
+            "id": 1960208
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960783"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960783"
+                }
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-23T19:14:29.700842+00:00",
+            "updated_on": "2014-05-23T19:14:29.903453+00:00",
+            "id": 1960783
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/mzingale"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/mzingale/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/mzingale/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Michael  Zingale",
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
+                "username": "mzingale"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1962996"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1962996"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1960052"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1960052"
+                    }
+                },
+                "id": 1960052
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "can you show me an example of how to do this?  I have another change I want to issue a pull request for.  hg is just different enough from git that I get confused.",
+                "html": "<p>can you show me an example of how to do this?  I have another change I want to issue a pull request for.  hg is just different enough from git that I get confused.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-24T14:27:06.449876+00:00",
+            "updated_on": "2014-05-24T14:27:06.575822+00:00",
+            "id": 1962996
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1963430"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1963430"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922/comments/1962996"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922/_/diff#comment-1962996"
+                    }
+                },
+                "id": 1962996
+            },
+            "pullrequest": {
+                "title": "fix transfer function tick labels",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/922"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/922"
+                    }
+                },
+                "id": 922
+            },
+            "content": {
+                "raw": "It depends a bit on what you've done with your new change.\n\nIf I'm starting on a new feature or fixing a bug present in the tip of the main yt repository, I would first look up the changeset of the current tip of the yt_analysis/yt repository, which is 3c7983a at the moment.  Next I would do:\n\n```\n#!bash\n\n$ hg pull -r 3c7983a https://bitbucket.org/yt_analysis/yt\n$ hg up 3c7983a\n$ hg bookmark my_new_feature\n<add new feature>\n$ hg commit -m \"added an awesome new feature\"\n# You might need to do hg push -f if you have created a new head.\n$ hg push -B https://bitbucket.org/ngoldbaum/yt\n```\n\nAnd then create a new pull request.  Your old pull request is unaffected since you have started development from the current tip of the yt_analysis/yt repo, rather than the changeset at the tip of your pull request.\n\nI use the [hgbb](https://bitbucket.org/birkenfeld/hgbb) extension to streamline working with bitbucket.  This allows the above example to be a bit simpler - using hgbb I only need to say `bb:yt` to reference https://bitbucket.org/ngoldbaum/yt or `bb:yt_analysis/yt` to represent the main yt repo.\n\nI also find it's best to never use `hg pull` or `hg push`.  Instead, you can avoid a lot of pain if you always push and pull referencing a specific changeset (`hg pull -r <rev>` or `hg push -r <rev>`).  In both cases `<rev>` can be a specific changeset SHA-1 hash, a local revision number, a bookmark name, a named branch (i.e. the tip of the branch), `tip`, or a [revset](http://www.selenic.com/hg/help/revsets).\n\nIf you've already made a change, but accidentally committed it to the tip of a pull request, then be careful NOT to push this change to bitbucket, since it will automatically update the pull request.  This is definitely a bit of a pain - both myself and @MatthewTurk have had trouble with this in the past week and we're pretty experienced with mercurial.\n\nInstead, you should re-apply your changeset to the current tip of the `yt_analysis/yt` repository.  The best way to do that is using the hg [graft](http://selenic.com/hg/help/graft) command.",
+                "html": "<p>It depends a bit on what you've done with your new change.</p>\n<p>If I'm starting on a new feature or fixing a bug present in the tip of the main yt repository, I would first look up the changeset of the current tip of the <a href=\"/yt_analysis/yt\" rel=\"nofollow\">yt_analysis/yt</a> repository, which is <a href=\"/yt_analysis/yt/commits/3c7983a\" rel=\"nofollow\">3c7983a</a> at the moment.  Next I would do:</p>\n<div class=\"codehilite\"><pre><span></span>$ hg pull -r 3c7983a https://bitbucket.org/yt_analysis/yt\n$ hg up 3c7983a\n$ hg bookmark my_new_feature\n&lt;add new feature&gt;\n$ hg commit -m <span class=\"s2\">&quot;added an awesome new feature&quot;</span>\n<span class=\"c1\"># You might need to do hg push -f if you have created a new head.</span>\n$ hg push -B https://bitbucket.org/ngoldbaum/yt\n</pre></div>\n\n\n<p>And then create a new pull request.  Your old pull request is unaffected since you have started development from the current tip of the <a href=\"/yt_analysis/yt\" rel=\"nofollow\">yt_analysis/yt</a> repo, rather than the changeset at the tip of your pull request.</p>\n<p>I use the <a href=\"https://bitbucket.org/birkenfeld/hgbb\">hgbb</a> extension to streamline working with bitbucket.  This allows the above example to be a bit simpler - using hgbb I only need to say <code>bb:yt</code> to reference <a href=\"https://bitbucket.org/ngoldbaum/yt\" rel=\"nofollow\">https://bitbucket.org/ngoldbaum/yt</a> or <code>bb:yt_analysis/yt</code> to represent the main yt repo.</p>\n<p>I also find it's best to never use <code>hg pull</code> or <code>hg push</code>.  Instead, you can avoid a lot of pain if you always push and pull referencing a specific changeset (<code>hg pull -r &lt;rev&gt;</code> or <code>hg push -r &lt;rev&gt;</code>).  In both cases <code>&lt;rev&gt;</code> can be a specific changeset SHA-1 hash, a local revision number, a bookmark name, a named branch (i.e. the tip of the branch), <code>tip</code>, or a <a href=\"http://www.selenic.com/hg/help/revsets\">revset</a>.</p>\n<p>If you've already made a change, but accidentally committed it to the tip of a pull request, then be careful NOT to push this change to bitbucket, since it will automatically update the pull request.  This is definitely a bit of a pain - both myself and <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> have had trouble with this in the past week and we're pretty experienced with mercurial.</p>\n<p>Instead, you should re-apply your changeset to the current tip of the <code>yt_analysis/yt</code> repository.  The best way to do that is using the hg <a href=\"http://selenic.com/hg/help/graft\">graft</a> command.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-05-24T21:44:47.917548+00:00",
+            "updated_on": "2014-05-24T22:07:28.700921+00:00",
+            "id": 1963430
+        }
+    ]
+}

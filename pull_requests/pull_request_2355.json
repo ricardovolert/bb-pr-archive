@@ -1,0 +1,814 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-09-07T18:11:55.566176+00:00",
+    "comment_count": 13,
+    "description": "* Enabled Gadget Format 2 in _validate_header\r\n\r\n* Changes in data_structures.py:\r\n    1. New function to determine the gadget format:\r\n    def _get_gadget_format(filename):\r\n        # check and return gadget binary format\r\n        f = open(filename, 'rb')\r\n        (rhead,) = struct.unpack('<I',f.read(4))\r\n        f.close()\r\n        if (rhead == 134217728) | (rhead == 8):\r\n            return 2\r\n        elif (rhead == 65536) | (rhead == 256):\r\n            return 1\r\n        else:\r\n            raise RuntimeError(\"Un correct Gadget format!\")\r\n    2. class GadgetBinaryFile(ParticleFile): add skip for the GF2 header\r\n                if _get_gadget_format(filename) == 2:\r\n                    f.seek(f.tell()+16)\r\n    3. Function _get_hvals in class GadgetDataset: add skip for the GF2 header\r\n\r\n    4. Function _validate_header in class GadgetDataset: add skip for the GF2 header\r\n            elif rhead == 8:\r\n                return True, '<'\r\n            elif rhead == 134217728:\r\n                return True, '>'\r\n\r\n    Changes in io.py:\r\n    1. from .data_structures import _get_gadget_format\r\n    2. in class IOHandlerGadgetBinary(BaseIOHandler) __init__(): self._format =  _get_gadget_format(ds.parameter_filename)#default gadget format 1\r\n    3. in _calculate_field_offsets:\r\n                if self._format == 2:\r\n                    pos += 20 #skip block header\r\n                    #print(\"With Gadget format 2\")\r\n                elif self._format == 1:\r\n                    pos += 4\r\n                else:\r\n                    raise RuntimeError(\"Un correct Gadget format!\")\r\n    \t\t.....\r\n                if (file_size != pos) & (self._format == 1): #ignore the rest of format 2",
+    "created_on": "2016-08-30T07:28:20.318821+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/eaabc53f4933"
+            }
+        },
+        "hash": "eaabc53f4933"
+    },
+    "title": "Yt - enabled Gadget format 2",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2355,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/WeiguangCui"
+            },
+            "html": {
+                "href": "https://bitbucket.org/WeiguangCui/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/WeiguangCui/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Weiguang Cui",
+        "uuid": "{a5b78c18-ff68-417b-a30b-132e03345dd7}",
+        "username": "WeiguangCui"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": null,
+        "repository": null
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7e7c3fdd9cc7"
+                }
+            },
+            "hash": "7e7c3fdd9cc7"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23013602"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23013602"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/101/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/101/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/101/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T08:11:38.613976+00:00",
+            "updated_on": "2016-08-30T08:11:38.678046+00:00",
+            "id": 23013602
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23027465"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:e0a07d979202..e339dc97f667?path=yt%2Ffrontends%2Fgadget%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23027465"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "This should be \"incorrect\"",
+                "html": "<p>This should be \"incorrect\"</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T12:16:02.814210+00:00",
+            "updated_on": "2016-08-30T12:16:02.817865+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/gadget/io.py",
+                "to": 186
+            },
+            "id": 23027465
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23027499"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:e0a07d979202..e339dc97f667?path=yt%2Ffrontends%2Fgadget%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23027499"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "This should be \"incorrect\"",
+                "html": "<p>This should be \"incorrect\"</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T12:16:40.744518+00:00",
+            "updated_on": "2016-08-30T12:16:40.755445+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/gadget/data_structures.py",
+                "to": 59
+            },
+            "id": 23027499
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23027523"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:e0a07d979202..e339dc97f667?path=yt%2Ffrontends%2Fgadget%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23027523"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "Maybe add a space between the two functions?",
+                "html": "<p>Maybe add a space between the two functions?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T12:16:59.479985+00:00",
+            "updated_on": "2016-08-30T12:16:59.483688+00:00",
+            "inline": {
+                "from": 48,
+                "path": "yt/frontends/gadget/data_structures.py",
+                "to": null
+            },
+            "id": 23027523
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23027537"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:e0a07d979202..e339dc97f667?path=yt%2Ffrontends%2Fgadget%2Fdata_structures.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23027537"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "Typo \"Enabled\"",
+                "html": "<p>Typo \"Enabled\"</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T12:17:12.582487+00:00",
+            "updated_on": "2016-08-30T12:17:12.588931+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/gadget/data_structures.py",
+                "to": 329
+            },
+            "id": 23027537
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23027551"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:e0a07d979202..e339dc97f667?path=yt%2Ffrontends%2Fgadget%2Fio.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23027551"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "Take out this commented print statement",
+                "html": "<p>Take out this commented print statement</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T12:17:28.505125+00:00",
+            "updated_on": "2016-08-30T12:17:28.507194+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/frontends/gadget/io.py",
+                "to": 182
+            },
+            "id": 23027551
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23027731"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23027731"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "Hi @WeiguangCui, I suggested some stylistic changes but otherwise this looks ok. I'd suggest that you also set up answer testing for your files in the same way that it's done for the other Gadget files. \n\nAlso, it's better to have spaces both before and after comment hashes (#) if you can. ",
+                "html": "<p>Hi <a href=\"/WeiguangCui/\" rel=\"nofollow\" title=\"@WeiguangCui\" class=\"mention\">Weiguang Cui</a>, I suggested some stylistic changes but otherwise this looks ok. I'd suggest that you also set up answer testing for your files in the same way that it's done for the other Gadget files. </p>\n<p>Also, it's better to have spaces both before and after comment hashes (#) if you can. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T12:20:29.003742+00:00",
+            "updated_on": "2016-08-30T12:20:29.012031+00:00",
+            "id": 23027731
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23033804"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23033804"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/102/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/102/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/102/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T13:50:37.212387+00:00",
+            "updated_on": "2016-08-30T13:50:37.267080+00:00",
+            "id": 23033804
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23037312"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23037312"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/103/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/103/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/103/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T14:35:37.246336+00:00",
+            "updated_on": "2016-08-30T14:35:37.312302+00:00",
+            "id": 23037312
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23038164"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23038164"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "Can you update the documentation on how to load Gadget data? The yt documentation is in the repository (the doc folder). I think at a minimum you're going to need to update this page: http://yt-project.org/doc/examining/loading_data.html#gadget-data. The file you need to edit is located in the file, `doc/source/examining/loading_data.rst`, where this path is relative to the root of the yt repository. There's more information about how to update the docs and build them locally here: http://yt-project.org/docs/dev/developing/building_the_docs.html",
+                "html": "<p>Can you update the documentation on how to load Gadget data? The yt documentation is in the repository (the doc folder). I think at a minimum you're going to need to update this page: <a href=\"http://yt-project.org/doc/examining/loading_data.html#gadget-data\" rel=\"nofollow\">http://yt-project.org/doc/examining/loading_data.html#gadget-data</a>. The file you need to edit is located in the file, <code>doc/source/examining/loading_data.rst</code>, where this path is relative to the root of the yt repository. There's more information about how to update the docs and build them locally here: <a href=\"http://yt-project.org/docs/dev/developing/building_the_docs.html\" rel=\"nofollow\">http://yt-project.org/docs/dev/developing/building_the_docs.html</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T14:47:25.701851+00:00",
+            "updated_on": "2016-08-30T14:47:25.708952+00:00",
+            "id": 23038164
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23038661"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23038661"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23027731"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23027731"
+                    }
+                },
+                "id": 23027731
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "There's more information about answer tests here: http://yt-project.org/docs/dev/developing/testing.html#answer-testing\n\nYou should be able to more or less copy/paste what's already there for the other gadget answer tests in `yt/frontends/gadget/tests/test_outputs.py`.",
+                "html": "<p>There's more information about answer tests here: <a href=\"http://yt-project.org/docs/dev/developing/testing.html#answer-testing\" rel=\"nofollow\">http://yt-project.org/docs/dev/developing/testing.html#answer-testing</a></p>\n<p>You should be able to more or less copy/paste what's already there for the other gadget answer tests in <code>yt/frontends/gadget/tests/test_outputs.py</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T14:53:37.061591+00:00",
+            "updated_on": "2016-08-30T14:53:37.070635+00:00",
+            "id": 23038661
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23040601"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23040601"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/104/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/104/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/104/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T15:17:50.004648+00:00",
+            "updated_on": "2016-08-30T15:17:50.051695+00:00",
+            "id": 23040601
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355/comments/23043655"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355/_/diff#comment-23043655"
+                }
+            },
+            "pullrequest": {
+                "title": "Yt - enabled Gadget format 2",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2355"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2355"
+                    }
+                },
+                "id": 2355
+            },
+            "content": {
+                "raw": "* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/105/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/120/\n",
+                "html": "<ul>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/105/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/105/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/120/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/120/</a></li>\n</ul>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-30T16:01:27.612036+00:00",
+            "updated_on": "2016-09-05T07:09:17.118582+00:00",
+            "id": 23043655
+        }
+    ]
+}

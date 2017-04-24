@@ -1,0 +1,713 @@
+{
+    "reason": "Declined in favor of PR 2448",
+    "state": "DECLINED",
+    "updated_on": "2016-12-07T18:57:10.324328+00:00",
+    "comment_count": 10,
+    "description": "This is a reissue of PR 2216.\r\n\r\nIt makes some minor changes to the guts of the profiling code - adding `right=True` to our calls to `np.digitize`. In practice I don't think this choice will make much of a difference as it only affects values that fall exactly on bin edges.\r\n\r\nThe rest of the changes include quality-of-life improvements for generating profiles where the bins are the coordinate axes of the simulation. It's now possible to use integers to specify the bin fields (i.e. 1 instead of 'x' or ('index', 'x')). The default extrema for spatial index fields are also given more natural values by looking at `ds.domain_left_edge`, so the domain edges will be included.\r\n\r\nFinally, there are some fixes to ensure the profiled data has the correct orientation along with new tests for this behavior. There's a possibly suspicious-loooking ad-hoc transpose added at the bottom of `profiles.py`, but after looking at the tests carefully I think this is doing the right thing. It's possible that this is fixing a symptom of a more generic problem, although maybe @hristovb wants to comment.",
+    "created_on": "2016-06-29T15:55:51.304357+00:00",
+    "task_count": 0,
+    "merge_commit": null,
+    "title": "create_profile fixes",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2255,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/0bfa0d1b2609"
+                }
+            },
+            "hash": "0bfa0d1b2609"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/96882803a599"
+                }
+            },
+            "hash": "96882803a599"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20901064"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:0bfa0d1b2609..1f83a250683e?path=yt%2Fdata_objects%2Fprofiles.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20901064"
+                }
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "So I'm a little bit confused by this part.  Are we doing a double iteration?  It looks like the outer loop iterates over `bin_fields` which we then do again in here.  Is that right?  Are we doing an N-by-N comparison?  Or is it sufficient to yank out this loop and just use the already-assigned `bin_field`?",
+                "html": "<p>So I'm a little bit confused by this part.  Are we doing a double iteration?  It looks like the outer loop iterates over <code>bin_fields</code> which we then do again in here.  Is that right?  Are we doing an N-by-N comparison?  Or is it sufficient to yank out this loop and just use the already-assigned <code>bin_field</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-12T14:36:07.308847+00:00",
+            "updated_on": "2016-07-12T14:36:07.314070+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/profiles.py",
+                "to": 989
+            },
+            "id": 20901064
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20901157"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:0bfa0d1b2609..1f83a250683e?path=yt%2Fdata_objects%2Fprofiles.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20901157"
+                }
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "nit: as long as we're updating this code, `quantities.extrema` is preferred",
+                "html": "<p>nit: as long as we're updating this code, <code>quantities.extrema</code> is preferred</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-12T14:37:29.674159+00:00",
+            "updated_on": "2016-07-12T14:37:29.680807+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/profiles.py",
+                "to": 1018
+            },
+            "id": 20901157
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20901191"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:0bfa0d1b2609..1f83a250683e?path=yt%2Fdata_objects%2Fprofiles.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20901191"
+                }
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "I never noticed this before, but there's a chance it might cause problems.",
+                "html": "<p>I never noticed this before, but there's a chance it might cause problems.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-12T14:37:51.450725+00:00",
+            "updated_on": "2016-07-12T14:37:51.453113+00:00",
+            "inline": {
+                "from": 1000,
+                "path": "yt/data_objects/profiles.py",
+                "to": null
+            },
+            "id": 20901191
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20901245"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:0bfa0d1b2609..1f83a250683e?path=yt%2Fdata_objects%2Fprofiles.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20901245"
+                }
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "Do we need this conditional, or is it just to set off the section as belonging to the comment?  I don't mind it if there's a reason we're setting it off -- as in, to show \"this is what the comment relates to\" but I want to be sure.",
+                "html": "<p>Do we need this conditional, or is it just to set off the section as belonging to the comment?  I don't mind it if there's a reason we're setting it off -- as in, to show \"this is what the comment relates to\" but I want to be sure.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-12T14:38:49.762186+00:00",
+            "updated_on": "2016-07-12T14:38:49.774034+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/profiles.py",
+                "to": 1079
+            },
+            "id": 20901245
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20901294"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20901294"
+                }
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "Some comments, but otherwise LGTM.  Thanks, @hristovb !",
+                "html": "<p>Some comments, but otherwise LGTM.  Thanks, <a href=\"/hristovb/\" rel=\"nofollow\" title=\"@hristovb\" class=\"mention\">Boyan Hristov</a> !</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-12T14:39:42.300959+00:00",
+            "updated_on": "2016-07-12T14:39:42.365547+00:00",
+            "id": 20901294
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hristovb"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hristovb/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hristovb/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Boyan Hristov",
+                "uuid": "{4ff363be-b5fe-424b-bc0d-1e9c148716c6}",
+                "username": "hristovb"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20930185"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fdata_objects%2Fprofiles.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20930185"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20901064"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20901064"
+                    }
+                },
+                "id": 20901064
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "Here we need only the body of the inner for loop, which needs the value of bin_field from the outer loop. To fix this delete the inner for statement (and unindent the body, lines 990-1009). This is a piece of the of the old version, which I had no need to change, since my fix works when the extrema parameter is not set. Further more I don't entirely understand the reasons behind all the bits in the segment. My intent was to preserve this code as-is and execute it conditionally in the if statement but I left the original for statement by mistake.",
+                "html": "<p>Here we need only the body of the inner for loop, which needs the value of bin_field from the outer loop. To fix this delete the inner for statement (and unindent the body, lines 990-1009). This is a piece of the of the old version, which I had no need to change, since my fix works when the extrema parameter is not set. Further more I don't entirely understand the reasons behind all the bits in the segment. My intent was to preserve this code as-is and execute it conditionally in the if statement but I left the original for statement by mistake.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-13T02:52:44.372890+00:00",
+            "updated_on": "2016-07-13T02:52:44.428712+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/profiles.py",
+                "to": null
+            },
+            "id": 20930185
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hristovb"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hristovb/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hristovb/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Boyan Hristov",
+                "uuid": "{4ff363be-b5fe-424b-bc0d-1e9c148716c6}",
+                "username": "hristovb"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20930992"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fdata_objects%2Fprofiles.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20930992"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20901245"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20901245"
+                    }
+                },
+                "id": 20901245
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "I used the conditional during testing. Later I decided to leave it for a couple of reasons and I should have commented on it. For one thing it outlines the new section. Secondly, it is a small inconsistency in the function result, perhaps too unimportant to be treated as a bug. I mostly wanted to point out and offer a fix. It could be worth considering the following alternatives before making a decision what to do with the \"fix\": (a) remove it as unnecessary; (b) leave it as it is and accept the risk that it could break existing software; and (c) make it optional for backwards compatibility.",
+                "html": "<p>I used the conditional during testing. Later I decided to leave it for a couple of reasons and I should have commented on it. For one thing it outlines the new section. Secondly, it is a small inconsistency in the function result, perhaps too unimportant to be treated as a bug. I mostly wanted to point out and offer a fix. It could be worth considering the following alternatives before making a decision what to do with the \"fix\": (a) remove it as unnecessary; (b) leave it as it is and accept the risk that it could break existing software; and (c) make it optional for backwards compatibility.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-13T03:36:07.496498+00:00",
+            "updated_on": "2016-07-13T03:36:07.547249+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/profiles.py",
+                "to": null
+            },
+            "id": 20930992
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hristovb"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hristovb/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hristovb/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Boyan Hristov",
+                "uuid": "{4ff363be-b5fe-424b-bc0d-1e9c148716c6}",
+                "username": "hristovb"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/20931062"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-20931062"
+                }
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "Dear Matthew Turk,\nHope my \"inline\" replies answer your questions.\n--Boyan",
+                "html": "<p>Dear Matthew Turk,\nHope my \"inline\" replies answer your questions.\n--Boyan</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-07-13T03:40:38.758022+00:00",
+            "updated_on": "2016-07-13T03:40:38.804779+00:00",
+            "id": 20931062
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/hristovb"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/hristovb/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/hristovb/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Boyan Hristov",
+                "uuid": "{4ff363be-b5fe-424b-bc0d-1e9c148716c6}",
+                "username": "hristovb"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/27983930"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-27983930"
+                }
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "Hi, Nathan,\n\nDo you need me to act on this?\n\n--Boyan\n",
+                "html": "<p>Hi, Nathan,</p>\n<p>Do you need me to act on this?</p>\n<p>--Boyan</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-07T18:55:12.452153+00:00",
+            "updated_on": "2016-12-07T18:55:12.476722+00:00",
+            "id": 27983930
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/27984027"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-27984027"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255/comments/27983930"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255/_/diff#comment-27983930"
+                    }
+                },
+                "id": 27983930
+            },
+            "pullrequest": {
+                "title": "create_profile fixes",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2255"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2255"
+                    }
+                },
+                "id": 2255
+            },
+            "content": {
+                "raw": "Nope, we ended up deciding not to take this in favor of an alternate solution, see PR 2448: https://bitbucket.org/yt_analysis/yt/pull-requests/2448",
+                "html": "<p>Nope, we ended up deciding not to take this in favor of an alternate solution, see PR 2448: <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/2448\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/2448</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-12-07T18:57:10.256808+00:00",
+            "updated_on": "2016-12-07T18:57:10.259489+00:00",
+            "id": 27984027
+        }
+    ]
+}

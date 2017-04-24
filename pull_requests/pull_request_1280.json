@@ -1,0 +1,1456 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2014-11-06T15:33:41.173258+00:00",
+    "comment_count": 26,
+    "description": "My apologies that this turned into a veritable kitchen-sink PR, but as I was going through and implementing these things I kept finding stuff that needed to be addressed. \r\n\r\n1. Additions to `PPVCube`, including thermal line broadening and allowing for the spectral axis to be in units other than velocity (energy, frequency, or wavelength). Updated docs to reflect these new options.\r\n\r\n2. `FITSImageBuffer` (for writing FITS images) had a bewildering and confusing number of options, mainly centered around the writing of WCS coordinates to the file. I've simplified these. Updated the parts of the code that use `FITSImageBuffer` to reflect these changes.\r\n\r\n3. Improved options for customizing the center, width, and resolution of FITS images produced with `FITSSlice` and `FITSProjection`.\r\n\r\n4. The FITS frontend now recognizes PPV/spectral cubes that have the position axes in length units (previously it was just angular units). In the course of fixing this I had to touch `PlotWindow` just a smidge to make sure that in this case that the appropriate length units appear on the axes of the plots.\r\n\r\n5. Added the `\"sum\"` method to off-axis projections. Partially resolves [this issue](https://bitbucket.org/yt_analysis/yt/issue/911/enable-the-same-projection-methods-for).\r\n\r\n6. Get units correct for off-axis projections. Closes Issue #892. \r\n\r\n7. Raise an error if one attempts to load a FITS file but doesn't have AstroPy installed. Closes Issue #932.\r\n\r\n8. Make the micro prefix \"u\" render as the LaTeX \"\\mu\" in plots. \r\n\r\n9. A new option for specifying plot centers (or anything that uses `sanitize_center`), where you can say you want the min or max of a specific field to be the center. An example:\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nds = yt.load(\"GasSloshing/sloshing_nomag2_hdf5_plt_cnt_0100\")\r\nslc = yt.SlicePlot(ds, \"z\", \"density\", center=(\"min\",\"temperature\"))\r\n```\r\nUPDATE: Responded to @ngoldbaum and @chummels's suggestions and bug discoveries--I think I managed to fix all of the issues you found.",
+    "created_on": "2014-10-22T14:37:27.861923+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e433a9791f5d"
+            }
+        },
+        "hash": "e433a9791f5d"
+    },
+    "title": "Improved FITS support, with a number of small additional refinements ",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+        "username": "MatthewTurk"
+    },
+    "id": 1280,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+        "username": "jzuhone"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-old/commit/52a7220cf325"
+                }
+            },
+            "hash": "52a7220cf325"
+        },
+        "repository": {
+            "full_name": "jzuhone/yt-old",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-old"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/jzuhone/yt-old"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/jzuhone/yt-old/avatar/32/"
+                }
+            },
+            "name": "yt-old",
+            "uuid": "{8936e0ba-e21c-47d2-bfc6-728321863245}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ab0c5ed83cc0"
+                }
+            },
+            "hash": "ab0c5ed83cc0"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3561774"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3561774"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-22T16:13:26.625361+00:00",
+            "updated_on": "2014-10-22T16:13:26.999460+00:00",
+            "id": 3561774
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3568378"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3568378"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-22T23:34:23.227689+00:00",
+            "updated_on": "2014-10-22T23:34:23.613448+00:00",
+            "id": 3568378
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3597685"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3597685"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-24T17:02:45.166909+00:00",
+            "updated_on": "2014-10-24T17:02:45.650493+00:00",
+            "id": 3597685
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3599350"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3599350"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-24T19:02:27.229469+00:00",
+            "updated_on": "2014-10-24T19:02:27.668896+00:00",
+            "id": 3599350
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3600806"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3600806"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-24T20:54:49.201984+00:00",
+            "updated_on": "2014-10-24T20:54:49.483304+00:00",
+            "id": 3600806
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3601582"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3601582"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1560/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1560/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1560/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-24T22:19:30.890860+00:00",
+            "updated_on": "2014-10-24T22:19:31.422063+00:00",
+            "id": 3601582
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3603643"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3603643"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-25T17:58:25.917906+00:00",
+            "updated_on": "2014-10-25T17:58:26.216472+00:00",
+            "id": 3603643
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3619896"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3619896"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-27T19:14:45.742093+00:00",
+            "updated_on": "2014-10-27T19:14:46.184372+00:00",
+            "id": 3619896
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3620984"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3620984"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-27T20:28:56.366908+00:00",
+            "updated_on": "2014-10-27T20:28:57.126273+00:00",
+            "id": 3620984
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3622810"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3622810"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-27T22:58:45.963980+00:00",
+            "updated_on": "2014-10-27T22:58:46.523672+00:00",
+            "id": 3622810
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3641716"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3641716"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1575/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1575/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1575/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-28T21:14:34.361336+00:00",
+            "updated_on": "2014-10-28T21:14:34.753455+00:00",
+            "id": 3641716
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3659810"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3659810"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-10-29T18:47:18.606750+00:00",
+            "updated_on": "2014-10-29T18:47:19.019267+00:00",
+            "id": 3659810
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3714961"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3714961"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Can you document the new semantics for `center`?  Both in the docs and the various docstrings.",
+                "html": "<p>Can you document the new semantics for <code>center</code>?  Both in the docs and the various docstrings.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-03T20:53:24.550132+00:00",
+            "updated_on": "2014-11-03T20:53:24.561284+00:00",
+            "id": 3714961
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3715233"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3715233"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Very impressive number of fixes in this PR.  Hard to test each and every one of them, but I can vouch that #6 from the list above is fixed in this PR (see demo in the Issue description).  That said, I tried to test #5 from the list above and I found some problems.\n\nWhen I test out this script:\nhttp://paste.yt-project.org/show/5186/\n\nI get two very different results between off-axis and on-axis projections using the 'sum' method:\n\non_axis_projection: http://i.imgur.com/NIdtAX6.png\noff_axis_projection: http://i.imgur.com/AzaIbrN.png\n\nI think the main issue is that the units are different between the two methods: on-axis = g/cm^3, off-axis = g/cm^2.  For a sum projection, I would expect things to be g/cm^3, since we're not dividing by dl, right?",
+                "html": "<p>Very impressive number of fixes in this PR.  Hard to test each and every one of them, but I can vouch that <a href=\"/yt_analysis/yt/issues/6/gui-reason\" rel=\"nofollow\" title=\"GUI (Reason)\"><s>#6</s></a> from the list above is fixed in this PR (see demo in the Issue description).  That said, I tried to test <a href=\"/yt_analysis/yt/issues/5/legends-between-engines-are-inconsistent\" rel=\"nofollow\" title=\"Legends between engines are inconsistent\"><s>#5</s></a> from the list above and I found some problems.</p>\n<p>When I test out this script:\n<a href=\"http://paste.yt-project.org/show/5186/\" rel=\"nofollow\">http://paste.yt-project.org/show/5186/</a></p>\n<p>I get two very different results between off-axis and on-axis projections using the 'sum' method:</p>\n<p>on_axis_projection: <a href=\"http://i.imgur.com/NIdtAX6.png\" rel=\"nofollow\">http://i.imgur.com/NIdtAX6.png</a>\noff_axis_projection: <a href=\"http://i.imgur.com/AzaIbrN.png\" rel=\"nofollow\">http://i.imgur.com/AzaIbrN.png</a></p>\n<p>I think the main issue is that the units are different between the two methods: on-axis = g/cm^3, off-axis = g/cm^2.  For a sum projection, I would expect things to be g/cm^3, since we're not dividing by dl, right?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-03T21:10:42.791163+00:00",
+            "updated_on": "2014-11-03T21:10:42.799377+00:00",
+            "id": 3715233
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3715308"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3715308"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "I think the root issue was that the image object didn't have any units,\nwhich means converting to cm or something will keep the same issues as\nbefore.",
+                "html": "<p>I think the root issue was that the image object didn't have any units,\nwhich means converting to cm or something will keep the same issues as\nbefore.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-03T21:15:06.617598+00:00",
+            "updated_on": "2014-11-03T21:15:06.657598+00:00",
+            "id": 3715308
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3715344"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3715344"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3715308"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3715308"
+                    }
+                },
+                "id": 3715308
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Part of this PR adds units to the image object, however. I'm looking into @chummels's issue.",
+                "html": "<p>Part of this PR adds units to the image object, however. I'm looking into <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>'s issue.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-03T21:17:03.631192+00:00",
+            "updated_on": "2014-11-03T21:17:03.649292+00:00",
+            "id": 3715344
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3715688"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3715688"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Regarding @chummels's note above about `\"sum\"` projections, I think that we should probably note that it doesn't really work well for AMR datasets, as you end up getting the artifacts that you see above. `\"sum\"` was originally designed for unigrid FITS datasets where this isn't an issue. This is something I should more clearly document. \n\nHowever, the units in the `OffAxisProjectionPlot` are wrong, so I'll fix them. ",
+                "html": "<p>Regarding <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>'s note above about <code>\"sum\"</code> projections, I think that we should probably note that it doesn't really work well for AMR datasets, as you end up getting the artifacts that you see above. <code>\"sum\"</code> was originally designed for unigrid FITS datasets where this isn't an issue. This is something I should more clearly document. </p>\n<p>However, the units in the <code>OffAxisProjectionPlot</code> are wrong, so I'll fix them. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-03T21:39:29.452330+00:00",
+            "updated_on": "2014-11-03T21:39:29.474628+00:00",
+            "id": 3715688
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3715799"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3715799"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3715688"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3715688"
+                    }
+                },
+                "id": 3715688
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Yeah, this makes sense.  As long as the units are aligned and it is documented not to use the 'sum' method for AMR, I think we're fine on this point.  Thank you for looking into this, @jzuhone .",
+                "html": "<p>Yeah, this makes sense.  As long as the units are aligned and it is documented not to use the 'sum' method for AMR, I think we're fine on this point.  Thank you for looking into this, <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> .</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-03T21:44:56.228860+00:00",
+            "updated_on": "2014-11-03T21:44:56.241231+00:00",
+            "id": 3715799
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3716084"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3716084"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "I tested point #9, and it works great!  Nice!!\n\nAlso, I tried getting the `mu` to render properly (point #8), but it doesn't seem to work for me.  Here is my sample script:\n\nhttp://paste.yt-project.org/show/5187/\n\nAnd the axis labels, which should be in micropc, are just upc:\n\nhttp://i.imgur.com/bLUzcVu.png\n\nOr is this not how it was supposed to work?",
+                "html": "<p>I tested point <a href=\"/yt_analysis/yt/issues/9/enzoderivedfields-is-highly-unflexible\" rel=\"nofollow\" title=\"EnzoDerivedFields is highly unflexible\"><s>#9</s></a>, and it works great!  Nice!!</p>\n<p>Also, I tried getting the <code>mu</code> to render properly (point <a href=\"/yt_analysis/yt/issues/8/matplotlib-accessibility\" rel=\"nofollow\" title=\"Matplotlib accessibility\"><s>#8</s></a>), but it doesn't seem to work for me.  Here is my sample script:</p>\n<p><a href=\"http://paste.yt-project.org/show/5187/\" rel=\"nofollow\">http://paste.yt-project.org/show/5187/</a></p>\n<p>And the axis labels, which should be in micropc, are just upc:</p>\n<p><a href=\"http://i.imgur.com/bLUzcVu.png\" rel=\"nofollow\">http://i.imgur.com/bLUzcVu.png</a></p>\n<p>Or is this not how it was supposed to work?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-03T22:01:24.627001+00:00",
+            "updated_on": "2014-11-03T22:01:24.639785+00:00",
+            "id": 3716084
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3718725"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3718725"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Looks great to me - lots of excellent fixes!",
+                "html": "<p>Looks great to me - lots of excellent fixes!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-04T02:37:37.544152+00:00",
+            "updated_on": "2014-11-04T02:37:37.552939+00:00",
+            "id": 3718725
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3719251"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3719251"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Awesome.  I can confirm that 5, 6, 8, and 9 all work (from the points above).  Thanks for your hard work on this, @jzuhone .",
+                "html": "<p>Awesome.  I can confirm that 5, 6, 8, and 9 all work (from the points above).  Thanks for your hard work on this, <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> .</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-04T04:26:08.943067+00:00",
+            "updated_on": "2014-11-04T04:26:08.958588+00:00",
+            "id": 3719251
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3728173"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3728173"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "@xarthisius any idea why the tests haven't run in a while on this one?",
+                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> any idea why the tests haven't run in a while on this one?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-04T15:48:49.926540+00:00",
+            "updated_on": "2014-11-04T15:48:49.943786+00:00",
+            "id": 3728173
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3729399"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3729399"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3728173"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3728173"
+                    }
+                },
+                "id": 3728173
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "They were: http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1594/ but it seems that yt-fido is broken after latest jenkins' update",
+                "html": "<p>They were: <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1594/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1594/</a> but it seems that yt-fido is broken after latest jenkins' update</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-04T16:44:52.205294+00:00",
+            "updated_on": "2014-11-04T16:44:52.214202+00:00",
+            "id": 3729399
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3731134"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3731134"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1595/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1595/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1595/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-04T18:15:43.821136+00:00",
+            "updated_on": "2014-11-04T18:15:44.390612+00:00",
+            "id": 3731134
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3737729"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3737729"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-05T03:22:14.670301+00:00",
+            "updated_on": "2014-11-05T03:22:15.216792+00:00",
+            "id": 3737729
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280/comments/3752015"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280/_/diff#comment-3752015"
+                }
+            },
+            "pullrequest": {
+                "title": "Improved FITS support, with a number of small additional refinements ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1280"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1280"
+                    }
+                },
+                "id": 1280
+            },
+            "content": {
+                "raw": "I fixed the test failure, so this is ready to go once everyone is ok with it. ",
+                "html": "<p>I fixed the test failure, so this is ready to go once everyone is ok with it. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2014-11-05T19:35:01.449332+00:00",
+            "updated_on": "2014-11-05T19:35:01.462055+00:00",
+            "id": 3752015
+        }
+    ]
+}

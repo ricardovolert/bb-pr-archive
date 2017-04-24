@@ -1,0 +1,2266 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-02-20T17:54:42.491657+00:00",
+    "comment_count": 37,
+    "description": "This PR updates and adds to the callback functionality.  \r\n\r\nIt adds the `annotate_scale()` callback to enable to the user to overplot the size scale of the plot in either user-specified distance units, or if None are specified, it figures out a good value.  This means it works well in generating movies from `TimeSeries` data to always show the current scale of the plot in reasonable units.\r\n\r\nIt updates the font backend of the callbacks, so that all callbacks using text will use the font characteristics set for the rest of the PlotWindow.  This means that using p.set_font() will update *all* of the text in a plot, including the callbacks.\r\n\r\nIt updates the `annotate_timestamp()` callback to enable the user to overplot redshift and/or time information, with a variable format/precision, and provides several sensible defaults for location, size, etc.  It retains all of the old functionality, but there are a few minor changes in the syntax:\r\n\r\nOld syntax:\r\n\r\n```\r\n#!python\r\n\r\nannotate_timestamp(x, y, units=None, format=\"{time:.3G} {units}\", **kwargs, normalized=False, bbox_dict=None)\r\n```\r\n\r\nNew syntax:\r\n\r\n\r\n```\r\n#!python\r\n\r\nannotate_timestamp(corner='lowerleft', time=True, redshift=False, time_format='t = {time:.0f} {units}', time_unit=None, redshift_format='z = {redshift:.2f}', bbox=False, pos=None, text_args=None, bbox_args=None)\r\n```\r\n\r\nI've added tests for the two new callbacks, docstrings, and entries on the Plot Modifications docs page.\r\n\r\nFor a demonstration of how to use these new features, see this notebook:\r\n[http://nbviewer.ipython.org/gist/anonymous/3bd06d3805b75d307413]()\r\n\r\nUPDATE1: Accounted for all comments from @ngoldbaum as well as those from the yt-dev discussion.  Modified API of annotate_timestamp() to have `x_pos` and `y_pos` kwargs as the first kwargs so as to minimize problems with API switch.  Integrated time information into `get_smallest_appropriate_unit()` so it now works with time units.  Cleaned up exceptions, updated docs, etc.\r\nUPDATE2: Accounting for all comments from @ngoldbaum .  Changing `bbox` references to be `inset_box`, making docstring tests, and more docstring examples.  Correcting minor text errors.\r\nUPDATE3: Correcting a typo that caused an error in the docs cookbook tests.\r\nUPDATE4: Correcting a typo that caused an error in the tests.",
+    "created_on": "2015-02-18T22:25:56.859137+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a0743a510278"
+            }
+        },
+        "hash": "a0743a510278"
+    },
+    "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1458,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/d20806ee93bc"
+                }
+            },
+            "hash": "d20806ee93bc"
+        },
+        "repository": {
+            "full_name": "chummels/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/chummels/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/chummels/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/47a1ad46f08d"
+                }
+            },
+            "hash": "47a1ad46f08d"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218264"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=doc%2Fsource%2Fvisualizing%2F_cb_docstrings.inc"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218264"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Can you call this keyword argument `draw_inset_box` - I think that's clearer.  Usually in matplotlib a `bbox` is something somewhat more general than what you're talking about here.  Similarly `bbox_args` below should be `inset_box_properties`, or something like that.",
+                "html": "<p>Can you call this keyword argument <code>draw_inset_box</code> - I think that's clearer.  Usually in matplotlib a <code>bbox</code> is something somewhat more general than what you're talking about here.  Similarly <code>bbox_args</code> below should be <code>inset_box_properties</code>, or something like that.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:41:01.134035+00:00",
+            "updated_on": "2015-02-18T22:41:01.145505+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/_cb_docstrings.inc",
+                "to": 487
+            },
+            "id": 5218264
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218284"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=doc%2Fsource%2Fvisualizing%2F_cb_docstrings.inc"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218284"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Can you add an example that doesn't use `redshift=True`?  Many datasets don't have a notion of a redshift and I want to make it clear that this will still work in those cases.",
+                "html": "<p>Can you add an example that doesn't use <code>redshift=True</code>?  Many datasets don't have a notion of a redshift and I want to make it clear that this will still work in those cases.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:42:04.305860+00:00",
+            "updated_on": "2015-02-18T22:42:04.313891+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/_cb_docstrings.inc",
+                "to": 508
+            },
+            "id": 5218284
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218300"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218300"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Have you played around with these positioning settings in plots that aren't square?",
+                "html": "<p>Have you played around with these positioning settings in plots that aren't square?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:42:55.324785+00:00",
+            "updated_on": "2015-02-18T22:42:55.335050+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1303
+            },
+            "id": 5218300
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218307"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218307"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Rather than calling `print` here, you should pass a string to the `AttributeError`.",
+                "html": "<p>Rather than calling <code>print</code> here, you should pass a string to the <code>AttributeError</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:43:26.575986+00:00",
+            "updated_on": "2015-02-18T22:43:26.584113+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1340
+            },
+            "id": 5218307
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218324"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218324"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Would it be useful to factor out this logic and put it into `yt.funcs`?",
+                "html": "<p>Would it be useful to factor out this logic and put it into <code>yt.funcs</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:44:16.254848+00:00",
+            "updated_on": "2015-02-18T22:44:16.262864+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1324
+            },
+            "id": 5218324
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218333"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218333"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Same here, pass a string with the error message to the `SyntaxError`.",
+                "html": "<p>Same here, pass a string with the error message to the <code>SyntaxError</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:44:44.229135+00:00",
+            "updated_on": "2015-02-18T22:44:44.239932+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1305
+            },
+            "id": 5218333
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218404"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218404"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Should you perhaps be using `get_smallest_appropriate_unit` here?",
+                "html": "<p>Should you perhaps be using <code>get_smallest_appropriate_unit</code> here?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:48:58.313753+00:00",
+            "updated_on": "2015-02-18T22:48:58.320625+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1457
+            },
+            "id": 5218404
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218417"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218417"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "If this is the API we're going with, I'd prefer it if it were `lower_right` instead of `lowerright`, same with the others below.",
+                "html": "<p>If this is the API we're going with, I'd prefer it if it were <code>lower_right</code> instead of <code>lowerright</code>, same with the others below.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:49:51.665590+00:00",
+            "updated_on": "2015-02-18T22:49:51.674510+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1431
+            },
+            "id": 5218417
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218426"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218426"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218417"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218417"
+                    }
+                },
+                "id": 5218417
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Could you make it possible to pass in a custom tuple as well?",
+                "html": "<p>Could you make it possible to pass in a custom tuple as well?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:50:14.855394+00:00",
+            "updated_on": "2015-02-18T22:50:14.865348+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5218426
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218443"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:0d58c9a6c4e8..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218443"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "It's not clear to me from the docstrings what `coeff` is.  Can you elaborate a bit more?",
+                "html": "<p>It's not clear to me from the docstrings what <code>coeff</code> is.  Can you elaborate a bit more?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:51:08.551640+00:00",
+            "updated_on": "2015-02-18T22:51:08.559173+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1372
+            },
+            "id": 5218443
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218485"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218485"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "It would be nice to have a cookbook recipe for each of the new callbacks so you can go into a little bit more detail explaining all the options.  You could base it off of the notebook you've attached to the PR description.\n\nI think this is a significant improvement.  There's definitely some iteration and discussion that needs to happen before this goes in, but this is a great start. Great work!",
+                "html": "<p>It would be nice to have a cookbook recipe for each of the new callbacks so you can go into a little bit more detail explaining all the options.  You could base it off of the notebook you've attached to the PR description.</p>\n<p>I think this is a significant improvement.  There's definitely some iteration and discussion that needs to happen before this goes in, but this is a great start. Great work!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:53:15.649986+00:00",
+            "updated_on": "2015-02-18T22:53:15.657675+00:00",
+            "id": 5218485
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218573"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218573"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Other than @ngoldbaum's comments below, I like this. It's a significant improvement. ",
+                "html": "<p>Other than <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>'s comments below, I like this. It's a significant improvement. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:58:54.092094+00:00",
+            "updated_on": "2015-02-18T22:58:54.106430+00:00",
+            "id": 5218573
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/jzuhone/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "John ZuHone",
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
+                "username": "jzuhone"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218582"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218582"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218573"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218573"
+                    }
+                },
+                "id": 5218573
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Let me clarify--I agree with @ngoldbaum's comments.",
+                "html": "<p>Let me clarify--I agree with <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>'s comments.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T22:59:16.618410+00:00",
+            "updated_on": "2015-02-18T22:59:16.631659+00:00",
+            "id": 5218582
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218772"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218772"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5218324"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5218324"
+                    }
+                },
+                "id": 5218324
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Sorry, not `yt.funcs`. `get_smallest_appropriate_unit` was added as a member function of the `Dataset` class a while ago, this would go in the same place.",
+                "html": "<p>Sorry, not <code>yt.funcs</code>. <code>get_smallest_appropriate_unit</code> was added as a member function of the <code>Dataset</code> class a while ago, this would go in the same place.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-18T23:11:59.260454+00:00",
+            "updated_on": "2015-02-18T23:11:59.271597+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5218772
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5221238"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5221238"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T03:10:49.664085+00:00",
+            "updated_on": "2015-02-19T03:10:49.699608+00:00",
+            "id": 5221238
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5231826"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5231826"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T15:06:03.850077+00:00",
+            "updated_on": "2015-02-19T15:06:03.886618+00:00",
+            "id": 5231826
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5237949"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=doc%2Fsource%2Fvisualizing%2F_cb_docstrings.inc"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5237949"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Did you reply to my comment about this being named `draw_inset_box`?  I don't see anything. Maybe you just missed it when you were updating things?",
+                "html": "<p>Did you reply to my comment about this being named <code>draw_inset_box</code>?  I don't see anything. Maybe you just missed it when you were updating things?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T18:45:47.403369+00:00",
+            "updated_on": "2015-02-19T18:45:47.414163+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/_cb_docstrings.inc",
+                "to": 515
+            },
+            "id": 5237949
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5237955"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=doc%2Fsource%2Fvisualizing%2F_cb_docstrings.inc"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5237955"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Similarly here, can this be something like `inset_box_arguments`?",
+                "html": "<p>Similarly here, can this be something like <code>inset_box_arguments</code>?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T18:46:13.229939+00:00",
+            "updated_on": "2015-02-19T18:46:13.237883+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/_cb_docstrings.inc",
+                "to": 522
+            },
+            "id": 5237955
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5237995"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:d20806ee93bc..47a1ad46f08d?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5237995"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "I think this is a behavior change for PlotWindow.  Can you explain why you changed it? I'd prefer to keep this behavior consistent.",
+                "html": "<p>I think this is a behavior change for PlotWindow.  Can you explain why you changed it? I'd prefer to keep this behavior consistent.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T18:47:37.920347+00:00",
+            "updated_on": "2015-02-19T18:47:37.930673+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": 281
+            },
+            "id": 5237995
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238042"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238042"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "I don't think you want a comma at the end of this line.",
+                "html": "<p>I don't think you want a comma at the end of this line.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T18:49:23.555279+00:00",
+            "updated_on": "2015-02-19T18:49:23.562760+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1418
+            },
+            "id": 5238042
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238085"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238085"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "I would use \"overrides\" instead of \"trumps\"",
+                "html": "<p>I would use \"overrides\" instead of \"trumps\"</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T18:50:57.840445+00:00",
+            "updated_on": "2015-02-19T18:50:57.848739+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1375
+            },
+            "id": 5238085
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238123"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238123"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "There needs to be a space at the end of this line, otherwise the bit at the end of this line and the beginning of the next will get rendered as `to'upper_left'`.  In addition the trailing backslashes here (and elsewhere in this PR) are unnecessary since you're inside enclosing parens.",
+                "html": "<p>There needs to be a space at the end of this line, otherwise the bit at the end of this line and the beginning of the next will get rendered as <code>to'upper_left'</code>.  In addition the trailing backslashes here (and elsewhere in this PR) are unnecessary since you're inside enclosing parens.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T18:52:26.273993+00:00",
+            "updated_on": "2015-02-19T18:53:34.662795+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1435
+            },
+            "id": 5238123
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238502"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fdata_objects%2Fstatic_output.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238502"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5237995"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5237995"
+                    }
+                },
+                "id": 5237995
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "The existing behavior is actually incorrect, since if you pass `YTQuantity(1., 'kpc')` to `get_smallest_appropriate_unit()`, you'll get out `pc` instead of `kpc`.  I was correcting this in addition to the other changes I made incorporating Time units and the powers of 10.",
+                "html": "<p>The existing behavior is actually incorrect, since if you pass <code>YTQuantity(1., 'kpc')</code> to <code>get_smallest_appropriate_unit()</code>, you'll get out <code>pc</code> instead of <code>kpc</code>.  I was correcting this in addition to the other changes I made incorporating Time units and the powers of 10.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:07:25.396150+00:00",
+            "updated_on": "2015-02-19T19:07:25.406489+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/static_output.py",
+                "to": null
+            },
+            "id": 5238502
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238573"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=doc%2Fsource%2Fvisualizing%2F_cb_docstrings.inc"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238573"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5237949"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5237949"
+                    }
+                },
+                "id": 5237949
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "I missed it in your first set of comments, but in reviewing this, I still think that `bbox` is still appropriate.  I was actually only adapting it from the previous `annotate_timestamp()` function, where it was first used.  That said, it is a bounding box around the text in the same way MPL uses it (and the same way we use it elsewhere in yt).",
+                "html": "<p>I missed it in your first set of comments, but in reviewing this, I still think that <code>bbox</code> is still appropriate.  I was actually only adapting it from the previous <code>annotate_timestamp()</code> function, where it was first used.  That said, it is a bounding box around the text in the same way MPL uses it (and the same way we use it elsewhere in yt).</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:10:04.366092+00:00",
+            "updated_on": "2015-02-19T19:10:04.381470+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/_cb_docstrings.inc",
+                "to": null
+            },
+            "id": 5238573
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238696"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=doc%2Fsource%2Fvisualizing%2F_cb_docstrings.inc"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238696"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238573"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238573"
+                    }
+                },
+                "id": 5238573
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Right, I just think that `bbox` is a bit more of a general bounding box in matplotlib, while this is specifically an inset box, and I want to make that clear.",
+                "html": "<p>Right, I just think that <code>bbox</code> is a bit more of a general bounding box in matplotlib, while this is specifically an inset box, and I want to make that clear.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:15:25.985282+00:00",
+            "updated_on": "2015-02-19T19:15:32.373151+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/_cb_docstrings.inc",
+                "to": null
+            },
+            "id": 5238696
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238713"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238713"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Need a space between `x_pos` and `y_pos`.",
+                "html": "<p>Need a space between <code>x_pos</code> and <code>y_pos</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:16:18.210694+00:00",
+            "updated_on": "2015-02-19T19:16:18.224216+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1207
+            },
+            "id": 5238713
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238720"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238720"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "overrides/trumps here as well",
+                "html": "<p>overrides/trumps here as well</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:16:43.844033+00:00",
+            "updated_on": "2015-02-19T19:16:43.853005+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1216
+            },
+            "id": 5238720
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238731"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238731"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "with the time parameter",
+                "html": "<p>with the time parameter</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:17:07.899568+00:00",
+            "updated_on": "2015-02-19T19:17:07.907503+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1227
+            },
+            "id": 5238731
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238744"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238744"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Any chance you can add an example?",
+                "html": "<p>Any chance you can add an example?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:17:39.840339+00:00",
+            "updated_on": "2015-02-19T19:17:39.847659+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1233
+            },
+            "id": 5238744
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238758"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c4b83d55bbe2..a209cabb1b8a?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238758"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Maybe a quick doctest-style example at the end of the docstring?",
+                "html": "<p>Maybe a quick doctest-style example at the end of the docstring?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:18:14.615851+00:00",
+            "updated_on": "2015-02-19T19:18:14.628689+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": 1253
+            },
+            "id": 5238758
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238776"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238776"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238744"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238744"
+                    }
+                },
+                "id": 5238744
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "There is an example 20 lines up in the call case.",
+                "html": "<p>There is an example 20 lines up in the call case.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:19:07.898942+00:00",
+            "updated_on": "2015-02-19T19:19:07.909684+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "to": null
+            },
+            "id": 5238776
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238780"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238780"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Looking good, I've added a few more comments but I think this is almost ready.",
+                "html": "<p>Looking good, I've added a few more comments but I think this is almost ready.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:19:14.845115+00:00",
+            "updated_on": "2015-02-19T19:19:14.853557+00:00",
+            "id": 5238780
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5239057"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=doc%2Fsource%2Fvisualizing%2F_cb_docstrings.inc"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5239057"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5238696"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5238696"
+                    }
+                },
+                "id": 5238696
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "I started changing this, and as I did so, it just seems more confusing to describe it as an `inset box`.  It is a box that bounds the timestamp text.  It's creating a MPL `FancyBboxPatch` object by running the MPL `text()` function using the MPL `bbox` keyword.  Unless there are others who think this should be switched to the `inset_box` syntax, I would like to keep it as `bbox` as I think that best describes it.",
+                "html": "<p>I started changing this, and as I did so, it just seems more confusing to describe it as an <code>inset box</code>.  It is a box that bounds the timestamp text.  It's creating a MPL <code>FancyBboxPatch</code> object by running the MPL <code>text()</code> function using the MPL <code>bbox</code> keyword.  Unless there are others who think this should be switched to the <code>inset_box</code> syntax, I would like to keep it as <code>bbox</code> as I think that best describes it.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T19:30:34.034815+00:00",
+            "updated_on": "2015-02-19T19:30:34.048099+00:00",
+            "inline": {
+                "from": null,
+                "path": "doc/source/visualizing/_cb_docstrings.inc",
+                "to": null
+            },
+            "id": 5239057
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5243620"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5243620"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/2002/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/2002/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/2002/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-19T23:42:20.435188+00:00",
+            "updated_on": "2015-02-19T23:42:20.495689+00:00",
+            "id": 5243620
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5246262"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5246262"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/2006/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/2006/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/2006/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-20T05:26:10.083606+00:00",
+            "updated_on": "2015-02-20T05:26:10.134164+00:00",
+            "id": 5246262
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5253415"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5253415"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-20T13:25:56.069872+00:00",
+            "updated_on": "2015-02-20T13:25:56.387857+00:00",
+            "id": 5253415
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458/comments/5260252"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458/_/diff#comment-5260252"
+                }
+            },
+            "pullrequest": {
+                "title": "[BREAKS_API] Updating callbacks to include: annotate_timestamp, annotate_scale, and make callbacks use same font as other plot text",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1458"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1458"
+                    }
+                },
+                "id": 1458
+            },
+            "content": {
+                "raw": "Thanks a ton @chummels!",
+                "html": "<p>Thanks a ton <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-02-20T17:54:42.438836+00:00",
+            "updated_on": "2015-02-20T17:54:42.459583+00:00",
+            "id": 5260252
+        }
+    ]
+}

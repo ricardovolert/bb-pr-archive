@@ -1,0 +1,565 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-06-15T20:58:31.438534+00:00",
+    "comment_count": 7,
+    "description": "This PR includes a number of bug fixes and improvements for off-axis slices:\r\n\r\n    1) Implements scale, scale_units, and normalize kwargs for cutting quiver callbacks\r\n\r\n    2) Sets slice bounds in code units, to match behavior of AxisAlignedSlicePlot.\r\n\r\n    3) Off-axis pixelization needs to be transposed, see: https://gist.github.com/atmyers/fd70d8ffca72a16a7ff500496a520b35\r\n\r\n    4) Adds a test to make sure on and off axis slices are consistent.\r\n\r\nWith those changes, this script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nimport numpy as np\r\n\r\ndims = (200,200,200)\r\n\r\nx = np.load('data.npy')\r\n\r\nfield1 = x[:,2].reshape(dims, order=\"F\")\r\nfield2 = x[:,1].reshape(dims, order=\"F\")\r\nfield3 = x[:,0].reshape(dims, order=\"F\")\r\n\r\ndata = dict(velocity_x = field1,\r\n            velocity_y = field2,\r\n            velocity_z = field3)\r\n\r\nbbox = np.array([[-100, 99], [-100, 99], [-100, 99]])\r\n\r\nds = yt.load_uniform_grid(data, dims, 'km', bbox=bbox, nprocs=1)\r\n\r\nL = [0, 1, 0]\r\nnorth_vector = [1, 0, 0]\r\nsl = yt.OffAxisSlicePlot(ds, L, 'velocity_x', center=[0,0,0], width=(180,'km'), north_vector=north_vector)\r\nsl.annotate_velocity(factor=40, normalize=True)\r\nsl.save()\r\n```\r\n\r\nproduces this image:\r\n\r\n![UniformGridData_OffAxisSlice_velocity_x.png](https://bitbucket.org/repo/qRkyKd/images/2102994361-UniformGridData_OffAxisSlice_velocity_x.png)",
+    "created_on": "2016-06-03T23:58:08.929531+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5bb5a38e4eb1"
+            }
+        },
+        "hash": "5bb5a38e4eb1"
+    },
+    "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2214,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+        "username": "atmyers"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt/commit/db3fc359aa9e"
+                }
+            },
+            "hash": "db3fc359aa9e"
+        },
+        "repository": {
+            "full_name": "atmyers/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/atmyers/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/atmyers/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{14866916-6c53-4d06-95e1-89d30c798c08}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/9bcee915d549"
+                }
+            },
+            "hash": "9bcee915d549"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19332791"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:db3fc359aa9e..9bcee915d549?path=yt%2Futilities%2Flib%2Fpixelization_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19332791"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+                    }
+                },
+                "id": 2214
+            },
+            "content": {
+                "raw": "This change was necessary to get the the images to match, otherwise they would be off by 1 pixel.",
+                "html": "<p>This change was necessary to get the the images to match, otherwise they would be off by 1 pixel.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-04T00:05:20.768232+00:00",
+            "updated_on": "2016-06-04T00:05:20.773066+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/pixelization_routines.pyx",
+                "to": 280
+            },
+            "id": 19332791
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19334238"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19334238"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+                    }
+                },
+                "id": 2214
+            },
+            "content": {
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/530/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/530/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/530/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-04T05:42:26.374551+00:00",
+            "updated_on": "2016-06-04T05:42:26.460207+00:00",
+            "id": 19334238
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19390633"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:None..None?path=yt%2Futilities%2Flib%2Fpixelization_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19390633"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19332791"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19332791"
+                    }
+                },
+                "id": 19332791
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+                    }
+                },
+                "id": 2214
+            },
+            "content": {
+                "raw": "Fascinating.  I seem to recall this just being a heuristic I applied...  Perhaps there's a Better Way (TM)?",
+                "html": "<p>Fascinating.  I seem to recall this just being a heuristic I applied...  Perhaps there's a Better Way (TM)?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-06T19:08:12.048752+00:00",
+            "updated_on": "2016-06-06T19:08:12.050934+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/pixelization_routines.pyx",
+                "to": null
+            },
+            "id": 19390633
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19391903"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:None..None?path=yt%2Futilities%2Flib%2Fpixelization_routines.pyx"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19391903"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19390633"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19390633"
+                    }
+                },
+                "id": 19390633
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+                    }
+                },
+                "id": 2214
+            },
+            "content": {
+                "raw": "I think your heuristic is fine - the difference was invisible to the naked eye - but there was was a shift where one pixel got considered part of a different cell compared to the on-axis pixelizer because of the particular value chosen. I think this got triggered by the test below because the fake dataset is pretty low res, and (32/800) is less than 0.05 but not less than 0.01. ",
+                "html": "<p>I think your heuristic is fine - the difference was invisible to the naked eye - but there was was a shift where one pixel got considered part of a different cell compared to the on-axis pixelizer because of the particular value chosen. I think this got triggered by the test below because the fake dataset is pretty low res, and (32/800) is less than 0.05 but not less than 0.01. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-06T19:39:50.075750+00:00",
+            "updated_on": "2016-06-06T19:45:51.172453+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/lib/pixelization_routines.pyx",
+                "to": null
+            },
+            "id": 19391903
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19394055"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:6b2328634230..b4f9e4c9baed?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19394055"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+                    }
+                },
+                "id": 2214
+            },
+            "content": {
+                "raw": "Hmm, where'd this change come from?",
+                "html": "<p>Hmm, where'd this change come from?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-06T20:30:57.303142+00:00",
+            "updated_on": "2016-06-06T20:30:57.305893+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": 105
+            },
+            "id": 19394055
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/atmyers"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/atmyers/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Andrew Myers",
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
+                "username": "atmyers"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19396532"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19396532"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19394055"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19394055"
+                    }
+                },
+                "id": 19394055
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+                    }
+                },
+                "id": 2214
+            },
+            "content": {
+                "raw": "This is on purpose - `pixelize_off_axis_cartesian` requires this to be in the same units as the 'px', 'py', etc fields. This might not be the best place / way to enforce this, though. ",
+                "html": "<p>This is on purpose - <code>pixelize_off_axis_cartesian</code> requires this to be in the same units as the 'px', 'py', etc fields. This might not be the best place / way to enforce this, though. </p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-06T21:29:34.587781+00:00",
+            "updated_on": "2016-06-06T21:29:34.592308+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/visualization/plot_window.py",
+                "to": null
+            },
+            "id": 19396532
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214/comments/19813985"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214/_/diff#comment-19813985"
+                }
+            },
+            "pullrequest": {
+                "title": "[BUGFIX] Fixes for off-axis slice plots. Closes #1214.  ",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2214"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2214"
+                    }
+                },
+                "id": 2214
+            },
+            "content": {
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/587/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/587/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/587/</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-06-15T20:54:56.369111+00:00",
+            "updated_on": "2016-06-15T20:54:56.446572+00:00",
+            "id": 19813985
+        }
+    ]
+}

@@ -1,0 +1,571 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2013-04-02T22:52:24.091187+00:00",
+    "comment_count": 8,
+    "description": "This adds a number of answer tests for the plot window plotting routines.  Right now, these test all of the plot window member functions besides the callbacks, which will be addressed in a separate PR.\r\n\r\nI'm using answer testing since most of the plot modifications produce a visual change in the resulting file.  To test for visual changes, I deserialize the plot object from the answers, create a new, hopefully identical plot object, have the two objects save plots to disk, and then compare the images using a helpful matplotlib routine that checks for pixel-level differences in the two images.\r\n\r\nThe tests aren't terribly in depth but I think I've made the framework flexible enough that it will be easy to add new tests as we find it to be necessary.\r\n\r\nI'm PRing this now before I finish the callback tests so that I can hopefully get @MatthewTurk's eyes on this before he goes on vacation.\r\n\r\nLastly I've added blank __init__.py files in the places where we have answer tests.  This makes it possible to run only one set of answer tests by doing, for example, (in the $YT_HG folder):\r\n\r\n```\r\n#!bash\r\n\r\nnosetests --with-answer-testing yt.visualization.tests.test_plotwindow\r\n```\r\n\r\nEDIT: Updating to address comments.\r\n\r\nEDIT2: Bumping the gold standard to gold007.  The new gold standard will need to be uploaded before this can be accepted.\r\n\r\nEDIT3: Uploaded gold007.",
+    "created_on": "2013-03-28T06:27:56.340598+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/73fa10cba4d5"
+            }
+        },
+        "hash": "73fa10cba4d5"
+    },
+    "title": "Plot window answer testing",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+        "username": "chummels"
+    },
+    "id": 470,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/7208dbbf115c"
+                }
+            },
+            "hash": "7208dbbf115c"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/85145a05a5be"
+                }
+            },
+            "hash": "85145a05a5be"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/174593"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-174593"
+                }
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "Hi Nathan,\n\nThis has brought me around; I like this method, and my skepticism about plot window answer tests has gone away.  Have you verified that it picks up actual, bad changes?  My main question at this time is why the Reason stuff got moved between classes.\n\nNice work, and very thoughtfully done.",
+                "html": "<p>Hi Nathan,</p>\n<p>This has brought me around; I like this method, and my skepticism about plot window answer tests has gone away.  Have you verified that it picks up actual, bad changes?  My main question at this time is why the Reason stuff got moved between classes.</p>\n<p>Nice work, and very thoughtfully done.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-03-28T10:01:36.422569+00:00",
+            "updated_on": "2013-03-28T10:01:36.436762+00:00",
+            "id": 174593
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Matthew Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
+                "username": "MatthewTurk"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/175000"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-175000"
+                }
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "@ngoldbaum I actually see no reason this can't go in as a step toward full coverage.  What do you think?",
+                "html": "<p><a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> I actually see no reason this can't go in as a step toward full coverage.  What do you think?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-03-28T13:58:34.058736+00:00",
+            "updated_on": "2013-03-28T13:58:34.072463+00:00",
+            "id": 175000
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/xarthisius/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Kacper Kowalik",
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+                "username": "xarthisius"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/175009"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:432887371718..5dcd737e56c4?path=yt%2Futilities%2Fcommand_line.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-175009"
+                }
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "Is this really necessary? I have a lot of datasets with `dimensionality == 2` not being in *xy*-plane",
+                "html": "<p>Is this really necessary? I have a lot of datasets with <code>dimensionality == 2</code> not being in <em>xy</em>-plane</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-03-28T14:03:31.054103+00:00",
+            "updated_on": "2013-03-28T14:03:31.061758+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/utilities/command_line.py",
+                "to": 1296
+            },
+            "id": 175009
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/175683"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-175683"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/174593"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-174593"
+                    }
+                },
+                "id": 174593
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "The Reason stuff was moved around because it lived in the base plot window class but was only ever used by the ExtJS4 plot window.  I noticed this when I went through the plot window API in iPython which is why it's showing up here.  This shouldn't break reason since the member functions will still be there and it simplifies the matplotlib plot window API by only showing functions that are used.\n\nI just tested on a local answer and it does catch a bug I intentionally inserted in plot_window.py.",
+                "html": "<p>The Reason stuff was moved around because it lived in the base plot window class but was only ever used by the ExtJS4 plot window.  I noticed this when I went through the plot window API in iPython which is why it's showing up here.  This shouldn't break reason since the member functions will still be there and it simplifies the matplotlib plot window API by only showing functions that are used.</p>\n<p>I just tested on a local answer and it does catch a bug I intentionally inserted in plot_window.py.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-03-28T19:24:38.458580+00:00",
+            "updated_on": "2013-03-28T19:25:31.470719+00:00",
+            "id": 175683
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/175685"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-175685"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/175000"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-175000"
+                    }
+                },
+                "id": 175000
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "No reason it can't go in as is.  I'm glad that this was a smooth PR :)",
+                "html": "<p>No reason it can't go in as is.  I'm glad that this was a smooth PR :)</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-03-28T19:25:46.468115+00:00",
+            "updated_on": "2013-03-28T19:25:46.475700+00:00",
+            "id": 175685
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/177360"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-177360"
+                }
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "I've uploaded the new gold standard.  That ended up being a bit harder than I anticipated and I've updated my PR to reflect the changes I had to make.  First, I've added zlib compression for the png's I'm trying to serialize.  The compression decreases the size of the final gold standard file by a factor of 200!\n\nI also added a progress bar so whover's uploading the results can see how the s3 upload is going.\n\nLastly, I noticed that the galaxy cluster merger test in the flash frontend never actually ran.  This is because the filename in the test file doesn't correspond to the filename of the output on yt-project.org/data.  I don't think this test has ever been run by anyone, unless someone has the dataset this test was originally written for.\n\nSince the GalaxyClusterMerger dataset on yt-project.org/data is huge (6 GB!) I don't think it's a good idea to add it to the test suite now.  Instead I've made the smaller but still biggish low-res gas sloshing dataset a big-data test and deleted the galaxy cluster merger dataset from the test.  @jzuhone, is that alright?",
+                "html": "<p>I've uploaded the new gold standard.  That ended up being a bit harder than I anticipated and I've updated my PR to reflect the changes I had to make.  First, I've added zlib compression for the png's I'm trying to serialize.  The compression decreases the size of the final gold standard file by a factor of 200!</p>\n<p>I also added a progress bar so whover's uploading the results can see how the s3 upload is going.</p>\n<p>Lastly, I noticed that the galaxy cluster merger test in the flash frontend never actually ran.  This is because the filename in the test file doesn't correspond to the filename of the output on <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>.  I don't think this test has ever been run by anyone, unless someone has the dataset this test was originally written for.</p>\n<p>Since the GalaxyClusterMerger dataset on <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a> is huge (6 GB!) I don't think it's a good idea to add it to the test suite now.  Instead I've made the smaller but still biggish low-res gas sloshing dataset a big-data test and deleted the galaxy cluster merger dataset from the test.  <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a>, is that alright?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-03-30T10:52:56.857204+00:00",
+            "updated_on": "2013-03-30T10:52:56.868960+00:00",
+            "id": 177360
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/177449"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-177449"
+                }
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "This passes all tests on ladon using the new gold standard.  Should be able to go in as is.",
+                "html": "<p>This passes all tests on ladon using the new gold standard.  Should be able to go in as is.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-03-30T18:38:13.900048+00:00",
+            "updated_on": "2013-03-30T18:38:13.906256+00:00",
+            "id": 177449
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Cameron Hummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
+                "username": "chummels"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470/comments/180601"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470/_/diff#comment-180601"
+                }
+            },
+            "pullrequest": {
+                "title": "Plot window answer testing",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/470"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/470"
+                    }
+                },
+                "id": 470
+            },
+            "content": {
+                "raw": "I talked to Nathan about this.  I was concerned that it might break the enzo answer testing by having a new \"--local-dir\" flag in framework.py, but he has demonstrated that it does not.  I'm happy with this.  It will be good to have consistency in plot outputs!",
+                "html": "<p>I talked to Nathan about this.  I was concerned that it might break the enzo answer testing by having a new \"--local-dir\" flag in framework.py, but he has demonstrated that it does not.  I'm happy with this.  It will be good to have consistency in plot outputs!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2013-04-02T22:52:08.720470+00:00",
+            "updated_on": "2013-04-02T22:52:08.727398+00:00",
+            "id": 180601
+        }
+    ]
+}

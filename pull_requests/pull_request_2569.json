@@ -1,0 +1,693 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2017-04-11T13:50:31.969611+00:00",
+    "comment_count": 9,
+    "description": "Thanks to @yihaochen for pointing this out and providing an excellent test script to debug with.\r\n\r\nThe issue is that we only have logic for handling particle filters in the base class for selection data containers. It happens to be that `YTCoveringGrid` overrides the function that handles this for other data containers so it was basically blind to the existence of particle filters, at least for particle derived fields (I think it would have worked correctly for on-disk particle fields).\r\n\r\nThe fix is to simply defer to the \"base\" data object for the covering grid for particle IO. Since particles don't care that they're being selected by a covering grid or a region, this is safe.",
+    "created_on": "2017-03-30T20:53:48.634828+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/2441e1324406"
+            }
+        },
+        "hash": "2441e1324406"
+    },
+    "title": "Fix covering grid access for particle filters. Closes #1342",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "id": 2569,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/61bc54a88820"
+                }
+            },
+            "hash": "61bc54a88820"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/bd29e64137ef"
+                }
+            },
+            "hash": "bd29e64137ef"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34203642"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:632e31e077bc..3fee41c2ea35?path=yt%2Fdata_objects%2Fparticle_filters.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34203642"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "This makes the `DerivedField` object for the filtered field have a correct `__repr__` which I noticed was wrong while debugging.",
+                "html": "<p>This makes the <code>DerivedField</code> object for the filtered field have a correct <code>__repr__</code> which I noticed was wrong while debugging.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-03-30T20:59:40.602920+00:00",
+            "updated_on": "2017-03-30T20:59:40.605447+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/particle_filters.py",
+                "to": 74
+            },
+            "id": 34203642
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yihaochen"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yihaochen/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Yi-Hao Chen",
+                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
+                "username": "yihaochen"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34271330"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34271330"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "This seems to be working only with derived particle field. After applying this commit, on-disk particle fields (e.g. \"particle_mass\") are still not filtered for covering grid.",
+                "html": "<p>This seems to be working only with derived particle field. After applying this commit, on-disk particle fields (e.g. \"particle_mass\") are still not filtered for covering grid.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-03-31T18:37:57.677586+00:00",
+            "updated_on": "2017-03-31T18:37:57.721398+00:00",
+            "id": 34271330
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yihaochen"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yihaochen/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Yi-Hao Chen",
+                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
+                "username": "yihaochen"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34271360"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:632e31e077bc..3fee41c2ea35?path=yt%2Fdata_objects%2Ftests%2Ftest_particle_filter.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34271360"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "Maybe check a on-disk field as well?",
+                "html": "<p>Maybe check a on-disk field as well?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-03-31T18:38:40.152607+00:00",
+            "updated_on": "2017-03-31T18:38:40.186110+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/tests/test_particle_filter.py",
+                "to": 66
+            },
+            "id": 34271360
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34271487"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:632e31e077bc..3fee41c2ea35?path=yt%2Fdata_objects%2Ftests%2Ftest_particle_filter.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34271487"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34271360"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34271360"
+                    }
+                },
+                "id": 34271360
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "Which on-disk field are you having trouble with? It seems to work with `particle_mass`.",
+                "html": "<p>Which on-disk field are you having trouble with? It seems to work with <code>particle_mass</code>.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-03-31T18:41:09.576183+00:00",
+            "updated_on": "2017-03-31T18:41:09.578471+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/tests/test_particle_filter.py",
+                "to": null
+            },
+            "id": 34271487
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34271571"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:632e31e077bc..3fee41c2ea35?path=yt%2Fdata_objects%2Ftests%2Ftest_particle_filter.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34271571"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34271487"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34271487"
+                    }
+                },
+                "id": 34271487
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "Oh wait never mind I messed up setting up my test environment.",
+                "html": "<p>Oh wait never mind I messed up setting up my test environment.</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-03-31T18:42:54.206338+00:00",
+            "updated_on": "2017-03-31T18:42:54.209200+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/tests/test_particle_filter.py",
+                "to": null
+            },
+            "id": 34271571
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34272317"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34272317"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34271330"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34271330"
+                    }
+                },
+                "id": 34271330
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "should be fixed now, thanks for the thorough testing",
+                "html": "<p>should be fixed now, thanks for the thorough testing</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-03-31T18:55:48.138158+00:00",
+            "updated_on": "2017-03-31T18:55:48.140519+00:00",
+            "id": 34272317
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yihaochen"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yihaochen/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Yi-Hao Chen",
+                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
+                "username": "yihaochen"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34273028"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34273028"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34272317"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34272317"
+                    }
+                },
+                "id": 34272317
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "Yep, it works great now! Thanks!",
+                "html": "<p>Yep, it works great now! Thanks!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-03-31T19:08:10.036101+00:00",
+            "updated_on": "2017-03-31T19:08:10.106340+00:00",
+            "id": 34273028
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/brittonsmith/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Britton Smith",
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
+                "username": "brittonsmith"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34441754"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:61bc54a88820..bd29e64137ef?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34441754"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "Are we using `sampling_type` instead of `particle_type` now?",
+                "html": "<p>Are we using <code>sampling_type</code> instead of <code>particle_type</code> now?</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-04-04T17:38:02.437464+00:00",
+            "updated_on": "2017-04-04T17:38:02.441013+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": 633
+            },
+            "id": 34441754
+        },
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+                "username": "ngoldbaum"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34442018"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:61bc54a88820..bd29e64137ef?path=yt%2Fdata_objects%2Fconstruction_data_containers.py"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34442018"
+                }
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569/comments/34441754"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569/_/diff#comment-34441754"
+                    }
+                },
+                "id": 34441754
+            },
+            "pullrequest": {
+                "title": "Fix covering grid access for particle filters. Closes #1342",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2569"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2569"
+                    }
+                },
+                "id": 2569
+            },
+            "content": {
+                "raw": "No, particle_type is still there, it's just a property now:\n\nhttps://bitbucket.org/yt_analysis/yt/src/51ca56bb7126b9be23edd0fe6f2bf281be7ee2d3/yt/fields/derived_field.py?at=yt&fileviewer=file-view-default#derived_field.py-158",
+                "html": "<p>No, particle_type is still there, it's just a property now:</p>\n<p><a href=\"https://bitbucket.org/yt_analysis/yt/src/51ca56bb7126b9be23edd0fe6f2bf281be7ee2d3/yt/fields/derived_field.py?at=yt&amp;fileviewer=file-view-default#derived_field.py-158\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/src/51ca56bb7126b9be23edd0fe6f2bf281be7ee2d3/yt/fields/derived_field.py?at=yt&amp;fileviewer=file-view-default#derived_field.py-158</a></p>",
+                "markup": "markdown"
+            },
+            "created_on": "2017-04-04T17:42:23.366207+00:00",
+            "updated_on": "2017-04-04T17:42:23.368505+00:00",
+            "inline": {
+                "from": null,
+                "path": "yt/data_objects/construction_data_containers.py",
+                "to": null
+            },
+            "id": 34442018
+        }
+    ]
+}

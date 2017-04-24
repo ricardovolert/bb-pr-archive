@@ -1,0 +1,198 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2015-11-09T19:14:28.302031+00:00",
+    "comment_count": 1,
+    "description": "Right now the tipsy frontend tests fail with the following error:\r\n\r\n```\r\ngoldbaum at ROUS2 in ~/Documents/yt-hg-python3 on yt!?^\r\n\u263f nosetests3 frontends.tipsy\r\nE\r\n======================================================================\r\nERROR: Failure: RuntimeError ()\r\n----------------------------------------------------------------------\r\nTraceback (most recent call last):\r\n  File \"/usr/local/lib/python3.4/site-packages/nose/failure.py\", line 39, in runTest\r\n    raise self.exc_val.with_traceback(self.tb)\r\n  File \"/usr/local/lib/python3.4/site-packages/nose/loader.py\", line 418, in loadTestsFromName\r\n    addr.filename, addr.module)\r\n  File \"/usr/local/lib/python3.4/site-packages/nose/importer.py\", line 47, in importFromPath\r\n    return self.importFromDir(dir_path, fqname)\r\n  File \"/usr/local/lib/python3.4/site-packages/nose/importer.py\", line 94, in importFromDir\r\n    mod = load_module(part_fqname, fh, filename, desc)\r\n  File \"/usr/local/Cellar/python3/3.4.3_2/Frameworks/Python.framework/Versions/3.4/lib/python3.4/imp.py\", line 235, in load_module\r\n    return load_source(name, filename, file)\r\n  File \"/usr/local/Cellar/python3/3.4.3_2/Frameworks/Python.framework/Versions/3.4/lib/python3.4/imp.py\", line 171, in load_source\r\n    module = methods.load()\r\n  File \"<frozen importlib._bootstrap>\", line 1220, in load\r\n  File \"<frozen importlib._bootstrap>\", line 1200, in _load_unlocked\r\n  File \"<frozen importlib._bootstrap>\", line 1129, in _exec\r\n  File \"<frozen importlib._bootstrap>\", line 1471, in exec_module\r\n  File \"<frozen importlib._bootstrap>\", line 321, in _call_with_frames_removed\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/frontends/tipsy/tests/test_outputs.py\", line 111, in <module>\r\n    @requires_ds(tipsy_gal)\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/utilities/answer_testing/framework.py\", line 786, in requires_ds\r\n    elif not can_run_ds(ds_fn, file_check):\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/utilities/answer_testing/framework.py\", line 257, in can_run_ds\r\n    load(ds_fn)\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/convenience.py\", line 72, in load\r\n    return candidates[0](*args, **kwargs)\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/frontends/tipsy/data_structures.py\", line 110, in __init__\r\n    super(TipsyDataset, self).__init__(filename, dataset_type)\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/data_objects/static_output.py\", line 205, in __init__\r\n    self._set_derived_attrs()\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/frontends/tipsy/data_structures.py\", line 223, in _set_derived_attrs\r\n    self.index\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/data_objects/static_output.py\", line 323, in index\r\n    self, dataset_type=self.dataset_type)\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/geometry/particle_geometry_handler.py\", line 37, in __init__\r\n    super(ParticleIndex, self).__init__(ds, dataset_type)\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/geometry/geometry_handler.py\", line 50, in __init__\r\n    self._setup_geometry()\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/geometry/particle_geometry_handler.py\", line 41, in _setup_geometry\r\n    self._initialize_particle_handler()\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/geometry/particle_geometry_handler.py\", line 62, in _initialize_particle_handler\r\n    for i in range(ndoms)]\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/geometry/particle_geometry_handler.py\", line 62, in <listcomp>\r\n    for i in range(ndoms)]\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/frontends/tipsy/data_structures.py\", line 46, in __init__\r\n    io._create_dtypes(self)\r\n  File \"/Users/goldbaum/Documents/yt-hg-python3/yt/frontends/tipsy/io.py\", line 337, in _create_dtypes\r\n    raise RuntimeError\r\nRuntimeError\r\n\r\n----------------------------------------------------------------------\r\nRan 1 test in 0.003s\r\n\r\nFAILED (errors=1)\r\n```\r\n\r\nThere are two issues here. First, we're reading a binary file as UTF-8, which is wrong.\r\n\r\nSecond, in python3, dict.values() returns a view, not a list, so we need to explicitly cast `data_file.total_particles.values()` to a list before passing to `np.sum`, since `np.sum` doesn't know what to do with a dict view.",
+    "created_on": "2015-11-02T22:34:55.234119+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/8695789ff8e3"
+            }
+        },
+        "hash": "8695789ff8e3"
+    },
+    "title": "Fix issues with loading tipsy files in python3",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1842"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 1842,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/633b94462530"
+                }
+            },
+            "hash": "633b94462530"
+        },
+        "repository": {
+            "full_name": "ngoldbaum/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7e0882aabe36"
+                }
+            },
+            "hash": "7e0882aabe36"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842/comments/11400618"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1842/_/diff#comment-11400618"
+                }
+            },
+            "pullrequest": {
+                "title": "Fix issues with loading tipsy files in python3",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1842"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1842"
+                    }
+                },
+                "id": 1842
+            },
+            "content": {
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>",
+                "markup": "markdown"
+            },
+            "created_on": "2015-11-03T00:49:41.540566+00:00",
+            "updated_on": "2015-11-03T00:49:41.651210+00:00",
+            "id": 11400618
+        }
+    ]
+}

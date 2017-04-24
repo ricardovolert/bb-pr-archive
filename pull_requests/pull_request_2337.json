@@ -1,0 +1,198 @@
+{
+    "reason": "",
+    "state": "MERGED",
+    "updated_on": "2016-09-07T18:04:42.098457+00:00",
+    "comment_count": 1,
+    "description": "`ParticleTrajectories` used to loop over all files for each requested field. With the following changes, for each dataset loaded into memory, we try extract as many fields as possible. It typically reduces the analysis to just 2 passes over the `TimeSeries` object. I've used a modified cookbook example for benchmarking:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nimport glob\r\nfrom yt.analysis_modules.particle_trajectories.api import ParticleTrajectories\r\nfrom yt.config import ytcfg\r\npath = ytcfg.get(\"yt\", \"test_data_dir\")\r\n\r\nmy_fns = glob.glob(path+\"/Orbit/orbit_hdf5_chk_00[0-9][0-9]\")\r\nmy_fns.sort()\r\n\r\nfields = [\"particle_velocity_x\", \"particle_velocity_y\", \"particle_velocity_z\"]\r\nds = yt.load(my_fns[0])\r\ndd = ds.all_data()\r\nindices = dd[\"particle_index\"].astype(\"int\")\r\ntrajs = ParticleTrajectories(my_fns, indices, fields=fields)\r\nparticle1 = trajs.trajectory_from_index(1)\r\n\r\nds = yt.load(\"enzo_cosmology_plus/DD0046/DD0046\")\r\nsp = ds.sphere(\"max\", (0.5, \"Mpc\"))\r\nindices = sp[\"particle_index\"][sp[\"particle_type\"] == 1]\r\nmy_fns = glob.glob(path+\"/enzo_cosmology_plus/DD*/*.hierarchy\")\r\nmy_fns.sort()\r\ntrajs = ParticleTrajectories(my_fns, indices)\r\ntrajs.add_fields([\"density\"])\r\n```\r\n\r\nResults:\r\n\r\n\r\n```\r\n#!text\r\n\r\n# before\r\nreal  8m5.926s\r\nuser  8m2.613s\r\nsys   0m2.556s\r\n\r\n# after\r\nreal\t3m59.859s\r\nuser\t3m57.053s\r\nsys\t0m2.418s\r\n\r\n```\r\n",
+    "created_on": "2016-08-12T18:51:18.778907+00:00",
+    "task_count": 0,
+    "merge_commit": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/9ccda6b503c6"
+            }
+        },
+        "hash": "9ccda6b503c6"
+    },
+    "title": "Optimization of Particle Trajectories",
+    "links": {
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/diff"
+        },
+        "decline": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/decline"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337"
+        },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/activity"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/merge"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/commits"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/statuses"
+        },
+        "approve": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/approve"
+        },
+        "html": {
+            "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2337"
+        },
+        "comments": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/comments"
+        }
+    },
+    "closed_by": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
+        "username": "ngoldbaum"
+    },
+    "id": 2337,
+    "type": "pullrequest",
+    "author": {
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "type": "user",
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
+        "username": "xarthisius"
+    },
+    "source": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/xarthisius/yt/commit/fb5544dfd793"
+                }
+            },
+            "hash": "fb5544dfd793"
+        },
+        "repository": {
+            "full_name": "xarthisius/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/xarthisius/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/xarthisius/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/xarthisius/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b753a527-1ccd-415c-8b85-3244947466a3}"
+        }
+    },
+    "close_source_branch": false,
+    "destination": {
+        "branch": {
+            "name": "yt"
+        },
+        "commit": {
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/0186541d072b"
+                }
+            },
+            "hash": "0186541d072b"
+        },
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        }
+    },
+    "comments": [
+        {
+            "user": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "type": "user",
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
+                "username": "yt-fido"
+            },
+            "type": "pullrequest_comment",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337/comments/22366802"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2337/_/diff#comment-22366802"
+                }
+            },
+            "pullrequest": {
+                "title": "Optimization of Particle Trajectories",
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2337"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2337"
+                    }
+                },
+                "id": 2337
+            },
+            "content": {
+                "raw": "* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1141/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1141/artifact/sandbox/doc/build/html/index.html\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1201/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1201/artifact/sandbox/doc/build/html/index.html\n",
+                "html": "<ul>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1141/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1141/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1141/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1141/artifact/sandbox/doc/build/html/index.html</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1201/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1201/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1201/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1201/artifact/sandbox/doc/build/html/index.html</a></li>\n</ul>",
+                "markup": "markdown"
+            },
+            "created_on": "2016-08-15T20:48:50.643223+00:00",
+            "updated_on": "2016-09-07T17:21:05.895329+00:00",
+            "id": 22366802
+        }
+    ]
+}
