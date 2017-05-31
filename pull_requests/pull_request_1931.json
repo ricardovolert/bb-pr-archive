@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2016-01-11T19:05:28.447731+00:00",
-    "comment_count": 1,
-    "description": "This fixes an issue in the png writer under python3. The following script (adapted from the VR example quickstart notebook) illustrates the issue:\r\n\r\n```\r\nimport yt\r\nds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\ntf = yt.ColorTransferFunction((-28, -24))\r\ntf.add_layers(4, w=0.01)\r\ncam = ds.camera([0.5, 0.5, 0.5], [1.0, 1.0, 1.0], (20, 'kpc'), 512, tf, fields=[\"density\"])\r\ncam.show()\r\n```\r\n\r\nUnder ipython3 in the current yt tip, it raises the following error:\r\n\r\n```\r\n---------------------------------------------------------------------------\r\nTypeError                                 Traceback (most recent call last)\r\n/Users/goldbaum/Documents/test/test.py in <module>()\r\n      4 tf.add_layers(4, w=0.01)\r\n      5 cam = ds.camera([0.5, 0.5, 0.5], [1.0, 1.0, 1.0], (20, 'kpc'), 512, tf, fields=[\"density\"])\r\n----> 6 cam.show()\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/visualization/volume_rendering/old_camera.py in show(self, clip_ratio)\r\n    824             image = self.snapshot()[:,:,:3]\r\n    825             if clip_ratio is not None: clip_ratio *= image.std()\r\n--> 826             data = write_bitmap(image, None, clip_ratio)\r\n    827             publish_display_data(\r\n    828                 data={'image/png': data},\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/visualization/image_writer.py in write_bitmap(bitmap_array, filename, max_val, transpose)\r\n    173         pw.write_png(bitmap_array, filename)\r\n    174     else:\r\n--> 175         return pw.write_png_to_string(bitmap_array.copy())\r\n    176     return bitmap_array\r\n    177\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/utilities/png_writer.py in write_png_to_string(buffer, dpi, gray)\r\n     35     height = buffer.shape[0]\r\n     36     fileobj = cStringIO()\r\n---> 37     call_png_write_png(buffer, width, height, fileobj, dpi)\r\n     38     png_str = fileobj.getvalue()\r\n     39     fileobj.close()\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/utilities/png_writer.py in call_png_write_png(buffer, width, height, filename, dpi)\r\n     24 else:\r\n     25     def call_png_write_png(buffer, width, height, filename, dpi):\r\n---> 26         _png.write_png(buffer, filename, dpi)\r\n     27\r\n     28 def write_png(buffer, filename, dpi=100):\r\n\r\nTypeError: string argument expected, got 'bytes'\r\n```\r\n\r\nThe fix is to use `BytesIO` instead of `StringIO` in py3.",
-    "created_on": "2016-01-11T17:16:50.312920+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c16a46ac522e"
-            }
-        },
-        "hash": "c16a46ac522e"
-    },
-    "title": "Use BytesIO in the png writer under python3",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1931"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
-            },
-            "html": {
-                "href": "https://bitbucket.org/jzuhone/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "John ZuHone",
-        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-        "username": "jzuhone"
-    },
-    "id": 1931,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/be45ff11582e"
-                }
-            },
-            "hash": "be45ff11582e"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,25 +48,127 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "be45ff11582e",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/aaf932204c21"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/be45ff11582e"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "jzuhone",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
+    },
+    "title": "Use BytesIO in the png writer under python3",
+    "id": 1931,
+    "comment_count": 1,
+    "created_on": "2016-01-11T17:16:50.312920+00:00",
+    "merge_commit": {
+        "hash": "c16a46ac522e",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c16a46ac522e"
+            }
+        }
+    },
+    "comments": [
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
+            "user": {
+                "username": "yt-fido",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/comments/13360095"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1931/_/diff#comment-13360095"
                 }
             },
-            "hash": "aaf932204c21"
+            "created_on": "2016-01-11T18:16:25.866288+00:00",
+            "updated_on": "2016-01-11T18:16:25.916149+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1931"
+                    }
+                },
+                "title": "Use BytesIO in the png writer under python3",
+                "id": 1931
+            },
+            "type": "pullrequest_comment",
+            "id": 13360095
+        }
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This fixes an issue in the png writer under python3. The following script (adapted from the VR example quickstart notebook) illustrates the issue:\r\n\r\n```\r\nimport yt\r\nds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\ntf = yt.ColorTransferFunction((-28, -24))\r\ntf.add_layers(4, w=0.01)\r\ncam = ds.camera([0.5, 0.5, 0.5], [1.0, 1.0, 1.0], (20, 'kpc'), 512, tf, fields=[\"density\"])\r\ncam.show()\r\n```\r\n\r\nUnder ipython3 in the current yt tip, it raises the following error:\r\n\r\n```\r\n---------------------------------------------------------------------------\r\nTypeError                                 Traceback (most recent call last)\r\n/Users/goldbaum/Documents/test/test.py in <module>()\r\n      4 tf.add_layers(4, w=0.01)\r\n      5 cam = ds.camera([0.5, 0.5, 0.5], [1.0, 1.0, 1.0], (20, 'kpc'), 512, tf, fields=[\"density\"])\r\n----> 6 cam.show()\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/visualization/volume_rendering/old_camera.py in show(self, clip_ratio)\r\n    824             image = self.snapshot()[:,:,:3]\r\n    825             if clip_ratio is not None: clip_ratio *= image.std()\r\n--> 826             data = write_bitmap(image, None, clip_ratio)\r\n    827             publish_display_data(\r\n    828                 data={'image/png': data},\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/visualization/image_writer.py in write_bitmap(bitmap_array, filename, max_val, transpose)\r\n    173         pw.write_png(bitmap_array, filename)\r\n    174     else:\r\n--> 175         return pw.write_png_to_string(bitmap_array.copy())\r\n    176     return bitmap_array\r\n    177\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/utilities/png_writer.py in write_png_to_string(buffer, dpi, gray)\r\n     35     height = buffer.shape[0]\r\n     36     fileobj = cStringIO()\r\n---> 37     call_png_write_png(buffer, width, height, fileobj, dpi)\r\n     38     png_str = fileobj.getvalue()\r\n     39     fileobj.close()\r\n\r\n/Users/goldbaum/Documents/yt-hg-python3/yt/utilities/png_writer.py in call_png_write_png(buffer, width, height, filename, dpi)\r\n     24 else:\r\n     25     def call_png_write_png(buffer, width, height, filename, dpi):\r\n---> 26         _png.write_png(buffer, filename, dpi)\r\n     27\r\n     28 def write_png(buffer, filename, dpi=100):\r\n\r\nTypeError: string argument expected, got 'bytes'\r\n```\r\n\r\nThe fix is to use `BytesIO` instead of `StringIO` in py3.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
         },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2016-01-11T19:05:28.447731+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -140,59 +181,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
-        }
-    },
-    "comments": [
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt-fido/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
-            },
-            "type": "pullrequest_comment",
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "aaf932204c21",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931/comments/13360095"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1931/_/diff#comment-13360095"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/aaf932204c21"
                 }
-            },
-            "pullrequest": {
-                "title": "Use BytesIO in the png writer under python3",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1931"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1931"
-                    }
-                },
-                "id": 1931
-            },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-01-11T18:16:25.866288+00:00",
-            "updated_on": "2016-01-11T18:16:25.916149+00:00",
-            "id": 13360095
+            }
+        },
+        "branch": {
+            "name": "yt"
         }
-    ]
+    }
 }

@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2014-10-24T18:27:04.149437+00:00",
-    "comment_count": 39,
-    "description": "Some background: @sacielo had some FLASH datasets where he had a custom units implementation, which does not jibe with our \"cgs-only\" assumption in the FLASH frontend.\r\n\r\nThe Athena frontend already allows for the user to supply code units in a dictionary passed to `load`, like so:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\n\r\nparameters={\"time_unit\":(1.0,\"Myr\"),\r\n            \"length_unit\":(1.0,\"Mpc\"),\r\n            \"mass_unit\":(1.0e14,\"Msun\")}\r\n\r\nds = yt.load(\"virgo_novisc.0054.vtk\", parameters=parameters)\r\n\r\n```\r\n\r\nThis PR extends this functionality to the other frontends, allowing the user to specify their own code units (thus overriding the defaults) using an `units_override` dictionary, which does the same thing as the Athena example above. This, of course, is risky business, but a feature that I think some users (at least one!) would want. \r\n\r\nWhy this is WIP:\r\n\r\n1) Needs documentation  \r\n2) Needs tests  \r\n3) Needs to be added to other frontends  \r\n\r\nI'm setting up the PR now so that folks can comment and suggest changes before I go through and start setting it up everywhere. \r\n\r\nIn the course of testing this I added some new magnetic-related fields.\r\n\r\nUPDATE: Documentation and tests have been added, and the functionality has been added to all the frontends that make sense. I had to make some small changes to the RAMSES and the MOAB frontends--someone who knows these should check them. \r\n\r\nUPDATE 2: The fact that we cache datasets automatically led to some issues in the test I developed where I have to load a dataset twice, so I developed a configuration option that turns caching on and off (which is set by default to False). I'm guessing it could have other applications. \r\n\r\nUPDATE 3: Addressed @MatthewTurk and @ngoldbaum's comments.",
-    "created_on": "2014-10-04T05:38:38.124257+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/840185d54851"
-            }
-        },
-        "hash": "840185d54851"
-    },
-    "title": "[APICHANGE] Overriding code units ",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "id": 1236,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
-            },
-            "html": {
-                "href": "https://bitbucket.org/jzuhone/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "John ZuHone",
-        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-        "username": "jzuhone"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/42b8e035e8d2"
-                }
-            },
-            "hash": "42b8e035e8d2"
-        },
         "repository": {
             "full_name": "jzuhone/yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
                 }
             },
-            "name": "yt-3.x",
-            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
+            "name": "yt-3.x"
         },
         "commit": {
+            "hash": "42b8e035e8d2",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/96b14a15b102"
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/42b8e035e8d2"
                 }
-            },
-            "hash": "96b14a15b102"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "[APICHANGE] Overriding code units ",
+    "id": 1236,
+    "comment_count": 39,
+    "created_on": "2014-10-04T05:38:38.124257+00:00",
+    "merge_commit": {
+        "hash": "840185d54851",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/840185d54851"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1432/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1432/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1432/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3325664"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3325664"
                 }
             },
+            "created_on": "2014-10-04T06:05:46.617016+00:00",
+            "updated_on": "2014-10-04T06:05:46.982004+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1432/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1432/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1432/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-04T06:05:46.617016+00:00",
-            "updated_on": "2014-10-04T06:05:46.982004+00:00",
+            "type": "pullrequest_comment",
             "id": 3325664
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Forgot to `'175 s/):/,/'`",
+                "html": "<p>Forgot to <code>'175 s/):/,/'</code></p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -207,25 +161,23 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326196"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:d6109b509d64..2134d6d5144b?path=yt%2Ffrontends%2Fgdf%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326196"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:d6109b509d64..2134d6d5144b?path=yt%2Ffrontends%2Fgdf%2Fdata_structures.py"
                 }
             },
+            "created_on": "2014-10-04T14:35:58.965342+00:00",
+            "updated_on": "2014-10-04T14:35:58.972172+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -235,24 +187,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Forgot to `'175 s/):/,/'`",
-                "html": "<p>Forgot to <code>'175 s/):/,/'</code></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-04T14:35:58.965342+00:00",
-            "updated_on": "2014-10-04T14:35:58.972172+00:00",
             "inline": {
-                "from": null,
+                "to": 176,
                 "path": "yt/frontends/gdf/data_structures.py",
-                "to": 176
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 3326196
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "not all codes will have a constant gamma, i.e., anything with a general equation of state",
+                "html": "<p>not all codes will have a constant gamma, i.e., anything with a general equation of state</p>"
+            },
             "user": {
+                "username": "mzingale",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/mzingale"
@@ -264,25 +218,23 @@
                         "href": "https://bitbucket.org/account/mzingale/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Michael  Zingale",
-                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
-                "username": "mzingale"
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326672"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:34ab3bf4077c..297789d10298?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326672"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:34ab3bf4077c..297789d10298?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
                 }
             },
+            "created_on": "2014-10-04T19:41:22.568314+00:00",
+            "updated_on": "2014-10-04T19:41:22.576050+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -292,24 +244,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "not all codes will have a constant gamma, i.e., anything with a general equation of state",
-                "html": "<p>not all codes will have a constant gamma, i.e., anything with a general equation of state</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-04T19:41:22.568314+00:00",
-            "updated_on": "2014-10-04T19:41:22.576050+00:00",
             "inline": {
-                "from": null,
+                "to": 137,
                 "path": "doc/source/examining/loading_data.rst",
-                "to": 137
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 3326672
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Right now yt assumes a constant gamma internally in many places. This is definitely something that we need to look into and is related to your concerns about the relationship between internal energy and thermal energy.",
+                "html": "<p>Right now yt assumes a constant gamma internally in many places. This is definitely something that we need to look into and is related to your concerns about the relationship between internal energy and thermal energy.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -321,22 +275,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326688"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326688"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -349,8 +289,19 @@
                 },
                 "id": 3326672
             },
+            "created_on": "2014-10-04T19:55:28.625556+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326688"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326688"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -360,24 +311,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Right now yt assumes a constant gamma internally in many places. This is definitely something that we need to look into and is related to your concerns about the relationship between internal energy and thermal energy.",
-                "html": "<p>Right now yt assumes a constant gamma internally in many places. This is definitely something that we need to look into and is related to your concerns about the relationship between internal energy and thermal energy.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-04T19:55:28.625556+00:00",
-            "updated_on": "2014-10-04T19:55:28.631607+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "doc/source/examining/loading_data.rst",
-                "to": null
+                "from": null
             },
-            "id": 3326688
+            "type": "pullrequest_comment",
+            "id": 3326688,
+            "updated_on": "2014-10-04T19:55:28.631607+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@mzingale @ngoldbaum this section of the docs is Athena-only.",
+                "html": "<p><a href=\"/mzingale/\" rel=\"nofollow\" title=\"@mzingale\" class=\"mention\">Michael  Zingale</a> <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> this section of the docs is Athena-only.</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -389,22 +343,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326698"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326698"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -417,8 +357,19 @@
                 },
                 "id": 3326688
             },
+            "created_on": "2014-10-04T20:03:16.640515+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326698"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326698"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -428,24 +379,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "@mzingale @ngoldbaum this section of the docs is Athena-only.",
-                "html": "<p><a href=\"/mzingale/\" rel=\"nofollow\" title=\"@mzingale\" class=\"mention\">Michael  Zingale</a> <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> this section of the docs is Athena-only.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-04T20:03:16.640515+00:00",
-            "updated_on": "2014-10-04T20:03:16.697608+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "doc/source/examining/loading_data.rst",
-                "to": null
+                "from": null
             },
-            "id": 3326698
+            "type": "pullrequest_comment",
+            "id": 3326698,
+            "updated_on": "2014-10-04T20:03:16.697608+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Ah, didn't catch that.  I assume that Athena is a single-component ideal gas (or something like that).\n\nI'll add a note to the issue that Nathan cites.",
+                "html": "<p>Ah, didn't catch that.  I assume that Athena is a single-component ideal gas (or something like that).</p>\n<p>I'll add a note to the issue that Nathan cites.</p>"
+            },
             "user": {
+                "username": "mzingale",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/mzingale"
@@ -457,22 +411,8 @@
                         "href": "https://bitbucket.org/account/mzingale/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Michael  Zingale",
-                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
-                "username": "mzingale"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326772"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326772"
-                }
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}"
             },
             "parent": {
                 "links": {
@@ -485,8 +425,19 @@
                 },
                 "id": 3326698
             },
+            "created_on": "2014-10-04T20:48:18.233662+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3326772"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3326772"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fexamining%2Floading_data.rst"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -496,24 +447,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Ah, didn't catch that.  I assume that Athena is a single-component ideal gas (or something like that).\n\nI'll add a note to the issue that Nathan cites.",
-                "html": "<p>Ah, didn't catch that.  I assume that Athena is a single-component ideal gas (or something like that).</p>\n<p>I'll add a note to the issue that Nathan cites.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-04T20:48:18.233662+00:00",
-            "updated_on": "2014-10-04T20:48:18.240675+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "doc/source/examining/loading_data.rst",
-                "to": null
+                "from": null
             },
-            "id": 3326772
+            "type": "pullrequest_comment",
+            "id": 3326772,
+            "updated_on": "2014-10-04T20:48:18.240675+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -525,12 +479,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3327096"
@@ -539,8 +490,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3327096"
                 }
             },
+            "created_on": "2014-10-05T03:21:41.358787+00:00",
+            "updated_on": "2014-10-05T03:21:41.645630+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -550,19 +502,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-05T03:21:41.358787+00:00",
-            "updated_on": "2014-10-05T03:21:41.645630+00:00",
+            "type": "pullrequest_comment",
             "id": 3327096
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can you try to flow at 80 characters?",
+                "html": "<p>Can you try to flow at 80 characters?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -574,25 +528,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3327100"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:0ea586566966..558d9f064464?path=yt%2Ffrontends%2Fenzo%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3327100"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:0ea586566966..558d9f064464?path=yt%2Ffrontends%2Fenzo%2Fdata_structures.py"
                 }
             },
+            "created_on": "2014-10-05T03:30:56.753004+00:00",
+            "updated_on": "2014-10-05T03:30:56.763287+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -602,24 +554,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Can you try to flow at 80 characters?",
-                "html": "<p>Can you try to flow at 80 characters?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-05T03:30:56.753004+00:00",
-            "updated_on": "2014-10-05T03:30:56.763287+00:00",
             "inline": {
-                "from": null,
+                "to": 686,
                 "path": "yt/frontends/enzo/data_structures.py",
-                "to": 686
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 3327100
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This is great!  Thanks for looking at this John.\n",
+                "html": "<p>This is great!  Thanks for looking at this John.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -631,12 +585,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3327102"
@@ -645,8 +596,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3327102"
                 }
             },
+            "created_on": "2014-10-05T03:31:33.369019+00:00",
+            "updated_on": "2014-10-05T03:31:33.376702+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -656,19 +608,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "This is great!  Thanks for looking at this John.\n",
-                "html": "<p>This is great!  Thanks for looking at this John.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-05T03:31:33.369019+00:00",
-            "updated_on": "2014-10-05T03:31:33.376702+00:00",
+            "type": "pullrequest_comment",
             "id": 3327102
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -680,12 +634,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3505940"
@@ -694,8 +645,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3505940"
                 }
             },
+            "created_on": "2014-10-17T19:57:02.515765+00:00",
+            "updated_on": "2014-10-17T19:57:03.107528+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -705,19 +657,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-17T19:57:02.515765+00:00",
-            "updated_on": "2014-10-17T19:57:03.107528+00:00",
+            "type": "pullrequest_comment",
             "id": 3505940
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -729,12 +683,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3506943"
@@ -743,8 +694,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3506943"
                 }
             },
+            "created_on": "2014-10-17T21:15:00.456130+00:00",
+            "updated_on": "2014-10-17T21:15:00.750355+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -754,19 +706,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-17T21:15:00.456130+00:00",
-            "updated_on": "2014-10-17T21:15:00.750355+00:00",
+            "type": "pullrequest_comment",
             "id": 3506943
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -778,12 +732,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3507717"
@@ -792,8 +743,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3507717"
                 }
             },
+            "created_on": "2014-10-17T22:48:10.547257+00:00",
+            "updated_on": "2014-10-17T22:48:10.923942+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -803,19 +755,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-17T22:48:10.547257+00:00",
-            "updated_on": "2014-10-17T22:48:10.923942+00:00",
+            "type": "pullrequest_comment",
             "id": 3507717
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@sacielo, can you try out the latest version of this and see how it works for you? see the changes to your script I suggested at [the original issue](https://bitbucket.org/yt_analysis/yt/issue/907/changing-units-manually-in-flash-datasets).",
+                "html": "<p><a href=\"/sacielo/\" rel=\"nofollow\" title=\"@sacielo\" class=\"mention\">Salvatore Cielo</a>, can you try out the latest version of this and see how it works for you? see the changes to your script I suggested at <a href=\"https://bitbucket.org/yt_analysis/yt/issue/907/changing-units-manually-in-flash-datasets\">the original issue</a>.</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -827,12 +781,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3508359"
@@ -841,8 +792,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3508359"
                 }
             },
+            "created_on": "2014-10-18T01:56:55.125106+00:00",
+            "updated_on": "2014-10-18T01:56:55.137297+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -852,19 +804,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "@sacielo, can you try out the latest version of this and see how it works for you? see the changes to your script I suggested at [the original issue](https://bitbucket.org/yt_analysis/yt/issue/907/changing-units-manually-in-flash-datasets).",
-                "html": "<p><a href=\"/sacielo/\" rel=\"nofollow\" title=\"@sacielo\" class=\"mention\">Salvatore Cielo</a>, can you try out the latest version of this and see how it works for you? see the changes to your script I suggested at <a href=\"https://bitbucket.org/yt_analysis/yt/issue/907/changing-units-manually-in-flash-datasets\">the original issue</a>.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-18T01:56:55.125106+00:00",
-            "updated_on": "2014-10-18T01:56:55.137297+00:00",
+            "type": "pullrequest_comment",
             "id": 3508359
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1508/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1508/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1508/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -876,12 +830,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509323"
@@ -890,8 +841,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509323"
                 }
             },
+            "created_on": "2014-10-18T16:35:28.516429+00:00",
+            "updated_on": "2014-10-18T16:35:29.128581+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -901,19 +853,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1508/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1508/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1508/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-18T16:35:28.516429+00:00",
-            "updated_on": "2014-10-18T16:35:29.128581+00:00",
+            "type": "pullrequest_comment",
             "id": 3509323
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I was just about to say that my tests on both FLASH and Athena worked fine...",
+                "html": "<p>I was just about to say that my tests on both FLASH and Athena worked fine...</p>"
+            },
             "user": {
+                "username": "sacielo",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sacielo"
@@ -925,12 +879,9 @@
                         "href": "https://bitbucket.org/account/sacielo/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Salvatore Cielo",
-                "uuid": "{1eca2a17-ad04-454a-a8e7-9eb647d6bb0c}",
-                "username": "sacielo"
+                "uuid": "{1eca2a17-ad04-454a-a8e7-9eb647d6bb0c}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509340"
@@ -939,8 +890,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509340"
                 }
             },
+            "created_on": "2014-10-18T16:49:33.655268+00:00",
+            "updated_on": "2014-10-18T16:49:33.929157+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -950,19 +902,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "I was just about to say that my tests on both FLASH and Athena worked fine...",
-                "html": "<p>I was just about to say that my tests on both FLASH and Athena worked fine...</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-18T16:49:33.655268+00:00",
-            "updated_on": "2014-10-18T16:49:33.929157+00:00",
+            "type": "pullrequest_comment",
             "id": 3509340
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yeah, the test failures are apart from those. No worries. ",
+                "html": "<p>Yeah, the test failures are apart from those. No worries. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -974,19 +928,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509362"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509362"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -999,8 +942,16 @@
                 },
                 "id": 3509340
             },
+            "created_on": "2014-10-18T17:00:47.632251+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509362"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509362"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1010,19 +961,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Yeah, the test failures are apart from those. No worries. ",
-                "html": "<p>Yeah, the test failures are apart from those. No worries. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-18T17:00:47.632251+00:00",
-            "updated_on": "2014-10-18T17:00:47.640381+00:00",
-            "id": 3509362
+            "type": "pullrequest_comment",
+            "id": 3509362,
+            "updated_on": "2014-10-18T17:00:47.640381+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1509/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1509/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1509/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1034,12 +988,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509417"
@@ -1048,8 +999,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509417"
                 }
             },
+            "created_on": "2014-10-18T17:50:45.270698+00:00",
+            "updated_on": "2014-10-18T17:50:45.707461+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1059,19 +1011,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1509/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1509/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1509/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-18T17:50:45.270698+00:00",
-            "updated_on": "2014-10-18T17:50:45.707461+00:00",
+            "type": "pullrequest_comment",
             "id": 3509417
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Does anyone know what's going on with the answer test failure?",
+                "html": "<p>Does anyone know what's going on with the answer test failure?</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1083,12 +1037,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509610"
@@ -1097,8 +1048,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509610"
                 }
             },
+            "created_on": "2014-10-18T19:59:59.189101+00:00",
+            "updated_on": "2014-10-18T19:59:59.196491+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1108,19 +1060,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Does anyone know what's going on with the answer test failure?",
-                "html": "<p>Does anyone know what's going on with the answer test failure?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-18T19:59:59.189101+00:00",
-            "updated_on": "2014-10-18T19:59:59.196491+00:00",
+            "type": "pullrequest_comment",
             "id": 3509610
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I don't understand *why* it's happening, but it looks like the failure is actually `test_ecp`, which might not be obvious unless you're looking at the console output:\n\nhttp://tests.yt-project.org/job/py2.7-yt-3.0_answer.enzo.moving7/1147/console\n\nUnfortunately I don't have time right now to dig in closer (need to get on the plane to SFO!), but hopefully that makes it easier for you to reproduce locally.",
+                "html": "<p>I don't understand <em>why</em> it's happening, but it looks like the failure is actually <code>test_ecp</code>, which might not be obvious unless you're looking at the console output:</p>\n<p><a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_answer.enzo.moving7/1147/console\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_answer.enzo.moving7/1147/console</a></p>\n<p>Unfortunately I don't have time right now to dig in closer (need to get on the plane to SFO!), but hopefully that makes it easier for you to reproduce locally.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1132,19 +1086,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509692"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509692"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1157,8 +1100,16 @@
                 },
                 "id": 3509610
             },
+            "created_on": "2014-10-18T21:02:37.521098+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3509692"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3509692"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1168,19 +1119,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "I don't understand *why* it's happening, but it looks like the failure is actually `test_ecp`, which might not be obvious unless you're looking at the console output:\n\nhttp://tests.yt-project.org/job/py2.7-yt-3.0_answer.enzo.moving7/1147/console\n\nUnfortunately I don't have time right now to dig in closer (need to get on the plane to SFO!), but hopefully that makes it easier for you to reproduce locally.",
-                "html": "<p>I don't understand <em>why</em> it's happening, but it looks like the failure is actually <code>test_ecp</code>, which might not be obvious unless you're looking at the console output:</p>\n<p><a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_answer.enzo.moving7/1147/console\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_answer.enzo.moving7/1147/console</a></p>\n<p>Unfortunately I don't have time right now to dig in closer (need to get on the plane to SFO!), but hopefully that makes it easier for you to reproduce locally.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-18T21:02:37.521098+00:00",
-            "updated_on": "2014-10-18T21:02:37.530486+00:00",
-            "id": 3509692
+            "type": "pullrequest_comment",
+            "id": 3509692,
+            "updated_on": "2014-10-18T21:02:37.530486+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Would anything break if this were `True` by default?",
+                "html": "<p>Would anything break if this were <code>True</code> by default?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1192,25 +1146,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3531614"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:42b8e035e8d2..96b14a15b102?path=yt%2Fconfig.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3531614"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:42b8e035e8d2..96b14a15b102?path=yt%2Fconfig.py"
                 }
             },
+            "created_on": "2014-10-21T05:10:45.606797+00:00",
+            "updated_on": "2014-10-21T05:10:45.617078+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1220,24 +1172,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Would anything break if this were `True` by default?",
-                "html": "<p>Would anything break if this were <code>True</code> by default?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T05:10:45.606797+00:00",
-            "updated_on": "2014-10-21T05:10:45.617078+00:00",
             "inline": {
-                "from": null,
+                "to": 42,
                 "path": "yt/config.py",
-                "to": 42
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 3531614
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I don't know, but I'm guessing that we'd need a consensus to make that the default behavior. ",
+                "html": "<p>I don't know, but I'm guessing that we'd need a consensus to make that the default behavior. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1249,22 +1203,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3531616"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fconfig.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3531616"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -1277,8 +1217,19 @@
                 },
                 "id": 3531614
             },
+            "created_on": "2014-10-21T05:11:42.515663+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3531616"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3531616"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fconfig.py"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1288,24 +1239,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "I don't know, but I'm guessing that we'd need a consensus to make that the default behavior. ",
-                "html": "<p>I don't know, but I'm guessing that we'd need a consensus to make that the default behavior. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T05:11:42.515663+00:00",
-            "updated_on": "2014-10-21T05:11:42.525135+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/config.py",
-                "to": null
+                "from": null
             },
-            "id": 3531616
+            "type": "pullrequest_comment",
+            "id": 3531616,
+            "updated_on": "2014-10-21T05:11:42.525135+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1317,12 +1271,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3532518"
@@ -1331,8 +1282,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3532518"
                 }
             },
+            "created_on": "2014-10-21T07:10:06.478649+00:00",
+            "updated_on": "2014-10-21T07:10:06.876467+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1342,19 +1294,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T07:10:06.478649+00:00",
-            "updated_on": "2014-10-21T07:10:06.876467+00:00",
+            "type": "pullrequest_comment",
             "id": 3532518
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "So are all tests now actually, really, truly passing?",
+                "html": "<p>So are all tests now actually, really, truly passing?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1366,12 +1320,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3536702"
@@ -1380,8 +1331,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3536702"
                 }
             },
+            "created_on": "2014-10-21T11:44:35.277535+00:00",
+            "updated_on": "2014-10-21T11:44:35.288411+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1391,19 +1343,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "So are all tests now actually, really, truly passing?",
-                "html": "<p>So are all tests now actually, really, truly passing?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T11:44:35.277535+00:00",
-            "updated_on": "2014-10-21T11:44:35.288411+00:00",
+            "type": "pullrequest_comment",
             "id": 3536702
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think it would break unpickling of data objects, which is very very rarely done, I believe.  I'd like to get to the point where this can safely be `False`, but keep in mind that this also enables, for instance, a per-instance cache of which datasets are currently loaded (not which have been loaded) so it will get flushed if the ds object is properly GC'd first.",
+                "html": "<p>I think it would break unpickling of data objects, which is very very rarely done, I believe.  I'd like to get to the point where this can safely be <code>False</code>, but keep in mind that this also enables, for instance, a per-instance cache of which datasets are currently loaded (not which have been loaded) so it will get flushed if the ds object is properly GC'd first.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1415,22 +1369,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3536739"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fconfig.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3536739"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1443,8 +1383,19 @@
                 },
                 "id": 3531614
             },
+            "created_on": "2014-10-21T11:46:13.040769+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3536739"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3536739"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fconfig.py"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1454,24 +1405,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "I think it would break unpickling of data objects, which is very very rarely done, I believe.  I'd like to get to the point where this can safely be `False`, but keep in mind that this also enables, for instance, a per-instance cache of which datasets are currently loaded (not which have been loaded) so it will get flushed if the ds object is properly GC'd first.",
-                "html": "<p>I think it would break unpickling of data objects, which is very very rarely done, I believe.  I'd like to get to the point where this can safely be <code>False</code>, but keep in mind that this also enables, for instance, a per-instance cache of which datasets are currently loaded (not which have been loaded) so it will get flushed if the ds object is properly GC'd first.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T11:46:13.040769+00:00",
-            "updated_on": "2014-10-21T11:46:13.054143+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/config.py",
-                "to": null
+                "from": null
             },
-            "id": 3536739
+            "type": "pullrequest_comment",
+            "id": 3536739,
+            "updated_on": "2014-10-21T11:46:13.054143+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This probably doesn't need to be in an `else` block.",
+                "html": "<p>This probably doesn't need to be in an <code>else</code> block.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1483,25 +1437,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3536805"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:798284bc01f9..6f5a2e3f405f?path=yt%2Fdata_objects%2Fstatic_output.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3536805"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:798284bc01f9..6f5a2e3f405f?path=yt%2Fdata_objects%2Fstatic_output.py"
                 }
             },
+            "created_on": "2014-10-21T11:49:51.335539+00:00",
+            "updated_on": "2014-10-21T11:49:51.343378+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1511,24 +1463,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "This probably doesn't need to be in an `else` block.",
-                "html": "<p>This probably doesn't need to be in an <code>else</code> block.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T11:49:51.335539+00:00",
-            "updated_on": "2014-10-21T11:49:51.343378+00:00",
             "inline": {
-                "from": null,
+                "to": 692,
                 "path": "yt/data_objects/static_output.py",
-                "to": 692
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 3536805
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yes, they are. Unless anyone has any other issues this is ready to go. ",
+                "html": "<p>Yes, they are. Unless anyone has any other issues this is ready to go. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1540,19 +1494,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3536923"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3536923"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -1565,8 +1508,16 @@
                 },
                 "id": 3536702
             },
+            "created_on": "2014-10-21T11:56:15.962083+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3536923"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3536923"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1576,19 +1527,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Yes, they are. Unless anyone has any other issues this is ready to go. ",
-                "html": "<p>Yes, they are. Unless anyone has any other issues this is ready to go. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T11:56:15.962083+00:00",
-            "updated_on": "2014-10-21T11:56:15.972094+00:00",
-            "id": 3536923
+            "type": "pullrequest_comment",
+            "id": 3536923,
+            "updated_on": "2014-10-21T11:56:15.972094+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1600,12 +1554,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3538744"
@@ -1614,8 +1565,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3538744"
                 }
             },
+            "created_on": "2014-10-21T13:36:56.865995+00:00",
+            "updated_on": "2014-10-21T13:36:57.158843+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1625,19 +1577,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T13:36:56.865995+00:00",
-            "updated_on": "2014-10-21T13:36:57.158843+00:00",
+            "type": "pullrequest_comment",
             "id": 3538744
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Good catch!",
+                "html": "<p>Good catch!</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1649,25 +1603,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543521"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:42b8e035e8d2..96b14a15b102?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543521"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:42b8e035e8d2..96b14a15b102?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
                 }
             },
+            "created_on": "2014-10-21T17:15:35.549199+00:00",
+            "updated_on": "2014-10-21T17:15:35.560631+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1677,24 +1629,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Good catch!",
-                "html": "<p>Good catch!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T17:15:35.549199+00:00",
-            "updated_on": "2014-10-21T17:15:35.560631+00:00",
             "inline": {
-                "from": 334,
+                "to": null,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": null
+                "from": 334
             },
+            "type": "pullrequest_comment",
             "id": 3543521
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Does `units_override` need to be in the `Dataset` API for the SPH frontends?",
+                "html": "<p>Does <code>units_override</code> need to be in the <code>Dataset</code> API for the SPH frontends?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1706,25 +1660,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543548"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:34ab3bf4077c..f75c6a2bc844?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543548"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:34ab3bf4077c..f75c6a2bc844?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
                 }
             },
+            "created_on": "2014-10-21T17:16:55.935399+00:00",
+            "updated_on": "2014-10-21T17:16:55.948679+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1734,24 +1686,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Does `units_override` need to be in the `Dataset` API for the SPH frontends?",
-                "html": "<p>Does <code>units_override</code> need to be in the <code>Dataset</code> API for the SPH frontends?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T17:16:55.935399+00:00",
-            "updated_on": "2014-10-21T17:16:55.948679+00:00",
             "inline": {
-                "from": null,
+                "to": 100,
                 "path": "yt/frontends/sph/data_structures.py",
-                "to": 100
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 3543548
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Besides the minor comment regarding the SPH frontends, LGTM.",
+                "html": "<p>Besides the minor comment regarding the SPH frontends, LGTM.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1763,12 +1717,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543558"
@@ -1777,8 +1728,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543558"
                 }
             },
+            "created_on": "2014-10-21T17:17:34.756999+00:00",
+            "updated_on": "2014-10-21T17:17:34.764284+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1788,19 +1740,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Besides the minor comment regarding the SPH frontends, LGTM.",
-                "html": "<p>Besides the minor comment regarding the SPH frontends, LGTM.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T17:17:34.756999+00:00",
-            "updated_on": "2014-10-21T17:17:34.764284+00:00",
+            "type": "pullrequest_comment",
             "id": 3543558
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Its inclusion here was mainly for consistency, and so that if someone tries to use it they will at least see some kind of response, but if you like we can remove it. ",
+                "html": "<p>Its inclusion here was mainly for consistency, and so that if someone tries to use it they will at least see some kind of response, but if you like we can remove it. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1812,22 +1766,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543589"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543589"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -1840,8 +1780,19 @@
                 },
                 "id": 3543548
             },
+            "created_on": "2014-10-21T17:19:06.971467+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543589"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543589"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1851,24 +1802,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Its inclusion here was mainly for consistency, and so that if someone tries to use it they will at least see some kind of response, but if you like we can remove it. ",
-                "html": "<p>Its inclusion here was mainly for consistency, and so that if someone tries to use it they will at least see some kind of response, but if you like we can remove it. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T17:19:06.971467+00:00",
-            "updated_on": "2014-10-21T17:19:06.979003+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/sph/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 3543589
+            "type": "pullrequest_comment",
+            "id": 3543589,
+            "updated_on": "2014-10-21T17:19:06.979003+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "To put it more clearly, I don't think it should go by silently if someone tries to use it--they ought to at least know that nothing is happening, and what they should do instead. ",
+                "html": "<p>To put it more clearly, I don't think it should go by silently if someone tries to use it--they ought to at least know that nothing is happening, and what they should do instead. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1880,22 +1834,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543627"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543627"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -1908,8 +1848,19 @@
                 },
                 "id": 3543589
             },
+            "created_on": "2014-10-21T17:21:05.344806+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543627"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543627"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1919,24 +1870,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "To put it more clearly, I don't think it should go by silently if someone tries to use it--they ought to at least know that nothing is happening, and what they should do instead. ",
-                "html": "<p>To put it more clearly, I don't think it should go by silently if someone tries to use it--they ought to at least know that nothing is happening, and what they should do instead. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T17:21:05.344806+00:00",
-            "updated_on": "2014-10-21T17:21:05.355308+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/sph/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 3543627
+            "type": "pullrequest_comment",
+            "id": 3543627,
+            "updated_on": "2014-10-21T17:21:05.355308+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "OK, but I think issuing a warning and ignoring `units_override` might not be the best way to handle this.\n\nWhat about either raising a RuntimeError using the text of the warning or copying the contents of units_override over to the unit_base dict?",
+                "html": "<p>OK, but I think issuing a warning and ignoring <code>units_override</code> might not be the best way to handle this.</p>\n<p>What about either raising a RuntimeError using the text of the warning or copying the contents of units_override over to the unit_base dict?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1948,22 +1902,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543770"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543770"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1976,8 +1916,19 @@
                 },
                 "id": 3543627
             },
+            "created_on": "2014-10-21T17:28:52.634102+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3543770"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3543770"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Ffrontends%2Fsph%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1987,24 +1938,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "OK, but I think issuing a warning and ignoring `units_override` might not be the best way to handle this.\n\nWhat about either raising a RuntimeError using the text of the warning or copying the contents of units_override over to the unit_base dict?",
-                "html": "<p>OK, but I think issuing a warning and ignoring <code>units_override</code> might not be the best way to handle this.</p>\n<p>What about either raising a RuntimeError using the text of the warning or copying the contents of units_override over to the unit_base dict?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T17:28:52.634102+00:00",
-            "updated_on": "2014-10-21T17:28:52.643729+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/sph/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 3543770
+            "type": "pullrequest_comment",
+            "id": 3543770,
+            "updated_on": "2014-10-21T17:28:52.643729+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -2016,12 +1970,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3548102"
@@ -2030,8 +1981,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3548102"
                 }
             },
+            "created_on": "2014-10-21T21:50:46.618395+00:00",
+            "updated_on": "2014-10-21T21:50:47.025540+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2041,19 +1993,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-21T21:50:46.618395+00:00",
-            "updated_on": "2014-10-21T21:50:47.025540+00:00",
+            "type": "pullrequest_comment",
             "id": 3548102
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This is ready to go now, BTW. ",
+                "html": "<p>This is ready to go now, BTW. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -2065,12 +2019,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3597910"
@@ -2079,8 +2030,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3597910"
                 }
             },
+            "created_on": "2014-10-24T17:21:57.529227+00:00",
+            "updated_on": "2014-10-24T17:21:57.540745+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2090,19 +2042,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "This is ready to go now, BTW. ",
-                "html": "<p>This is ready to go now, BTW. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-24T17:21:57.529227+00:00",
-            "updated_on": "2014-10-24T17:21:57.540745+00:00",
+            "type": "pullrequest_comment",
             "id": 3597910
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Remove WIP from the title?",
+                "html": "<p>Remove WIP from the title?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -2114,19 +2068,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3597916"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3597916"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -2139,8 +2082,16 @@
                 },
                 "id": 3597910
             },
+            "created_on": "2014-10-24T17:22:50.317694+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3597916"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3597916"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2150,19 +2101,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Remove WIP from the title?",
-                "html": "<p>Remove WIP from the title?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-24T17:22:50.317694+00:00",
-            "updated_on": "2014-10-24T17:22:50.326933+00:00",
-            "id": 3597916
+            "type": "pullrequest_comment",
+            "id": 3597916,
+            "updated_on": "2014-10-24T17:22:50.326933+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I thought when we did that it broke a link or something. ",
+                "html": "<p>I thought when we did that it broke a link or something. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -2174,19 +2128,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3597925"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3597925"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -2199,8 +2142,16 @@
                 },
                 "id": 3597916
             },
+            "created_on": "2014-10-24T17:23:43.960421+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3597925"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3597925"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2210,19 +2161,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "I thought when we did that it broke a link or something. ",
-                "html": "<p>I thought when we did that it broke a link or something. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-24T17:23:43.960421+00:00",
-            "updated_on": "2014-10-24T17:23:43.970178+00:00",
-            "id": 3597925
+            "type": "pullrequest_comment",
+            "id": 3597925,
+            "updated_on": "2014-10-24T17:23:43.970178+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Nope, just got here through the old link.",
+                "html": "<p>Nope, just got here through the old link.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -2234,19 +2188,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3597934"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3597934"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -2259,8 +2202,16 @@
                 },
                 "id": 3597925
             },
+            "created_on": "2014-10-24T17:24:18.015840+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3597934"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3597934"
+                }
+            },
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2270,19 +2221,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Nope, just got here through the old link.",
-                "html": "<p>Nope, just got here through the old link.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-24T17:24:18.015840+00:00",
-            "updated_on": "2014-10-24T17:24:18.030595+00:00",
-            "id": 3597934
+            "type": "pullrequest_comment",
+            "id": 3597934,
+            "updated_on": "2014-10-24T17:24:18.030595+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Thanks a ton for taking this on John!  This is an awesome new feature.",
+                "html": "<p>Thanks a ton for taking this on John!  This is an awesome new feature.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -2294,12 +2248,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1236/comments/3598859"
@@ -2308,8 +2259,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236/_/diff#comment-3598859"
                 }
             },
+            "created_on": "2014-10-24T18:27:04.137282+00:00",
+            "updated_on": "2014-10-24T18:27:04.146049+00:00",
             "pullrequest": {
-                "title": "[APICHANGE] Overriding code units ",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2319,16 +2271,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1236"
                     }
                 },
+                "title": "[APICHANGE] Overriding code units ",
                 "id": 1236
             },
-            "content": {
-                "raw": "Thanks a ton for taking this on John!  This is an awesome new feature.",
-                "html": "<p>Thanks a ton for taking this on John!  This is an awesome new feature.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-10-24T18:27:04.137282+00:00",
-            "updated_on": "2014-10-24T18:27:04.146049+00:00",
+            "type": "pullrequest_comment",
             "id": 3598859
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "Some background: @sacielo had some FLASH datasets where he had a custom units implementation, which does not jibe with our \"cgs-only\" assumption in the FLASH frontend.\r\n\r\nThe Athena frontend already allows for the user to supply code units in a dictionary passed to `load`, like so:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\n\r\nparameters={\"time_unit\":(1.0,\"Myr\"),\r\n            \"length_unit\":(1.0,\"Mpc\"),\r\n            \"mass_unit\":(1.0e14,\"Msun\")}\r\n\r\nds = yt.load(\"virgo_novisc.0054.vtk\", parameters=parameters)\r\n\r\n```\r\n\r\nThis PR extends this functionality to the other frontends, allowing the user to specify their own code units (thus overriding the defaults) using an `units_override` dictionary, which does the same thing as the Athena example above. This, of course, is risky business, but a feature that I think some users (at least one!) would want. \r\n\r\nWhy this is WIP:\r\n\r\n1) Needs documentation  \r\n2) Needs tests  \r\n3) Needs to be added to other frontends  \r\n\r\nI'm setting up the PR now so that folks can comment and suggest changes before I go through and start setting it up everywhere. \r\n\r\nIn the course of testing this I added some new magnetic-related fields.\r\n\r\nUPDATE: Documentation and tests have been added, and the functionality has been added to all the frontends that make sense. I had to make some small changes to the RAMSES and the MOAB frontends--someone who knows these should check them. \r\n\r\nUPDATE 2: The fact that we cache datasets automatically led to some issues in the test I developed where I have to load a dataset twice, so I developed a configuration option that turns caching on and off (which is set by default to False). I'm guessing it could have other applications. \r\n\r\nUPDATE 3: Addressed @MatthewTurk and @ngoldbaum's comments.",
+    "author": {
+        "username": "jzuhone",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
+    },
+    "updated_on": "2014-10-24T18:27:04.149437+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "96b14a15b102",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/96b14a15b102"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

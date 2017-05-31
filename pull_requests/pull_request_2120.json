@@ -1,34 +1,7 @@
 {
-    "reason": "This was supplanted by PR 2245 and the underlying issue addressed here is now fixed.",
-    "state": "DECLINED",
-    "updated_on": "2016-10-01T04:49:24.027185+00:00",
-    "comment_count": 13,
-    "description": "Running this test script\r\nhttp://paste.yt-project.org/show/6379/\r\nwill result in this image\r\nhttps://slack-files.com/T042F73QM-F0X0YJE3V-4a579d9431\r\n\r\nApparently, the sequence of buff_size is switched so that\r\n\r\nset_buff_size((8,4))\r\n\r\ngives a 4 by 8 image.\r\n\r\nI have traced down the codes and found the following lines are the cause of the problem.\r\nhttps://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/utilities/lib/pixelization_routines.pyx?at=yt&fileviewer=file-view-default#pixelization_routines.pyx-61\r\n\r\nhttps://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/utilities/lib/pixelization_routines.pyx?at=yt&fileviewer=file-view-default#pixelization_routines.pyx-216\r\n\r\nIf rows=nx and cols=ny, the two functions (pixelize_cartesian and pixelize_off_axis_cartesian) should take rows first and then cols.\r\n\r\nThe same API has been around in _MPL.c since 2010 and thus changing it will be backward incompatible.\r\n\r\nHowever, to be consistent with other parts of the code (e.g. [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/visualization/fixed_resolution.py?at=yt&fileviewer=file-view-default#fixed_resolution.py-374), [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/visualization/fixed_resolution.py?at=yt&fileviewer=file-view-default#fixed_resolution.py-249), [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/data_objects/data_containers.py?at=yt&fileviewer=file-view-default#data_containers.py-1388), and [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/analysis_modules/sunyaev_zeldovich/projection.py?at=yt&fileviewer=file-view-default#projection.py-184)), in which buff_size = (nx, ny) is assumed and used, I propose to change the behavior of the above two functions.",
-    "created_on": "2016-04-07T22:22:55.403676+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/approve"
@@ -36,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "id": 2120,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/yihaochen"
-            },
-            "html": {
-                "href": "https://bitbucket.org/yihaochen/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Yi-Hao Chen",
-        "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
-        "username": "yihaochen"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yihaochen/yt/commit/d31d186fc83b"
-                }
-            },
-            "hash": "d31d186fc83b"
-        },
         "repository": {
             "full_name": "yihaochen/yt",
+            "uuid": "{7d6022d2-dd1d-4d07-a984-b55d410a3535}",
             "type": "repository",
             "links": {
                 "self": {
@@ -102,44 +48,52 @@
                     "href": "https://bitbucket.org/yihaochen/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{7d6022d2-dd1d-4d07-a984-b55d410a3535}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "d31d186fc83b",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/1d70bf412499"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yihaochen/yt/commit/d31d186fc83b"
                 }
-            },
-            "hash": "1d70bf412499"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
-            },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        "branch": {
+            "name": "yt"
         }
     },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
+    "id": 2120,
+    "comment_count": 13,
+    "created_on": "2016-04-07T22:22:55.403676+00:00",
+    "merge_commit": null,
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/298/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/298/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/298/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -151,12 +105,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/16955689"
@@ -165,8 +116,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-16955689"
                 }
             },
+            "created_on": "2016-04-07T23:07:57.795700+00:00",
+            "updated_on": "2016-04-07T23:07:57.860373+00:00",
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -176,19 +128,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/298/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/298/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/298/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-07T23:07:57.795700+00:00",
-            "updated_on": "2016-04-07T23:07:57.860373+00:00",
+            "type": "pullrequest_comment",
             "id": 16955689
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All of these failures are expected, I think.\n\nSee http://yt-project.org/docs/dev/developing/testing.html#enabling-answer-tests-on-jenkins for how to update the answers.\n\nI think this might also fix #1014?",
+                "html": "<p>All of these failures are expected, I think.</p>\n<p>See <a href=\"http://yt-project.org/docs/dev/developing/testing.html#enabling-answer-tests-on-jenkins\" rel=\"nofollow\">http://yt-project.org/docs/dev/developing/testing.html#enabling-answer-tests-on-jenkins</a> for how to update the answers.</p>\n<p>I think this might also fix #1014?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -200,19 +154,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/16955912"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-16955912"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -225,8 +168,16 @@
                 },
                 "id": 16955689
             },
+            "created_on": "2016-04-07T23:17:12.385673+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/16955912"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-16955912"
+                }
+            },
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -236,19 +187,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "All of these failures are expected, I think.\n\nSee http://yt-project.org/docs/dev/developing/testing.html#enabling-answer-tests-on-jenkins for how to update the answers.\n\nI think this might also fix #1014?",
-                "html": "<p>All of these failures are expected, I think.</p>\n<p>See <a href=\"http://yt-project.org/docs/dev/developing/testing.html#enabling-answer-tests-on-jenkins\" rel=\"nofollow\">http://yt-project.org/docs/dev/developing/testing.html#enabling-answer-tests-on-jenkins</a> for how to update the answers.</p>\n<p>I think this might also fix <a href=\"/yt_analysis/yt/issues/1014/annotate-velocity-in-on-cubic-datasets\" rel=\"nofollow\" title=\"annotate velocity in on-cubic datasets\">#1014</a>?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-07T23:17:12.385673+00:00",
-            "updated_on": "2016-04-07T23:17:12.387694+00:00",
-            "id": 16955912
+            "type": "pullrequest_comment",
+            "id": 16955912,
+            "updated_on": "2016-04-07T23:17:12.387694+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "No. I don't think it will fix #1014. And I see now there are more issues regarding the (nx,ny) fix.\n\nBefore this fix, \n```\nnx = plot.image._A.shape[0]\nny = plot.image._A.shape[1]\n```\nis fine, because `imshow()` needs an array with the shape (ny, nx) to display nx pixels along x axis and ny pixels along y axis.\nSo `plot.image._A` should actually have shape `(ny, nx)`. \n\nHere are the scenarios if I understand it correctly:\n\n**Before this fix:**\n\nSay a user specified `buff_size = (nx, ny)`. During the creation of the image, this was swapped. So it will have ny pixels along x axis and nx pixels along y axis. But the image array does have shape `(nx, ny)`.\n\n**After this fix:**\n\n`buff_size = (nx, ny)` will result in an image array with shape `(ny, nx)`, which is correct. But the usage like `nx = plot.image._A.shape[0]` will no longer be valid.\n\n\nWe will probably need to investigate this thoroughly before merging this PR...",
+                "html": "<p>No. I don't think it will fix #1014. And I see now there are more issues regarding the (nx,ny) fix.</p>\n<p>Before this fix, </p>\n<div class=\"codehilite\"><pre><span></span>nx = plot.image._A.shape[0]\nny = plot.image._A.shape[1]\n</pre></div>\n\n\n<p>is fine, because <code>imshow()</code> needs an array with the shape (ny, nx) to display nx pixels along x axis and ny pixels along y axis.\nSo <code>plot.image._A</code> should actually have shape <code>(ny, nx)</code>. </p>\n<p>Here are the scenarios if I understand it correctly:</p>\n<p><strong>Before this fix:</strong></p>\n<p>Say a user specified <code>buff_size = (nx, ny)</code>. During the creation of the image, this was swapped. So it will have ny pixels along x axis and nx pixels along y axis. But the image array does have shape <code>(nx, ny)</code>.</p>\n<p><strong>After this fix:</strong></p>\n<p><code>buff_size = (nx, ny)</code> will result in an image array with shape <code>(ny, nx)</code>, which is correct. But the usage like <code>nx = plot.image._A.shape[0]</code> will no longer be valid.</p>\n<p>We will probably need to investigate this thoroughly before merging this PR...</p>"
+            },
             "user": {
+                "username": "yihaochen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yihaochen"
@@ -260,19 +214,8 @@
                         "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Yi-Hao Chen",
-                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
-                "username": "yihaochen"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17120695"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17120695"
-                }
+                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}"
             },
             "parent": {
                 "links": {
@@ -285,8 +228,16 @@
                 },
                 "id": 16955912
             },
+            "created_on": "2016-04-12T15:52:09.303416+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17120695"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17120695"
+                }
+            },
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -296,19 +247,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "No. I don't think it will fix #1014. And I see now there are more issues regarding the (nx,ny) fix.\n\nBefore this fix, \n```\nnx = plot.image._A.shape[0]\nny = plot.image._A.shape[1]\n```\nis fine, because `imshow()` needs an array with the shape (ny, nx) to display nx pixels along x axis and ny pixels along y axis.\nSo `plot.image._A` should actually have shape `(ny, nx)`. \n\nHere are the scenarios if I understand it correctly:\n\n**Before this fix:**\n\nSay a user specified `buff_size = (nx, ny)`. During the creation of the image, this was swapped. So it will have ny pixels along x axis and nx pixels along y axis. But the image array does have shape `(nx, ny)`.\n\n**After this fix:**\n\n`buff_size = (nx, ny)` will result in an image array with shape `(ny, nx)`, which is correct. But the usage like `nx = plot.image._A.shape[0]` will no longer be valid.\n\n\nWe will probably need to investigate this thoroughly before merging this PR...",
-                "html": "<p>No. I don't think it will fix <a href=\"/yt_analysis/yt/issues/1014/annotate-velocity-in-on-cubic-datasets\" rel=\"nofollow\" title=\"annotate velocity in on-cubic datasets\">#1014</a>. And I see now there are more issues regarding the (nx,ny) fix.</p>\n<p>Before this fix, </p>\n<div class=\"codehilite\"><pre><span></span>nx = plot.image._A.shape[0]\nny = plot.image._A.shape[1]\n</pre></div>\n\n\n<p>is fine, because <code>imshow()</code> needs an array with the shape (ny, nx) to display nx pixels along x axis and ny pixels along y axis.\nSo <code>plot.image._A</code> should actually have shape <code>(ny, nx)</code>. </p>\n<p>Here are the scenarios if I understand it correctly:</p>\n<p><strong>Before this fix:</strong></p>\n<p>Say a user specified <code>buff_size = (nx, ny)</code>. During the creation of the image, this was swapped. So it will have ny pixels along x axis and nx pixels along y axis. But the image array does have shape <code>(nx, ny)</code>.</p>\n<p><strong>After this fix:</strong></p>\n<p><code>buff_size = (nx, ny)</code> will result in an image array with shape <code>(ny, nx)</code>, which is correct. But the usage like <code>nx = plot.image._A.shape[0]</code> will no longer be valid.</p>\n<p>We will probably need to investigate this thoroughly before merging this PR...</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-12T15:52:09.303416+00:00",
-            "updated_on": "2016-04-12T15:55:28.207027+00:00",
-            "id": 17120695
+            "type": "pullrequest_comment",
+            "id": 17120695,
+            "updated_on": "2016-04-12T15:55:28.207027+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Maybe it would be simpler to just document that set_buff_size expects and (ny, nx) tuple? Are there other places we'd need to document that behavior?\n\n`plot.image._A` is an implementation detail in matplotlib, so we don't have any control over how that behaves.",
+                "html": "<p>Maybe it would be simpler to just document that set_buff_size expects and (ny, nx) tuple? Are there other places we'd need to document that behavior?</p>\n<p><code>plot.image._A</code> is an implementation detail in matplotlib, so we don't have any control over how that behaves.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -320,19 +274,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17121058"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17121058"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -345,8 +288,16 @@
                 },
                 "id": 17120695
             },
+            "created_on": "2016-04-12T15:57:21.353911+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17121058"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17121058"
+                }
+            },
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -356,19 +307,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "Maybe it would be simpler to just document that set_buff_size expects and (ny, nx) tuple? Are there other places we'd need to document that behavior?\n\n`plot.image._A` is an implementation detail in matplotlib, so we don't have any control over how that behaves.",
-                "html": "<p>Maybe it would be simpler to just document that set_buff_size expects and (ny, nx) tuple? Are there other places we'd need to document that behavior?</p>\n<p><code>plot.image._A</code> is an implementation detail in matplotlib, so we don't have any control over how that behaves.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-12T15:57:21.353911+00:00",
-            "updated_on": "2016-04-12T15:57:21.356322+00:00",
-            "id": 17121058
+            "type": "pullrequest_comment",
+            "id": 17121058,
+            "updated_on": "2016-04-12T15:57:21.356322+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "In short term, maybe documenting buff_size = (ny,nx) is the simple way.\n\nBut for long term, I think it would be better to be consistent with matplotlib. ",
+                "html": "<p>In short term, maybe documenting buff_size = (ny,nx) is the simple way.</p>\n<p>But for long term, I think it would be better to be consistent with matplotlib. </p>"
+            },
             "user": {
+                "username": "yihaochen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yihaochen"
@@ -380,19 +334,8 @@
                         "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Yi-Hao Chen",
-                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
-                "username": "yihaochen"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17122695"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17122695"
-                }
+                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}"
             },
             "parent": {
                 "links": {
@@ -405,8 +348,16 @@
                 },
                 "id": 17121058
             },
+            "created_on": "2016-04-12T16:21:18.802923+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17122695"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17122695"
+                }
+            },
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -416,19 +367,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "In short term, maybe documenting buff_size = (ny,nx) is the simple way.\n\nBut for long term, I think it would be better to be consistent with matplotlib. ",
-                "html": "<p>In short term, maybe documenting buff_size = (ny,nx) is the simple way.</p>\n<p>But for long term, I think it would be better to be consistent with matplotlib. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-12T16:21:18.802923+00:00",
-            "updated_on": "2016-04-12T16:21:19.100086+00:00",
-            "id": 17122695
+            "type": "pullrequest_comment",
+            "id": 17122695,
+            "updated_on": "2016-04-12T16:21:19.100086+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I did not mean to update this PR... My poor knowledge on mercurial made me mess up the repositories...",
+                "html": "<p>I did not mean to update this PR... My poor knowledge on mercurial made me mess up the repositories...</p>"
+            },
             "user": {
+                "username": "yihaochen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yihaochen"
@@ -440,12 +394,9 @@
                         "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Yi-Hao Chen",
-                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
-                "username": "yihaochen"
+                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17517306"
@@ -454,8 +405,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17517306"
                 }
             },
+            "created_on": "2016-04-20T17:16:04.086993+00:00",
+            "updated_on": "2016-04-20T17:16:04.252296+00:00",
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -465,19 +417,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "I did not mean to update this PR... My poor knowledge on mercurial made me mess up the repositories...",
-                "html": "<p>I did not mean to update this PR... My poor knowledge on mercurial made me mess up the repositories...</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-20T17:16:04.086993+00:00",
-            "updated_on": "2016-04-20T17:16:04.252296+00:00",
+            "type": "pullrequest_comment",
             "id": 17517306
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I can walk you through how to fix this. Unfortunately it means declining this pull request and re-issuing, unfotunately. Ping me on slack sometime and I can walk you through it.",
+                "html": "<p>I can walk you through how to fix this. Unfortunately it means declining this pull request and re-issuing, unfotunately. Ping me on slack sometime and I can walk you through it.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -489,19 +443,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17518482"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17518482"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -514,8 +457,16 @@
                 },
                 "id": 17517306
             },
+            "created_on": "2016-04-20T17:40:44.415072+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17518482"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17518482"
+                }
+            },
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -525,19 +476,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "I can walk you through how to fix this. Unfortunately it means declining this pull request and re-issuing, unfotunately. Ping me on slack sometime and I can walk you through it.",
-                "html": "<p>I can walk you through how to fix this. Unfortunately it means declining this pull request and re-issuing, unfotunately. Ping me on slack sometime and I can walk you through it.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-20T17:40:44.415072+00:00",
-            "updated_on": "2016-04-20T17:40:44.417734+00:00",
-            "id": 17518482
+            "type": "pullrequest_comment",
+            "id": 17518482,
+            "updated_on": "2016-04-20T17:40:44.417734+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/324/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/324/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/324/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -549,12 +503,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17518860"
@@ -563,8 +514,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17518860"
                 }
             },
+            "created_on": "2016-04-20T17:49:03.340339+00:00",
+            "updated_on": "2016-04-20T17:49:04.652288+00:00",
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -574,19 +526,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/324/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/324/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/324/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-20T17:49:03.340339+00:00",
-            "updated_on": "2016-04-20T17:49:04.652288+00:00",
+            "type": "pullrequest_comment",
             "id": 17518860
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I updated this PR by creating another graft commit based on the current tip. I hope this is clean now...",
+                "html": "<p>I updated this PR by creating another graft commit based on the current tip. I hope this is clean now...</p>"
+            },
             "user": {
+                "username": "yihaochen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yihaochen"
@@ -598,12 +552,9 @@
                         "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Yi-Hao Chen",
-                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}",
-                "username": "yihaochen"
+                "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17525173"
@@ -612,8 +563,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17525173"
                 }
             },
+            "created_on": "2016-04-20T20:19:03.626274+00:00",
+            "updated_on": "2016-04-20T20:19:03.896755+00:00",
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -623,19 +575,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "I updated this PR by creating another graft commit based on the current tip. I hope this is clean now...",
-                "html": "<p>I updated this PR by creating another graft commit based on the current tip. I hope this is clean now...</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-20T20:19:03.626274+00:00",
-            "updated_on": "2016-04-20T20:19:03.896755+00:00",
+            "type": "pullrequest_comment",
             "id": 17525173
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/325/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/325/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/325/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -647,12 +601,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17527192"
@@ -661,8 +612,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17527192"
                 }
             },
+            "created_on": "2016-04-20T21:01:00.747992+00:00",
+            "updated_on": "2016-04-20T21:01:00.826864+00:00",
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -672,19 +624,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/325/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/325/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/325/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-20T21:01:00.747992+00:00",
-            "updated_on": "2016-04-20T21:01:00.826864+00:00",
+            "type": "pullrequest_comment",
             "id": 17527192
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/328/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/328/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/328/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -696,12 +650,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17533305"
@@ -710,8 +661,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17533305"
                 }
             },
+            "created_on": "2016-04-21T00:27:44.061599+00:00",
+            "updated_on": "2016-04-21T00:27:44.148509+00:00",
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -721,19 +673,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/328/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/328/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/328/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-21T00:27:44.061599+00:00",
-            "updated_on": "2016-04-21T00:27:44.148509+00:00",
+            "type": "pullrequest_comment",
             "id": 17533305
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/375/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/375/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/375/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -745,12 +699,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/17963310"
@@ -759,8 +710,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-17963310"
                 }
             },
+            "created_on": "2016-04-29T23:03:23.599813+00:00",
+            "updated_on": "2016-04-29T23:03:23.816131+00:00",
             "pullrequest": {
-                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -770,16 +722,113 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
                     }
                 },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
                 "id": 2120
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/375/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/375/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/375/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-29T23:03:23.599813+00:00",
-            "updated_on": "2016-04-29T23:03:23.816131+00:00",
+            "type": "pullrequest_comment",
             "id": 17963310
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/31/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/31/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/31/</a></p>"
+            },
+            "user": {
+                "username": "yt-fido",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120/comments/22432315"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120/_/diff#comment-22432315"
+                }
+            },
+            "created_on": "2016-08-16T21:43:10.452707+00:00",
+            "updated_on": "2016-08-16T21:43:10.507494+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2120"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2120"
+                    }
+                },
+                "title": "Change the sequence of rows and cols to let buff_size = (nx, ny)",
+                "id": 2120
+            },
+            "type": "pullrequest_comment",
+            "id": 22432315
         }
-    ]
+    ],
+    "reason": "This was supplanted by PR 2245 and the underlying issue addressed here is now fixed.",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "DECLINED",
+    "description": "Running this test script\r\nhttp://paste.yt-project.org/show/6379/\r\nwill result in this image\r\nhttps://slack-files.com/T042F73QM-F0X0YJE3V-4a579d9431\r\n\r\nApparently, the sequence of buff_size is switched so that\r\n\r\nset_buff_size((8,4))\r\n\r\ngives a 4 by 8 image.\r\n\r\nI have traced down the codes and found the following lines are the cause of the problem.\r\nhttps://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/utilities/lib/pixelization_routines.pyx?at=yt&fileviewer=file-view-default#pixelization_routines.pyx-61\r\n\r\nhttps://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/utilities/lib/pixelization_routines.pyx?at=yt&fileviewer=file-view-default#pixelization_routines.pyx-216\r\n\r\nIf rows=nx and cols=ny, the two functions (pixelize_cartesian and pixelize_off_axis_cartesian) should take rows first and then cols.\r\n\r\nThe same API has been around in _MPL.c since 2010 and thus changing it will be backward incompatible.\r\n\r\nHowever, to be consistent with other parts of the code (e.g. [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/visualization/fixed_resolution.py?at=yt&fileviewer=file-view-default#fixed_resolution.py-374), [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/visualization/fixed_resolution.py?at=yt&fileviewer=file-view-default#fixed_resolution.py-249), [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/data_objects/data_containers.py?at=yt&fileviewer=file-view-default#data_containers.py-1388), and [here](https://bitbucket.org/yt_analysis/yt/src/d18f33211199f71e2fac4d927307b015d513a328/yt/analysis_modules/sunyaev_zeldovich/projection.py?at=yt&fileviewer=file-view-default#projection.py-184)), in which buff_size = (nx, ny) is assumed and used, I propose to change the behavior of the above two functions.",
+    "author": {
+        "username": "yihaochen",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/yihaochen"
+            },
+            "html": {
+                "href": "https://bitbucket.org/yihaochen/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/yihaochen/avatar/32/"
+            }
+        },
+        "display_name": "Yi-Hao Chen",
+        "uuid": "{a764fe55-fa1b-42b5-9e6d-dc0a473c4630}"
+    },
+    "updated_on": "2016-10-01T04:49:24.027185+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "1d70bf412499",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/1d70bf412499"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

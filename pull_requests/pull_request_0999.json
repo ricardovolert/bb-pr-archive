@@ -1,34 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2014-07-09T15:59:02.115371+00:00",
-    "comment_count": 5,
-    "description": "This contains two changes, one tiny but possibly controversial, one somewhat bigger but definitely not controversial.\r\n\r\nFirst, I've modified the layout constants for `PlotWindow` to leave a bit more space for bulky axis labels.  I noticed this first when working with `PlotWindowWCS`, where the behavior is particularly bad.\r\n\r\nHere's an example that exhibits this:\r\n\r\n\r\n```\r\n#!python\r\n\r\n%matplotlib inline\r\nimport yt\r\n\r\nds = yt.load(\"/pfs/goldbaum/m33_fits/m33_hi.fits\", nan_mask=0.0, z_axis_decomp=True)\r\n\r\nds.field_list\r\nfrom yt.frontends.fits.misc import PlotWindowWCS\r\n\r\n#prj = yt.ProjectionPlot(ds, 'z', 'intensity', proj_style='sum')\r\n\r\nprj = yt.SlicePlot(ds, 'z', 'intensity')\r\n\r\nPlotWindowWCS(prj)['intensity']\r\n```\r\n\r\nWhen run in a notebook, I get back the following image:\r\n\r\nhttp://imgur.com/ebV9oCT\r\n\r\nWith this patch, I get:\r\n\r\nhttp://imgur.com/imSZCsd\r\n\r\nWhile I first saw this working with `PlotWindowWCS`, I was able to reproduce the issue using regular `PlotWindow` plots using the following script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\n\r\nds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\n\r\nyt.SlicePlot(ds, 2, 'density', width=(1e3, '1000*pc'))\r\n```\r\n\r\nhttp://imgur.com/fvsIRks  (the y-axis label is ever so slightly cut off).\r\n\r\nWhile this is a somewhat contrived example, things like this can also happen when someone makes a plot with custom fonts or are plotting a field or using a unit that takes up a lot of space.\r\n\r\nI totally understand that people don't want to change how our plots look.  Then again, this sort of visual artifact is very distracting and it's not necessarily obvious to a user how to fix it.  I'd prefer to leave a bit more white space in our plots to avoid this situation.\r\n\r\nAdditionally, I've added `_repr_html_` to `PlotWindowWCS`.  This makes it play a bit nicer in the notebook.  I've also changed `PlotWindowWCS.show` to use this new `_repr_html_`.  This makes it possible to `show` one of these plots without first doing `%matplotlib inline`.  I've added John as a reviewer to look this over.",
-    "created_on": "2014-07-07T22:33:06.485994+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/approve"
@@ -36,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
-            },
-            "html": {
-                "href": "https://bitbucket.org/jzuhone/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "John ZuHone",
-        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-        "username": "jzuhone"
-    },
-    "id": 999,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt-3.0"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/c6b09204f3e7"
-                }
-            },
-            "hash": "c6b09204f3e7"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -102,44 +48,52 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt-3.0"
+            "name": "yt"
         },
         "commit": {
+            "hash": "c6b09204f3e7",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/92e343ce7927"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/c6b09204f3e7"
                 }
-            },
-            "hash": "92e343ce7927"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
-            },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        "branch": {
+            "name": "yt-3.0"
         }
     },
+    "closed_by": {
+        "username": "jzuhone",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
+    },
+    "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
+    "id": 999,
+    "comment_count": 5,
+    "created_on": "2014-07-07T22:33:06.485994+00:00",
+    "merge_commit": null,
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Looks good to me!",
+                "html": "<p>Looks good to me!</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -151,12 +105,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/comments/2335595"
@@ -165,8 +116,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999/_/diff#comment-2335595"
                 }
             },
+            "created_on": "2014-07-07T22:37:15.962907+00:00",
+            "updated_on": "2014-07-07T22:37:15.974188+00:00",
             "pullrequest": {
-                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -176,19 +128,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999"
                     }
                 },
+                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "id": 999
             },
-            "content": {
-                "raw": "Looks good to me!",
-                "html": "<p>Looks good to me!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-07-07T22:37:15.962907+00:00",
-            "updated_on": "2014-07-07T22:37:15.974188+00:00",
+            "type": "pullrequest_comment",
             "id": 2335595
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Definite improvement in the images.  Will review code ASAP.",
+                "html": "<p>Definite improvement in the images.  Will review code ASAP.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -200,12 +154,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/comments/2335794"
@@ -214,8 +165,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999/_/diff#comment-2335794"
                 }
             },
+            "created_on": "2014-07-07T23:10:09.475119+00:00",
+            "updated_on": "2014-07-07T23:10:09.484784+00:00",
             "pullrequest": {
-                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -225,19 +177,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999"
                     }
                 },
+                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "id": 999
             },
-            "content": {
-                "raw": "Definite improvement in the images.  Will review code ASAP.",
-                "html": "<p>Definite improvement in the images.  Will review code ASAP.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-07-07T23:10:09.475119+00:00",
-            "updated_on": "2014-07-07T23:10:09.484784+00:00",
+            "type": "pullrequest_comment",
             "id": 2335794
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/844/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/844/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/844/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -249,12 +203,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/comments/2335843"
@@ -263,8 +214,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999/_/diff#comment-2335843"
                 }
             },
+            "created_on": "2014-07-07T23:19:41.207413+00:00",
+            "updated_on": "2014-07-07T23:19:41.371336+00:00",
             "pullrequest": {
-                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -274,19 +226,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999"
                     }
                 },
+                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "id": 999
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/844/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/844/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/844/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-07-07T23:19:41.207413+00:00",
-            "updated_on": "2014-07-07T23:19:41.371336+00:00",
+            "type": "pullrequest_comment",
             "id": 2335843
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I've verified that these failures are all in the `PlotWindow` answer tests and are expected since the plots are not pixel-identical.  Given that this is an improvement in the way the plots are laid out, I think we just need to regenerate the answers upon merging this PR in.",
+                "html": "<p>I've verified that these failures are all in the <code>PlotWindow</code> answer tests and are expected since the plots are not pixel-identical.  Given that this is an improvement in the way the plots are laid out, I think we just need to regenerate the answers upon merging this PR in.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -298,19 +252,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/comments/2337118"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999/_/diff#comment-2337118"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -323,8 +266,16 @@
                 },
                 "id": 2335843
             },
+            "created_on": "2014-07-08T02:32:07.966703+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/comments/2337118"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999/_/diff#comment-2337118"
+                }
+            },
             "pullrequest": {
-                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -334,19 +285,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999"
                     }
                 },
+                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "id": 999
             },
-            "content": {
-                "raw": "I've verified that these failures are all in the `PlotWindow` answer tests and are expected since the plots are not pixel-identical.  Given that this is an improvement in the way the plots are laid out, I think we just need to regenerate the answers upon merging this PR in.",
-                "html": "<p>I've verified that these failures are all in the <code>PlotWindow</code> answer tests and are expected since the plots are not pixel-identical.  Given that this is an improvement in the way the plots are laid out, I think we just need to regenerate the answers upon merging this PR in.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-07-08T02:32:07.966703+00:00",
-            "updated_on": "2014-07-08T02:32:18.501897+00:00",
-            "id": 2337118
+            "type": "pullrequest_comment",
+            "id": 2337118,
+            "updated_on": "2014-07-08T02:32:18.501897+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'm going to go ahead and merge. ",
+                "html": "<p>I'm going to go ahead and merge. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -358,12 +312,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/999/comments/2358090"
@@ -372,8 +323,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999/_/diff#comment-2358090"
                 }
             },
+            "created_on": "2014-07-09T15:58:45.117833+00:00",
+            "updated_on": "2014-07-09T15:58:45.130075+00:00",
             "pullrequest": {
-                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -383,16 +335,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/999"
                     }
                 },
+                "title": "Leave more room for axis labels in PlotWindow plots, adding _repr_html to PlotWindowWCS",
                 "id": 999
             },
-            "content": {
-                "raw": "I'm going to go ahead and merge. ",
-                "html": "<p>I'm going to go ahead and merge. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-07-09T15:58:45.117833+00:00",
-            "updated_on": "2014-07-09T15:58:45.130075+00:00",
+            "type": "pullrequest_comment",
             "id": 2358090
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This contains two changes, one tiny but possibly controversial, one somewhat bigger but definitely not controversial.\r\n\r\nFirst, I've modified the layout constants for `PlotWindow` to leave a bit more space for bulky axis labels.  I noticed this first when working with `PlotWindowWCS`, where the behavior is particularly bad.\r\n\r\nHere's an example that exhibits this:\r\n\r\n\r\n```\r\n#!python\r\n\r\n%matplotlib inline\r\nimport yt\r\n\r\nds = yt.load(\"/pfs/goldbaum/m33_fits/m33_hi.fits\", nan_mask=0.0, z_axis_decomp=True)\r\n\r\nds.field_list\r\nfrom yt.frontends.fits.misc import PlotWindowWCS\r\n\r\n#prj = yt.ProjectionPlot(ds, 'z', 'intensity', proj_style='sum')\r\n\r\nprj = yt.SlicePlot(ds, 'z', 'intensity')\r\n\r\nPlotWindowWCS(prj)['intensity']\r\n```\r\n\r\nWhen run in a notebook, I get back the following image:\r\n\r\nhttp://imgur.com/ebV9oCT\r\n\r\nWith this patch, I get:\r\n\r\nhttp://imgur.com/imSZCsd\r\n\r\nWhile I first saw this working with `PlotWindowWCS`, I was able to reproduce the issue using regular `PlotWindow` plots using the following script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\n\r\nds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\n\r\nyt.SlicePlot(ds, 2, 'density', width=(1e3, '1000*pc'))\r\n```\r\n\r\nhttp://imgur.com/fvsIRks  (the y-axis label is ever so slightly cut off).\r\n\r\nWhile this is a somewhat contrived example, things like this can also happen when someone makes a plot with custom fonts or are plotting a field or using a unit that takes up a lot of space.\r\n\r\nI totally understand that people don't want to change how our plots look.  Then again, this sort of visual artifact is very distracting and it's not necessarily obvious to a user how to fix it.  I'd prefer to leave a bit more white space in our plots to avoid this situation.\r\n\r\nAdditionally, I've added `_repr_html_` to `PlotWindowWCS`.  This makes it play a bit nicer in the notebook.  I've also changed `PlotWindowWCS.show` to use this new `_repr_html_`.  This makes it possible to `show` one of these plots without first doing `%matplotlib inline`.  I've added John as a reviewer to look this over.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2014-07-09T15:59:02.115371+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "92e343ce7927",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/92e343ce7927"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt-3.0"
+        }
+    }
 }

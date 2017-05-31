@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2014-04-09T15:16:35.816552+00:00",
-    "comment_count": 21,
-    "description": "This adds two things.\r\n\r\n1) Spherical coordinate handling, including slicing and pixelizing and whatnot.\r\n2) Specifying extents for cylindrical and polar coordinate pixelizing in extents, so you can pan/zoom in the coordinate system.\r\n\r\nThere is more that needs to be done -- for instance, making all the axis names correct, which means going through and finding all the places we use `axis_names` and `[xy]_dict` and fixing them![UniformGridData_Slice_z_density.png](https://bitbucket.org/repo/RMxd9/images/332576197-UniformGridData_Slice_z_density.png).  But here's a script that generates some sample data:\r\n\r\nhttp://paste.yt-project.org/show/4479/\r\n\r\nand I've attached an image of this, where I've zoomed and then panned a bit to show it works in general.\r\n\r\nUPDATE 1: Removing print statement.\r\n\r\nUPDATE 2: Populating with NaNs.  New example image attached.![UniformGridData_Slice_z_density.png](https://bitbucket.org/repo/BXbAb/images/4169494679-UniformGridData_Slice_z_density.png)\r\n\r\nUPDATE 3: Adding `geometry` option to GDF loading.\r\n\r\nUPDATE 4: Adding an aitoff pixelization.  Example usage:\r\n\r\n```\r\n#!python\r\nfrom yt.utilities.lib.misc_utilities import pixelize_aitoff\r\nimport matplotlib.pyplot as plt\r\n s = ds.slice(0, 0.5)\r\nimg = pixelize_aitoff(\r\n                s[\"theta\"], s[\"dtheta\"]/2.0,\r\n                s[\"phi\"], s[\"dphi\"]/2.0,\r\n                (2048, 1024), s[\"density\"], None, None).transpose()\r\nplt.gcf().set_size_inches(12,6)\r\nplt.imshow(img, origin='lower', interpolation='nearest', aspect=1.0)\r\nplt.savefig(\"aitoff.png\")\r\n```\r\n\r\nNote that it's not terribly fast.  Before this gets *used* everywhere, we need to get the API figured out, as I do not want to make the assumption that aitoff is what people want, nor that the slicing works such that \"r\" always does a surface projection.  (ping @jsoishi )\r\n\r\nForgot to attach an image:![aitoff.png](https://bitbucket.org/repo/BXbAb/images/2794961945-aitoff.png)\r\n\r\nUPDATE: Fixing some orthogonal pixelization stuff.",
-    "created_on": "2014-04-05T15:31:21.970788+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b7bc0683be9a"
-            }
-        },
-        "hash": "b7bc0683be9a"
-    },
-    "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "id": 800,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt-3.0"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/b6a9cd7440b7"
-                }
-            },
-            "hash": "b6a9cd7440b7"
-        },
         "repository": {
             "full_name": "MatthewTurk/yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt-3.0"
+            "name": "yt"
         },
         "commit": {
+            "hash": "b6a9cd7440b7",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/bf628d9eec62"
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/b6a9cd7440b7"
                 }
-            },
-            "hash": "bf628d9eec62"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt-3.0"
+        }
+    },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
+    "id": 800,
+    "comment_count": 21,
+    "created_on": "2014-04-05T15:31:21.970788+00:00",
+    "merge_commit": {
+        "hash": "b7bc0683be9a",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b7bc0683be9a"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "One note about the axes labels: since this is a Cartesian pixelization I think it's actually correct to reference a Cartesian coordinate system in the plot labels.",
+                "html": "<p>One note about the axes labels: since this is a Cartesian pixelization I think it's actually correct to reference a Cartesian coordinate system in the plot labels.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591571"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591571"
                 }
             },
+            "created_on": "2014-04-05T15:37:44.965843+00:00",
+            "updated_on": "2014-04-05T15:37:44.975541+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "One note about the axes labels: since this is a Cartesian pixelization I think it's actually correct to reference a Cartesian coordinate system in the plot labels.",
-                "html": "<p>One note about the axes labels: since this is a Cartesian pixelization I think it's actually correct to reference a Cartesian coordinate system in the plot labels.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:37:44.965843+00:00",
-            "updated_on": "2014-04-05T15:37:44.975541+00:00",
+            "type": "pullrequest_comment",
             "id": 1591571
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Interesting point.  Maybe they don't need to be changed.",
+                "html": "<p>Interesting point.  Maybe they don't need to be changed.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -207,19 +161,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591572"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591572"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -232,8 +175,16 @@
                 },
                 "id": 1591571
             },
+            "created_on": "2014-04-05T15:38:07.922261+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591572"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591572"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -243,19 +194,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "Interesting point.  Maybe they don't need to be changed.",
-                "html": "<p>Interesting point.  Maybe they don't need to be changed.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:38:07.922261+00:00",
-            "updated_on": "2014-04-05T15:38:07.931384+00:00",
-            "id": 1591572
+            "type": "pullrequest_comment",
+            "id": 1591572,
+            "updated_on": "2014-04-05T15:38:07.931384+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Remove this print statement?",
+                "html": "<p>Remove this print statement?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -267,25 +221,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591573"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:3711410ebb3b..c08048dc7f10?path=yt%2Fvisualization%2Fplot_window.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591573"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:3711410ebb3b..c08048dc7f10?path=yt%2Fvisualization%2Fplot_window.py"
                 }
             },
+            "created_on": "2014-04-05T15:38:26.238223+00:00",
+            "updated_on": "2014-04-05T15:38:26.247236+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -295,24 +247,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "Remove this print statement?",
-                "html": "<p>Remove this print statement?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:38:26.238223+00:00",
-            "updated_on": "2014-04-05T15:38:26.247236+00:00",
             "inline": {
-                "from": null,
+                "to": 186,
                 "path": "yt/visualization/plot_window.py",
-                "to": 186
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 1591573
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Although, the way we set up the slicing is *not* along cartesian axes, unfortunately ... I think.",
+                "html": "<p>Although, the way we set up the slicing is <em>not</em> along cartesian axes, unfortunately ... I think.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -324,19 +278,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591575"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591575"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -349,8 +292,16 @@
                 },
                 "id": 1591572
             },
+            "created_on": "2014-04-05T15:38:42.613389+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591575"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591575"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -360,19 +311,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "Although, the way we set up the slicing is *not* along cartesian axes, unfortunately ... I think.",
-                "html": "<p>Although, the way we set up the slicing is <em>not</em> along cartesian axes, unfortunately ... I think.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:38:42.613389+00:00",
-            "updated_on": "2014-04-05T15:38:42.619726+00:00",
-            "id": 1591575
+            "type": "pullrequest_comment",
+            "id": 1591575,
+            "updated_on": "2014-04-05T15:38:42.619726+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Wait -- they are \"pixel\" x, y planes, but not necessarily aligned with the actual axes, inasmuch as we have a fixed coordinate transformation.  For instance, if I place a cut at a fixed theta, the \"x\" and \"y\" axes won't be x, y as defined according to the unit circle.  (If I do phi slice, it probably will be okay.)",
+                "html": "<p>Wait -- they are \"pixel\" x, y planes, but not necessarily aligned with the actual axes, inasmuch as we have a fixed coordinate transformation.  For instance, if I place a cut at a fixed theta, the \"x\" and \"y\" axes won't be x, y as defined according to the unit circle.  (If I do phi slice, it probably will be okay.)</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -384,19 +338,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591578"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591578"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -409,8 +352,16 @@
                 },
                 "id": 1591571
             },
+            "created_on": "2014-04-05T15:43:44.259057+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591578"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591578"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -420,19 +371,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "Wait -- they are \"pixel\" x, y planes, but not necessarily aligned with the actual axes, inasmuch as we have a fixed coordinate transformation.  For instance, if I place a cut at a fixed theta, the \"x\" and \"y\" axes won't be x, y as defined according to the unit circle.  (If I do phi slice, it probably will be okay.)",
-                "html": "<p>Wait -- they are \"pixel\" x, y planes, but not necessarily aligned with the actual axes, inasmuch as we have a fixed coordinate transformation.  For instance, if I place a cut at a fixed theta, the \"x\" and \"y\" axes won't be x, y as defined according to the unit circle.  (If I do phi slice, it probably will be okay.)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:43:44.259057+00:00",
-            "updated_on": "2014-04-05T15:43:44.267194+00:00",
-            "id": 1591578
+            "type": "pullrequest_comment",
+            "id": 1591578,
+            "updated_on": "2014-04-05T15:43:44.267194+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "True - what you call \"x\", \"y\", and \"z\" is also somewhat arbitrary.\n\nAlso we don't necessarily *need* to do a Cartesian pixelization: http://matplotlib.org/basemap/api/basemap_api.html\n\nThat said, this is clearly just a first step.  An awesome one at that, great job Matt!\n\nHow much more effort are you going to put into non-Cartesian coordinate systems before the 3.0 release?  I feel like this is 3.1 material.  I also worry about releasing incomplete functionality.",
+                "html": "<p>True - what you call \"x\", \"y\", and \"z\" is also somewhat arbitrary.</p>\n<p>Also we don't necessarily <em>need</em> to do a Cartesian pixelization: <a href=\"http://matplotlib.org/basemap/api/basemap_api.html\" rel=\"nofollow\">http://matplotlib.org/basemap/api/basemap_api.html</a></p>\n<p>That said, this is clearly just a first step.  An awesome one at that, great job Matt!</p>\n<p>How much more effort are you going to put into non-Cartesian coordinate systems before the 3.0 release?  I feel like this is 3.1 material.  I also worry about releasing incomplete functionality.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -444,19 +398,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591583"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591583"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -469,8 +412,16 @@
                 },
                 "id": 1591578
             },
+            "created_on": "2014-04-05T15:49:01.986126+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591583"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591583"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -480,19 +431,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "True - what you call \"x\", \"y\", and \"z\" is also somewhat arbitrary.\n\nAlso we don't necessarily *need* to do a Cartesian pixelization: http://matplotlib.org/basemap/api/basemap_api.html\n\nThat said, this is clearly just a first step.  An awesome one at that, great job Matt!\n\nHow much more effort are you going to put into non-Cartesian coordinate systems before the 3.0 release?  I feel like this is 3.1 material.  I also worry about releasing incomplete functionality.",
-                "html": "<p>True - what you call \"x\", \"y\", and \"z\" is also somewhat arbitrary.</p>\n<p>Also we don't necessarily <em>need</em> to do a Cartesian pixelization: <a href=\"http://matplotlib.org/basemap/api/basemap_api.html\" rel=\"nofollow\">http://matplotlib.org/basemap/api/basemap_api.html</a></p>\n<p>That said, this is clearly just a first step.  An awesome one at that, great job Matt!</p>\n<p>How much more effort are you going to put into non-Cartesian coordinate systems before the 3.0 release?  I feel like this is 3.1 material.  I also worry about releasing incomplete functionality.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:49:01.986126+00:00",
-            "updated_on": "2014-04-05T15:49:01.994267+00:00",
-            "id": 1591583
+            "type": "pullrequest_comment",
+            "id": 1591583,
+            "updated_on": "2014-04-05T15:49:01.994267+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I've been using this for a few projects, and I'm fine with the announcement being part of 3.1, along with all the changes being part of 3.1.  I don't know if this particular PR should wait, but maybe it ought to.",
+                "html": "<p>I've been using this for a few projects, and I'm fine with the announcement being part of 3.1, along with all the changes being part of 3.1.  I don't know if this particular PR should wait, but maybe it ought to.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -504,12 +458,21 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591583"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591583"
+                    }
+                },
+                "id": 1591583
+            },
+            "created_on": "2014-04-05T15:50:48.838465+00:00",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591586"
@@ -518,19 +481,7 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591586"
                 }
             },
-            "parent": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591583"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591583"
-                    }
-                },
-                "id": 1591583
-            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -540,19 +491,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "I've been using this for a few projects, and I'm fine with the announcement being part of 3.1, along with all the changes being part of 3.1.  I don't know if this particular PR should wait, but maybe it ought to.",
-                "html": "<p>I've been using this for a few projects, and I'm fine with the announcement being part of 3.1, along with all the changes being part of 3.1.  I don't know if this particular PR should wait, but maybe it ought to.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:50:48.838465+00:00",
-            "updated_on": "2014-04-05T15:50:48.848226+00:00",
-            "id": 1591586
+            "type": "pullrequest_comment",
+            "id": 1591586,
+            "updated_on": "2014-04-05T15:50:48.848226+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "So, Basemap does something different than what this does (it's also quite a heavy dependency) in that it puts it onto a projection of the sphere.  That would be \"slicing along radius\" in this notation, which isn't what the pixelizers primarily do.",
+                "html": "<p>So, Basemap does something different than what this does (it's also quite a heavy dependency) in that it puts it onto a projection of the sphere.  That would be \"slicing along radius\" in this notation, which isn't what the pixelizers primarily do.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -564,19 +518,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591593"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591593"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -589,8 +532,16 @@
                 },
                 "id": 1591583
             },
+            "created_on": "2014-04-05T15:55:17.881751+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591593"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591593"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -600,19 +551,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "So, Basemap does something different than what this does (it's also quite a heavy dependency) in that it puts it onto a projection of the sphere.  That would be \"slicing along radius\" in this notation, which isn't what the pixelizers primarily do.",
-                "html": "<p>So, Basemap does something different than what this does (it's also quite a heavy dependency) in that it puts it onto a projection of the sphere.  That would be \"slicing along radius\" in this notation, which isn't what the pixelizers primarily do.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T15:55:17.881751+00:00",
-            "updated_on": "2014-04-05T15:55:17.889791+00:00",
-            "id": 1591593
+            "type": "pullrequest_comment",
+            "id": 1591593,
+            "updated_on": "2014-04-05T15:55:17.889791+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -624,12 +578,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591600"
@@ -638,8 +589,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591600"
                 }
             },
+            "created_on": "2014-04-05T16:02:19.507844+00:00",
+            "updated_on": "2014-04-05T16:02:19.607871+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -649,19 +601,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T16:02:19.507844+00:00",
-            "updated_on": "2014-04-05T16:02:19.607871+00:00",
+            "type": "pullrequest_comment",
             "id": 1591600
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think this is fine to go in now.  That said I think documentation and getting 3.0 out the door should be our highest priority.",
+                "html": "<p>I think this is fine to go in now.  That said I think documentation and getting 3.0 out the door should be our highest priority.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -673,19 +627,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591601"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591601"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -698,8 +641,16 @@
                 },
                 "id": 1591586
             },
+            "created_on": "2014-04-05T16:02:38.829756+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1591601"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1591601"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -709,19 +660,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "I think this is fine to go in now.  That said I think documentation and getting 3.0 out the door should be our highest priority.",
-                "html": "<p>I think this is fine to go in now.  That said I think documentation and getting 3.0 out the door should be our highest priority.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-05T16:02:38.829756+00:00",
-            "updated_on": "2014-04-05T16:02:38.837578+00:00",
-            "id": 1591601
+            "type": "pullrequest_comment",
+            "id": 1591601,
+            "updated_on": "2014-04-05T16:02:38.837578+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "\"Slicing along radius\" is a very important feature for most spherical applications, and having several available projections is, I think, essential for yt. \n\nHowever, there are loads of OTHER kinds of slices one might want to do: meridional slices that include the center, off-axis meridional slices, off-axis slices along the rotation axis, etc. I've attached a figure to illustrate what I mean. However, this is what I think the pixelizer is for, and in that case, we will need to figure out what to label the axes as.\n\n\n![2014-04-07-103220.jpg](https://bitbucket.org/repo/BXbAb/images/1637408980-2014-04-07-103220.jpg)",
+                "html": "<p>\"Slicing along radius\" is a very important feature for most spherical applications, and having several available projections is, I think, essential for yt. </p>\n<p>However, there are loads of OTHER kinds of slices one might want to do: meridional slices that include the center, off-axis meridional slices, off-axis slices along the rotation axis, etc. I've attached a figure to illustrate what I mean. However, this is what I think the pixelizer is for, and in that case, we will need to figure out what to label the axes as.</p>\n<p><img alt=\"2014-04-07-103220.jpg\" src=\"https://bitbucket.org/repo/BXbAb/images/1637408980-2014-04-07-103220.jpg\" /></p>"
+            },
             "user": {
+                "username": "jsoishi",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jsoishi"
@@ -733,19 +687,8 @@
                         "href": "https://bitbucket.org/account/jsoishi/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "J. S. Oishi",
-                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}",
-                "username": "jsoishi"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1598327"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1598327"
-                }
+                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}"
             },
             "parent": {
                 "links": {
@@ -758,8 +701,16 @@
                 },
                 "id": 1591593
             },
+            "created_on": "2014-04-07T14:33:18.583316+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1598327"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1598327"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -769,19 +720,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "\"Slicing along radius\" is a very important feature for most spherical applications, and having several available projections is, I think, essential for yt. \n\nHowever, there are loads of OTHER kinds of slices one might want to do: meridional slices that include the center, off-axis meridional slices, off-axis slices along the rotation axis, etc. I've attached a figure to illustrate what I mean. However, this is what I think the pixelizer is for, and in that case, we will need to figure out what to label the axes as.\n\n\n![2014-04-07-103220.jpg](https://bitbucket.org/repo/BXbAb/images/1637408980-2014-04-07-103220.jpg)",
-                "html": "<p>\"Slicing along radius\" is a very important feature for most spherical applications, and having several available projections is, I think, essential for yt. </p>\n<p>However, there are loads of OTHER kinds of slices one might want to do: meridional slices that include the center, off-axis meridional slices, off-axis slices along the rotation axis, etc. I've attached a figure to illustrate what I mean. However, this is what I think the pixelizer is for, and in that case, we will need to figure out what to label the axes as.</p>\n<p><img alt=\"2014-04-07-103220.jpg\" src=\"https://bitbucket.org/repo/BXbAb/images/1637408980-2014-04-07-103220.jpg\" /></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-07T14:33:18.583316+00:00",
-            "updated_on": "2014-04-07T14:34:21.902565+00:00",
-            "id": 1598327
+            "type": "pullrequest_comment",
+            "id": 1598327,
+            "updated_on": "2014-04-07T14:34:21.902565+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "The color used for the regions where there is no data should not be selected from the colorbar by default. ",
+                "html": "<p>The color used for the regions where there is no data should not be selected from the colorbar by default. </p>"
+            },
             "user": {
+                "username": "jsoishi",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jsoishi"
@@ -793,12 +747,9 @@
                         "href": "https://bitbucket.org/account/jsoishi/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "J. S. Oishi",
-                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}",
-                "username": "jsoishi"
+                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1598349"
@@ -807,8 +758,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1598349"
                 }
             },
+            "created_on": "2014-04-07T14:35:03.054038+00:00",
+            "updated_on": "2014-04-07T14:35:03.082077+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -818,19 +770,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "The color used for the regions where there is no data should not be selected from the colorbar by default. ",
-                "html": "<p>The color used for the regions where there is no data should not be selected from the colorbar by default. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-07T14:35:03.054038+00:00",
-            "updated_on": "2014-04-07T14:35:03.082077+00:00",
+            "type": "pullrequest_comment",
             "id": 1598349
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I *think* we have at least one projection already, I think aitoff?  It currently takes healpix but could be modified to take anything.\n\nThe other items you note are in fact important, and I agree completely.  I have not given a lot of thought yet to how to represent these -- as it stands, the only thing I've worked on is how to slice along the principal axes of the system (r, theta, phi) which does not cover the range of slices you're describing.  I'm wondering if we would need to write a different pixelizer for them; I suspect we would, but I may be wrong.  If we can translate the input coordinates (or supply translation information) such that it's identical to slicing along phi, we should be able to represent this with the existing pixelizer.",
+                "html": "<p>I <em>think</em> we have at least one projection already, I think aitoff?  It currently takes healpix but could be modified to take anything.</p>\n<p>The other items you note are in fact important, and I agree completely.  I have not given a lot of thought yet to how to represent these -- as it stands, the only thing I've worked on is how to slice along the principal axes of the system (r, theta, phi) which does not cover the range of slices you're describing.  I'm wondering if we would need to write a different pixelizer for them; I suspect we would, but I may be wrong.  If we can translate the input coordinates (or supply translation information) such that it's identical to slicing along phi, we should be able to represent this with the existing pixelizer.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -842,19 +796,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1599662"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1599662"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -867,8 +810,16 @@
                 },
                 "id": 1598327
             },
+            "created_on": "2014-04-07T16:33:30.909983+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1599662"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1599662"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -878,19 +829,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "I *think* we have at least one projection already, I think aitoff?  It currently takes healpix but could be modified to take anything.\n\nThe other items you note are in fact important, and I agree completely.  I have not given a lot of thought yet to how to represent these -- as it stands, the only thing I've worked on is how to slice along the principal axes of the system (r, theta, phi) which does not cover the range of slices you're describing.  I'm wondering if we would need to write a different pixelizer for them; I suspect we would, but I may be wrong.  If we can translate the input coordinates (or supply translation information) such that it's identical to slicing along phi, we should be able to represent this with the existing pixelizer.",
-                "html": "<p>I <em>think</em> we have at least one projection already, I think aitoff?  It currently takes healpix but could be modified to take anything.</p>\n<p>The other items you note are in fact important, and I agree completely.  I have not given a lot of thought yet to how to represent these -- as it stands, the only thing I've worked on is how to slice along the principal axes of the system (r, theta, phi) which does not cover the range of slices you're describing.  I'm wondering if we would need to write a different pixelizer for them; I suspect we would, but I may be wrong.  If we can translate the input coordinates (or supply translation information) such that it's identical to slicing along phi, we should be able to represent this with the existing pixelizer.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-07T16:33:30.909983+00:00",
-            "updated_on": "2014-04-07T16:33:30.919944+00:00",
-            "id": 1599662
+            "type": "pullrequest_comment",
+            "id": 1599662,
+            "updated_on": "2014-04-07T16:33:30.919944+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I agree with this, but I don't know how to represent that without using something like a masked array.  I suppose I could stick NaN values in?",
+                "html": "<p>I agree with this, but I don't know how to represent that without using something like a masked array.  I suppose I could stick NaN values in?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -902,19 +856,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1599671"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1599671"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -927,8 +870,16 @@
                 },
                 "id": 1598349
             },
+            "created_on": "2014-04-07T16:33:58.275724+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1599671"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1599671"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -938,19 +889,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "I agree with this, but I don't know how to represent that without using something like a masked array.  I suppose I could stick NaN values in?",
-                "html": "<p>I agree with this, but I don't know how to represent that without using something like a masked array.  I suppose I could stick NaN values in?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-07T16:33:58.275724+00:00",
-            "updated_on": "2014-04-07T16:33:58.283173+00:00",
-            "id": 1599671
+            "type": "pullrequest_comment",
+            "id": 1599671,
+            "updated_on": "2014-04-07T16:33:58.283173+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "NaNs sound like a good idea.",
+                "html": "<p>NaNs sound like a good idea.</p>"
+            },
             "user": {
+                "username": "jsoishi",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jsoishi"
@@ -962,19 +916,8 @@
                         "href": "https://bitbucket.org/account/jsoishi/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "J. S. Oishi",
-                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}",
-                "username": "jsoishi"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1600177"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1600177"
-                }
+                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}"
             },
             "parent": {
                 "links": {
@@ -987,8 +930,16 @@
                 },
                 "id": 1599671
             },
+            "created_on": "2014-04-07T17:35:19.956631+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1600177"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1600177"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -998,19 +949,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "NaNs sound like a good idea.",
-                "html": "<p>NaNs sound like a good idea.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-07T17:35:19.956631+00:00",
-            "updated_on": "2014-04-07T17:35:19.984607+00:00",
-            "id": 1600177
+            "type": "pullrequest_comment",
+            "id": 1600177,
+            "updated_on": "2014-04-07T17:35:19.984607+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1022,12 +976,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1608339"
@@ -1036,8 +987,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1608339"
                 }
             },
+            "created_on": "2014-04-08T13:47:22.772272+00:00",
+            "updated_on": "2014-04-08T13:47:22.987365+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1047,19 +999,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-08T13:47:22.772272+00:00",
-            "updated_on": "2014-04-08T13:47:22.987365+00:00",
+            "type": "pullrequest_comment",
             "id": 1608339
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1071,12 +1025,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1608735"
@@ -1085,8 +1036,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1608735"
                 }
             },
+            "created_on": "2014-04-08T14:17:27.748768+00:00",
+            "updated_on": "2014-04-08T14:17:27.889510+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1096,19 +1048,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-08T14:17:27.748768+00:00",
-            "updated_on": "2014-04-08T14:17:27.889510+00:00",
+            "type": "pullrequest_comment",
             "id": 1608735
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1120,12 +1074,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1609132"
@@ -1134,8 +1085,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1609132"
                 }
             },
+            "created_on": "2014-04-08T14:47:38.372025+00:00",
+            "updated_on": "2014-04-08T14:47:38.574473+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1145,19 +1097,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-08T14:47:38.372025+00:00",
-            "updated_on": "2014-04-08T14:47:38.574473+00:00",
+            "type": "pullrequest_comment",
             "id": 1609132
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "There seems to be several people who have gone over this code and successfully loaded data.  @MatthewTurk how do you feel about pulling this in now?  I think the changes in this PR should be totally isolated from functionality used by cartesian codes so I see no harm in pulling this in while it's still a work in progress.",
+                "html": "<p>There seems to be several people who have gone over this code and successfully loaded data.  <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matt Turk</a> how do you feel about pulling this in now?  I think the changes in this PR should be totally isolated from functionality used by cartesian codes so I see no harm in pulling this in while it's still a work in progress.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1169,12 +1123,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1612904"
@@ -1183,8 +1134,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1612904"
                 }
             },
+            "created_on": "2014-04-08T21:58:19.627429+00:00",
+            "updated_on": "2014-04-08T21:58:19.645098+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1194,19 +1146,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "There seems to be several people who have gone over this code and successfully loaded data.  @MatthewTurk how do you feel about pulling this in now?  I think the changes in this PR should be totally isolated from functionality used by cartesian codes so I see no harm in pulling this in while it's still a work in progress.",
-                "html": "<p>There seems to be several people who have gone over this code and successfully loaded data.  <a href=\"/MatthewTurk/\" rel=\"nofollow\" title=\"@MatthewTurk\" class=\"mention\">Matthew Turk</a> how do you feel about pulling this in now?  I think the changes in this PR should be totally isolated from functionality used by cartesian codes so I see no harm in pulling this in while it's still a work in progress.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-08T21:58:19.627429+00:00",
-            "updated_on": "2014-04-08T21:58:19.645098+00:00",
+            "type": "pullrequest_comment",
             "id": 1612904
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1218,12 +1172,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1613019"
@@ -1232,8 +1183,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1613019"
                 }
             },
+            "created_on": "2014-04-08T22:18:27.091685+00:00",
+            "updated_on": "2014-04-08T22:18:27.206545+00:00",
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1243,19 +1195,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-08T22:18:27.091685+00:00",
-            "updated_on": "2014-04-08T22:18:27.206545+00:00",
+            "type": "pullrequest_comment",
             "id": 1613019
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'd be okay with that.  I think we need it to be in so we can collectively explore how to expose the API.",
+                "html": "<p>I'd be okay with that.  I think we need it to be in so we can collectively explore how to expose the API.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1267,19 +1221,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1613208"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1613208"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1292,8 +1235,16 @@
                 },
                 "id": 1612904
             },
+            "created_on": "2014-04-08T23:04:40.491589+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/800/comments/1613208"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800/_/diff#comment-1613208"
+                }
+            },
             "pullrequest": {
-                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1303,16 +1254,65 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/800"
                     }
                 },
+                "title": "Spherical slicing and coordinates, making bounds for Cylindrical in Cartesian",
                 "id": 800
             },
-            "content": {
-                "raw": "I'd be okay with that.  I think we need it to be in so we can collectively explore how to expose the API.",
-                "html": "<p>I'd be okay with that.  I think we need it to be in so we can collectively explore how to expose the API.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-04-08T23:04:40.491589+00:00",
-            "updated_on": "2014-04-08T23:04:40.500029+00:00",
-            "id": 1613208
+            "type": "pullrequest_comment",
+            "id": 1613208,
+            "updated_on": "2014-04-08T23:04:40.500029+00:00"
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This adds two things.\r\n\r\n1) Spherical coordinate handling, including slicing and pixelizing and whatnot.\r\n2) Specifying extents for cylindrical and polar coordinate pixelizing in extents, so you can pan/zoom in the coordinate system.\r\n\r\nThere is more that needs to be done -- for instance, making all the axis names correct, which means going through and finding all the places we use `axis_names` and `[xy]_dict` and fixing them![UniformGridData_Slice_z_density.png](https://bitbucket.org/repo/RMxd9/images/332576197-UniformGridData_Slice_z_density.png).  But here's a script that generates some sample data:\r\n\r\nhttp://paste.yt-project.org/show/4479/\r\n\r\nand I've attached an image of this, where I've zoomed and then panned a bit to show it works in general.\r\n\r\nUPDATE 1: Removing print statement.\r\n\r\nUPDATE 2: Populating with NaNs.  New example image attached.![UniformGridData_Slice_z_density.png](https://bitbucket.org/repo/BXbAb/images/4169494679-UniformGridData_Slice_z_density.png)\r\n\r\nUPDATE 3: Adding `geometry` option to GDF loading.\r\n\r\nUPDATE 4: Adding an aitoff pixelization.  Example usage:\r\n\r\n```\r\n#!python\r\nfrom yt.utilities.lib.misc_utilities import pixelize_aitoff\r\nimport matplotlib.pyplot as plt\r\n s = ds.slice(0, 0.5)\r\nimg = pixelize_aitoff(\r\n                s[\"theta\"], s[\"dtheta\"]/2.0,\r\n                s[\"phi\"], s[\"dphi\"]/2.0,\r\n                (2048, 1024), s[\"density\"], None, None).transpose()\r\nplt.gcf().set_size_inches(12,6)\r\nplt.imshow(img, origin='lower', interpolation='nearest', aspect=1.0)\r\nplt.savefig(\"aitoff.png\")\r\n```\r\n\r\nNote that it's not terribly fast.  Before this gets *used* everywhere, we need to get the API figured out, as I do not want to make the assumption that aitoff is what people want, nor that the slicing works such that \"r\" always does a surface projection.  (ping @jsoishi )\r\n\r\nForgot to attach an image:![aitoff.png](https://bitbucket.org/repo/BXbAb/images/2794961945-aitoff.png)\r\n\r\nUPDATE: Fixing some orthogonal pixelization stuff.",
+    "author": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "updated_on": "2014-04-09T15:16:35.816552+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "bf628d9eec62",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/bf628d9eec62"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt-3.0"
+        }
+    }
 }

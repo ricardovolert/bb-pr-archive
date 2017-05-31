@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2012-10-24T19:35:10.824235+00:00",
-    "comment_count": 6,
-    "description": "This should fix the strange behavior that boolean objects exhibited to Matt. Using a script like this:\r\n\r\n    from yt.mods import *\r\n    pf = load(\"RedshiftOutput0000\")\r\n    sp = pf.h.sphere(\"max\", 0.1)\r\n    sp_mass = sp.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    L = sp.quantities[\"AngularMomentumVector\"]()\r\n    disk = pf.h.disk(\"max\", L, 0.05, 0.05 )\r\n    disk_mass = disk.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    bo = pf.h.boolean([sp, \"NOT\", disk])\r\n    tm1 = bo.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    tm2 = sp.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0] - disk.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    print sp_mass, disk_mass, (sp_mass - disk_mass), tm1, tm2\r\n\r\n    print sp.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0], disk.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n\r\nI get (for my dataset)\r\n\r\n    8800795386.31 8374144031.51 426651354.799 426651354.799 426651354.799\r\n    8800795386.31 8374144031.51\r\n\r\nWhich looks correct to me. I would just push this fix without a PR but I'd like to ask Matt to confirm that this works for him as well.\r\n\r\nUpdate: Added tests for boolean regions. As of this re-submission, the last test (test_boolean_mix_periodicity) fails because periodic spheres on fake_random_pfs appear to select the entire volume, see [yt-paste](http://paste.yt-project.org/show/2800/).\r\n\r\nUpdate 2: Fixed import.\r\n\r\nUpdate 3: Added nprocs and yields. For me all tests pass but the last, still.\r\n\r\nUpdate 4: Removed ellipsoid container from the last test (test_boolean_mix_periodicity) and I'll probably re-add it once it is fixed. [This example shows what I mean](https://bitbucket.org/yt_analysis/yt/issue/457/ellipsoid-objects-and-fake_random_pf). I think that this PR should be accepted anyways, since it is unknown when the ellipsoid issue will be fixed.",
-    "created_on": "2012-10-19T20:06:53.494075+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/81d3dd529a1d"
-            }
-        },
-        "hash": "81d3dd529a1d"
-    },
-    "title": "Fixed a small error with boolean objects.",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/approve"
@@ -43,11 +9,39 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/diff"
+        }
+    },
+    "task_count": 0,
+    "source": {
+        "repository": null,
+        "commit": null,
+        "branch": {
+            "name": "yt"
         }
     },
     "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
         "links": {
             "self": {
                 "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -59,71 +53,31 @@
                 "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
             }
         },
-        "type": "user",
         "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
     },
+    "title": "Fixed a small error with boolean objects.",
     "id": 311,
-    "type": "pullrequest",
-    "author": {
+    "comment_count": 6,
+    "created_on": "2012-10-19T20:06:53.494075+00:00",
+    "merge_commit": {
+        "hash": "81d3dd529a1d",
         "links": {
             "self": {
-                "href": "https://api.bitbucket.org/2.0/users/sskory"
-            },
-            "html": {
-                "href": "https://bitbucket.org/sskory/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/sskory/avatar/32/"
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/81d3dd529a1d"
             }
-        },
-        "type": "user",
-        "display_name": "Stephen Skory",
-        "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-        "username": "sskory"
-    },
-    "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": null,
-        "repository": null
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/4c9fee8d49ac"
-                }
-            },
-            "hash": "4c9fee8d49ac"
-        },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
-            },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Stephen, thanks for catching this.\n\nWe should have tests for boolean objects and each of the logical operators: OR, AND, NOT, and nesting.",
+                "html": "<p>Hi Stephen, thanks for catching this.</p>\n<p>We should have tests for boolean objects and each of the logical operators: OR, AND, NOT, and nesting.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -135,12 +89,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments/27508"
@@ -149,8 +100,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311/_/diff#comment-27508"
                 }
             },
+            "created_on": "2012-10-19T20:10:20.394279+00:00",
+            "updated_on": "2012-10-19T20:10:20.403263+00:00",
             "pullrequest": {
-                "title": "Fixed a small error with boolean objects.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -160,19 +112,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311"
                     }
                 },
+                "title": "Fixed a small error with boolean objects.",
                 "id": 311
             },
-            "content": {
-                "raw": "Hi Stephen, thanks for catching this.\n\nWe should have tests for boolean objects and each of the logical operators: OR, AND, NOT, and nesting.",
-                "html": "<p>Hi Stephen, thanks for catching this.</p>\n<p>We should have tests for boolean objects and each of the logical operators: OR, AND, NOT, and nesting.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-19T20:10:20.394279+00:00",
-            "updated_on": "2012-10-19T20:10:20.403263+00:00",
+            "type": "pullrequest_comment",
             "id": 27508
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Actually, to be clearer, what we should be testing is using a fake_random_pf, with at least 32 cells, and with nprocs = [1, 2, 4, 8], that the arrays created using CellMassMsun are correct for the logical operations with spheres centered at different places and with different radii.  I think we should also check that it works with disks and spheres.  This can be done in a handful of lines of code, following the examples in the other `yt/data_objects/tests` directory, specifically the covering grid example and the projection example.",
+                "html": "<p>Actually, to be clearer, what we should be testing is using a fake_random_pf, with at least 32 cells, and with nprocs = [1, 2, 4, 8], that the arrays created using CellMassMsun are correct for the logical operations with spheres centered at different places and with different radii.  I think we should also check that it works with disks and spheres.  This can be done in a handful of lines of code, following the examples in the other <code>yt/data_objects/tests</code> directory, specifically the covering grid example and the projection example.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -184,12 +138,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments/27513"
@@ -198,8 +149,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311/_/diff#comment-27513"
                 }
             },
+            "created_on": "2012-10-19T20:13:39.940044+00:00",
+            "updated_on": "2012-10-19T20:13:39.947126+00:00",
             "pullrequest": {
-                "title": "Fixed a small error with boolean objects.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -209,19 +161,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311"
                     }
                 },
+                "title": "Fixed a small error with boolean objects.",
                 "id": 311
             },
-            "content": {
-                "raw": "Actually, to be clearer, what we should be testing is using a fake_random_pf, with at least 32 cells, and with nprocs = [1, 2, 4, 8], that the arrays created using CellMassMsun are correct for the logical operations with spheres centered at different places and with different radii.  I think we should also check that it works with disks and spheres.  This can be done in a handful of lines of code, following the examples in the other `yt/data_objects/tests` directory, specifically the covering grid example and the projection example.",
-                "html": "<p>Actually, to be clearer, what we should be testing is using a fake_random_pf, with at least 32 cells, and with nprocs = [1, 2, 4, 8], that the arrays created using CellMassMsun are correct for the logical operations with spheres centered at different places and with different radii.  I think we should also check that it works with disks and spheres.  This can be done in a handful of lines of code, following the examples in the other <code>yt/data_objects/tests</code> directory, specifically the covering grid example and the projection example.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-19T20:13:39.940044+00:00",
-            "updated_on": "2012-10-19T20:13:39.947126+00:00",
+            "type": "pullrequest_comment",
             "id": 27513
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Ok, sounds like a simple enough outline.",
+                "html": "<p>Ok, sounds like a simple enough outline.</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -233,19 +187,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments/27521"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311/_/diff#comment-27521"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -258,8 +201,16 @@
                 },
                 "id": 27513
             },
+            "created_on": "2012-10-19T20:18:26.178790+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments/27521"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311/_/diff#comment-27521"
+                }
+            },
             "pullrequest": {
-                "title": "Fixed a small error with boolean objects.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -269,19 +220,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311"
                     }
                 },
+                "title": "Fixed a small error with boolean objects.",
                 "id": 311
             },
-            "content": {
-                "raw": "Ok, sounds like a simple enough outline.",
-                "html": "<p>Ok, sounds like a simple enough outline.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-19T20:18:26.178790+00:00",
-            "updated_on": "2012-10-19T20:18:26.186606+00:00",
-            "id": 27521
+            "type": "pullrequest_comment",
+            "id": 27521,
+            "updated_on": "2012-10-19T20:18:26.186606+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I am guessing that importing yt.mods * might not be exactly kosher here, but I want to define the ID field below. I'm open to suggestions!",
+                "html": "<p>I am guessing that importing yt.mods * might not be exactly kosher here, but I want to define the ID field below. I'm open to suggestions!</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -293,25 +247,23 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments/28926"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:97aea7f156df..82c77ccccc39?path=yt%2Fdata_objects%2Ftests%2Ftest_boolean_regions.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311/_/diff#comment-28926"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:97aea7f156df..82c77ccccc39?path=yt%2Fdata_objects%2Ftests%2Ftest_boolean_regions.py"
                 }
             },
+            "created_on": "2012-10-23T15:46:14.784878+00:00",
+            "updated_on": "2012-10-23T15:46:14.789797+00:00",
             "pullrequest": {
-                "title": "Fixed a small error with boolean objects.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -321,24 +273,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311"
                     }
                 },
+                "title": "Fixed a small error with boolean objects.",
                 "id": 311
             },
-            "content": {
-                "raw": "I am guessing that importing yt.mods * might not be exactly kosher here, but I want to define the ID field below. I'm open to suggestions!",
-                "html": "<p>I am guessing that importing yt.mods * might not be exactly kosher here, but I want to define the ID field below. I'm open to suggestions!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T15:46:14.784878+00:00",
-            "updated_on": "2012-10-23T15:46:14.789797+00:00",
             "inline": {
-                "from": null,
+                "to": 2,
                 "path": "yt/data_objects/tests/test_boolean_regions.py",
-                "to": 2
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 28926
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Thanks, Stephen!  I will look into the sphere (and add tests for it) and then accept once I've fixed it.",
+                "html": "<p>Thanks, Stephen!  I will look into the sphere (and add tests for it) and then accept once I've fixed it.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -350,12 +304,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments/28928"
@@ -364,8 +315,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311/_/diff#comment-28928"
                 }
             },
+            "created_on": "2012-10-23T15:49:55.334495+00:00",
+            "updated_on": "2012-10-23T15:49:55.339663+00:00",
             "pullrequest": {
-                "title": "Fixed a small error with boolean objects.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -375,19 +327,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311"
                     }
                 },
+                "title": "Fixed a small error with boolean objects.",
                 "id": 311
             },
-            "content": {
-                "raw": "Thanks, Stephen!  I will look into the sphere (and add tests for it) and then accept once I've fixed it.",
-                "html": "<p>Thanks, Stephen!  I will look into the sphere (and add tests for it) and then accept once I've fixed it.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T15:49:55.334495+00:00",
-            "updated_on": "2012-10-23T15:49:55.339663+00:00",
+            "type": "pullrequest_comment",
             "id": 28928
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Stephen, it looks to me like there's an issue with it detecting when a grid is fully contained in a sphere.  If you were to (see comment above) implement nprocs = [1, 2, 4, 8] my guess is that the other tests will fail, but differently.  This would be a useful data point.\n\nAlso, it's better practice to yield assertions than to call them directly.  If you look at the covering grid example you can see how this is done.",
+                "html": "<p>Stephen, it looks to me like there's an issue with it detecting when a grid is fully contained in a sphere.  If you were to (see comment above) implement nprocs = [1, 2, 4, 8] my guess is that the other tests will fail, but differently.  This would be a useful data point.</p>\n<p>Also, it's better practice to yield assertions than to call them directly.  If you look at the covering grid example you can see how this is done.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -399,12 +353,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/311/comments/28933"
@@ -413,8 +364,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311/_/diff#comment-28933"
                 }
             },
+            "created_on": "2012-10-23T15:54:15.348188+00:00",
+            "updated_on": "2012-10-23T15:54:15.354526+00:00",
             "pullrequest": {
-                "title": "Fixed a small error with boolean objects.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -424,16 +376,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/311"
                     }
                 },
+                "title": "Fixed a small error with boolean objects.",
                 "id": 311
             },
-            "content": {
-                "raw": "Stephen, it looks to me like there's an issue with it detecting when a grid is fully contained in a sphere.  If you were to (see comment above) implement nprocs = [1, 2, 4, 8] my guess is that the other tests will fail, but differently.  This would be a useful data point.\n\nAlso, it's better practice to yield assertions than to call them directly.  If you look at the covering grid example you can see how this is done.",
-                "html": "<p>Stephen, it looks to me like there's an issue with it detecting when a grid is fully contained in a sphere.  If you were to (see comment above) implement nprocs = [1, 2, 4, 8] my guess is that the other tests will fail, but differently.  This would be a useful data point.</p>\n<p>Also, it's better practice to yield assertions than to call them directly.  If you look at the covering grid example you can see how this is done.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T15:54:15.348188+00:00",
-            "updated_on": "2012-10-23T15:54:15.354526+00:00",
+            "type": "pullrequest_comment",
             "id": 28933
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This should fix the strange behavior that boolean objects exhibited to Matt. Using a script like this:\r\n\r\n    from yt.mods import *\r\n    pf = load(\"RedshiftOutput0000\")\r\n    sp = pf.h.sphere(\"max\", 0.1)\r\n    sp_mass = sp.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    L = sp.quantities[\"AngularMomentumVector\"]()\r\n    disk = pf.h.disk(\"max\", L, 0.05, 0.05 )\r\n    disk_mass = disk.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    bo = pf.h.boolean([sp, \"NOT\", disk])\r\n    tm1 = bo.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    tm2 = sp.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0] - disk.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n    print sp_mass, disk_mass, (sp_mass - disk_mass), tm1, tm2\r\n\r\n    print sp.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0], disk.quantities[\"TotalQuantity\"](\"CellMassMsun\")[0]\r\n\r\nI get (for my dataset)\r\n\r\n    8800795386.31 8374144031.51 426651354.799 426651354.799 426651354.799\r\n    8800795386.31 8374144031.51\r\n\r\nWhich looks correct to me. I would just push this fix without a PR but I'd like to ask Matt to confirm that this works for him as well.\r\n\r\nUpdate: Added tests for boolean regions. As of this re-submission, the last test (test_boolean_mix_periodicity) fails because periodic spheres on fake_random_pfs appear to select the entire volume, see [yt-paste](http://paste.yt-project.org/show/2800/).\r\n\r\nUpdate 2: Fixed import.\r\n\r\nUpdate 3: Added nprocs and yields. For me all tests pass but the last, still.\r\n\r\nUpdate 4: Removed ellipsoid container from the last test (test_boolean_mix_periodicity) and I'll probably re-add it once it is fixed. [This example shows what I mean](https://bitbucket.org/yt_analysis/yt/issue/457/ellipsoid-objects-and-fake_random_pf). I think that this PR should be accepted anyways, since it is unknown when the ellipsoid issue will be fixed.",
+    "author": {
+        "username": "sskory",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/sskory"
+            },
+            "html": {
+                "href": "https://bitbucket.org/sskory/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/sskory/avatar/32/"
+            }
+        },
+        "display_name": "Stephen Skory",
+        "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
+    },
+    "updated_on": "2012-10-24T19:35:10.824235+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "4c9fee8d49ac",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/4c9fee8d49ac"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

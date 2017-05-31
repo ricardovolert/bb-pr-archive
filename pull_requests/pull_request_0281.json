@@ -1,34 +1,7 @@
 {
-    "reason": "I'm reconfiguring the way my yt mercurial repository works which unfortunately means that I had to delete the repository this PR originated from.  I'll be reissuing the PR in a little bit.  Apologies for the noise.",
-    "state": "DECLINED",
-    "updated_on": "2012-10-01T23:19:13.834457+00:00",
-    "comment_count": 1,
-    "description": "This PR implements OffAxisProjectionPlot, which is to ProjectionPlot as OffAxisSlicePlot is to SlicePlot.  Since off axis projections are generated using the volume renderer, I created a 'dummy' data source object and a 'dummy' fixed resolution buffer object that wraps Cameron's off_axis_projection function in the volume renderer, providing a dict-like interface to the ProjectionCamera.  This sort of indirection could probably be generalized to the other cameras if we wanted to go that way.\r\n\r\nOffAxisProjectionPlot is still pretty rough - I haven't tested any of the callbacks and have only tested a few of the setter methods (e.g. set_zlim and set_cmap), which seem to work OK.  I tested this with the following script: \r\n\r\nhttp://paste.yt-project.org/show/2722/\r\n\r\nThis script produces the following images: \r\n\r\nhttp://i.imgur.com/bqnFV.png\r\nhttp://i.imgur.com/jdrhv.png\r\n\r\nI'm PRing this now because I'm not sure if what I've done conforms with accepted yt style.  For example, should I put the fake data containers in another file?\r\n\r\nIt would also be great if others could try this out on their data and report back if something they want to use breaks.",
-    "created_on": "2012-09-25T23:49:18.519193+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "OffAxisProjectionPlot",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/approve"
@@ -36,11 +9,39 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/281"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/diff"
+        }
+    },
+    "task_count": 0,
+    "source": {
+        "repository": null,
+        "commit": null,
+        "branch": {
+            "name": "yt"
         }
     },
     "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
         "links": {
             "self": {
                 "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -52,52 +53,92 @@
                 "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
             }
         },
-        "type": "user",
         "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
     },
+    "title": "OffAxisProjectionPlot",
     "id": 281,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+    "comment_count": 1,
+    "created_on": "2012-09-25T23:49:18.519193+00:00",
+    "merge_commit": null,
+    "comments": [
+        {
+            "content": {
+                "markup": "creole",
+                "raw": "Hi Nathan, thanks a ton for this work.  I've got some comments, but I think @chummels should also chime in before this gets accepted.\n\n * Could we have the class_name checks be changed to having the classes themselves contain the appropriate FRBs as attributes?\n * Same for the \"type\" setup, for the name?  That could just be a _nice_type_name attribute or something on the class.  (Also, 'type' sometimes gets used by a variable, by me as well, but it's a builtin in Python.)\n * FRBs use self.data, not self.internal_dict, and the off axis FRB class should probably go in yt/visualization/fixed_resolution.py .  The construction used for {{{__getitem__}}} could look more like the one on line 122 of fixed_resolution.py.\n\nOtherwise, I think this looks good!",
+                "html": "<p>Hi Nathan, thanks a ton for this work.  I've got some comments, but I think <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">chummels</a> should also chime in before this gets accepted.</p>\n<ul><li>Could we have the class_name checks be changed to having the classes themselves contain the appropriate FRBs as attributes?\n</li><li>Same for the \"type\" setup, for the name?  That could just be a _nice_type_name attribute or something on the class.  (Also, 'type' sometimes gets used by a variable, by me as well, but it's a builtin in Python.)\n</li><li>FRBs use self.data, not self.internal_dict, and the off axis FRB class should probably go in yt/visualization/fixed_resolution.py .  The construction used for <code>__getitem__</code> could look more like the one on line 122 of fixed_resolution.py.\n</li></ul>\n<p>Otherwise, I think this looks good!</p>\n"
             },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
+            "user": {
+                "username": "MatthewTurk",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": null,
-        "repository": null
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e56c3f9dca02"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/comments/19521"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/281/_/diff#comment-19521"
                 }
             },
-            "hash": "e56c3f9dca02"
+            "created_on": "2012-09-26T11:14:38.126223+00:00",
+            "updated_on": "2012-09-26T11:14:38.131881+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/281"
+                    }
+                },
+                "title": "OffAxisProjectionPlot",
+                "id": 281
+            },
+            "type": "pullrequest_comment",
+            "id": 19521
+        }
+    ],
+    "reason": "I'm reconfiguring the way my yt mercurial repository works which unfortunately means that I had to delete the repository this PR originated from.  I'll be reissuing the PR in a little bit.  Apologies for the noise.",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "DECLINED",
+    "description": "This PR implements OffAxisProjectionPlot, which is to ProjectionPlot as OffAxisSlicePlot is to SlicePlot.  Since off axis projections are generated using the volume renderer, I created a 'dummy' data source object and a 'dummy' fixed resolution buffer object that wraps Cameron's off_axis_projection function in the volume renderer, providing a dict-like interface to the ProjectionCamera.  This sort of indirection could probably be generalized to the other cameras if we wanted to go that way.\r\n\r\nOffAxisProjectionPlot is still pretty rough - I haven't tested any of the callbacks and have only tested a few of the setter methods (e.g. set_zlim and set_cmap), which seem to work OK.  I tested this with the following script: \r\n\r\nhttp://paste.yt-project.org/show/2722/\r\n\r\nThis script produces the following images: \r\n\r\nhttp://i.imgur.com/bqnFV.png\r\nhttp://i.imgur.com/jdrhv.png\r\n\r\nI'm PRing this now because I'm not sure if what I've done conforms with accepted yt style.  For example, should I put the fake data containers in another file?\r\n\r\nIt would also be great if others could try this out on their data and report back if something they want to use breaks.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
         },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2012-10-01T23:19:13.834457+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -110,59 +151,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
-        }
-    },
-    "comments": [
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/MatthewTurk/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "e56c3f9dca02",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281/comments/19521"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/281/_/diff#comment-19521"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e56c3f9dca02"
                 }
-            },
-            "pullrequest": {
-                "title": "OffAxisProjectionPlot",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/281"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/281"
-                    }
-                },
-                "id": 281
-            },
-            "content": {
-                "raw": "Hi Nathan, thanks a ton for this work.  I've got some comments, but I think @chummels should also chime in before this gets accepted.\n\n * Could we have the class_name checks be changed to having the classes themselves contain the appropriate FRBs as attributes?\n * Same for the \"type\" setup, for the name?  That could just be a _nice_type_name attribute or something on the class.  (Also, 'type' sometimes gets used by a variable, by me as well, but it's a builtin in Python.)\n * FRBs use self.data, not self.internal_dict, and the off axis FRB class should probably go in yt/visualization/fixed_resolution.py .  The construction used for {{{__getitem__}}} could look more like the one on line 122 of fixed_resolution.py.\n\nOtherwise, I think this looks good!",
-                "html": "<p>Hi Nathan, thanks a ton for this work.  I've got some comments, but I think <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> should also chime in before this gets accepted.</p>\n<ul><li>Could we have the class_name checks be changed to having the classes themselves contain the appropriate FRBs as attributes?\n</li><li>Same for the \"type\" setup, for the name?  That could just be a _nice_type_name attribute or something on the class.  (Also, 'type' sometimes gets used by a variable, by me as well, but it's a builtin in Python.)\n</li><li>FRBs use self.data, not self.internal_dict, and the off axis FRB class should probably go in yt/visualization/fixed_resolution.py .  The construction used for <code>__getitem__</code> could look more like the one on line 122 of fixed_resolution.py.\n</li></ul>\n<p>Otherwise, I think this looks good!</p>\n",
-                "markup": "creole"
-            },
-            "created_on": "2012-09-26T11:14:38.126223+00:00",
-            "updated_on": "2012-09-26T11:14:38.131881+00:00",
-            "id": 19521
+            }
+        },
+        "branch": {
+            "name": "yt"
         }
-    ]
+    }
 }

@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2016-06-29T18:06:47.669079+00:00",
-    "comment_count": 9,
-    "description": "This fixes the issue reported on the mailing list where yt errors out when one tries to set the magnetic unit to 1 T (or any MKS unit).\r\n\r\nThis ended up being a little subtle and required some changes to the equivalency and unit system machinery. I'd appreciate it if @jzuhone would take a look. It might be easier to understand if you look at each commit individually - I tried to keep things atomic.\r\n\r\n* Move implementations for some unit equivalency functions to the Unit class\r\n\r\n    I'm leaving the original functions behind with implementations that delegate to\r\n    the new functions on the Unit object to maintain API compatibility and for\r\n    conveinience.\r\n\r\n* Add a cgs-ampere unit system.\r\n\r\n    This system is only used internally, and is necessary because it's the only\r\n    unit system where quantities with both CGS and SI EM units are representable.\r\n\r\n* Make it possible to create a code unit system with MKS base units\r\n\r\n* Don't add nonexistent dimensions to the unit system's internal state\r\n\r\n* Regenerate unit system units if the underlying dimensions change\r\n\r\n* flush unit registry unit_objs cache if a unit symbol is removed or modified\r\n\r\n* When updating a unit registry, convert to yt's internal cgs-ampere unit system\r\n\r\n* Make it possible to update the dimensions of a unit registry entry\r\n\r\n* Fix bug in _get_unit_system_string where units in the base units weren't always getting returned\r\n\r\n* Only modify unit registries inside the base dataset class to avoid order of operations issues\r\n\r\n* Rearrange the order in which a dataset's unit systems get set up\r\n\r\n* Accept lower of upper-case versions of unit system names\r\n\r\n* Handle the case when ds.magnetic_unit is provided in MKS for all unit systems\r\n\r\n* Add tests for magnetic units",
-    "created_on": "2016-06-03T21:03:49.235014+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/9b2d8e598c95"
-            }
-        },
-        "hash": "9b2d8e598c95"
-    },
-    "title": "MKS code unit system fixes. Closes #1229",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
-            },
-            "html": {
-                "href": "https://bitbucket.org/xarthisius/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Kacper Kowalik",
-        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-        "username": "xarthisius"
-    },
-    "id": 2213,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/82ad6ff08522"
-                }
-            },
-            "hash": "82ad6ff08522"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "82ad6ff08522",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/3215234b6e95"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/82ad6ff08522"
                 }
-            },
-            "hash": "3215234b6e95"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "xarthisius",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
+    },
+    "title": "MKS code unit system fixes. Closes #1229",
+    "id": 2213,
+    "comment_count": 9,
+    "created_on": "2016-06-03T21:03:49.235014+00:00",
+    "merge_commit": {
+        "hash": "9b2d8e598c95",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/9b2d8e598c95"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Was this a bug?",
+                "html": "<p>Was this a bug?</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -158,25 +112,23 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19385324"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:140413889207..27783a435b49?path=yt%2Fdata_objects%2Fstatic_output.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19385324"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:82ad6ff08522..3ca8a739e529?path=yt%2Fdata_objects%2Fstatic_output.py"
                 }
             },
+            "created_on": "2016-06-06T17:04:15.814032+00:00",
+            "updated_on": "2016-06-06T17:04:15.822324+00:00",
             "pullrequest": {
-                "title": "MKS code unit system fixes. Closes #1229",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -186,24 +138,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
                     }
                 },
+                "title": "MKS code unit system fixes. Closes #1229",
                 "id": 2213
             },
-            "content": {
-                "raw": "Was this a bug?",
-                "html": "<p>Was this a bug?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-06-06T17:04:15.814032+00:00",
-            "updated_on": "2016-06-06T17:04:15.822324+00:00",
             "inline": {
-                "from": null,
+                "to": 893,
                 "path": "yt/data_objects/static_output.py",
-                "to": 893
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 19385324
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yup, revealed by running the test suite against this pull request.",
+                "html": "<p>Yup, revealed by running the test suite against this pull request.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -215,22 +169,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19385391"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fdata_objects%2Fstatic_output.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19385391"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -243,8 +183,19 @@
                 },
                 "id": 19385324
             },
+            "created_on": "2016-06-06T17:05:39.319168+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19385391"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19385391"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fdata_objects%2Fstatic_output.py"
+                }
+            },
             "pullrequest": {
-                "title": "MKS code unit system fixes. Closes #1229",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -254,24 +205,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
                     }
                 },
+                "title": "MKS code unit system fixes. Closes #1229",
                 "id": 2213
             },
-            "content": {
-                "raw": "Yup, revealed by running the test suite against this pull request.",
-                "html": "<p>Yup, revealed by running the test suite against this pull request.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-06-06T17:05:39.319168+00:00",
-            "updated_on": "2016-06-06T17:05:39.324295+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/data_objects/static_output.py",
-                "to": null
+                "from": null
             },
-            "id": 19385391
+            "type": "pullrequest_comment",
+            "id": 19385391,
+            "updated_on": "2016-06-06T17:05:39.324295+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Good catch!",
+                "html": "<p>Good catch!</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -283,22 +237,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19385423"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fdata_objects%2Fstatic_output.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19385423"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -311,8 +251,19 @@
                 },
                 "id": 19385391
             },
+            "created_on": "2016-06-06T17:06:21.323663+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19385423"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19385423"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fdata_objects%2Fstatic_output.py"
+                }
+            },
             "pullrequest": {
-                "title": "MKS code unit system fixes. Closes #1229",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -322,24 +273,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
                     }
                 },
+                "title": "MKS code unit system fixes. Closes #1229",
                 "id": 2213
             },
-            "content": {
-                "raw": "Good catch!",
-                "html": "<p>Good catch!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-06-06T17:06:21.323663+00:00",
-            "updated_on": "2016-06-06T17:06:21.330799+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/data_objects/static_output.py",
-                "to": null
+                "from": null
             },
-            "id": 19385423
+            "type": "pullrequest_comment",
+            "id": 19385423,
+            "updated_on": "2016-06-06T17:06:21.330799+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Looks good, we'll wait to see what happens when we can get a test run. \n\nAny impacts on performance? I doubt it, but just curious. ",
+                "html": "<p>Looks good, we'll wait to see what happens when we can get a test run. </p>\n<p>Any impacts on performance? I doubt it, but just curious. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -351,12 +305,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19385897"
@@ -365,8 +316,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19385897"
                 }
             },
+            "created_on": "2016-06-06T17:16:56.113884+00:00",
+            "updated_on": "2016-06-06T17:16:56.115935+00:00",
             "pullrequest": {
-                "title": "MKS code unit system fixes. Closes #1229",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -376,19 +328,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
                     }
                 },
+                "title": "MKS code unit system fixes. Closes #1229",
                 "id": 2213
             },
-            "content": {
-                "raw": "Looks good, we'll wait to see what happens when we can get a test run. \n\nAny impacts on performance? I doubt it, but just curious. ",
-                "html": "<p>Looks good, we'll wait to see what happens when we can get a test run. </p>\n<p>Any impacts on performance? I doubt it, but just curious. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-06-06T17:16:56.113884+00:00",
-            "updated_on": "2016-06-06T17:16:56.115935+00:00",
+            "type": "pullrequest_comment",
             "id": 19385897
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I haven't carefully tested and we don't really have a benchmark setup so it's kind of a pain to systemtically compare performance. That said, I would be surprised if any of these changes had performance implications.",
+                "html": "<p>I haven't carefully tested and we don't really have a benchmark setup so it's kind of a pain to systemtically compare performance. That said, I would be surprised if any of these changes had performance implications.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -400,19 +354,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19387748"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19387748"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -425,8 +368,16 @@
                 },
                 "id": 19385897
             },
+            "created_on": "2016-06-06T17:59:39.025760+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19387748"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19387748"
+                }
+            },
             "pullrequest": {
-                "title": "MKS code unit system fixes. Closes #1229",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -436,19 +387,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
                     }
                 },
+                "title": "MKS code unit system fixes. Closes #1229",
                 "id": 2213
             },
-            "content": {
-                "raw": "I haven't carefully tested and we don't really have a benchmark setup so it's kind of a pain to systemtically compare performance. That said, I would be surprised if any of these changes had performance implications.",
-                "html": "<p>I haven't carefully tested and we don't really have a benchmark setup so it's kind of a pain to systemtically compare performance. That said, I would be surprised if any of these changes had performance implications.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-06-06T17:59:39.025760+00:00",
-            "updated_on": "2016-06-06T17:59:39.029663+00:00",
-            "id": 19387748
+            "type": "pullrequest_comment",
+            "id": 19387748,
+            "updated_on": "2016-06-06T17:59:39.029663+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "We need to add `WDMerger_hdf5_chk_1000/WDMerger_hdf5_chk_1000.hdf5` to the test datasets the test machine sees.",
+                "html": "<p>We need to add <code>WDMerger_hdf5_chk_1000/WDMerger_hdf5_chk_1000.hdf5</code> to the test datasets the test machine sees.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -460,12 +414,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19463078"
@@ -474,8 +425,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19463078"
                 }
             },
+            "created_on": "2016-06-08T02:15:07.786304+00:00",
+            "updated_on": "2016-06-08T02:15:07.791337+00:00",
             "pullrequest": {
-                "title": "MKS code unit system fixes. Closes #1229",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -485,19 +437,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
                     }
                 },
+                "title": "MKS code unit system fixes. Closes #1229",
                 "id": 2213
             },
-            "content": {
-                "raw": "We need to add `WDMerger_hdf5_chk_1000/WDMerger_hdf5_chk_1000.hdf5` to the test datasets the test machine sees.",
-                "html": "<p>We need to add <code>WDMerger_hdf5_chk_1000/WDMerger_hdf5_chk_1000.hdf5</code> to the test datasets the test machine sees.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-06-08T02:15:07.786304+00:00",
-            "updated_on": "2016-06-08T02:15:07.791337+00:00",
+            "type": "pullrequest_comment",
             "id": 19463078
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This is currently blocked on [PR 2235](https://bitbucket.org/yt_analysis/yt/pull-requests/2235). Once that's merged in the tests should pass on this one.",
+                "html": "<p>This is currently blocked on <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/2235\">PR 2235</a>. Once that's merged in the tests should pass on this one.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -509,12 +463,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19810893"
@@ -523,8 +474,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19810893"
                 }
             },
+            "created_on": "2016-06-15T19:44:12.315889+00:00",
+            "updated_on": "2016-06-15T19:44:12.324061+00:00",
             "pullrequest": {
-                "title": "MKS code unit system fixes. Closes #1229",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -534,16 +486,173 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
                     }
                 },
+                "title": "MKS code unit system fixes. Closes #1229",
                 "id": 2213
             },
-            "content": {
-                "raw": "This is currently blocked on [PR 2235](https://bitbucket.org/yt_analysis/yt/pull-requests/2235). Once that's merged in the tests should pass on this one.",
-                "html": "<p>This is currently blocked on <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/2235\">PR 2235</a>. Once that's merged in the tests should pass on this one.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-06-15T19:44:12.315889+00:00",
-            "updated_on": "2016-06-15T19:44:12.324061+00:00",
+            "type": "pullrequest_comment",
             "id": 19810893
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "This is no longer true, I've folded that PR into this one.",
+                "html": "<p>This is no longer true, I've folded that PR into this one.</p>"
+            },
+            "user": {
+                "username": "ngoldbaum",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+            },
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/19810893"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-19810893"
+                    }
+                },
+                "id": 19810893
+            },
+            "created_on": "2016-06-28T21:20:55.538530+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/20355919"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-20355919"
+                }
+            },
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
+                    }
+                },
+                "title": "MKS code unit system fixes. Closes #1229",
+                "id": 2213
+            },
+            "type": "pullrequest_comment",
+            "id": 20355919,
+            "updated_on": "2016-06-28T21:21:46.204107+00:00"
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "Despite the test failure on the last test run (which is unrelated to this PR), I think this is ready to go in. Would appreciate eyes from people who are familiar with GDF data, as I had to make some changes to the GDF frontend.",
+                "html": "<p>Despite the test failure on the last test run (which is unrelated to this PR), I think this is ready to go in. Would appreciate eyes from people who are familiar with GDF data, as I had to make some changes to the GDF frontend.</p>"
+            },
+            "user": {
+                "username": "ngoldbaum",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213/comments/20355953"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213/_/diff#comment-20355953"
+                }
+            },
+            "created_on": "2016-06-28T21:21:39.220361+00:00",
+            "updated_on": "2016-06-28T21:21:57.581513+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2213"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2213"
+                    }
+                },
+                "title": "MKS code unit system fixes. Closes #1229",
+                "id": 2213
+            },
+            "type": "pullrequest_comment",
+            "id": 20355953
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This fixes the issue reported on the mailing list where yt errors out when one tries to set the magnetic unit to 1 T (or any MKS unit).\r\n\r\nThis ended up being a little subtle and required some changes to the equivalency and unit system machinery. I'd appreciate it if @jzuhone would take a look. It might be easier to understand if you look at each commit individually - I tried to keep things atomic.\r\n\r\n* Move implementations for some unit equivalency functions to the Unit class\r\n\r\n    I'm leaving the original functions behind with implementations that delegate to\r\n    the new functions on the Unit object to maintain API compatibility and for\r\n    conveinience.\r\n\r\n* Add a cgs-ampere unit system.\r\n\r\n    This system is only used internally, and is necessary because it's the only\r\n    unit system where quantities with both CGS and SI EM units are representable.\r\n\r\n* Make it possible to create a code unit system with MKS base units\r\n\r\n* Don't add nonexistent dimensions to the unit system's internal state\r\n\r\n* Regenerate unit system units if the underlying dimensions change\r\n\r\n* flush unit registry unit_objs cache if a unit symbol is removed or modified\r\n\r\n* When updating a unit registry, convert to yt's internal cgs-ampere unit system\r\n\r\n* Make it possible to update the dimensions of a unit registry entry\r\n\r\n* Fix bug in _get_unit_system_string where units in the base units weren't always getting returned\r\n\r\n* Only modify unit registries inside the base dataset class to avoid order of operations issues\r\n\r\n* Rearrange the order in which a dataset's unit systems get set up\r\n\r\n* Accept lower of upper-case versions of unit system names\r\n\r\n* Handle the case when ds.magnetic_unit is provided in MKS for all unit systems\r\n\r\n* Add tests for magnetic units",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2016-06-29T18:06:47.669079+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "3215234b6e95",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/3215234b6e95"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

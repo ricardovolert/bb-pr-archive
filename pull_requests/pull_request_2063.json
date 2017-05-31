@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2016-03-23T20:52:18.700714+00:00",
-    "comment_count": 0,
-    "description": "Before:\r\n\r\n```\r\nTotal time: 159.165 s\r\nFile: /home/xarth/yt/src/yt-my/yt/visualization/streamlines.py\r\nFunction: _integrate_through_brick at line 172\r\n\r\nLine #      Hits         Time  Per Hit   % Time  Line Contents\r\n==============================================================\r\n   172                                               @profile\r\n   173                                               def _integrate_through_brick(self, node, stream, step,\r\n   174                                                                            periodic=False, mag=None):\r\n   175    811148       390996      0.5      0.2          while (step > 1):\r\n   176    811065      2835686      3.5      1.8              self.volume.get_brick_data(node)\r\n   177    811065       395773      0.5      0.2              brick = node.data\r\n   178    811065      1495096      1.8      0.9              stream[-step+1] = stream[-step]\r\n   179    811065       393712      0.5      0.2              if mag is None:\r\n   180                                                           brick.integrate_streamline(\r\n   181                                                               stream[-step+1], self.direction*self.dx, None)\r\n   182                                                       else:\r\n   183    811065       489732      0.6      0.3                  marr = [mag]\r\n   184    811065       447927      0.6      0.3                  brick.integrate_streamline(\r\n   185    811065     14057228     17.3      8.8                      stream[-step+1], self.direction*self.dx, marr)\r\n   186    811065       718595      0.9      0.5                  mag[-step+1] = marr[0]\r\n   187                                                           \r\n   188    811065     62464907     77.0     39.2              if np.any(stream[-step+1,:] <= self.ds.domain_left_edge) | \\\r\n   189    811065     60047771     74.0     37.7                     np.any(stream[-step+1,:] >= self.ds.domain_right_edge):\r\n   190         1            1      1.0      0.0                  return 0\r\n   191                                           \r\n   192    811064      8280180     10.2      5.2              if np.any(stream[-step+1,:] < node.get_left_edge()) | \\\r\n   193    811064      6649980      8.2      4.2                     np.any(stream[-step+1,:] >= node.get_right_edge()):\r\n   194     52001        29549      0.6      0.0                  return step-1\r\n   195    759063       467934      0.6      0.3              step -= 1\r\n   196        83           37      0.4      0.0          return step\r\n```\r\n\r\nafter:\r\n\r\n```\r\nTotal time: 34.3174 s\r\nFile: /home/xarth/yt/src/yt-my/yt/visualization/streamlines.py\r\nFunction: _integrate_through_brick at line 172\r\n\r\nLine #      Hits         Time  Per Hit   % Time  Line Contents\r\n==============================================================\r\n   172                                               @profile\r\n   173                                               def _integrate_through_brick(self, node, stream, step,\r\n   174                                                                            periodic=False, mag=None):\r\n   175     45544       124698      2.7      0.4          LE = self.ds.domain_left_edge.d\r\n   176     45544        77128      1.7      0.2          RE = self.ds.domain_right_edge.d\r\n   177    763153       399808      0.5      1.2          while (step > 1):\r\n   178    763073      2329492      3.1      6.8              self.volume.get_brick_data(node)\r\n   179    763073       406527      0.5      1.2              brick = node.data\r\n   180    763073      1231795      1.6      3.6              stream[-step+1] = stream[-step]\r\n   181    763073       384946      0.5      1.1              if mag is None:\r\n   182                                                           brick.integrate_streamline(\r\n   183                                                               stream[-step+1], self.direction*self.dx, None)\r\n   184                                                       else:\r\n   185    763073       492039      0.6      1.4                  marr = [mag]\r\n   186    763073       419178      0.5      1.2                  brick.integrate_streamline(\r\n   187    763073     11619095     15.2     33.9                      stream[-step+1], self.direction*self.dx, marr)\r\n   188    763073       635172      0.8      1.9                  mag[-step+1] = marr[0]\r\n   189                                           \r\n   190    763073       814590      1.1      2.4              cur_stream = stream[-step+1, :]\r\n   191    763073      5998019      7.9     17.5              if np.sum(np.logical_or(cur_stream < LE, cur_stream >= RE)):\r\n   192         7            2      0.3      0.0                  return 0\r\n   193                                           \r\n   194    763066      2108667      2.8      6.1              nLE = node.get_left_edge()\r\n   195    763066      1402543      1.8      4.1              nRE = node.get_right_edge()\r\n   196    763066      5424702      7.1     15.8              if np.sum(np.logical_or(cur_stream < nLE, cur_stream >= nRE)):\r\n   197     45457        27522      0.6      0.1                  return step-1\r\n   198    717609       421437      0.6      1.2              step -= 1\r\n   199        80           35      0.4      0.0          return step\r\n```",
-    "created_on": "2016-03-22T02:40:53.554884+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7538e9cb964c"
-            }
-        },
-        "hash": "7538e9cb964c"
-    },
-    "title": "[opt] Drop units from tight loop in _integrate_through_brick",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2063"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2063/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "id": 2063,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
-            },
-            "html": {
-                "href": "https://bitbucket.org/xarthisius/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Kacper Kowalik",
-        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-        "username": "xarthisius"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/xarthisius/yt/commit/ba537a082b93"
-                }
-            },
-            "hash": "ba537a082b93"
-        },
         "repository": {
             "full_name": "xarthisius/yt",
+            "uuid": "{b753a527-1ccd-415c-8b85-3244947466a3}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,25 +48,77 @@
                     "href": "https://bitbucket.org/xarthisius/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b753a527-1ccd-415c-8b85-3244947466a3}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "ba537a082b93",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b00711a542af"
+                    "href": "https://api.bitbucket.org/2.0/repositories/xarthisius/yt/commit/ba537a082b93"
                 }
-            },
-            "hash": "b00711a542af"
+            }
         },
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "[opt] Drop units from tight loop in _integrate_through_brick",
+    "id": 2063,
+    "comment_count": 0,
+    "created_on": "2016-03-22T02:40:53.554884+00:00",
+    "merge_commit": {
+        "hash": "7538e9cb964c",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7538e9cb964c"
+            }
+        }
+    },
+    "comments": [],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "Before:\r\n\r\n```\r\nTotal time: 159.165 s\r\nFile: /home/xarth/yt/src/yt-my/yt/visualization/streamlines.py\r\nFunction: _integrate_through_brick at line 172\r\n\r\nLine #      Hits         Time  Per Hit   % Time  Line Contents\r\n==============================================================\r\n   172                                               @profile\r\n   173                                               def _integrate_through_brick(self, node, stream, step,\r\n   174                                                                            periodic=False, mag=None):\r\n   175    811148       390996      0.5      0.2          while (step > 1):\r\n   176    811065      2835686      3.5      1.8              self.volume.get_brick_data(node)\r\n   177    811065       395773      0.5      0.2              brick = node.data\r\n   178    811065      1495096      1.8      0.9              stream[-step+1] = stream[-step]\r\n   179    811065       393712      0.5      0.2              if mag is None:\r\n   180                                                           brick.integrate_streamline(\r\n   181                                                               stream[-step+1], self.direction*self.dx, None)\r\n   182                                                       else:\r\n   183    811065       489732      0.6      0.3                  marr = [mag]\r\n   184    811065       447927      0.6      0.3                  brick.integrate_streamline(\r\n   185    811065     14057228     17.3      8.8                      stream[-step+1], self.direction*self.dx, marr)\r\n   186    811065       718595      0.9      0.5                  mag[-step+1] = marr[0]\r\n   187                                                           \r\n   188    811065     62464907     77.0     39.2              if np.any(stream[-step+1,:] <= self.ds.domain_left_edge) | \\\r\n   189    811065     60047771     74.0     37.7                     np.any(stream[-step+1,:] >= self.ds.domain_right_edge):\r\n   190         1            1      1.0      0.0                  return 0\r\n   191                                           \r\n   192    811064      8280180     10.2      5.2              if np.any(stream[-step+1,:] < node.get_left_edge()) | \\\r\n   193    811064      6649980      8.2      4.2                     np.any(stream[-step+1,:] >= node.get_right_edge()):\r\n   194     52001        29549      0.6      0.0                  return step-1\r\n   195    759063       467934      0.6      0.3              step -= 1\r\n   196        83           37      0.4      0.0          return step\r\n```\r\n\r\nafter:\r\n\r\n```\r\nTotal time: 34.3174 s\r\nFile: /home/xarth/yt/src/yt-my/yt/visualization/streamlines.py\r\nFunction: _integrate_through_brick at line 172\r\n\r\nLine #      Hits         Time  Per Hit   % Time  Line Contents\r\n==============================================================\r\n   172                                               @profile\r\n   173                                               def _integrate_through_brick(self, node, stream, step,\r\n   174                                                                            periodic=False, mag=None):\r\n   175     45544       124698      2.7      0.4          LE = self.ds.domain_left_edge.d\r\n   176     45544        77128      1.7      0.2          RE = self.ds.domain_right_edge.d\r\n   177    763153       399808      0.5      1.2          while (step > 1):\r\n   178    763073      2329492      3.1      6.8              self.volume.get_brick_data(node)\r\n   179    763073       406527      0.5      1.2              brick = node.data\r\n   180    763073      1231795      1.6      3.6              stream[-step+1] = stream[-step]\r\n   181    763073       384946      0.5      1.1              if mag is None:\r\n   182                                                           brick.integrate_streamline(\r\n   183                                                               stream[-step+1], self.direction*self.dx, None)\r\n   184                                                       else:\r\n   185    763073       492039      0.6      1.4                  marr = [mag]\r\n   186    763073       419178      0.5      1.2                  brick.integrate_streamline(\r\n   187    763073     11619095     15.2     33.9                      stream[-step+1], self.direction*self.dx, marr)\r\n   188    763073       635172      0.8      1.9                  mag[-step+1] = marr[0]\r\n   189                                           \r\n   190    763073       814590      1.1      2.4              cur_stream = stream[-step+1, :]\r\n   191    763073      5998019      7.9     17.5              if np.sum(np.logical_or(cur_stream < LE, cur_stream >= RE)):\r\n   192         7            2      0.3      0.0                  return 0\r\n   193                                           \r\n   194    763066      2108667      2.8      6.1              nLE = node.get_left_edge()\r\n   195    763066      1402543      1.8      4.1              nRE = node.get_right_edge()\r\n   196    763066      5424702      7.1     15.8              if np.sum(np.logical_or(cur_stream < nLE, cur_stream >= nRE)):\r\n   197     45457        27522      0.6      0.1                  return step-1\r\n   198    717609       421437      0.6      1.2              step -= 1\r\n   199        80           35      0.4      0.0          return step\r\n```",
+    "author": {
+        "username": "xarthisius",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
+    },
+    "updated_on": "2016-03-23T20:52:18.700714+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -140,9 +131,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "b00711a542af",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/b00711a542af"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
         }
-    },
-    "comments": []
+    }
 }

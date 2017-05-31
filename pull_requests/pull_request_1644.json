@@ -1,34 +1,7 @@
 {
-    "reason": "superseded by https://bitbucket.org/yt_analysis/yt/pull-requests/2346/fixing-ramses-time-values",
-    "state": "DECLINED",
-    "updated_on": "2016-08-26T21:32:44.752389+00:00",
-    "comment_count": 0,
-    "description": "Please note that I have only used YT with RAMSES so I am lead to believe that the particle_age field is the birth time of the star in hubble lookback time?\r\n\r\nSo the time units in RAMSES datasets are output in lookback conformal time. , in cosmological simulations this leads to particle ages being I am lead to believe inconsistent with the particle ages in other cosmological simulation datasets .. which have the units of proper time\r\n\r\nIn order to do this, I have adapted the routine from this file within the RAMSES utils\r\n\r\nhttps://bitbucket.org/rteyssie/ramses/src/4b15d692647ca970b3a0060bd00a94b80c823a3b/trunk/ramses/utils/f90/part2birth.f90?at=master\r\n\r\ninto cython.\r\n\r\nLikewise I have also redefined the origional \"particle_age\" field as \"particle_ramses_age\"... but I might change this to \"particle_conformal_time\" to be a bit more verbose.\r\n\r\nI cannot take all the credit for this PR, since I have basically adapted the code from the origional RAMSES utils ( R. Teyssier ) as well as some discussion with D. Sullivan.\r\n\r\nBefore this PR goes through, I would like some help with including the tform.pyx within the build process of YT. Along with some work on speeding up the computation of tform.friedman (required in order to produce the conformal lookback time -> propertime conversion. and packaging all of this together.\r\n\r\nThis would be a great addition to YT since it would bypass the time transformation part of loading cosmological simulations in RAMSES.",
-    "created_on": "2015-07-16T23:24:27.975007+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/approve"
@@ -36,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
-            },
-            "html": {
-                "href": "https://bitbucket.org/cosmosquark/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Benjamin Thompson",
-        "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-        "username": "cosmosquark"
-    },
-    "id": 1644,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
-            },
-            "html": {
-                "href": "https://bitbucket.org/cosmosquark/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Benjamin Thompson",
-        "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-        "username": "cosmosquark"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/cosmosquark/yt-time/commit/094475195cb2"
-                }
-            },
-            "hash": "094475195cb2"
-        },
         "repository": {
             "full_name": "cosmosquark/yt-time",
+            "uuid": "{9a439e28-c204-42af-b14b-fcf1c6273cd9}",
             "type": "repository",
             "links": {
                 "self": {
@@ -102,44 +48,52 @@
                     "href": "https://bitbucket.org/cosmosquark/yt-time/avatar/32/"
                 }
             },
-            "name": "yt-time",
-            "uuid": "{9a439e28-c204-42af-b14b-fcf1c6273cd9}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
+            "name": "yt-time"
         },
         "commit": {
+            "hash": "094475195cb2",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c941aa457bc3"
+                    "href": "https://api.bitbucket.org/2.0/repositories/cosmosquark/yt-time/commit/094475195cb2"
                 }
-            },
-            "hash": "c941aa457bc3"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
-            },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        "branch": {
+            "name": "yt"
         }
     },
+    "closed_by": {
+        "username": "cosmosquark",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
+            },
+            "html": {
+                "href": "https://bitbucket.org/cosmosquark/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+            }
+        },
+        "display_name": "Benjamin Thompson",
+        "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
+    },
+    "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
+    "id": 1644,
+    "comment_count": 0,
+    "created_on": "2015-07-16T23:24:27.975007+00:00",
+    "merge_commit": null,
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "this change was made so that if box_len != 1.0, then self.length_unit would essentially be self.parameters[\"unit_l\"] * box_len**2 which I suspect is wrong.. something I overlooked with @RicardaBeckmann PR (my apologise)",
+                "html": "<p>this change was made so that if box_len != 1.0, then self.length_unit would essentially be self.parameters[\"unit_l\"] * box_len**2 which I suspect is wrong.. something I overlooked with <a href=\"/RicardaBeckmann/\" rel=\"nofollow\" title=\"@RicardaBeckmann\" class=\"mention\">Ricarda Beckmann</a> PR (my apologise)</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -151,25 +105,23 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8326915"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8326915"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
                 }
             },
+            "created_on": "2015-07-16T23:26:38.686805+00:00",
+            "updated_on": "2015-07-16T23:26:38.820206+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -179,24 +131,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "this change was made so that if box_len != 1.0, then self.length_unit would essentially be self.parameters[\"unit_l\"] * box_len**2 which I suspect is wrong.. something I overlooked with @RicardaBeckmann PR (my apologise)",
-                "html": "<p>this change was made so that if box_len != 1.0, then self.length_unit would essentially be self.parameters[\"unit_l\"] * box_len**2 which I suspect is wrong.. something I overlooked with <a href=\"/RicardaBeckmann/\" rel=\"nofollow\" title=\"@RicardaBeckmann\" class=\"mention\">Ricarda Beckmann</a> PR (my apologise)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-16T23:26:38.686805+00:00",
-            "updated_on": "2015-07-16T23:26:38.820206+00:00",
             "inline": {
-                "from": null,
+                "to": 529,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": 529
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 8326915
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "this needs a bit more checking",
+                "html": "<p>this needs a bit more checking</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -208,25 +162,23 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8326917"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8326917"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
                 }
             },
+            "created_on": "2015-07-16T23:26:58.967881+00:00",
+            "updated_on": "2015-07-16T23:26:59.011896+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -236,24 +188,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "this needs a bit more checking",
-                "html": "<p>this needs a bit more checking</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-16T23:26:58.967881+00:00",
-            "updated_on": "2015-07-16T23:26:59.011896+00:00",
             "inline": {
-                "from": null,
+                "to": 532,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": 532
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 8326917
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "self.current_time = self.parameters['time'] * self.parameters['unit_t'] for non cosmological runs",
+                "html": "<p>self.current_time = self.parameters['time'] * self.parameters['unit_t'] for non cosmological runs</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -265,25 +219,23 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8326929"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8326929"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
                 }
             },
+            "created_on": "2015-07-16T23:27:47.582040+00:00",
+            "updated_on": "2015-07-16T23:27:47.708642+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -293,24 +245,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "self.current_time = self.parameters['time'] * self.parameters['unit_t'] for non cosmological runs",
-                "html": "<p>self.current_time = self.parameters['time'] * self.parameters['unit_t'] for non cosmological runs</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-16T23:27:47.582040+00:00",
-            "updated_on": "2015-07-16T23:27:47.708642+00:00",
             "inline": {
-                "from": 581,
+                "to": null,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": null
+                "from": 581
             },
+            "type": "pullrequest_comment",
             "id": 8326929
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "need to check over this on a non cosmological simulation... I *think* RAMSES uses proper time in non-comsological runs.. and thus this field is really \"particle_age\"",
+                "html": "<p>need to check over this on a non cosmological simulation... I <em>think</em> RAMSES uses proper time in non-comsological runs.. and thus this field is really \"particle_age\"</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -322,25 +276,23 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8326944"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Ffields.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8326944"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Ffields.py"
                 }
             },
+            "created_on": "2015-07-16T23:29:00.901322+00:00",
+            "updated_on": "2015-07-16T23:29:00.946495+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -350,24 +302,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "need to check over this on a non cosmological simulation... I *think* RAMSES uses proper time in non-comsological runs.. and thus this field is really \"particle_age\"",
-                "html": "<p>need to check over this on a non cosmological simulation... I <em>think</em> RAMSES uses proper time in non-comsological runs.. and thus this field is really \"particle_age\"</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-16T23:29:00.901322+00:00",
-            "updated_on": "2015-07-16T23:29:00.946495+00:00",
             "inline": {
-                "from": null,
+                "to": 87,
                 "path": "yt/frontends/ramses/fields.py",
-                "to": 87
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 8326944
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/266/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/266/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/266/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -379,12 +333,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8327521"
@@ -393,8 +344,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8327521"
                 }
             },
+            "created_on": "2015-07-17T00:16:56.495413+00:00",
+            "updated_on": "2015-07-17T00:16:56.563603+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -404,19 +356,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/266/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/266/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/266/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-17T00:16:56.495413+00:00",
-            "updated_on": "2015-07-17T00:16:56.563603+00:00",
+            "type": "pullrequest_comment",
             "id": 8327521
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/267/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/267/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/267/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -428,12 +382,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8328039"
@@ -442,8 +393,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8328039"
                 }
             },
+            "created_on": "2015-07-17T01:04:28.480207+00:00",
+            "updated_on": "2015-07-17T01:04:28.545659+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -453,19 +405,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/267/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/267/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/267/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-17T01:04:28.480207+00:00",
-            "updated_on": "2015-07-17T01:04:28.545659+00:00",
+            "type": "pullrequest_comment",
             "id": 8328039
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Indeed, well spotted.",
+                "html": "<p>Indeed, well spotted.</p>"
+            },
             "user": {
+                "username": "RicardaBeckmann",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/RicardaBeckmann"
@@ -477,22 +431,8 @@
                         "href": "https://bitbucket.org/account/RicardaBeckmann/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Ricarda Beckmann",
-                "uuid": "{5e24222d-27c6-4903-bd0e-ca057679d25f}",
-                "username": "RicardaBeckmann"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8377010"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8377010"
-                }
+                "uuid": "{5e24222d-27c6-4903-bd0e-ca057679d25f}"
             },
             "parent": {
                 "links": {
@@ -505,8 +445,19 @@
                 },
                 "id": 8326915
             },
+            "created_on": "2015-07-20T13:51:12.167380+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8377010"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8377010"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -516,24 +467,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "Indeed, well spotted.",
-                "html": "<p>Indeed, well spotted.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-20T13:51:12.167380+00:00",
-            "updated_on": "2015-07-20T13:51:12.222324+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 8377010
+            "type": "pullrequest_comment",
+            "id": 8377010,
+            "updated_on": "2015-07-20T13:51:12.222324+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Are you sure? I suspect the it has to be length_unit as before. Otherwise, wouldn't you end up missing another factor of boxlen?",
+                "html": "<p>Are you sure? I suspect the it has to be length_unit as before. Otherwise, wouldn't you end up missing another factor of boxlen?</p>"
+            },
             "user": {
+                "username": "RicardaBeckmann",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/RicardaBeckmann"
@@ -545,22 +499,8 @@
                         "href": "https://bitbucket.org/account/RicardaBeckmann/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Ricarda Beckmann",
-                "uuid": "{5e24222d-27c6-4903-bd0e-ca057679d25f}",
-                "username": "RicardaBeckmann"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8377073"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8377073"
-                }
+                "uuid": "{5e24222d-27c6-4903-bd0e-ca057679d25f}"
             },
             "parent": {
                 "links": {
@@ -573,8 +513,19 @@
                 },
                 "id": 8326917
             },
+            "created_on": "2015-07-20T13:52:45.123916+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8377073"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8377073"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -584,24 +535,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "Are you sure? I suspect the it has to be length_unit as before. Otherwise, wouldn't you end up missing another factor of boxlen?",
-                "html": "<p>Are you sure? I suspect the it has to be length_unit as before. Otherwise, wouldn't you end up missing another factor of boxlen?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-20T13:52:45.123916+00:00",
-            "updated_on": "2015-07-20T13:52:45.203614+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 8377073
+            "type": "pullrequest_comment",
+            "id": 8377073,
+            "updated_on": "2015-07-20T13:52:45.203614+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think that is the case. I'll have a look too.",
+                "html": "<p>I think that is the case. I'll have a look too.</p>"
+            },
             "user": {
+                "username": "RicardaBeckmann",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/RicardaBeckmann"
@@ -613,22 +567,8 @@
                         "href": "https://bitbucket.org/account/RicardaBeckmann/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Ricarda Beckmann",
-                "uuid": "{5e24222d-27c6-4903-bd0e-ca057679d25f}",
-                "username": "RicardaBeckmann"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8705623"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Ffields.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8705623"
-                }
+                "uuid": "{5e24222d-27c6-4903-bd0e-ca057679d25f}"
             },
             "parent": {
                 "links": {
@@ -641,8 +581,19 @@
                 },
                 "id": 8326944
             },
+            "created_on": "2015-07-31T15:56:36.620073+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8705623"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8705623"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Ffields.py"
+                }
+            },
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -652,24 +603,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "I think that is the case. I'll have a look too.",
-                "html": "<p>I think that is the case. I'll have a look too.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-31T15:56:36.620073+00:00",
-            "updated_on": "2015-07-31T15:56:36.771147+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/ramses/fields.py",
-                "to": null
+                "from": null
             },
-            "id": 8705623
+            "type": "pullrequest_comment",
+            "id": 8705623,
+            "updated_on": "2015-07-31T15:56:36.771147+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "with what I have discussed earlier, this should be \n\n\n```\n#!python\n\nif ds.self.cosmological_simulation == 1:\n   particle_fields += [(\"particle_ramses_age\", \"d\"),\nelse:\n   particle_fields += [(\"particle_age\", \"d\"),\n```\nand the particle_age field for comsological_simulations == 1 will be created in fields.py\n",
+                "html": "<p>with what I have discussed earlier, this should be </p>\n<div class=\"codehilite language-python\"><pre><span></span><span class=\"k\">if</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">self</span><span class=\"o\">.</span><span class=\"n\">cosmological_simulation</span> <span class=\"o\">==</span> <span class=\"mi\">1</span><span class=\"p\">:</span>\n   <span class=\"n\">particle_fields</span> <span class=\"o\">+=</span> <span class=\"p\">[(</span><span class=\"s2\">&quot;particle_ramses_age&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;d&quot;</span><span class=\"p\">),</span>\n<span class=\"k\">else</span><span class=\"p\">:</span>\n   <span class=\"n\">particle_fields</span> <span class=\"o\">+=</span> <span class=\"p\">[(</span><span class=\"s2\">&quot;particle_age&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;d&quot;</span><span class=\"p\">),</span>\n</pre></div>\n\n\n<p>and the particle_age field for comsological_simulations == 1 will be created in fields.py</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -681,25 +635,23 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8706384"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8706384"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:094475195cb2..c2ac99552d56?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
                 }
             },
+            "created_on": "2015-07-31T16:19:46.782252+00:00",
+            "updated_on": "2015-07-31T16:19:46.841905+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -709,24 +661,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "with what I have discussed earlier, this should be \n\n\n```\n#!python\n\nif ds.self.cosmological_simulation == 1:\n   particle_fields += [(\"particle_ramses_age\", \"d\"),\nelse:\n   particle_fields += [(\"particle_age\", \"d\"),\n```\nand the particle_age field for comsological_simulations == 1 will be created in fields.py\n",
-                "html": "<p>with what I have discussed earlier, this should be </p>\n<div class=\"codehilite\"><pre><span></span><span class=\"k\">if</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">self</span><span class=\"o\">.</span><span class=\"n\">cosmological_simulation</span> <span class=\"o\">==</span> <span class=\"mi\">1</span><span class=\"p\">:</span>\n   <span class=\"n\">particle_fields</span> <span class=\"o\">+=</span> <span class=\"p\">[(</span><span class=\"s2\">&quot;particle_ramses_age&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;d&quot;</span><span class=\"p\">),</span>\n<span class=\"k\">else</span><span class=\"p\">:</span>\n   <span class=\"n\">particle_fields</span> <span class=\"o\">+=</span> <span class=\"p\">[(</span><span class=\"s2\">&quot;particle_age&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;d&quot;</span><span class=\"p\">),</span>\n</pre></div>\n\n\n<p>and the particle_age field for comsological_simulations == 1 will be created in fields.py</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-31T16:19:46.782252+00:00",
-            "updated_on": "2015-07-31T16:19:46.841905+00:00",
             "inline": {
-                "from": null,
+                "to": 170,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": 170
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 8706384
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "That is true. So this change is incorrect then. I will try and double check this with pynbody/pymses though.",
+                "html": "<p>That is true. So this change is incorrect then. I will try and double check this with pynbody/pymses though.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -738,22 +692,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8706428"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8706428"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -766,8 +706,19 @@
                 },
                 "id": 8377073
             },
+            "created_on": "2015-07-31T16:21:20.393393+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8706428"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8706428"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -777,24 +728,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "That is true. So this change is incorrect then. I will try and double check this with pynbody/pymses though.",
-                "html": "<p>That is true. So this change is incorrect then. I will try and double check this with pynbody/pymses though.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-31T16:21:20.393393+00:00",
-            "updated_on": "2015-07-31T16:21:20.445879+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 8706428
+            "type": "pullrequest_comment",
+            "id": 8706428,
+            "updated_on": "2015-07-31T16:21:20.445879+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Alright, thanks",
+                "html": "<p>Alright, thanks</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -806,22 +760,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8706432"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Ffields.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8706432"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -834,8 +774,19 @@
                 },
                 "id": 8705623
             },
+            "created_on": "2015-07-31T16:21:31.583465+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8706432"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8706432"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Ffields.py"
+                }
+            },
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -845,24 +796,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "Alright, thanks",
-                "html": "<p>Alright, thanks</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-31T16:21:31.583465+00:00",
-            "updated_on": "2015-07-31T16:21:31.632152+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/ramses/fields.py",
-                "to": null
+                "from": null
             },
-            "id": 8706432
+            "type": "pullrequest_comment",
+            "id": 8706432,
+            "updated_on": "2015-07-31T16:21:31.632152+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Actually.. looking over https://bitbucket.org/yt_analysis/yt/pull-requests/1335/ramses-unit-conversions/diff\n\n\"in Pymses, the length unit is multiplied by boxlen after the velocity unit is defined. Change line 504 to self.velocity_unit = self.parameters['unit_l'] / self.time_unit or similar and it should work fine. \"\n\nSince the Length unit is being multiplied by the box len beforehand..  this is why I figured this change is sensible.. however, this might not be the case for non-cosmological runs (hence why I suggested this is worth checking).... and I think Pymses is used mainly with cosmological runs? I could be wrong... @samgeen  what are your thoughts on this?",
+                "html": "<p>Actually.. looking over <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/1335/ramses-unit-conversions/diff\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/1335/ramses-unit-conversions/diff</a></p>\n<p>\"in Pymses, the length unit is multiplied by boxlen after the velocity unit is defined. Change line 504 to self.velocity_unit = self.parameters['unit_l'] / self.time_unit or similar and it should work fine. \"</p>\n<p>Since the Length unit is being multiplied by the box len beforehand..  this is why I figured this change is sensible.. however, this might not be the case for non-cosmological runs (hence why I suggested this is worth checking).... and I think Pymses is used mainly with cosmological runs? I could be wrong... <a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a>  what are your thoughts on this?</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -874,22 +828,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8707765"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8707765"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -902,8 +842,19 @@
                 },
                 "id": 8377073
             },
+            "created_on": "2015-07-31T17:17:12.890744+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/8707765"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-8707765"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/cosmosquark/yt-time:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -913,24 +864,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "Actually.. looking over https://bitbucket.org/yt_analysis/yt/pull-requests/1335/ramses-unit-conversions/diff\n\n\"in Pymses, the length unit is multiplied by boxlen after the velocity unit is defined. Change line 504 to self.velocity_unit = self.parameters['unit_l'] / self.time_unit or similar and it should work fine. \"\n\nSince the Length unit is being multiplied by the box len beforehand..  this is why I figured this change is sensible.. however, this might not be the case for non-cosmological runs (hence why I suggested this is worth checking).... and I think Pymses is used mainly with cosmological runs? I could be wrong... @samgeen  what are your thoughts on this?",
-                "html": "<p>Actually.. looking over <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/1335/ramses-unit-conversions/diff\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/1335/ramses-unit-conversions/diff</a></p>\n<p>\"in Pymses, the length unit is multiplied by boxlen after the velocity unit is defined. Change line 504 to self.velocity_unit = self.parameters['unit_l'] / self.time_unit or similar and it should work fine. \"</p>\n<p>Since the Length unit is being multiplied by the box len beforehand..  this is why I figured this change is sensible.. however, this might not be the case for non-cosmological runs (hence why I suggested this is worth checking).... and I think Pymses is used mainly with cosmological runs? I could be wrong... <a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a>  what are your thoughts on this?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-07-31T17:17:12.890744+00:00",
-            "updated_on": "2015-07-31T17:17:12.973045+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 8707765
+            "type": "pullrequest_comment",
+            "id": 8707765,
+            "updated_on": "2015-07-31T17:17:12.973045+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I will work on this PR more so after Ricarda's PR #1694 ( https://bitbucket.org/yt_analysis/yt/pull-requests/1694/ ) goes through. I suspect that PR will require this one to change more so.",
+                "html": "<p>I will work on this PR more so after Ricarda's PR #1694 ( <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/1694/\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/1694/</a> ) goes through. I suspect that PR will require this one to change more so.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -942,12 +896,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1644/comments/9059657"
@@ -956,8 +907,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644/_/diff#comment-9059657"
                 }
             },
+            "created_on": "2015-08-13T12:11:06.603177+00:00",
+            "updated_on": "2015-08-13T12:11:23.408073+00:00",
             "pullrequest": {
-                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -967,16 +919,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1644"
                     }
                 },
+                "title": "[bugfix][WIP] setting particle_age in RAMSES as the lookback time the particle was created",
                 "id": 1644
             },
-            "content": {
-                "raw": "I will work on this PR more so after Ricarda's PR #1694 ( https://bitbucket.org/yt_analysis/yt/pull-requests/1694/ ) goes through. I suspect that PR will require this one to change more so.",
-                "html": "<p>I will work on this PR more so after Ricarda's PR #1694 ( <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/1694/\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/1694/</a> ) goes through. I suspect that PR will require this one to change more so.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-08-13T12:11:06.603177+00:00",
-            "updated_on": "2015-08-13T12:11:23.408073+00:00",
+            "type": "pullrequest_comment",
             "id": 9059657
         }
-    ]
+    ],
+    "reason": "superseded by https://bitbucket.org/yt_analysis/yt/pull-requests/2346/fixing-ramses-time-values",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "DECLINED",
+    "description": "Please note that I have only used YT with RAMSES so I am lead to believe that the particle_age field is the birth time of the star in hubble lookback time?\r\n\r\nSo the time units in RAMSES datasets are output in lookback conformal time. , in cosmological simulations this leads to particle ages being I am lead to believe inconsistent with the particle ages in other cosmological simulation datasets .. which have the units of proper time\r\n\r\nIn order to do this, I have adapted the routine from this file within the RAMSES utils\r\n\r\nhttps://bitbucket.org/rteyssie/ramses/src/4b15d692647ca970b3a0060bd00a94b80c823a3b/trunk/ramses/utils/f90/part2birth.f90?at=master\r\n\r\ninto cython.\r\n\r\nLikewise I have also redefined the origional \"particle_age\" field as \"particle_ramses_age\"... but I might change this to \"particle_conformal_time\" to be a bit more verbose.\r\n\r\nI cannot take all the credit for this PR, since I have basically adapted the code from the origional RAMSES utils ( R. Teyssier ) as well as some discussion with D. Sullivan.\r\n\r\nBefore this PR goes through, I would like some help with including the tform.pyx within the build process of YT. Along with some work on speeding up the computation of tform.friedman (required in order to produce the conformal lookback time -> propertime conversion. and packaging all of this together.\r\n\r\nThis would be a great addition to YT since it would bypass the time transformation part of loading cosmological simulations in RAMSES.",
+    "author": {
+        "username": "cosmosquark",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
+            },
+            "html": {
+                "href": "https://bitbucket.org/cosmosquark/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+            }
+        },
+        "display_name": "Benjamin Thompson",
+        "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
+    },
+    "updated_on": "2016-08-26T21:32:44.752389+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "c941aa457bc3",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c941aa457bc3"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

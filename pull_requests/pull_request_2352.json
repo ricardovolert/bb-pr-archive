@@ -1,34 +1,7 @@
 {
-    "reason": "redo the pull",
-    "state": "DECLINED",
-    "updated_on": "2016-08-30T01:07:54.045245+00:00",
-    "comment_count": 3,
-    "description": "* Moving the INST_PY3 = 1 version of the mercurial install to before the first use of hg.\r\n\r\n* Enabled Gadget Format 2 in _validate_header\r\n\r\n* Changes in data_structures.py:\r\n    1. New function to determine the gadget format:\r\n    def _get_gadget_format(filename):\r\n        # check and return gadget binary format\r\n        f = open(filename, 'rb')\r\n        (rhead,) = struct.unpack('<I',f.read(4))\r\n        f.close()\r\n        if (rhead == 134217728) | (rhead == 8):\r\n            return 2\r\n        elif (rhead == 65536) | (rhead == 256):\r\n            return 1\r\n        else:\r\n            raise RuntimeError(\"Un correct Gadget format!\")\r\n    2. class GadgetBinaryFile(ParticleFile): add skip for the GF2 header\r\n                if _get_gadget_format(filename) == 2:\r\n                    f.seek(f.tell()+16)\r\n    3. Function _get_hvals in class GadgetDataset: add skip for the GF2 header\r\n\r\n    4. Function _validate_header in class GadgetDataset: add skip for the GF2 header\r\n            elif rhead == 8:\r\n                return True, '<'\r\n            elif rhead == 134217728:\r\n                return True, '>'\r\n\r\n    Changes in io.py:\r\n    1. from .data_structures import _get_gadget_format\r\n    2. in class IOHandlerGadgetBinary(BaseIOHandler) __init__(): self._format =  _get_gadget_format(ds.parameter_filename)#default gadget format 1\r\n    3. in _calculate_field_offsets:\r\n                if self._format == 2:\r\n                    pos += 20 #skip block header\r\n                    #print(\"With Gadget format 2\")\r\n                elif self._format == 1:\r\n                    pos += 4\r\n                else:\r\n                    raise RuntimeError(\"Un correct Gadget format!\")\r\n    \t\t.....\r\n                if (file_size != pos) & (self._format == 1): #ignore the rest of format 2",
-    "created_on": "2016-08-29T07:20:33.312219+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "Stable-Add features to adopt the Gadget Format 2",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/approve"
@@ -36,11 +9,39 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/diff"
+        }
+    },
+    "task_count": 0,
+    "source": {
+        "repository": null,
+        "commit": null,
+        "branch": {
+            "name": "stable"
         }
     },
     "closed_by": {
+        "username": "WeiguangCui",
+        "type": "user",
         "links": {
             "self": {
                 "href": "https://api.bitbucket.org/2.0/users/WeiguangCui"
@@ -52,52 +53,190 @@
                 "href": "https://bitbucket.org/account/WeiguangCui/avatar/32/"
             }
         },
-        "type": "user",
         "display_name": "Weiguang Cui",
-        "uuid": "{a5b78c18-ff68-417b-a30b-132e03345dd7}",
-        "username": "WeiguangCui"
+        "uuid": "{a5b78c18-ff68-417b-a30b-132e03345dd7}"
     },
+    "title": "Stable-Add features to adopt the Gadget Format 2",
     "id": 2352,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/WeiguangCui"
+    "comment_count": 3,
+    "created_on": "2016-08-29T07:20:33.312219+00:00",
+    "merge_commit": null,
+    "comments": [
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/94/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/94/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/94/</a></p>"
             },
-            "html": {
-                "href": "https://bitbucket.org/WeiguangCui/"
+            "user": {
+                "username": "yt-fido",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "avatar": {
-                "href": "https://bitbucket.org/account/WeiguangCui/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Weiguang Cui",
-        "uuid": "{a5b78c18-ff68-417b-a30b-132e03345dd7}",
-        "username": "WeiguangCui"
-    },
-    "source": {
-        "branch": {
-            "name": "stable"
-        },
-        "commit": null,
-        "repository": null
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e339dc97f667"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/comments/22953196"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352/_/diff#comment-22953196"
                 }
             },
-            "hash": "e339dc97f667"
+            "created_on": "2016-08-29T08:00:43.776234+00:00",
+            "updated_on": "2016-08-29T08:00:43.900084+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352"
+                    }
+                },
+                "title": "Stable-Add features to adopt the Gadget Format 2",
+                "id": 2352
+            },
+            "type": "pullrequest_comment",
+            "id": 22953196
         },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi,\n\nI have tested with my yt for both frontends and units. It seems OK. \nHow can I debug to see what caused this error in the test?\n\nThank you.\n\n----------------------------------------------------------------------------------------------------------------------------------------\nwcui@localhost:~/Work/yt/yt$ nosetests frontends/gadget/tests/test_outputs.py\n\n----------------------------------------------------------------------\nRan 0 tests in 0.000s\n\nOK\n\nwcui@localhost:~/Work/yt/yt$ nosetests units/tests/test_ytarray.py \n.........................................................................................................................................................................................................................................................................................................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: divide by zero encountered in divide\n  return super(YTArray, self).__div__(ro)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: invalid value encountered in divide\n  return super(YTArray, self).__div__(ro)\n.............yt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: cosmological_simulation   = 0.0\n........................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log2\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log2\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log10\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log10\n  assert_array_equal(ret, ufunc(a_array))\n....../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log1p\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log1p\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:731: RuntimeWarning: invalid value encountered in sqrt\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:734: RuntimeWarning: invalid value encountered in sqrt\n  assert_array_equal(ret.to_ndarray(), ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arcsin\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arcsin\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccos\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccos\n  assert_array_equal(ret, ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccosh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccosh\n  assert_array_equal(ret, ufunc(a_array))\n..../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arctanh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arctanh\n  assert_array_equal(ret, ufunc(a_array))\n...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................yt : [INFO     ] 2016-08-29 16:47:33,571 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,572 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: cosmological_simulation   = 0.0\n..................yt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,898 Parameters: cosmological_simulation   = 0.0\n.......................................................yt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,050 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,051 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,074 Parameters: cosmological_simulation   = 0.0\n...yt : [INFO     ] 2016-08-29 16:47:34,078 Array units: Msun, km/s\n....\n----------------------------------------------------------------------\nRan 1399 tests in 1.297s\n\nOK\n",
+                "html": "<p>Hi,</p>\n<p>I have tested with my yt for both frontends and units. It seems OK. \nHow can I debug to see what caused this error in the test?</p>\n<p>Thank you.</p>\n<hr />\n<p>wcui@localhost:~/Work/yt/yt$ nosetests frontends/gadget/tests/test_outputs.py</p>\n<hr />\n<p>Ran 0 tests in 0.000s</p>\n<p>OK</p>\n<p>wcui@localhost:~/Work/yt/yt$ nosetests units/tests/test_ytarray.py \n.........................................................................................................................................................................................................................................................................................................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: divide by zero encountered in divide\n  return super(YTArray, self).<strong>div</strong>(ro)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: invalid value encountered in divide\n  return super(YTArray, self).<strong>div</strong>(ro)\n.............yt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: cosmological_simulation   = 0.0\n........................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log2\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log2\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log10\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log10\n  assert_array_equal(ret, ufunc(a_array))\n....../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log1p\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log1p\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:731: RuntimeWarning: invalid value encountered in sqrt\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:734: RuntimeWarning: invalid value encountered in sqrt\n  assert_array_equal(ret.to_ndarray(), ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arcsin\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arcsin\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccos\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccos\n  assert_array_equal(ret, ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccosh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccosh\n  assert_array_equal(ret, ufunc(a_array))\n..../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arctanh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arctanh\n  assert_array_equal(ret, ufunc(a_array))\n...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................yt : [INFO     ] 2016-08-29 16:47:33,571 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,572 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: cosmological_simulation   = 0.0\n..................yt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,898 Parameters: cosmological_simulation   = 0.0\n.......................................................yt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,050 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,051 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,074 Parameters: cosmological_simulation   = 0.0\n...yt : [INFO     ] 2016-08-29 16:47:34,078 Array units: Msun, km/s\n....</p>\n<hr />\n<p>Ran 1399 tests in 1.297s</p>\n<p>OK</p>"
+            },
+            "user": {
+                "username": "WeiguangCui",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/WeiguangCui"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/WeiguangCui/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/WeiguangCui/avatar/32/"
+                    }
+                },
+                "display_name": "Weiguang Cui",
+                "uuid": "{a5b78c18-ff68-417b-a30b-132e03345dd7}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/comments/22956081"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352/_/diff#comment-22956081"
+                }
+            },
+            "created_on": "2016-08-29T08:50:10.903145+00:00",
+            "updated_on": "2016-08-29T08:50:11.201872+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352"
+                    }
+                },
+                "title": "Stable-Add features to adopt the Gadget Format 2",
+                "id": 2352
+            },
+            "type": "pullrequest_comment",
+            "id": 22956081
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi @WeiguangCui. First, thanks so much for the pull request!\n\nIt looks like you made the changes on the stable branch. Unfortunately, we don't take pull requests on the stable branch so you're going to need to rebase your changes onto the yt branch. To make that easier, I've gone ahead and done that for you, all you need to do is close this pull request, pull the changes from me, push the rebased changes to your fork, and then reissue the pull request from the correct branch.\n\nHere are the steps you need to complete:\n\n* Decline this pull request, click the \"decline\" button at the top of this page.\n* Execute the following mercurial commands:\n\n```\n$ hg pull -B weiguang-fix https://bitbucket.org/ngoldbaum/yt\n$ hg update weiguang-fix\n$ python setup.py develop\n```\n\nand re-test that your pull request is working.\n\n* Push the rebased changes to your fork:\n\n```\n$ hg push -B weiguang-fix https://bitbucket.org/WeiguangCui/yt/\n```\n\n* Reissue the pull request from the rebased head. This new pull request should be from the `yt` branch in your fork  to the `yt` branch in the main repository. The `yt` branch is the name of the branch we use for active development.\n\nI don't think anyone has actually looked at the code changes you made yet, so you might need to make additional changes or cleanups once people have reviewed your pull request. This is just what needs to happen so the tests can run and people can review your changes.\n\nIn addition, can you make a data file that is in the Gadget Format 2 style available so we can upload it to yt-project.org/data? In general, we'd like to have data files available for testing for all data formats that yt supports. That will also make it possible for people reviewing your PR to test it.\n\nFinally, I think this is going to need some modifications to our documentation. The yt documentation is in the repository (the doc folder). I think at a minimum you're going to need to update the section on loading Gadget data (this page: http://yt-project.org/doc/examining/loading_data.html#gadget-data). The file you need to edit is located in the file, `doc/source/examining/loading_data.rst`, where this path is relative to the root of the yt repository.\n\nHope that's helpful, let us know if you have any questions about this.",
+                "html": "<p>Hi <a href=\"/WeiguangCui/\" rel=\"nofollow\" title=\"@WeiguangCui\" class=\"mention\">Weiguang Cui</a>. First, thanks so much for the pull request!</p>\n<p>It looks like you made the changes on the stable branch. Unfortunately, we don't take pull requests on the stable branch so you're going to need to rebase your changes onto the yt branch. To make that easier, I've gone ahead and done that for you, all you need to do is close this pull request, pull the changes from me, push the rebased changes to your fork, and then reissue the pull request from the correct branch.</p>\n<p>Here are the steps you need to complete:</p>\n<ul>\n<li>Decline this pull request, click the \"decline\" button at the top of this page.</li>\n<li>Execute the following mercurial commands:</li>\n</ul>\n<div class=\"codehilite\"><pre><span></span>$ hg pull -B weiguang-fix https://bitbucket.org/ngoldbaum/yt\n$ hg update weiguang-fix\n$ python setup.py develop\n</pre></div>\n\n\n<p>and re-test that your pull request is working.</p>\n<ul>\n<li>Push the rebased changes to your fork:</li>\n</ul>\n<div class=\"codehilite\"><pre><span></span>$ hg push -B weiguang-fix https://bitbucket.org/WeiguangCui/yt/\n</pre></div>\n\n\n<ul>\n<li>Reissue the pull request from the rebased head. This new pull request should be from the <code>yt</code> branch in your fork  to the <code>yt</code> branch in the main repository. The <code>yt</code> branch is the name of the branch we use for active development.</li>\n</ul>\n<p>I don't think anyone has actually looked at the code changes you made yet, so you might need to make additional changes or cleanups once people have reviewed your pull request. This is just what needs to happen so the tests can run and people can review your changes.</p>\n<p>In addition, can you make a data file that is in the Gadget Format 2 style available so we can upload it to <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>? In general, we'd like to have data files available for testing for all data formats that yt supports. That will also make it possible for people reviewing your PR to test it.</p>\n<p>Finally, I think this is going to need some modifications to our documentation. The yt documentation is in the repository (the doc folder). I think at a minimum you're going to need to update the section on loading Gadget data (this page: <a href=\"http://yt-project.org/doc/examining/loading_data.html#gadget-data\" rel=\"nofollow\">http://yt-project.org/doc/examining/loading_data.html#gadget-data</a>). The file you need to edit is located in the file, <code>doc/source/examining/loading_data.rst</code>, where this path is relative to the root of the yt repository.</p>\n<p>Hope that's helpful, let us know if you have any questions about this.</p>"
+            },
+            "user": {
+                "username": "ngoldbaum",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/comments/22976561"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352/_/diff#comment-22976561"
+                }
+            },
+            "created_on": "2016-08-29T14:57:53.411980+00:00",
+            "updated_on": "2016-08-29T14:58:40.991142+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352"
+                    }
+                },
+                "title": "Stable-Add features to adopt the Gadget Format 2",
+                "id": 2352
+            },
+            "type": "pullrequest_comment",
+            "id": 22976561
+        }
+    ],
+    "reason": "redo the pull",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "DECLINED",
+    "description": "* Moving the INST_PY3 = 1 version of the mercurial install to before the first use of hg.\r\n\r\n* Enabled Gadget Format 2 in _validate_header\r\n\r\n* Changes in data_structures.py:\r\n    1. New function to determine the gadget format:\r\n    def _get_gadget_format(filename):\r\n        # check and return gadget binary format\r\n        f = open(filename, 'rb')\r\n        (rhead,) = struct.unpack('<I',f.read(4))\r\n        f.close()\r\n        if (rhead == 134217728) | (rhead == 8):\r\n            return 2\r\n        elif (rhead == 65536) | (rhead == 256):\r\n            return 1\r\n        else:\r\n            raise RuntimeError(\"Un correct Gadget format!\")\r\n    2. class GadgetBinaryFile(ParticleFile): add skip for the GF2 header\r\n                if _get_gadget_format(filename) == 2:\r\n                    f.seek(f.tell()+16)\r\n    3. Function _get_hvals in class GadgetDataset: add skip for the GF2 header\r\n\r\n    4. Function _validate_header in class GadgetDataset: add skip for the GF2 header\r\n            elif rhead == 8:\r\n                return True, '<'\r\n            elif rhead == 134217728:\r\n                return True, '>'\r\n\r\n    Changes in io.py:\r\n    1. from .data_structures import _get_gadget_format\r\n    2. in class IOHandlerGadgetBinary(BaseIOHandler) __init__(): self._format =  _get_gadget_format(ds.parameter_filename)#default gadget format 1\r\n    3. in _calculate_field_offsets:\r\n                if self._format == 2:\r\n                    pos += 20 #skip block header\r\n                    #print(\"With Gadget format 2\")\r\n                elif self._format == 1:\r\n                    pos += 4\r\n                else:\r\n                    raise RuntimeError(\"Un correct Gadget format!\")\r\n    \t\t.....\r\n                if (file_size != pos) & (self._format == 1): #ignore the rest of format 2",
+    "author": {
+        "username": "WeiguangCui",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/WeiguangCui"
+            },
+            "html": {
+                "href": "https://bitbucket.org/WeiguangCui/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/WeiguangCui/avatar/32/"
+            }
+        },
+        "display_name": "Weiguang Cui",
+        "uuid": "{a5b78c18-ff68-417b-a30b-132e03345dd7}"
+    },
+    "updated_on": "2016-08-30T01:07:54.045245+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -110,157 +249,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
-        }
-    },
-    "comments": [
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt-fido/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/comments/22953196"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352/_/diff#comment-22953196"
-                }
-            },
-            "pullrequest": {
-                "title": "Stable-Add features to adopt the Gadget Format 2",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352"
-                    }
-                },
-                "id": 2352
-            },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/94/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/94/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/94/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-29T08:00:43.776234+00:00",
-            "updated_on": "2016-08-29T08:00:43.900084+00:00",
-            "id": 22953196
+            "name": "yt"
         },
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/WeiguangCui"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/WeiguangCui/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/WeiguangCui/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Weiguang Cui",
-                "uuid": "{a5b78c18-ff68-417b-a30b-132e03345dd7}",
-                "username": "WeiguangCui"
-            },
-            "type": "pullrequest_comment",
+        "commit": {
+            "hash": "e339dc97f667",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/comments/22956081"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352/_/diff#comment-22956081"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e339dc97f667"
                 }
-            },
-            "pullrequest": {
-                "title": "Stable-Add features to adopt the Gadget Format 2",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352"
-                    }
-                },
-                "id": 2352
-            },
-            "content": {
-                "raw": "Hi,\n\nI have tested with my yt for both frontends and units. It seems OK. \nHow can I debug to see what caused this error in the test?\n\nThank you.\n\n----------------------------------------------------------------------------------------------------------------------------------------\nwcui@localhost:~/Work/yt/yt$ nosetests frontends/gadget/tests/test_outputs.py\n\n----------------------------------------------------------------------\nRan 0 tests in 0.000s\n\nOK\n\nwcui@localhost:~/Work/yt/yt$ nosetests units/tests/test_ytarray.py \n.........................................................................................................................................................................................................................................................................................................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: divide by zero encountered in divide\n  return super(YTArray, self).__div__(ro)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: invalid value encountered in divide\n  return super(YTArray, self).__div__(ro)\n.............yt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: cosmological_simulation   = 0.0\n........................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log2\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log2\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log10\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log10\n  assert_array_equal(ret, ufunc(a_array))\n....../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log1p\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log1p\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:731: RuntimeWarning: invalid value encountered in sqrt\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:734: RuntimeWarning: invalid value encountered in sqrt\n  assert_array_equal(ret.to_ndarray(), ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arcsin\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arcsin\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccos\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccos\n  assert_array_equal(ret, ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccosh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccosh\n  assert_array_equal(ret, ufunc(a_array))\n..../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arctanh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arctanh\n  assert_array_equal(ret, ufunc(a_array))\n...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................yt : [INFO     ] 2016-08-29 16:47:33,571 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,572 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: cosmological_simulation   = 0.0\n..................yt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,898 Parameters: cosmological_simulation   = 0.0\n.......................................................yt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,050 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,051 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,074 Parameters: cosmological_simulation   = 0.0\n...yt : [INFO     ] 2016-08-29 16:47:34,078 Array units: Msun, km/s\n....\n----------------------------------------------------------------------\nRan 1399 tests in 1.297s\n\nOK\n",
-                "html": "<p>Hi,</p>\n<p>I have tested with my yt for both frontends and units. It seems OK. \nHow can I debug to see what caused this error in the test?</p>\n<p>Thank you.</p>\n<hr />\n<p>wcui@localhost:~/Work/yt/yt$ nosetests frontends/gadget/tests/test_outputs.py</p>\n<hr />\n<p>Ran 0 tests in 0.000s</p>\n<p>OK</p>\n<p>wcui@localhost:~/Work/yt/yt$ nosetests units/tests/test_ytarray.py \n.........................................................................................................................................................................................................................................................................................................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: divide by zero encountered in divide\n  return super(YTArray, self).<strong>div</strong>(ro)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/yt_array.py:973: RuntimeWarning: invalid value encountered in divide\n  return super(YTArray, self).<strong>div</strong>(ro)\n.............yt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,023 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,024 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,047 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,048 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,070 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,071 Parameters: cosmological_simulation   = 0.0\n.yt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,096 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,097 Parameters: cosmological_simulation   = 0.0\n........................................../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log2\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log2\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log10\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log10\n  assert_array_equal(ret, ufunc(a_array))\n....../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in log1p\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in log1p\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:731: RuntimeWarning: invalid value encountered in sqrt\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:734: RuntimeWarning: invalid value encountered in sqrt\n  assert_array_equal(ret.to_ndarray(), ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arcsin\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arcsin\n  assert_array_equal(ret, ufunc(a_array))\n.../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccos\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccos\n  assert_array_equal(ret, ufunc(a_array))\n................./mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arccosh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arccosh\n  assert_array_equal(ret, ufunc(a_array))\n..../mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:710: RuntimeWarning: invalid value encountered in arctanh\n  ret = ufunc(a, out=out)\n/mnt/hgfs/wcui/MEGA/Work/yt/yt/units/tests/test_ytarray.py:716: RuntimeWarning: invalid value encountered in arctanh\n  assert_array_equal(ret, ufunc(a_array))\n...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................yt : [INFO     ] 2016-08-29 16:47:33,571 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,572 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,573 Parameters: cosmological_simulation   = 0.0\n..................yt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:33,897 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:33,898 Parameters: cosmological_simulation   = 0.0\n.......................................................yt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,049 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,050 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,051 Parameters: cosmological_simulation   = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: current_time              = 0.0\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_dimensions         = [64 64 64]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_left_edge          = [ 0.  0.  0.]\nyt : [INFO     ] 2016-08-29 16:47:34,073 Parameters: domain_right_edge         = [ 1.  1.  1.]\nyt : [INFO     ] 2016-08-29 16:47:34,074 Parameters: cosmological_simulation   = 0.0\n...yt : [INFO     ] 2016-08-29 16:47:34,078 Array units: Msun, km/s\n....</p>\n<hr />\n<p>Ran 1399 tests in 1.297s</p>\n<p>OK</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-29T08:50:10.903145+00:00",
-            "updated_on": "2016-08-29T08:50:11.201872+00:00",
-            "id": 22956081
+            }
         },
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/ngoldbaum/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352/comments/22976561"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352/_/diff#comment-22976561"
-                }
-            },
-            "pullrequest": {
-                "title": "Stable-Add features to adopt the Gadget Format 2",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2352"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2352"
-                    }
-                },
-                "id": 2352
-            },
-            "content": {
-                "raw": "Hi @WeiguangCui. First, thanks so much for the pull request!\n\nIt looks like you made the changes on the stable branch. Unfortunately, we don't take pull requests on the stable branch so you're going to need to rebase your changes onto the yt branch. To make that easier, I've gone ahead and done that for you, all you need to do is close this pull request, pull the changes from me, push the rebased changes to your fork, and then reissue the pull request from the correct branch.\n\nHere are the steps you need to complete:\n\n* Decline this pull request, click the \"decline\" button at the top of this page.\n* Execute the following mercurial commands:\n\n```\n$ hg pull -B weiguang-fix https://bitbucket.org/ngoldbaum/yt\n$ hg update weiguang-fix\n$ python setup.py develop\n```\n\nand re-test that your pull request is working.\n\n* Push the rebased changes to your fork:\n\n```\n$ hg push -B weiguang-fix https://bitbucket.org/WeiguangCui/yt/\n```\n\n* Reissue the pull request from the rebased head. This new pull request should be from the `yt` branch in your fork  to the `yt` branch in the main repository. The `yt` branch is the name of the branch we use for active development.\n\nI don't think anyone has actually looked at the code changes you made yet, so you might need to make additional changes or cleanups once people have reviewed your pull request. This is just what needs to happen so the tests can run and people can review your changes.\n\nIn addition, can you make a data file that is in the Gadget Format 2 style available so we can upload it to yt-project.org/data? In general, we'd like to have data files available for testing for all data formats that yt supports. That will also make it possible for people reviewing your PR to test it.\n\nFinally, I think this is going to need some modifications to our documentation. The yt documentation is in the repository (the doc folder). I think at a minimum you're going to need to update the section on loading Gadget data (this page: http://yt-project.org/doc/examining/loading_data.html#gadget-data). The file you need to edit is located in the file, `doc/source/examining/loading_data.rst`, where this path is relative to the root of the yt repository.\n\nHope that's helpful, let us know if you have any questions about this.",
-                "html": "<p>Hi <a href=\"/WeiguangCui/\" rel=\"nofollow\" title=\"@WeiguangCui\" class=\"mention\">Weiguang Cui</a>. First, thanks so much for the pull request!</p>\n<p>It looks like you made the changes on the stable branch. Unfortunately, we don't take pull requests on the stable branch so you're going to need to rebase your changes onto the yt branch. To make that easier, I've gone ahead and done that for you, all you need to do is close this pull request, pull the changes from me, push the rebased changes to your fork, and then reissue the pull request from the correct branch.</p>\n<p>Here are the steps you need to complete:</p>\n<ul>\n<li>Decline this pull request, click the \"decline\" button at the top of this page.</li>\n<li>Execute the following mercurial commands:</li>\n</ul>\n<div class=\"codehilite\"><pre><span></span>$ hg pull -B weiguang-fix https://bitbucket.org/ngoldbaum/yt\n$ hg update weiguang-fix\n$ python setup.py develop\n</pre></div>\n\n\n<p>and re-test that your pull request is working.</p>\n<ul>\n<li>Push the rebased changes to your fork:</li>\n</ul>\n<div class=\"codehilite\"><pre><span></span>$ hg push -B weiguang-fix https://bitbucket.org/WeiguangCui/yt/\n</pre></div>\n\n\n<ul>\n<li>Reissue the pull request from the rebased head. This new pull request should be from the <code>yt</code> branch in your fork  to the <code>yt</code> branch in the main repository. The <code>yt</code> branch is the name of the branch we use for active development.</li>\n</ul>\n<p>I don't think anyone has actually looked at the code changes you made yet, so you might need to make additional changes or cleanups once people have reviewed your pull request. This is just what needs to happen so the tests can run and people can review your changes.</p>\n<p>In addition, can you make a data file that is in the Gadget Format 2 style available so we can upload it to <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>? In general, we'd like to have data files available for testing for all data formats that yt supports. That will also make it possible for people reviewing your PR to test it.</p>\n<p>Finally, I think this is going to need some modifications to our documentation. The yt documentation is in the repository (the doc folder). I think at a minimum you're going to need to update the section on loading Gadget data (this page: <a href=\"http://yt-project.org/doc/examining/loading_data.html#gadget-data\" rel=\"nofollow\">http://yt-project.org/doc/examining/loading_data.html#gadget-data</a>). The file you need to edit is located in the file, <code>doc/source/examining/loading_data.rst</code>, where this path is relative to the root of the yt repository.</p>\n<p>Hope that's helpful, let us know if you have any questions about this.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-29T14:57:53.411980+00:00",
-            "updated_on": "2016-08-29T14:58:40.991142+00:00",
-            "id": 22976561
+        "branch": {
+            "name": "yt"
         }
-    ]
+    }
 }

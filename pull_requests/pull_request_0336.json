@@ -1,34 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2012-11-26T16:33:25.345772+00:00",
-    "comment_count": 48,
-    "description": "**Update 6** The rockstar source directory is now handled using a rockstar.cfg file instead of an environment variable.\r\n\r\n**Update 5** Rockstar is now optional when installing. Default is true.\r\n\r\n**Update 4** I have added Rockstar to the install script and the activate scripts. I have made a patched tar.gz of Rockstar (you can get it here, Matt: http://stephenskory.com/Rockstar-0.99.tar.gz). I ran the install script (making sure to reference my BB repo temporarily) and it looks like it works.\r\n\r\nI've also pulled in the most recent mainline and merged.\r\n\r\nLet's hope that this is the last update!\r\n\r\n** Update 3** I wanted to use the new point finding stuff so I merged in from mainline. No other changes.\r\n\r\n** Update 2.5** I forgot to mention that with this changeset, a small patch is required to Rockstar so that the type of client that is launched can be specified, and not left to the Rockstar server to assign.\r\n\r\n** Update 2 ** Big changes!\r\n\r\n  * Fixed the MPI/hierarchy hanging issue with the topcomm by initializing the workgroup pool above ``ParallelAnalysisInterface.__init__(self)``.\r\n  * Rockstar appears to work inline with Enzo. To do this, I am using forks. Specifically, the server process and the writer/analysis processes are forked, while the reader clients are not forked and are called by all the Enzo MPI threads.\r\n  * I split up the differing functionality in rockstar.py for inline and outline modes into two classes which I know will make Matt happy :).\r\n\r\n** Update 1 ** Made some changes in response to Matt's comments. There is an issue with the hierarchy which I've emailed the list about. This is not ready to be pulled in until that's resolved.\r\n\r\n** Original text below **\r\n\r\nThis includes various improvements and changes to the Rockstar halo finder in yt:\r\n\r\n  * num_readers > 1 now works, and can dramatically speed up IO on a parallel disk system.\r\n  * Grids are now read in by readers in a cyclical way which prevents all the root grids being read in by a single reader. Like above, this helps to speed up IO on a parallel disk system.\r\n  * rockstar output is now stored in a directory named \"rockstar_halos\". Previously it was '\"%s_rockstar\" % (first pf in time series)', which was confusing when halos for other data snapshots were also stored in that directory.\r\n  * I have added a \"rockstar_halos/pf.txt\" file that gives the Rockstar index number for each original data snapshot because this is not an obvious connection.\r\n\r\n(pf.txt):\r\n\r\n    # pfname\tindex\r\n    DD0003/data0003\t0\r\n    DD0004/data0004\t1\r\n    DD0005/data0005\t2\r\n\r\n  * The loaded Rockstar halos, read in with LoadRockstarHalos (similar LoadHalos in implementation) now reads in halo data out of the Rockstar binary files (instead of the text files). The Rockstar halos have all the information that Rockstar supplies stored with them in the supp dict (raw - exactly as they are in the binary file, so \"pos\" below is actually position in Mpc and velocity in km/s), and also the appropriate values attached to the built-in things like total_mass(), center_of_mass() in simulation units where appropriate (like for center_of_mass() and radius).\r\n\r\n()\r\n\r\n    :::python\r\n    In [2]: rhalos = LoadRockstarHalos(pf, 'rockstar_halos/out_43.list')\r\n    yt : [INFO     ] 2012-11-12 13:17:16,696 Initializing Rockstar List\r\n    yt : [INFO     ] 2012-11-12 13:17:16,704 Getting the binary hierarchy\r\n    yt : [INFO     ] 2012-11-12 13:17:16,714 Finished with binary hierarchy reading\r\n    yt : [INFO     ] 2012-11-12 13:17:17,036 Parsing Rockstar halo list\r\n    yt : [INFO     ] 2012-11-12 13:17:17,060 Finished rockstar_halos/out_43.list\r\n    \r\n    In [3]: rhalos[0].supp\r\n    Out[3]: \r\n    {'J': array([ -6.15271728e+15,  -1.36593609e+17,  -7.80776865e+16], dtype=float32),\r\n     'bulkvel': array([-132.05046082,   11.53190422,   42.16183472], dtype=float32),\r\n     'child_r': 2.6411054,\r\n     'corevel': array([-132.05046082,   11.53190422,   42.16183472], dtype=float32),\r\n     'desc': 0,\r\n     'energy': -8.106986e+21,\r\n     'flags': 1,\r\n     'id': 166,\r\n     'm': 1.5341227e+15,\r\n     'mgrav': 1.5341227e+15,\r\n     'min_bulkvel_err': 1821.8152,\r\n     'min_pos_err': 0.00049575343,\r\n     'min_vel_err': 1821.8152,\r\n     'n_core': 1958,\r\n     'num_child_particles': 2764,\r\n     'num_p': 2409,\r\n     'p_start': 6540,\r\n     'pos': array([   0.20197368,    0.54656458,    0.11256824, -104.33285522,\r\n             29.02485085,   43.5154953 ], dtype=float32),\r\n     'r': 0.018403014,\r\n     'rs': 0.0026318002,\r\n     'rvmax': 1133.2,\r\n     'spin': 0.035755754,\r\n     'vmax': 1877.125,\r\n     'vrms': 1886.2648}\r\n\r\n  * Rockstar halos are capable of retrieving particle data from the binary files. Rockstar only stores particle IDs, and these are used to connect to the particle data available in the full data snapshot that is referenced when the Rockstar halos are loaded. The particle data is *only* read in upon demand.\r\n\r\n()\r\n\r\n    :::python\r\n    In [4]: rhalos[0]['particle_position_x']\r\n    yt : [INFO     ] 2012-11-12 13:40:43,296 Getting 2409 particles from Rockstar binary file rockstar_halos/halos_43.0.bin.\r\n    (2409,)\r\n    yt : [INFO     ] 2012-11-12 13:40:43,300 Getting particle_index using ParticleIO\r\n    yt : [INFO     ] 2012-11-12 13:40:49,674 Getting particle_position_x using ParticleIO\r\n    Out[4]: \r\n    array([ 0.21708461,  0.21823348,  0.21871664, ...,  0.20831766,\r\n            0.21101551,  0.21130322])\r\n\r\n  * The machinery that sets up Rockstar for halo finding now calculates the total number of particles in parallel, and can fall back if the \"particle_type\" field is absent.\r\n  * Generally cleaned up the RockstarHalo stuff to more closely resemble the other halo finder Halos in halo_objects.py.\r\n  * Pulled in (by hand) improvements from Chris Moody's Rockstar changes (in pull request #247), including the \"force_res\" parameter, which I've set to default to the width of the smallest cell in the last (most time evolved) snapshot in the TimeSeries.",
-    "created_on": "2012-11-12T20:41:50.279722+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "Rockstar improvements",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/approve"
@@ -36,11 +9,39 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/diff"
+        }
+    },
+    "task_count": 0,
+    "source": {
+        "repository": null,
+        "commit": null,
+        "branch": {
+            "name": "yt"
         }
     },
     "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
         "links": {
             "self": {
                 "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -52,71 +53,24 @@
                 "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
             }
         },
-        "type": "user",
         "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
     },
+    "title": "Rockstar improvements",
     "id": 336,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/sskory"
-            },
-            "html": {
-                "href": "https://bitbucket.org/sskory/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/sskory/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Stephen Skory",
-        "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-        "username": "sskory"
-    },
-    "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": null,
-        "repository": null
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/87237e244a95"
-                }
-            },
-            "hash": "87237e244a95"
-        },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
-            },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
-        }
-    },
+    "comment_count": 48,
+    "created_on": "2012-11-12T20:41:50.279722+00:00",
+    "merge_commit": null,
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Shoot, I was mistaken above. The .supp dictionary stores values in converted units, so position and radius are in simulation units, not physical.",
+                "html": "<p>Shoot, I was mistaken above. The .supp dictionary stores values in converted units, so position and radius are in simulation units, not physical.</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -128,12 +82,9 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40609"
@@ -142,8 +93,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40609"
                 }
             },
+            "created_on": "2012-11-12T20:44:27.445303+00:00",
+            "updated_on": "2012-11-12T20:44:27.451317+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -153,19 +105,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Shoot, I was mistaken above. The .supp dictionary stores values in converted units, so position and radius are in simulation units, not physical.",
-                "html": "<p>Shoot, I was mistaken above. The .supp dictionary stores values in converted units, so position and radius are in simulation units, not physical.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T20:44:27.445303+00:00",
-            "updated_on": "2012-11-12T20:44:27.451317+00:00",
+            "type": "pullrequest_comment",
             "id": 40609
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "if key in self.saved_fields",
+                "html": "<p>if key in self.saved_fields</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -177,25 +131,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40627"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40627"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:04:29.769870+00:00",
+            "updated_on": "2012-11-12T21:04:29.775705+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -205,24 +157,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "if key in self.saved_fields",
-                "html": "<p>if key in self.saved_fields</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:04:29.769870+00:00",
-            "updated_on": "2012-11-12T21:04:29.775705+00:00",
             "inline": {
-                "from": null,
+                "to": 579,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 579
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40627
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "In general we should never have an entire block of routines that are done this way.  You have added a level of indentation *entirely* inside an exception catch.",
+                "html": "<p>In general we should never have an entire block of routines that are done this way.  You have added a level of indentation <em>entirely</em> inside an exception catch.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -234,25 +188,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40628"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40628"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:05:02.370512+00:00",
+            "updated_on": "2012-11-12T21:05:02.375234+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -262,24 +214,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "In general we should never have an entire block of routines that are done this way.  You have added a level of indentation *entirely* inside an exception catch.",
-                "html": "<p>In general we should never have an entire block of routines that are done this way.  You have added a level of indentation <em>entirely</em> inside an exception catch.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:05:02.370512+00:00",
-            "updated_on": "2012-11-12T21:05:02.375234+00:00",
             "inline": {
-                "from": null,
+                "to": 582,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 582
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40628
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Stephen, this will take a bit of time to review, but I'll get to it in the next couple days.  Thanks for submitting -- initially it looks like a big improvement!",
+                "html": "<p>Hi Stephen, this will take a bit of time to review, but I'll get to it in the next couple days.  Thanks for submitting -- initially it looks like a big improvement!</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -291,12 +245,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40629"
@@ -305,8 +256,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40629"
                 }
             },
+            "created_on": "2012-11-12T21:05:34.266933+00:00",
+            "updated_on": "2012-11-12T21:05:34.272424+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -316,19 +268,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Hi Stephen, this will take a bit of time to review, but I'll get to it in the next couple days.  Thanks for submitting -- initially it looks like a big improvement!",
-                "html": "<p>Hi Stephen, this will take a bit of time to review, but I'll get to it in the next couple days.  Thanks for submitting -- initially it looks like a big improvement!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:05:34.266933+00:00",
-            "updated_on": "2012-11-12T21:05:34.272424+00:00",
+            "type": "pullrequest_comment",
             "id": 40629
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This is a very good change.  :)",
+                "html": "<p>This is a very good change.  :)</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -340,25 +294,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40633"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40633"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:08:35.723008+00:00",
+            "updated_on": "2012-11-12T21:08:35.728488+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -368,24 +320,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "This is a very good change.  :)",
-                "html": "<p>This is a very good change.  :)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:08:35.723008+00:00",
-            "updated_on": "2012-11-12T21:08:35.728488+00:00",
             "inline": {
-                "from": 550,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": null
+                "from": 550
             },
+            "type": "pullrequest_comment",
             "id": 40633
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "No problem, I can turn this into an if/else. Thanks for the tip.",
+                "html": "<p>No problem, I can turn this into an if/else. Thanks for the tip.</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -397,22 +351,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40640"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40640"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -425,8 +365,19 @@
                 },
                 "id": 40628
             },
+            "created_on": "2012-11-12T21:20:09.868854+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40640"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40640"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -436,24 +387,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "No problem, I can turn this into an if/else. Thanks for the tip.",
-                "html": "<p>No problem, I can turn this into an if/else. Thanks for the tip.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:20:09.868854+00:00",
-            "updated_on": "2012-11-12T21:20:09.876460+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": null
+                "from": null
             },
-            "id": 40640
+            "type": "pullrequest_comment",
+            "id": 40640,
+            "updated_on": "2012-11-12T21:20:09.876460+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Actually, I think that's just as bad -- just do an \"if key in something\" and return inside that block.  Then the rest of the function is at the function-level indentation.",
+                "html": "<p>Actually, I think that's just as bad -- just do an \"if key in something\" and return inside that block.  Then the rest of the function is at the function-level indentation.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -465,22 +419,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40642"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40642"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -493,8 +433,19 @@
                 },
                 "id": 40640
             },
+            "created_on": "2012-11-12T21:21:22.229838+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40642"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40642"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -504,24 +455,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Actually, I think that's just as bad -- just do an \"if key in something\" and return inside that block.  Then the rest of the function is at the function-level indentation.",
-                "html": "<p>Actually, I think that's just as bad -- just do an \"if key in something\" and return inside that block.  Then the rest of the function is at the function-level indentation.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:21:22.229838+00:00",
-            "updated_on": "2012-11-12T21:21:22.236806+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": null
+                "from": null
             },
-            "id": 40642
+            "type": "pullrequest_comment",
+            "id": 40642,
+            "updated_on": "2012-11-12T21:21:22.236806+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Don't percent the string.  The logging module is set up such that it accepts string format, then *Args.  If the loglevel excludes the log message, it won't conduct the string formatting.  So this would look like:\n\n    mylog.info(\"Getting %d particles from Rockstar binary file %s.\", self.supp['num_p'], file)",
+                "html": "<p>Don't percent the string.  The logging module is set up such that it accepts string format, then *Args.  If the loglevel excludes the log message, it won't conduct the string formatting.  So this would look like:</p>\n<div class=\"codehilite\"><pre><span></span>mylog.info(&quot;Getting %d particles from Rockstar binary file %s.&quot;, self.supp[&#39;num_p&#39;], file)\n</pre></div>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -533,25 +487,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40643"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40643"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:22:51.214798+00:00",
+            "updated_on": "2012-11-12T21:22:51.220597+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -561,24 +513,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Don't percent the string.  The logging module is set up such that it accepts string format, then *Args.  If the loglevel excludes the log message, it won't conduct the string formatting.  So this would look like:\n\n    mylog.info(\"Getting %d particles from Rockstar binary file %s.\", self.supp['num_p'], file)",
-                "html": "<p>Don't percent the string.  The logging module is set up such that it accepts string format, then *Args.  If the loglevel excludes the log message, it won't conduct the string formatting.  So this would look like:</p>\n<div class=\"codehilite\"><pre><span></span>mylog.info(&quot;Getting %d particles from Rockstar binary file %s.&quot;, self.supp[&#39;num_p&#39;], file)\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:22:51.214798+00:00",
-            "updated_on": "2012-11-12T21:22:51.220597+00:00",
             "inline": {
-                "from": null,
+                "to": 615,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 615
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40643
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This would be clearer and more maintainable if particle_mask were a property.  For instance:\n\n    _particle_mask = None\n    @property\n    def particle_mask(self):\n        if self._particle_mask is not None: return self._particle_mask\n        # rest of this conditional",
+                "html": "<p>This would be clearer and more maintainable if particle_mask were a property.  For instance:</p>\n<div class=\"codehilite\"><pre><span></span>_particle_mask = None\n@property\ndef particle_mask(self):\n    if self._particle_mask is not None: return self._particle_mask\n    # rest of this conditional\n</pre></div>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -590,25 +544,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40645"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40645"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:26:17.877028+00:00",
+            "updated_on": "2012-11-12T21:26:17.882374+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -618,24 +570,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "This would be clearer and more maintainable if particle_mask were a property.  For instance:\n\n    _particle_mask = None\n    @property\n    def particle_mask(self):\n        if self._particle_mask is not None: return self._particle_mask\n        # rest of this conditional",
-                "html": "<p>This would be clearer and more maintainable if particle_mask were a property.  For instance:</p>\n<div class=\"codehilite\"><pre><span></span>_particle_mask = None\n@property\ndef particle_mask(self):\n    if self._particle_mask is not None: return self._particle_mask\n    # rest of this conditional\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:26:17.877028+00:00",
-            "updated_on": "2012-11-12T21:26:17.882374+00:00",
             "inline": {
-                "from": null,
+                "to": 597,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 597
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40645
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "print statement",
+                "html": "<p>print statement</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -647,25 +601,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40646"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40646"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:27:03.984186+00:00",
+            "updated_on": "2012-11-12T21:27:03.989343+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -675,24 +627,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "print statement",
-                "html": "<p>print statement</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:27:03.984186+00:00",
-            "updated_on": "2012-11-12T21:27:03.989343+00:00",
             "inline": {
-                "from": null,
+                "to": 626,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 626
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40646
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Same change here for the try/except block.  Provide an early return in the if statement, then the rest of the function is at function-level indentation.  Also, should be key in saved_fields.",
+                "html": "<p>Same change here for the try/except block.  Provide an early return in the if statement, then the rest of the function is at function-level indentation.  Also, should be key in saved_fields.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -704,25 +658,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40648"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40648"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:28:40.639020+00:00",
+            "updated_on": "2012-11-12T21:29:01.129150+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -732,24 +684,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Same change here for the try/except block.  Provide an early return in the if statement, then the rest of the function is at function-level indentation.  Also, should be key in saved_fields.",
-                "html": "<p>Same change here for the try/except block.  Provide an early return in the if statement, then the rest of the function is at function-level indentation.  Also, should be key in saved_fields.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:28:40.639020+00:00",
-            "updated_on": "2012-11-12T21:29:01.129150+00:00",
             "inline": {
-                "from": 848,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": null
+                "from": 848
             },
+            "type": "pullrequest_comment",
             "id": 40648
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This else isn't needed, since the if block returns from the function.",
+                "html": "<p>This else isn't needed, since the if block returns from the function.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -761,25 +715,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40649"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40649"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:29:29.088701+00:00",
+            "updated_on": "2012-11-12T21:29:29.096871+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -789,24 +741,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "This else isn't needed, since the if block returns from the function.",
-                "html": "<p>This else isn't needed, since the if block returns from the function.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:29:29.088701+00:00",
-            "updated_on": "2012-11-12T21:29:29.096871+00:00",
             "inline": {
-                "from": 859,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": null
+                "from": 859
             },
+            "type": "pullrequest_comment",
             "id": 40649
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can these definitions live at module-level?  If they are not dynamic (i.e., will always be the same during a single run of yt) put them at the top of the module and prefix them with an underscore.  i.e., this would become _header_dt.",
+                "html": "<p>Can these definitions live at module-level?  If they are not dynamic (i.e., will always be the same during a single run of yt) put them at the top of the module and prefix them with an underscore.  i.e., this would become _header_dt.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -818,25 +772,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40650"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40650"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:30:26.334666+00:00",
+            "updated_on": "2012-11-12T21:30:26.343740+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -846,24 +798,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Can these definitions live at module-level?  If they are not dynamic (i.e., will always be the same during a single run of yt) put them at the top of the module and prefix them with an underscore.  i.e., this would become _header_dt.",
-                "html": "<p>Can these definitions live at module-level?  If they are not dynamic (i.e., will always be the same during a single run of yt) put them at the top of the module and prefix them with an underscore.  i.e., this would become _header_dt.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:30:26.334666+00:00",
-            "updated_on": "2012-11-12T21:30:26.343740+00:00",
             "inline": {
-                "from": null,
+                "to": 1339,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 1339
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40650
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "this looks like a syntax error, with a space between self. and halo_dt.",
+                "html": "<p>this looks like a syntax error, with a space between self. and halo_dt.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -875,25 +829,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40652"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40652"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-12T21:36:41.999559+00:00",
+            "updated_on": "2012-11-12T21:36:42.009181+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -903,24 +855,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "this looks like a syntax error, with a space between self. and halo_dt.",
-                "html": "<p>this looks like a syntax error, with a space between self. and halo_dt.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:36:41.999559+00:00",
-            "updated_on": "2012-11-12T21:36:42.009181+00:00",
             "inline": {
-                "from": null,
+                "to": 1385,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 1385
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40652
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Matt, thanks for the useful comments you've made so far. Let me know when you're done looking this over and I'll address them.",
+                "html": "<p>Hi Matt, thanks for the useful comments you've made so far. Let me know when you're done looking this over and I'll address them.</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -932,19 +886,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40653"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40653"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -957,8 +900,16 @@
                 },
                 "id": 40629
             },
+            "created_on": "2012-11-12T21:38:05.006518+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40653"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40653"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -968,19 +919,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Hi Matt, thanks for the useful comments you've made so far. Let me know when you're done looking this over and I'll address them.",
-                "html": "<p>Hi Matt, thanks for the useful comments you've made so far. Let me know when you're done looking this over and I'll address them.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:38:05.006518+00:00",
-            "updated_on": "2012-11-12T21:38:05.012392+00:00",
-            "id": 40653
+            "type": "pullrequest_comment",
+            "id": 40653,
+            "updated_on": "2012-11-12T21:38:05.012392+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Is this different from dd?",
+                "html": "<p>Is this different from dd?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -992,25 +946,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40655"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40655"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
                 }
             },
+            "created_on": "2012-11-12T21:40:07.792692+00:00",
+            "updated_on": "2012-11-12T21:40:07.797818+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1020,24 +972,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Is this different from dd?",
-                "html": "<p>Is this different from dd?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:40:07.792692+00:00",
-            "updated_on": "2012-11-12T21:40:07.797818+00:00",
             "inline": {
-                "from": null,
+                "to": 138,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar.py",
-                "to": 138
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40655
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Another data_source",
+                "html": "<p>Another data_source</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1049,25 +1003,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40656"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40656"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
                 }
             },
+            "created_on": "2012-11-12T21:41:12.783701+00:00",
+            "updated_on": "2012-11-12T21:41:12.789697+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1077,24 +1029,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Another data_source",
-                "html": "<p>Another data_source</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:41:12.783701+00:00",
-            "updated_on": "2012-11-12T21:41:12.789697+00:00",
             "inline": {
-                "from": null,
+                "to": 158,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar.py",
-                "to": 158
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40656
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "le and re are a bit terse for class attributes; I would say right_edge and left_edge",
+                "html": "<p>le and re are a bit terse for class attributes; I would say right_edge and left_edge</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1106,25 +1060,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40658"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40658"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
                 }
             },
+            "created_on": "2012-11-12T21:41:44.187844+00:00",
+            "updated_on": "2012-11-12T21:41:44.192691+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1134,24 +1086,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "le and re are a bit terse for class attributes; I would say right_edge and left_edge",
-                "html": "<p>le and re are a bit terse for class attributes; I would say right_edge and left_edge</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:41:44.187844+00:00",
-            "updated_on": "2012-11-12T21:41:44.192691+00:00",
             "inline": {
-                "from": null,
+                "to": 151,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar.py",
-                "to": 151
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40658
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "great catch!",
+                "html": "<p>great catch!</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1163,25 +1117,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40659"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40659"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:9f7c233dfb07..87237e244a95?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
                 }
             },
+            "created_on": "2012-11-12T21:42:04.667913+00:00",
+            "updated_on": "2012-11-12T21:42:04.675129+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1191,24 +1143,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "great catch!",
-                "html": "<p>great catch!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:42:04.667913+00:00",
-            "updated_on": "2012-11-12T21:42:04.675129+00:00",
             "inline": {
-                "from": null,
+                "to": 286,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar.py",
-                "to": 286
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40659
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This doesn't sit well with me, but I don't have a better solution at the moment.",
+                "html": "<p>This doesn't sit well with me, but I don't have a better solution at the moment.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1220,25 +1174,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40660"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40660"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
                 }
             },
+            "created_on": "2012-11-12T21:44:48.090226+00:00",
+            "updated_on": "2012-11-12T21:44:48.095931+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1248,24 +1200,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "This doesn't sit well with me, but I don't have a better solution at the moment.",
-                "html": "<p>This doesn't sit well with me, but I don't have a better solution at the moment.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:44:48.090226+00:00",
-            "updated_on": "2012-11-12T21:44:48.095931+00:00",
             "inline": {
-                "from": null,
+                "to": 254,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": 254
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40660
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "np.ellipsis",
+                "html": "<p>np.ellipsis</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1277,25 +1231,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40661"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40661"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
                 }
             },
+            "created_on": "2012-11-12T21:45:08.648816+00:00",
+            "updated_on": "2012-11-12T21:45:08.657217+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1305,24 +1257,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "np.ellipsis",
-                "html": "<p>np.ellipsis</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:45:08.648816+00:00",
-            "updated_on": "2012-11-12T21:45:08.657217+00:00",
             "inline": {
-                "from": null,
+                "to": 264,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": 264
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40661
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "print statement",
+                "html": "<p>print statement</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1334,25 +1288,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40662"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40662"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
                 }
             },
+            "created_on": "2012-11-12T21:45:23.221168+00:00",
+            "updated_on": "2012-11-12T21:45:23.226549+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1362,24 +1314,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "print statement",
-                "html": "<p>print statement</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:45:23.221168+00:00",
-            "updated_on": "2012-11-12T21:45:23.226549+00:00",
             "inline": {
-                "from": null,
+                "to": 271,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": 271
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40662
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Actually, one option would be to do exactly what is done in the preload call, which is to sort based on grid.filename, and select in chunks that way.",
+                "html": "<p>Actually, one option would be to do exactly what is done in the preload call, which is to sort based on grid.filename, and select in chunks that way.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1391,22 +1345,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40663"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40663"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1419,8 +1359,19 @@
                 },
                 "id": 40660
             },
+            "created_on": "2012-11-12T21:46:50.825536+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40663"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40663"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1430,24 +1381,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Actually, one option would be to do exactly what is done in the preload call, which is to sort based on grid.filename, and select in chunks that way.",
-                "html": "<p>Actually, one option would be to do exactly what is done in the preload call, which is to sort based on grid.filename, and select in chunks that way.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:46:50.825536+00:00",
-            "updated_on": "2012-11-12T21:46:50.830641+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": null
+                "from": null
             },
-            "id": 40663
+            "type": "pullrequest_comment",
+            "id": 40663,
+            "updated_on": "2012-11-12T21:46:50.830641+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "These changes look good to me, other than my comments below.  The improvements are certainly worth including.\n\nHave you had the opportunity to look at my head in MatthewTurk/yt where I have added callbacks to Rockstar?  I believe those are now in the released version, and I'd like to include them when we make a big push on Rockstar support.\n\nThanks, Stephen!",
+                "html": "<p>These changes look good to me, other than my comments below.  The improvements are certainly worth including.</p>\n<p>Have you had the opportunity to look at my head in <a href=\"/MatthewTurk/yt\" rel=\"nofollow\">MatthewTurk/yt</a> where I have added callbacks to Rockstar?  I believe those are now in the released version, and I'd like to include them when we make a big push on Rockstar support.</p>\n<p>Thanks, Stephen!</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1459,12 +1413,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40664"
@@ -1473,8 +1424,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40664"
                 }
             },
+            "created_on": "2012-11-12T21:47:53.304776+00:00",
+            "updated_on": "2012-11-12T21:47:53.310843+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1484,19 +1436,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "These changes look good to me, other than my comments below.  The improvements are certainly worth including.\n\nHave you had the opportunity to look at my head in MatthewTurk/yt where I have added callbacks to Rockstar?  I believe those are now in the released version, and I'd like to include them when we make a big push on Rockstar support.\n\nThanks, Stephen!",
-                "html": "<p>These changes look good to me, other than my comments below.  The improvements are certainly worth including.</p>\n<p>Have you had the opportunity to look at my head in <a href=\"/MatthewTurk/yt\" rel=\"nofollow\">MatthewTurk/yt</a> where I have added callbacks to Rockstar?  I believe those are now in the released version, and I'd like to include them when we make a big push on Rockstar support.</p>\n<p>Thanks, Stephen!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T21:47:53.304776+00:00",
-            "updated_on": "2012-11-12T21:47:53.310843+00:00",
+            "type": "pullrequest_comment",
             "id": 40664
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I have looked at the nascent callback mechanism, and it looks reasonable.\n\nIf by the \"released version,\" do you mean in the yt_analysis/yt version? Because, if so, it doesn't look like it has made its way over there yet.\n\nI don't want to have a big conversation about callbacks and halo objects here. But I think that I'm understanding you better than before, and I think it's a good approach. Have you had a chance to think about my email about halo_objects.py I sent on Friday to yt-dev?",
+                "html": "<p>I have looked at the nascent callback mechanism, and it looks reasonable.</p>\n<p>If by the \"released version,\" do you mean in the <a href=\"/yt_analysis/yt\" rel=\"nofollow\">yt_analysis/yt</a> version? Because, if so, it doesn't look like it has made its way over there yet.</p>\n<p>I don't want to have a big conversation about callbacks and halo objects here. But I think that I'm understanding you better than before, and I think it's a good approach. Have you had a chance to think about my email about halo_objects.py I sent on Friday to yt-dev?</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -1508,19 +1462,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40677"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40677"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -1533,8 +1476,16 @@
                 },
                 "id": 40664
             },
+            "created_on": "2012-11-12T22:11:39.668723+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40677"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40677"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1544,19 +1495,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "I have looked at the nascent callback mechanism, and it looks reasonable.\n\nIf by the \"released version,\" do you mean in the yt_analysis/yt version? Because, if so, it doesn't look like it has made its way over there yet.\n\nI don't want to have a big conversation about callbacks and halo objects here. But I think that I'm understanding you better than before, and I think it's a good approach. Have you had a chance to think about my email about halo_objects.py I sent on Friday to yt-dev?",
-                "html": "<p>I have looked at the nascent callback mechanism, and it looks reasonable.</p>\n<p>If by the \"released version,\" do you mean in the <a href=\"/yt_analysis/yt\" rel=\"nofollow\">yt_analysis/yt</a> version? Because, if so, it doesn't look like it has made its way over there yet.</p>\n<p>I don't want to have a big conversation about callbacks and halo objects here. But I think that I'm understanding you better than before, and I think it's a good approach. Have you had a chance to think about my email about halo_objects.py I sent on Friday to yt-dev?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T22:11:39.668723+00:00",
-            "updated_on": "2012-11-12T22:11:39.673651+00:00",
-            "id": 40677
+            "type": "pullrequest_comment",
+            "id": 40677,
+            "updated_on": "2012-11-12T22:11:39.673651+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "No, I mean, the released version of Rockstar.  :)\n\nYour email slipped through during the workshop.  I'll reply.",
+                "html": "<p>No, I mean, the released version of Rockstar.  :)</p>\n<p>Your email slipped through during the workshop.  I'll reply.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1568,12 +1522,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40679"
@@ -1582,8 +1533,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40679"
                 }
             },
+            "created_on": "2012-11-12T22:15:05.621747+00:00",
+            "updated_on": "2012-11-12T22:15:05.626016+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1593,19 +1545,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "No, I mean, the released version of Rockstar.  :)\n\nYour email slipped through during the workshop.  I'll reply.",
-                "html": "<p>No, I mean, the released version of Rockstar.  :)</p>\n<p>Your email slipped through during the workshop.  I'll reply.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T22:15:05.621747+00:00",
-            "updated_on": "2012-11-12T22:15:05.626016+00:00",
+            "type": "pullrequest_comment",
             "id": 40679
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "To be more clear, adding support for callbacks requires a hook in Rockstar, which I supplied to PB in a patch, which I think made its way into the released rockstar version.",
+                "html": "<p>To be more clear, adding support for callbacks requires a hook in Rockstar, which I supplied to PB in a patch, which I think made its way into the released rockstar version.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1617,12 +1571,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40680"
@@ -1631,8 +1582,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40680"
                 }
             },
+            "created_on": "2012-11-12T22:15:35.504235+00:00",
+            "updated_on": "2012-11-12T22:15:35.512592+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1642,19 +1594,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "To be more clear, adding support for callbacks requires a hook in Rockstar, which I supplied to PB in a patch, which I think made its way into the released rockstar version.",
-                "html": "<p>To be more clear, adding support for callbacks requires a hook in Rockstar, which I supplied to PB in a patch, which I think made its way into the released rockstar version.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T22:15:35.504235+00:00",
-            "updated_on": "2012-11-12T22:15:35.512592+00:00",
+            "type": "pullrequest_comment",
             "id": 40680
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think Chris Moody caught this, so we should send our props over to him!",
+                "html": "<p>I think Chris Moody caught this, so we should send our props over to him!</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -1666,22 +1620,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40686"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40686"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -1694,8 +1634,19 @@
                 },
                 "id": 40659
             },
+            "created_on": "2012-11-12T22:19:44.234174+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40686"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40686"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar.py"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1705,24 +1656,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "I think Chris Moody caught this, so we should send our props over to him!",
-                "html": "<p>I think Chris Moody caught this, so we should send our props over to him!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T22:19:44.234174+00:00",
-            "updated_on": "2012-11-12T22:19:44.242298+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar.py",
-                "to": null
+                "from": null
             },
-            "id": 40686
+            "type": "pullrequest_comment",
+            "id": 40686,
+            "updated_on": "2012-11-12T22:19:44.242298+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "...  I'm not sure what you're suggesting I do here. Can you be more explicit?",
+                "html": "<p>...  I'm not sure what you're suggesting I do here. Can you be more explicit?</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -1734,22 +1688,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40696"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40696"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -1762,8 +1702,19 @@
                 },
                 "id": 40661
             },
+            "created_on": "2012-11-12T22:39:51.270709+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40696"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40696"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1773,24 +1724,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "...  I'm not sure what you're suggesting I do here. Can you be more explicit?",
-                "html": "<p>...  I'm not sure what you're suggesting I do here. Can you be more explicit?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-12T22:39:51.270709+00:00",
-            "updated_on": "2012-11-12T22:39:51.278675+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": null
+                "from": null
             },
-            "id": 40696
+            "type": "pullrequest_comment",
+            "id": 40696,
+            "updated_on": "2012-11-12T22:39:51.278675+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yes, get rid of np.ones_like, which is a full array allocation, and use np.Ellipsis: http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html",
+                "html": "<p>Yes, get rid of np.ones_like, which is a full array allocation, and use np.Ellipsis: <a href=\"http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html\" rel=\"nofollow\">http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html</a></p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1802,22 +1756,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40845"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40845"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1830,8 +1770,19 @@
                 },
                 "id": 40696
             },
+            "created_on": "2012-11-13T03:06:59.591408+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40845"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40845"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1841,24 +1792,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Yes, get rid of np.ones_like, which is a full array allocation, and use np.Ellipsis: http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html",
-                "html": "<p>Yes, get rid of np.ones_like, which is a full array allocation, and use np.Ellipsis: <a href=\"http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html\" rel=\"nofollow\">http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-13T03:06:59.591408+00:00",
-            "updated_on": "2012-11-13T03:06:59.599815+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": null
+                "from": null
             },
-            "id": 40845
+            "type": "pullrequest_comment",
+            "id": 40845,
+            "updated_on": "2012-11-13T03:06:59.599815+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This should be np.ellipsis, too.  Also, it's easier to check if particle_type is in pf.h.field_list or pf.h.derived_field_list than to do this.  You can also skip over grids where g.NumberOfParticles == 0.",
+                "html": "<p>This should be np.ellipsis, too.  Also, it's easier to check if particle_type is in pf.h.field_list or pf.h.derived_field_list than to do this.  You can also skip over grids where g.NumberOfParticles == 0.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1870,25 +1824,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40849"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40849"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:ccaac7809283..8cee6c380933?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
                 }
             },
+            "created_on": "2012-11-13T03:19:06.246964+00:00",
+            "updated_on": "2012-11-13T03:19:06.252338+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1898,24 +1850,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "This should be np.ellipsis, too.  Also, it's easier to check if particle_type is in pf.h.field_list or pf.h.derived_field_list than to do this.  You can also skip over grids where g.NumberOfParticles == 0.",
-                "html": "<p>This should be np.ellipsis, too.  Also, it's easier to check if particle_type is in pf.h.field_list or pf.h.derived_field_list than to do this.  You can also skip over grids where g.NumberOfParticles == 0.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-13T03:19:06.246964+00:00",
-            "updated_on": "2012-11-13T03:19:06.252338+00:00",
             "inline": {
-                "from": null,
+                "to": 285,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": 285
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 40849
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "...but you'll want to do the check on pf.h.derived_field_list / pf.h.field_list (the former is a superset of the latter, but you could make a set from their concatenation) outside the loop.",
+                "html": "<p>...but you'll want to do the check on pf.h.derived_field_list / pf.h.field_list (the former is a superset of the latter, but you could make a set from their concatenation) outside the loop.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1927,22 +1881,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40850"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40850"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1955,8 +1895,19 @@
                 },
                 "id": 40849
             },
+            "created_on": "2012-11-13T03:19:38.123665+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/40850"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-40850"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1966,24 +1917,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "...but you'll want to do the check on pf.h.derived_field_list / pf.h.field_list (the former is a superset of the latter, but you could make a set from their concatenation) outside the loop.",
-                "html": "<p>...but you'll want to do the check on pf.h.derived_field_list / pf.h.field_list (the former is a superset of the latter, but you could make a set from their concatenation) outside the loop.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-13T03:19:38.123665+00:00",
-            "updated_on": "2012-11-13T03:19:38.130540+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": null
+                "from": null
             },
-            "id": 40850
+            "type": "pullrequest_comment",
+            "id": 40850,
+            "updated_on": "2012-11-13T03:19:38.130540+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Doing a simple test shows that grid.filename is None when running yt inline with Enzo, so a sort would not work on that axis. Of course, we would not want to sort the grids in the same way inline (or at all perhaps), but I'm not sure how you've envisioned running Rockstar inline. What do you think?",
+                "html": "<p>Doing a simple test shows that grid.filename is None when running yt inline with Enzo, so a sort would not work on that axis. Of course, we would not want to sort the grids in the same way inline (or at all perhaps), but I'm not sure how you've envisioned running Rockstar inline. What do you think?</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -1995,22 +1949,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/41223"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-41223"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -2023,8 +1963,19 @@
                 },
                 "id": 40663
             },
+            "created_on": "2012-11-13T16:28:25.412286+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/41223"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-41223"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2034,24 +1985,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Doing a simple test shows that grid.filename is None when running yt inline with Enzo, so a sort would not work on that axis. Of course, we would not want to sort the grids in the same way inline (or at all perhaps), but I'm not sure how you've envisioned running Rockstar inline. What do you think?",
-                "html": "<p>Doing a simple test shows that grid.filename is None when running yt inline with Enzo, so a sort would not work on that axis. Of course, we would not want to sort the grids in the same way inline (or at all perhaps), but I'm not sure how you've envisioned running Rockstar inline. What do you think?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-13T16:28:25.412286+00:00",
-            "updated_on": "2012-11-13T16:28:25.418692+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": null
+                "from": null
             },
-            "id": 41223
+            "type": "pullrequest_comment",
+            "id": 41223,
+            "updated_on": "2012-11-13T16:28:25.418692+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yeah, that's definitely necessary.  There *is* logic inside _get_grid_objs() that covers exactly this use case.  I would recommend either calling it, or copying the necessary portions.",
+                "html": "<p>Yeah, that's definitely necessary.  There <em>is</em> logic inside _get_grid_objs() that covers exactly this use case.  I would recommend either calling it, or copying the necessary portions.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2063,22 +2017,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/41262"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-41262"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -2091,8 +2031,19 @@
                 },
                 "id": 41223
             },
+            "created_on": "2012-11-13T16:57:08.448137+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/41262"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-41262"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Fanalysis_modules%2Fhalo_finding%2Frockstar%2Frockstar_interface.pyx"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2102,24 +2053,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Yeah, that's definitely necessary.  There *is* logic inside _get_grid_objs() that covers exactly this use case.  I would recommend either calling it, or copying the necessary portions.",
-                "html": "<p>Yeah, that's definitely necessary.  There <em>is</em> logic inside _get_grid_objs() that covers exactly this use case.  I would recommend either calling it, or copying the necessary portions.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-13T16:57:08.448137+00:00",
-            "updated_on": "2012-11-13T16:57:08.457841+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/halo_finding/rockstar/rockstar_interface.pyx",
-                "to": null
+                "from": null
             },
-            "id": 41262
+            "type": "pullrequest_comment",
+            "id": 41262,
+            "updated_on": "2012-11-13T16:57:08.457841+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "\"is\" should be \"==\"",
+                "html": "<p>\"is\" should be \"==\"</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2131,25 +2085,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/42387"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:faa73cec6e0f..c57187ca13b6?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-42387"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:faa73cec6e0f..c57187ca13b6?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-14T20:47:54.591164+00:00",
+            "updated_on": "2012-11-14T20:47:54.597078+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2159,24 +2111,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "\"is\" should be \"==\"",
-                "html": "<p>\"is\" should be \"==\"</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-14T20:47:54.591164+00:00",
-            "updated_on": "2012-11-14T20:47:54.597078+00:00",
             "inline": {
-                "from": null,
+                "to": 124,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 124
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 42387
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "same here, is should be ==",
+                "html": "<p>same here, is should be ==</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2188,25 +2142,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/42388"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:faa73cec6e0f..c57187ca13b6?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-42388"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:faa73cec6e0f..c57187ca13b6?path=yt%2Fanalysis_modules%2Fhalo_finding%2Fhalo_objects.py"
                 }
             },
+            "created_on": "2012-11-14T20:48:01.884033+00:00",
+            "updated_on": "2012-11-14T20:48:01.889500+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2216,24 +2168,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "same here, is should be ==",
-                "html": "<p>same here, is should be ==</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-14T20:48:01.884033+00:00",
-            "updated_on": "2012-11-14T20:48:01.889500+00:00",
             "inline": {
-                "from": null,
+                "to": 126,
                 "path": "yt/analysis_modules/halo_finding/halo_objects.py",
-                "to": 126
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 42388
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Stephen,  have you had the opportunity to address all the comments?  And, do you think this is ready to go?",
+                "html": "<p>Hi Stephen,  have you had the opportunity to address all the comments?  And, do you think this is ready to go?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2245,12 +2199,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/45294"
@@ -2259,8 +2210,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-45294"
                 }
             },
+            "created_on": "2012-11-19T19:39:46.890721+00:00",
+            "updated_on": "2012-11-19T19:39:46.903558+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2270,19 +2222,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Hi Stephen,  have you had the opportunity to address all the comments?  And, do you think this is ready to go?",
-                "html": "<p>Hi Stephen,  have you had the opportunity to address all the comments?  And, do you think this is ready to go?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-19T19:39:46.890721+00:00",
-            "updated_on": "2012-11-19T19:39:46.903558+00:00",
+            "type": "pullrequest_comment",
             "id": 45294
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yup, I think I have addressed all your comments and that's included presently. I'd say that it is good to go unless someone objects to using forks and wants to try using threads, which I have no strong opinion about either way.\n\nAs a follow-up, Peter Behroozi replied to my email and asked for the patch so that this stuff below can work without modifying Rockstar. I sent the changes, but it doesn't look like he's pushed them up to google code yet.",
+                "html": "<p>Yup, I think I have addressed all your comments and that's included presently. I'd say that it is good to go unless someone objects to using forks and wants to try using threads, which I have no strong opinion about either way.</p>\n<p>As a follow-up, Peter Behroozi replied to my email and asked for the patch so that this stuff below can work without modifying Rockstar. I sent the changes, but it doesn't look like he's pushed them up to google code yet.</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -2294,19 +2248,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/45302"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-45302"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -2319,8 +2262,16 @@
                 },
                 "id": 45294
             },
+            "created_on": "2012-11-19T20:05:09.132640+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/45302"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-45302"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2330,19 +2281,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Yup, I think I have addressed all your comments and that's included presently. I'd say that it is good to go unless someone objects to using forks and wants to try using threads, which I have no strong opinion about either way.\n\nAs a follow-up, Peter Behroozi replied to my email and asked for the patch so that this stuff below can work without modifying Rockstar. I sent the changes, but it doesn't look like he's pushed them up to google code yet.",
-                "html": "<p>Yup, I think I have addressed all your comments and that's included presently. I'd say that it is good to go unless someone objects to using forks and wants to try using threads, which I have no strong opinion about either way.</p>\n<p>As a follow-up, Peter Behroozi replied to my email and asked for the patch so that this stuff below can work without modifying Rockstar. I sent the changes, but it doesn't look like he's pushed them up to google code yet.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-19T20:05:09.132640+00:00",
-            "updated_on": "2012-11-19T20:05:09.139365+00:00",
-            "id": 45302
+            "type": "pullrequest_comment",
+            "id": 45302,
+            "updated_on": "2012-11-19T20:05:09.139365+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Stephen, this is really great. I really look forward to using the Rockstar halo lists. Sorry I didn't see this sooner -- evidently I've had all my bitbucket notifications silenced.\n\nI'm going to try and test this PR soon.\n\nWhat version of Rockstar are you using? Peter sent me a private version yesterday which has two important differences. First, it has better tracking of halos, and second small changes to the config_vars.h template (which means one must manually remove references to variables like OUTPUT_HMAD.) \n\nchris",
+                "html": "<p>Hi Stephen, this is really great. I really look forward to using the Rockstar halo lists. Sorry I didn't see this sooner -- evidently I've had all my bitbucket notifications silenced.</p>\n<p>I'm going to try and test this PR soon.</p>\n<p>What version of Rockstar are you using? Peter sent me a private version yesterday which has two important differences. First, it has better tracking of halos, and second small changes to the config_vars.h template (which means one must manually remove references to variables like OUTPUT_HMAD.) </p>\n<p>chris</p>"
+            },
             "user": {
+                "username": "juxtaposicion",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/juxtaposicion"
@@ -2354,12 +2308,9 @@
                         "href": "https://bitbucket.org/account/juxtaposicion/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Christopher Moody",
-                "uuid": "{2923e86b-189b-4a68-898f-fe6a9b9734af}",
-                "username": "juxtaposicion"
+                "uuid": "{2923e86b-189b-4a68-898f-fe6a9b9734af}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/45475"
@@ -2368,8 +2319,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-45475"
                 }
             },
+            "created_on": "2012-11-19T22:53:53.197462+00:00",
+            "updated_on": "2012-11-19T22:53:53.204603+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2379,19 +2331,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Hi Stephen, this is really great. I really look forward to using the Rockstar halo lists. Sorry I didn't see this sooner -- evidently I've had all my bitbucket notifications silenced.\n\nI'm going to try and test this PR soon.\n\nWhat version of Rockstar are you using? Peter sent me a private version yesterday which has two important differences. First, it has better tracking of halos, and second small changes to the config_vars.h template (which means one must manually remove references to variables like OUTPUT_HMAD.) \n\nchris",
-                "html": "<p>Hi Stephen, this is really great. I really look forward to using the Rockstar halo lists. Sorry I didn't see this sooner -- evidently I've had all my bitbucket notifications silenced.</p>\n<p>I'm going to try and test this PR soon.</p>\n<p>What version of Rockstar are you using? Peter sent me a private version yesterday which has two important differences. First, it has better tracking of halos, and second small changes to the config_vars.h template (which means one must manually remove references to variables like OUTPUT_HMAD.) </p>\n<p>chris</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-19T22:53:53.197462+00:00",
-            "updated_on": "2012-11-19T22:53:53.204603+00:00",
+            "type": "pullrequest_comment",
             "id": 45475
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Not having access to the private version, I'm using the public version (0.99) with this diff applied:\n\n    diff -r Rockstar-0.99/client.c /Users/sskory/yt/src/Rockstar-0.99/client.c\n    627,628c627,628\n    < void client(void) {\n    <   int64_t snap, block, chunk, type=-1, i, n, timestep, id_offset;\n    ---\n    > void client(int64_t in_type) {\n    >   int64_t snap, block, chunk, type, i, n, timestep, id_offset;\n    640a641,642\n    >   type = in_type;\n    >\n    diff -r Rockstar-0.99/client.h /Users/sskory/yt/src/Rockstar-0.99/client.h\n    18c18\n    < void client(void);\n    ---\n    > void client(int64_t type);\n    diff -r Rockstar-0.99/main.c /Users/sskory/yt/src/Rockstar-0.99/main.c\n    96c96\n    <     if (!s) client();\n    ---\n    >     if (!s) client(-1);\n\n",
+                "html": "<p>Not having access to the private version, I'm using the public version (0.99) with this diff applied:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"gh\">diff -r Rockstar-0.99/client.c /Users/sskory/yt/src/Rockstar-0.99/client.c</span>\n627,628c627,628\n&lt; void client(void) {\n&lt;   int64_t snap, block, chunk, type=-1, i, n, timestep, id_offset;\n<span class=\"gd\">---</span>\n&gt; void client(int64_t in_type) {\n&gt;   int64_t snap, block, chunk, type, i, n, timestep, id_offset;\n640a641,642\n&gt;   type = in_type;\n&gt;\n<span class=\"gh\">diff -r Rockstar-0.99/client.h /Users/sskory/yt/src/Rockstar-0.99/client.h</span>\n18c18\n&lt; void client(void);\n<span class=\"gd\">---</span>\n&gt; void client(int64_t type);\n<span class=\"gh\">diff -r Rockstar-0.99/main.c /Users/sskory/yt/src/Rockstar-0.99/main.c</span>\n96c96\n&lt;     if (!s) client();\n<span class=\"gd\">---</span>\n&gt;     if (!s) client(-1);\n</pre></div>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -2403,19 +2357,8 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/45505"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-45505"
-                }
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
             "parent": {
                 "links": {
@@ -2428,8 +2371,16 @@
                 },
                 "id": 45475
             },
+            "created_on": "2012-11-19T23:07:29.674648+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/45505"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-45505"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2439,19 +2390,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Not having access to the private version, I'm using the public version (0.99) with this diff applied:\n\n    diff -r Rockstar-0.99/client.c /Users/sskory/yt/src/Rockstar-0.99/client.c\n    627,628c627,628\n    < void client(void) {\n    <   int64_t snap, block, chunk, type=-1, i, n, timestep, id_offset;\n    ---\n    > void client(int64_t in_type) {\n    >   int64_t snap, block, chunk, type, i, n, timestep, id_offset;\n    640a641,642\n    >   type = in_type;\n    >\n    diff -r Rockstar-0.99/client.h /Users/sskory/yt/src/Rockstar-0.99/client.h\n    18c18\n    < void client(void);\n    ---\n    > void client(int64_t type);\n    diff -r Rockstar-0.99/main.c /Users/sskory/yt/src/Rockstar-0.99/main.c\n    96c96\n    <     if (!s) client();\n    ---\n    >     if (!s) client(-1);\n\n",
-                "html": "<p>Not having access to the private version, I'm using the public version (0.99) with this diff applied:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"gh\">diff -r Rockstar-0.99/client.c /Users/sskory/yt/src/Rockstar-0.99/client.c</span>\n627,628c627,628\n&lt; void client(void) {\n&lt;   int64_t snap, block, chunk, type=-1, i, n, timestep, id_offset;\n<span class=\"gd\">---</span>\n&gt; void client(int64_t in_type) {\n&gt;   int64_t snap, block, chunk, type, i, n, timestep, id_offset;\n640a641,642\n&gt;   type = in_type;\n&gt;\n<span class=\"gh\">diff -r Rockstar-0.99/client.h /Users/sskory/yt/src/Rockstar-0.99/client.h</span>\n18c18\n&lt; void client(void);\n<span class=\"gd\">---</span>\n&gt; void client(int64_t type);\n<span class=\"gh\">diff -r Rockstar-0.99/main.c /Users/sskory/yt/src/Rockstar-0.99/main.c</span>\n96c96\n&lt;     if (!s) client();\n<span class=\"gd\">---</span>\n&gt;     if (!s) client(-1);\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-19T23:07:29.674648+00:00",
-            "updated_on": "2012-11-19T23:07:29.681744+00:00",
-            "id": 45505
+            "type": "pullrequest_comment",
+            "id": 45505,
+            "updated_on": "2012-11-19T23:07:29.681744+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I had to remove references to OUTPUT_HMAD, OUTPUT_PARTICLES, DOUBLE_COUNT_SUBHALO_MASS_RATIO, from rockstar_interface.pyx. Otherwise, I tried this out with a single reader / multiple writers and it works beautifully on my ART data. \n\nThe private version of Rockstar I got from Peter has incorporated your suggested changes. I guess whenever he publishes his working version of the code we'll see it in the public.\n\nOnce this is accepted, I'll remove my current PR, merge, and go on from there.",
+                "html": "<p>I had to remove references to OUTPUT_HMAD, OUTPUT_PARTICLES, DOUBLE_COUNT_SUBHALO_MASS_RATIO, from rockstar_interface.pyx. Otherwise, I tried this out with a single reader / multiple writers and it works beautifully on my ART data. </p>\n<p>The private version of Rockstar I got from Peter has incorporated your suggested changes. I guess whenever he publishes his working version of the code we'll see it in the public.</p>\n<p>Once this is accepted, I'll remove my current PR, merge, and go on from there.</p>"
+            },
             "user": {
+                "username": "juxtaposicion",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/juxtaposicion"
@@ -2463,12 +2417,9 @@
                         "href": "https://bitbucket.org/account/juxtaposicion/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Christopher Moody",
-                "uuid": "{2923e86b-189b-4a68-898f-fe6a9b9734af}",
-                "username": "juxtaposicion"
+                "uuid": "{2923e86b-189b-4a68-898f-fe6a9b9734af}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/46394"
@@ -2477,8 +2428,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-46394"
                 }
             },
+            "created_on": "2012-11-20T23:39:34.408654+00:00",
+            "updated_on": "2012-11-20T23:39:34.416294+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2488,19 +2440,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "I had to remove references to OUTPUT_HMAD, OUTPUT_PARTICLES, DOUBLE_COUNT_SUBHALO_MASS_RATIO, from rockstar_interface.pyx. Otherwise, I tried this out with a single reader / multiple writers and it works beautifully on my ART data. \n\nThe private version of Rockstar I got from Peter has incorporated your suggested changes. I guess whenever he publishes his working version of the code we'll see it in the public.\n\nOnce this is accepted, I'll remove my current PR, merge, and go on from there.",
-                "html": "<p>I had to remove references to OUTPUT_HMAD, OUTPUT_PARTICLES, DOUBLE_COUNT_SUBHALO_MASS_RATIO, from rockstar_interface.pyx. Otherwise, I tried this out with a single reader / multiple writers and it works beautifully on my ART data. </p>\n<p>The private version of Rockstar I got from Peter has incorporated your suggested changes. I guess whenever he publishes his working version of the code we'll see it in the public.</p>\n<p>Once this is accepted, I'll remove my current PR, merge, and go on from there.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-20T23:39:34.408654+00:00",
-            "updated_on": "2012-11-20T23:39:34.416294+00:00",
+            "type": "pullrequest_comment",
             "id": 46394
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Chris, I think it would be sufficient to instead remove the Rockstar portion of your PR and then accept the remainder.  Please don't decline it yet.\n\nSo what are we waiting for on this?  Peter's new release?",
+                "html": "<p>Chris, I think it would be sufficient to instead remove the Rockstar portion of your PR and then accept the remainder.  Please don't decline it yet.</p>\n<p>So what are we waiting for on this?  Peter's new release?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2512,12 +2466,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/46402"
@@ -2526,8 +2477,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-46402"
                 }
             },
+            "created_on": "2012-11-21T00:12:16.019915+00:00",
+            "updated_on": "2012-11-21T00:12:16.025270+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2537,19 +2489,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Chris, I think it would be sufficient to instead remove the Rockstar portion of your PR and then accept the remainder.  Please don't decline it yet.\n\nSo what are we waiting for on this?  Peter's new release?",
-                "html": "<p>Chris, I think it would be sufficient to instead remove the Rockstar portion of your PR and then accept the remainder.  Please don't decline it yet.</p>\n<p>So what are we waiting for on this?  Peter's new release?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-21T00:12:16.019915+00:00",
-            "updated_on": "2012-11-21T00:12:16.025270+00:00",
+            "type": "pullrequest_comment",
             "id": 46402
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I don't know Peter's release schedule, but this PR works as it stands for both a public version (with a very small patch) and the current private version. I haven't tested the halo objects though.\n\nCool, I'll keep the PR around, and update the Rockstar code.",
+                "html": "<p>I don't know Peter's release schedule, but this PR works as it stands for both a public version (with a very small patch) and the current private version. I haven't tested the halo objects though.</p>\n<p>Cool, I'll keep the PR around, and update the Rockstar code.</p>"
+            },
             "user": {
+                "username": "juxtaposicion",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/juxtaposicion"
@@ -2561,19 +2515,8 @@
                         "href": "https://bitbucket.org/account/juxtaposicion/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Christopher Moody",
-                "uuid": "{2923e86b-189b-4a68-898f-fe6a9b9734af}",
-                "username": "juxtaposicion"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/46406"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-46406"
-                }
+                "uuid": "{2923e86b-189b-4a68-898f-fe6a9b9734af}"
             },
             "parent": {
                 "links": {
@@ -2586,8 +2529,16 @@
                 },
                 "id": 46402
             },
+            "created_on": "2012-11-21T00:17:26.982515+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/46406"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-46406"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2597,19 +2548,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "I don't know Peter's release schedule, but this PR works as it stands for both a public version (with a very small patch) and the current private version. I haven't tested the halo objects though.\n\nCool, I'll keep the PR around, and update the Rockstar code.",
-                "html": "<p>I don't know Peter's release schedule, but this PR works as it stands for both a public version (with a very small patch) and the current private version. I haven't tested the halo objects though.</p>\n<p>Cool, I'll keep the PR around, and update the Rockstar code.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-21T00:17:26.982515+00:00",
-            "updated_on": "2012-11-21T00:17:26.988093+00:00",
-            "id": 46406
+            "type": "pullrequest_comment",
+            "id": 46406,
+            "updated_on": "2012-11-21T00:17:26.988093+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Okay, so we *still* need a patch, and the new public release isn't out yet -- so I think we should hold off on accepting until either we have integrated Rockstar + the patch into the install script, or the new release is out.",
+                "html": "<p>Okay, so we <em>still</em> need a patch, and the new public release isn't out yet -- so I think we should hold off on accepting until either we have integrated Rockstar + the patch into the install script, or the new release is out.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2621,19 +2575,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/48832"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-48832"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -2646,8 +2589,16 @@
                 },
                 "id": 46406
             },
+            "created_on": "2012-11-25T13:12:36.197344+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/48832"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-48832"
+                }
+            },
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2657,19 +2608,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Okay, so we *still* need a patch, and the new public release isn't out yet -- so I think we should hold off on accepting until either we have integrated Rockstar + the patch into the install script, or the new release is out.",
-                "html": "<p>Okay, so we <em>still</em> need a patch, and the new public release isn't out yet -- so I think we should hold off on accepting until either we have integrated Rockstar + the patch into the install script, or the new release is out.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-25T13:12:36.197344+00:00",
-            "updated_on": "2012-11-25T13:12:36.203360+00:00",
-            "id": 48832
+            "type": "pullrequest_comment",
+            "id": 48832,
+            "updated_on": "2012-11-25T13:12:36.203360+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Stephen, everything looks ready to go to me (modulo testing) except I'd ask that we make Rockstar a variable in the install script, which we can default to on.  (Although perhaps this should be up for a vote on yt-dev.)  This way in case there are any issues with how the Makefile for Rockstar runs, we can always turn it off.  Then, I'm ready!",
+                "html": "<p>Hi Stephen, everything looks ready to go to me (modulo testing) except I'd ask that we make Rockstar a variable in the install script, which we can default to on.  (Although perhaps this should be up for a vote on yt-dev.)  This way in case there are any issues with how the Makefile for Rockstar runs, we can always turn it off.  Then, I'm ready!</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2681,12 +2635,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/48874"
@@ -2695,8 +2646,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-48874"
                 }
             },
+            "created_on": "2012-11-25T17:11:49.298600+00:00",
+            "updated_on": "2012-11-25T17:11:49.303721+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2706,19 +2658,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Hi Stephen, everything looks ready to go to me (modulo testing) except I'd ask that we make Rockstar a variable in the install script, which we can default to on.  (Although perhaps this should be up for a vote on yt-dev.)  This way in case there are any issues with how the Makefile for Rockstar runs, we can always turn it off.  Then, I'm ready!",
-                "html": "<p>Hi Stephen, everything looks ready to go to me (modulo testing) except I'd ask that we make Rockstar a variable in the install script, which we can default to on.  (Although perhaps this should be up for a vote on yt-dev.)  This way in case there are any issues with how the Makefile for Rockstar runs, we can always turn it off.  Then, I'm ready!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-25T17:11:49.298600+00:00",
-            "updated_on": "2012-11-25T17:11:49.303721+00:00",
+            "type": "pullrequest_comment",
             "id": 48874
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I hate to keep this PR going, but I realized that if Rockstar isn't built, I think it will cause problems with the activate scripts which will set ROCKSTAR_DIR anyway. Can you think of the best way to handle this, Matt?",
+                "html": "<p>I hate to keep this PR going, but I realized that if Rockstar isn't built, I think it will cause problems with the activate scripts which will set ROCKSTAR_DIR anyway. Can you think of the best way to handle this, Matt?</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -2730,12 +2684,9 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/49381"
@@ -2744,8 +2695,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-49381"
                 }
             },
+            "created_on": "2012-11-26T14:20:49.665273+00:00",
+            "updated_on": "2012-11-26T14:20:49.676979+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2755,19 +2707,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "I hate to keep this PR going, but I realized that if Rockstar isn't built, I think it will cause problems with the activate scripts which will set ROCKSTAR_DIR anyway. Can you think of the best way to handle this, Matt?",
-                "html": "<p>I hate to keep this PR going, but I realized that if Rockstar isn't built, I think it will cause problems with the activate scripts which will set ROCKSTAR_DIR anyway. Can you think of the best way to handle this, Matt?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-26T14:20:49.665273+00:00",
-            "updated_on": "2012-11-26T14:20:49.676979+00:00",
+            "type": "pullrequest_comment",
             "id": 49381
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Good catch.  That had not occurred to me.  I actually think it might be epsilon more work, but easier in the long run, to use basically the same thing as in the hdf5.cfg and png.cfg files -- make it an on-disk thing, which rolls back to an env var, and in the install script *don't* set the ENV var, but *do* create rockstar.cfg.  Does that make sense?",
+                "html": "<p>Good catch.  That had not occurred to me.  I actually think it might be epsilon more work, but easier in the long run, to use basically the same thing as in the hdf5.cfg and png.cfg files -- make it an on-disk thing, which rolls back to an env var, and in the install script <em>don't</em> set the ENV var, but <em>do</em> create rockstar.cfg.  Does that make sense?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2779,12 +2733,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/49385"
@@ -2793,8 +2744,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-49385"
                 }
             },
+            "created_on": "2012-11-26T14:28:37.738014+00:00",
+            "updated_on": "2012-11-26T14:28:37.743397+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2804,19 +2756,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Good catch.  That had not occurred to me.  I actually think it might be epsilon more work, but easier in the long run, to use basically the same thing as in the hdf5.cfg and png.cfg files -- make it an on-disk thing, which rolls back to an env var, and in the install script *don't* set the ENV var, but *do* create rockstar.cfg.  Does that make sense?",
-                "html": "<p>Good catch.  That had not occurred to me.  I actually think it might be epsilon more work, but easier in the long run, to use basically the same thing as in the hdf5.cfg and png.cfg files -- make it an on-disk thing, which rolls back to an env var, and in the install script <em>don't</em> set the ENV var, but <em>do</em> create rockstar.cfg.  Does that make sense?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-26T14:28:37.738014+00:00",
-            "updated_on": "2012-11-26T14:28:37.743397+00:00",
+            "type": "pullrequest_comment",
             "id": 49385
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Great work.  And I think in the future, we'll be able to point to this pull request as an example of our community working together to do really cool things.  Thank you, Stephen!",
+                "html": "<p>Great work.  And I think in the future, we'll be able to point to this pull request as an example of our community working together to do really cool things.  Thank you, Stephen!</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -2828,12 +2782,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/336/comments/49492"
@@ -2842,8 +2793,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336/_/diff#comment-49492"
                 }
             },
+            "created_on": "2012-11-26T16:33:13.057661+00:00",
+            "updated_on": "2012-11-26T16:33:13.063795+00:00",
             "pullrequest": {
-                "title": "Rockstar improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2853,16 +2805,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/336"
                     }
                 },
+                "title": "Rockstar improvements",
                 "id": 336
             },
-            "content": {
-                "raw": "Great work.  And I think in the future, we'll be able to point to this pull request as an example of our community working together to do really cool things.  Thank you, Stephen!",
-                "html": "<p>Great work.  And I think in the future, we'll be able to point to this pull request as an example of our community working together to do really cool things.  Thank you, Stephen!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-11-26T16:33:13.057661+00:00",
-            "updated_on": "2012-11-26T16:33:13.063795+00:00",
+            "type": "pullrequest_comment",
             "id": 49492
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "**Update 6** The rockstar source directory is now handled using a rockstar.cfg file instead of an environment variable.\r\n\r\n**Update 5** Rockstar is now optional when installing. Default is true.\r\n\r\n**Update 4** I have added Rockstar to the install script and the activate scripts. I have made a patched tar.gz of Rockstar (you can get it here, Matt: http://stephenskory.com/Rockstar-0.99.tar.gz). I ran the install script (making sure to reference my BB repo temporarily) and it looks like it works.\r\n\r\nI've also pulled in the most recent mainline and merged.\r\n\r\nLet's hope that this is the last update!\r\n\r\n** Update 3** I wanted to use the new point finding stuff so I merged in from mainline. No other changes.\r\n\r\n** Update 2.5** I forgot to mention that with this changeset, a small patch is required to Rockstar so that the type of client that is launched can be specified, and not left to the Rockstar server to assign.\r\n\r\n** Update 2 ** Big changes!\r\n\r\n  * Fixed the MPI/hierarchy hanging issue with the topcomm by initializing the workgroup pool above ``ParallelAnalysisInterface.__init__(self)``.\r\n  * Rockstar appears to work inline with Enzo. To do this, I am using forks. Specifically, the server process and the writer/analysis processes are forked, while the reader clients are not forked and are called by all the Enzo MPI threads.\r\n  * I split up the differing functionality in rockstar.py for inline and outline modes into two classes which I know will make Matt happy :).\r\n\r\n** Update 1 ** Made some changes in response to Matt's comments. There is an issue with the hierarchy which I've emailed the list about. This is not ready to be pulled in until that's resolved.\r\n\r\n** Original text below **\r\n\r\nThis includes various improvements and changes to the Rockstar halo finder in yt:\r\n\r\n  * num_readers > 1 now works, and can dramatically speed up IO on a parallel disk system.\r\n  * Grids are now read in by readers in a cyclical way which prevents all the root grids being read in by a single reader. Like above, this helps to speed up IO on a parallel disk system.\r\n  * rockstar output is now stored in a directory named \"rockstar_halos\". Previously it was '\"%s_rockstar\" % (first pf in time series)', which was confusing when halos for other data snapshots were also stored in that directory.\r\n  * I have added a \"rockstar_halos/pf.txt\" file that gives the Rockstar index number for each original data snapshot because this is not an obvious connection.\r\n\r\n(pf.txt):\r\n\r\n    # pfname\tindex\r\n    DD0003/data0003\t0\r\n    DD0004/data0004\t1\r\n    DD0005/data0005\t2\r\n\r\n  * The loaded Rockstar halos, read in with LoadRockstarHalos (similar LoadHalos in implementation) now reads in halo data out of the Rockstar binary files (instead of the text files). The Rockstar halos have all the information that Rockstar supplies stored with them in the supp dict (raw - exactly as they are in the binary file, so \"pos\" below is actually position in Mpc and velocity in km/s), and also the appropriate values attached to the built-in things like total_mass(), center_of_mass() in simulation units where appropriate (like for center_of_mass() and radius).\r\n\r\n()\r\n\r\n    :::python\r\n    In [2]: rhalos = LoadRockstarHalos(pf, 'rockstar_halos/out_43.list')\r\n    yt : [INFO     ] 2012-11-12 13:17:16,696 Initializing Rockstar List\r\n    yt : [INFO     ] 2012-11-12 13:17:16,704 Getting the binary hierarchy\r\n    yt : [INFO     ] 2012-11-12 13:17:16,714 Finished with binary hierarchy reading\r\n    yt : [INFO     ] 2012-11-12 13:17:17,036 Parsing Rockstar halo list\r\n    yt : [INFO     ] 2012-11-12 13:17:17,060 Finished rockstar_halos/out_43.list\r\n    \r\n    In [3]: rhalos[0].supp\r\n    Out[3]: \r\n    {'J': array([ -6.15271728e+15,  -1.36593609e+17,  -7.80776865e+16], dtype=float32),\r\n     'bulkvel': array([-132.05046082,   11.53190422,   42.16183472], dtype=float32),\r\n     'child_r': 2.6411054,\r\n     'corevel': array([-132.05046082,   11.53190422,   42.16183472], dtype=float32),\r\n     'desc': 0,\r\n     'energy': -8.106986e+21,\r\n     'flags': 1,\r\n     'id': 166,\r\n     'm': 1.5341227e+15,\r\n     'mgrav': 1.5341227e+15,\r\n     'min_bulkvel_err': 1821.8152,\r\n     'min_pos_err': 0.00049575343,\r\n     'min_vel_err': 1821.8152,\r\n     'n_core': 1958,\r\n     'num_child_particles': 2764,\r\n     'num_p': 2409,\r\n     'p_start': 6540,\r\n     'pos': array([   0.20197368,    0.54656458,    0.11256824, -104.33285522,\r\n             29.02485085,   43.5154953 ], dtype=float32),\r\n     'r': 0.018403014,\r\n     'rs': 0.0026318002,\r\n     'rvmax': 1133.2,\r\n     'spin': 0.035755754,\r\n     'vmax': 1877.125,\r\n     'vrms': 1886.2648}\r\n\r\n  * Rockstar halos are capable of retrieving particle data from the binary files. Rockstar only stores particle IDs, and these are used to connect to the particle data available in the full data snapshot that is referenced when the Rockstar halos are loaded. The particle data is *only* read in upon demand.\r\n\r\n()\r\n\r\n    :::python\r\n    In [4]: rhalos[0]['particle_position_x']\r\n    yt : [INFO     ] 2012-11-12 13:40:43,296 Getting 2409 particles from Rockstar binary file rockstar_halos/halos_43.0.bin.\r\n    (2409,)\r\n    yt : [INFO     ] 2012-11-12 13:40:43,300 Getting particle_index using ParticleIO\r\n    yt : [INFO     ] 2012-11-12 13:40:49,674 Getting particle_position_x using ParticleIO\r\n    Out[4]: \r\n    array([ 0.21708461,  0.21823348,  0.21871664, ...,  0.20831766,\r\n            0.21101551,  0.21130322])\r\n\r\n  * The machinery that sets up Rockstar for halo finding now calculates the total number of particles in parallel, and can fall back if the \"particle_type\" field is absent.\r\n  * Generally cleaned up the RockstarHalo stuff to more closely resemble the other halo finder Halos in halo_objects.py.\r\n  * Pulled in (by hand) improvements from Chris Moody's Rockstar changes (in pull request #247), including the \"force_res\" parameter, which I've set to default to the width of the smallest cell in the last (most time evolved) snapshot in the TimeSeries.",
+    "author": {
+        "username": "sskory",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/sskory"
+            },
+            "html": {
+                "href": "https://bitbucket.org/sskory/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/sskory/avatar/32/"
+            }
+        },
+        "display_name": "Stephen Skory",
+        "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
+    },
+    "updated_on": "2012-11-26T16:33:25.345772+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "87237e244a95",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/87237e244a95"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

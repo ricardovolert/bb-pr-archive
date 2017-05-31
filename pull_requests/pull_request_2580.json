@@ -1,34 +1,7 @@
 {
-    "reason": "",
-    "state": "OPEN",
-    "updated_on": "2017-04-21T11:36:47.718554+00:00",
-    "comment_count": 0,
-    "description": "The current behavior of yt with respect to \"code\" unit systems to to permit switching a `YTArray` to a code unit system via something like:\r\n\r\n```python\r\nds = yt.load(\"my_dataset\")\r\nsp = ds.sphere(\"c\", (100.0, \"kpc\"))\r\nsp[\"density\"].in_base(ds)\r\n```\r\nwhich is a bit clunky and not terribly symmetric with the other ways of switching to different unit systems, e.g. `in_base(\"galactic\")`. In the current implementation, the code unit systems in the `unit_system_registry` are indexed by the string representation of the dataset. \r\n\r\nWith respect to this latter point, this is actually a problem, because for stream datasets this representation is actually the same for every dataset, so one would end up overwriting the unit system in the registry every time one opened a new one. The solution is for every dataset to have a unique identifier. \r\n\r\nSo that each dataset has a unique hash within the `unit_system_registry` dict, I've stolen the `fnv_hash` from `selection_routines` and placed it in a Cython file under `yt/utilities/lib`, and used it for this purpose. \r\n\r\nThe other benefit to this technique is that one can now use `in_base(\"code\")` for `YTArrays` with code units and it will work, in the same way as the other unit systems. \r\n\r\nI need to edit the docs, but otherwise this is ready for code review.",
-    "created_on": "2017-04-15T03:20:02.301726+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "Properly create code unit systems",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/approve"
@@ -36,44 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2580"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/diff"
         }
     },
-    "closed_by": null,
-    "id": 2580,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
-            },
-            "html": {
-                "href": "https://bitbucket.org/jzuhone/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "John ZuHone",
-        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-        "username": "jzuhone"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt/commit/6b28977dbc64"
-                }
-            },
-            "hash": "6b28977dbc64"
-        },
         "repository": {
             "full_name": "jzuhone/yt",
+            "uuid": "{aa71d2fb-24c5-4e74-8701-f32955348acf}",
             "type": "repository",
             "links": {
                 "self": {
@@ -86,25 +48,120 @@
                     "href": "https://bitbucket.org/jzuhone/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{aa71d2fb-24c5-4e74-8701-f32955348acf}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "6b28977dbc64",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/634cc55bf066"
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt/commit/6b28977dbc64"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "Properly create code unit systems",
+    "id": 2580,
+    "comment_count": 1,
+    "created_on": "2017-04-15T03:20:02.301726+00:00",
+    "merge_commit": null,
+    "comments": [
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hmm, it looks like this is still failing the tests and it also doesn't have docs. @jzuhone I'm going to decline this so we can finish the github migration. Once you're back on your feet it would be great if you could port this to github so we don't drop it, even if you don't immediately finish this up.",
+                "html": "<p>Hmm, it looks like this is still failing the tests and it also doesn't have docs. <a href=\"/jzuhone/\" rel=\"nofollow\" title=\"@jzuhone\" class=\"mention\">John ZuHone</a> I'm going to decline this so we can finish the github migration. Once you're back on your feet it would be great if you could port this to github so we don't drop it, even if you don't immediately finish this up.</p>"
+            },
+            "user": {
+                "username": "ngoldbaum",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/ngoldbaum/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+                    }
+                },
+                "display_name": "Nathan Goldbaum",
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580/comments/36001009"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2580/_/diff#comment-36001009"
                 }
             },
-            "hash": "634cc55bf066"
+            "created_on": "2017-05-01T14:49:50.402636+00:00",
+            "updated_on": "2017-05-01T14:49:50.412516+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2580"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2580"
+                    }
+                },
+                "title": "Properly create code unit systems",
+                "id": 2580
+            },
+            "type": "pullrequest_comment",
+            "id": 36001009
+        }
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "DECLINED",
+    "description": "The current behavior of yt with respect to \"code\" unit systems to to permit switching a `YTArray` to a code unit system via something like:\r\n\r\n```python\r\nds = yt.load(\"my_dataset\")\r\nsp = ds.sphere(\"c\", (100.0, \"kpc\"))\r\nsp[\"density\"].in_base(ds)\r\n```\r\nwhich is a bit clunky and not terribly symmetric with the other ways of switching to different unit systems, e.g. `in_base(\"galactic\")`. In the current implementation, the code unit systems in the `unit_system_registry` are indexed by the string representation of the dataset. \r\n\r\nWith respect to this latter point, this is actually a problem, because for stream datasets this representation is actually the same for every dataset, so one would end up overwriting the unit system in the registry every time one opened a new one. The solution is for every dataset to have a unique identifier. \r\n\r\nSo that each dataset has a unique hash within the `unit_system_registry` dict, I've stolen the `fnv_hash` from `selection_routines` and placed it in a Cython file under `yt/utilities/lib`, and used it for this purpose. \r\n\r\nThe other benefit to this technique is that one can now use `in_base(\"code\")` for `YTArrays` with code units and it will work, in the same way as the other unit systems. \r\n\r\nI need to edit the docs, but otherwise this is ready for code review.",
+    "author": {
+        "username": "jzuhone",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
         },
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
+    },
+    "updated_on": "2017-05-01T14:49:57.387760+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -117,9 +174,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "aad9958444e0",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/aad9958444e0"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
         }
-    },
-    "comments": []
+    }
 }

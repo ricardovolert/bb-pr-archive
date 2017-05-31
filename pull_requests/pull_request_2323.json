@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2016-08-18T15:58:33.716534+00:00",
-    "comment_count": 34,
-    "description": "The AbsorptionSpectrum analysis module has the ability to add lines as well as continuua sources (like lyman continuum absorption at 912 A), but there were a couple of bugs preventing it from working in all cases.  This PR addresses those bugs, adds test coverage, updates the documentation, and includes a lot of comments for what is happening in the code.  In addition, there is a bunch of code that got reformatted because it went beyond the 80 char limit.\r\n\r\nThe two bugs that were addressed are as follows:\r\n\r\n1) the column_density values are calculated by multiplying densities in cgs by path lengths in kpc, which left it in units of `cm**-3*kpc`.  When these values were multiplied by some non-unitful input values, it resulted in wrong values, so I recast these as `cm**-2`, the traditional units of column densities in astro.  \r\n\r\n2) previously, we apply a cutoff in column density for absorbers in terms of whether or not we calculate their effects on continuum sources.  this cutoff threshold is equal to `min_tau * normalization`, where the `min_tau` is the minimum optical depth we care about (i.e. 1e-3) and `normalization` is the user-provided column density that should elicit an optical depth of 1 at the defined wavelength.  but the problem is that we get different behavior from a single absorber with X column density > cutoff than if we have N absorbers each with X/N column density < cutoff even though the total column density for both cases = X.  \r\n\r\nThis is corrected by scaling our `min_tau` value by the number of absorbers present to assure collections of seemingly inconsequential absorbers don't get ignored en masse when their effects add up to a consequential continuum.\r\n\r\nI have gone through the math and done a lot of tests to assure this behavior works, which is why I'm commenting this so heavily.  Any feedback is welcome.\r\n\r\nUPDATE1: Fixing test failure.\r\n\r\nUPDATE2: Merging with @ngoldbaum 's GenericArrayTest fix.\r\n\r\nUPDATE3: Fixing issues pointed out by @brittonsmith .",
-    "created_on": "2016-08-05T02:52:07.753893+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/df6fc87fa819"
-            }
-        },
-        "hash": "df6fc87fa819"
-    },
-    "title": "AbsorptionSpectrum continuum improvements and fixes",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "id": 2323,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/chummels"
-            },
-            "html": {
-                "href": "https://bitbucket.org/chummels/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/chummels/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "chummels",
-        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-        "username": "chummels"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/ffb3f22c89ad"
-                }
-            },
-            "hash": "ffb3f22c89ad"
-        },
         "repository": {
             "full_name": "chummels/yt",
+            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/chummels/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cc72b7fe-3d37-4cd2-a367-f2de113a2e82}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "ffb3f22c89ad",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/8de8a3c315df"
+                    "href": "https://api.bitbucket.org/2.0/repositories/chummels/yt/commit/ffb3f22c89ad"
                 }
-            },
-            "hash": "8de8a3c315df"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "AbsorptionSpectrum continuum improvements and fixes",
+    "id": 2323,
+    "comment_count": 34,
+    "created_on": "2016-08-05T02:52:07.753893+00:00",
+    "merge_commit": {
+        "hash": "df6fc87fa819",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/df6fc87fa819"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I just copied this bit below from previous absorption tests with slight modifications to make it work for this case.  The GenericArrayTest is a bit beyond me, but I *think* this will just compare the output of `spectrum.h5`'s arrays against a saved version, no?  That is what I want it to do, anyway.",
+                "html": "<p>I just copied this bit below from previous absorption tests with slight modifications to make it work for this case.  The GenericArrayTest is a bit beyond me, but I <em>think</em> this will just compare the output of <code>spectrum.h5</code>'s arrays against a saved version, no?  That is what I want it to do, anyway.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -158,25 +112,23 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21952855"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c86b00506c82..1a9c9ab1575b?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21952855"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:c86b00506c82..1a9c9ab1575b?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
                 }
             },
+            "created_on": "2016-08-05T03:06:59.274273+00:00",
+            "updated_on": "2016-08-05T03:06:59.276306+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -186,24 +138,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "I just copied this bit below from previous absorption tests with slight modifications to make it work for this case.  The GenericArrayTest is a bit beyond me, but I *think* this will just compare the output of `spectrum.h5`'s arrays against a saved version, no?  That is what I want it to do, anyway.",
-                "html": "<p>I just copied this bit below from previous absorption tests with slight modifications to make it work for this case.  The GenericArrayTest is a bit beyond me, but I <em>think</em> this will just compare the output of <code>spectrum.h5</code>'s arrays against a saved version, no?  That is what I want it to do, anyway.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T03:06:59.274273+00:00",
-            "updated_on": "2016-08-05T03:06:59.276306+00:00",
             "inline": {
-                "from": null,
+                "to": 414,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": 414
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 21952855
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1107/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1107/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1107/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1107/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1107/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1107/artifact/sandbox/doc/build/html/index.html</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -215,12 +169,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21958220"
@@ -229,8 +180,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21958220"
                 }
             },
+            "created_on": "2016-08-05T07:15:10.433886+00:00",
+            "updated_on": "2016-08-05T07:15:10.488056+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -240,19 +192,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1107/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1107/artifact/sandbox/doc/build/html/index.html",
-                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1107/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1107/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1107/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1107/artifact/sandbox/doc/build/html/index.html</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T07:15:10.433886+00:00",
-            "updated_on": "2016-08-05T07:15:10.488056+00:00",
+            "type": "pullrequest_comment",
             "id": 21958220
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/890/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/890/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/890/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -264,12 +218,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21960527"
@@ -278,8 +229,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21960527"
                 }
             },
+            "created_on": "2016-08-05T08:04:57.607755+00:00",
+            "updated_on": "2016-08-05T08:04:57.661746+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -289,19 +241,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/890/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/890/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/890/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T08:04:57.607755+00:00",
-            "updated_on": "2016-08-05T08:04:57.661746+00:00",
+            "type": "pullrequest_comment",
             "id": 21960527
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "It's `@requires_ds(ISO_GALAXY)` for answer testing",
+                "html": "<p>It's <code>@requires_ds(ISO_GALAXY)</code> for answer testing</p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -313,25 +267,23 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21976729"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21976729"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
                 }
             },
+            "created_on": "2016-08-05T13:26:01.616754+00:00",
+            "updated_on": "2016-08-05T13:26:01.631176+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -341,24 +293,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "It's `@requires_ds(ISO_GALAXY)` for answer testing",
-                "html": "<p>It's <code>@requires_ds(ISO_GALAXY)</code> for answer testing</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T13:26:01.616754+00:00",
-            "updated_on": "2016-08-05T13:26:01.631176+00:00",
             "inline": {
-                "from": null,
+                "to": 365,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": 365
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 21976729
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Erhm, I forgot it's more complicated, disregard my comment",
+                "html": "<p>Erhm, I forgot it's more complicated, disregard my comment</p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -370,22 +324,8 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21976824"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21976824"
-                }
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
             "parent": {
                 "links": {
@@ -398,8 +338,19 @@
                 },
                 "id": 21976729
             },
+            "created_on": "2016-08-05T13:27:37.083378+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21976824"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21976824"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -409,24 +360,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Erhm, I forgot it's more complicated, disregard my comment",
-                "html": "<p>Erhm, I forgot it's more complicated, disregard my comment</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T13:27:37.083378+00:00",
-            "updated_on": "2016-08-05T13:27:37.089386+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": null
+                "from": null
             },
-            "id": 21976824
+            "type": "pullrequest_comment",
+            "id": 21976824,
+            "updated_on": "2016-08-05T13:27:37.089386+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "It looks like the tests are failing simply because I've created a new answer test to compare to old values that don't yet exist.  But I thought by incrementing the .yaml file for these answer tests it wouldn't fail for this problem.  Am I missing something here?",
+                "html": "<p>It looks like the tests are failing simply because I've created a new answer test to compare to old values that don't yet exist.  But I thought by incrementing the .yaml file for these answer tests it wouldn't fail for this problem.  Am I missing something here?</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -438,19 +392,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21982811"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21982811"
-                }
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -463,8 +406,16 @@
                 },
                 "id": 21960527
             },
+            "created_on": "2016-08-05T15:01:16.729612+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21982811"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21982811"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -474,19 +425,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "It looks like the tests are failing simply because I've created a new answer test to compare to old values that don't yet exist.  But I thought by incrementing the .yaml file for these answer tests it wouldn't fail for this problem.  Am I missing something here?",
-                "html": "<p>It looks like the tests are failing simply because I've created a new answer test to compare to old values that don't yet exist.  But I thought by incrementing the .yaml file for these answer tests it wouldn't fail for this problem.  Am I missing something here?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T15:01:16.729612+00:00",
-            "updated_on": "2016-08-05T15:01:16.733148+00:00",
-            "id": 21982811
+            "type": "pullrequest_comment",
+            "id": 21982811,
+            "updated_on": "2016-08-05T15:01:16.733148+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/892/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/892/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/892/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -498,12 +452,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21984737"
@@ -512,8 +463,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21984737"
                 }
             },
+            "created_on": "2016-08-05T15:31:19.494608+00:00",
+            "updated_on": "2016-08-05T15:31:19.567874+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -523,19 +475,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/892/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/892/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/892/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T15:31:19.494608+00:00",
-            "updated_on": "2016-08-05T15:31:19.567874+00:00",
+            "type": "pullrequest_comment",
             "id": 21984737
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "You incremented answers in commit `c86b005`, they run and failed creating empty answers. You fixed failures in subsequent commit, but you didn't bump them again. I \"fixed\" that by manually removing offending answer set from testing server.",
+                "html": "<p>You incremented answers in commit <code>c86b005</code>, they run and failed creating empty answers. You fixed failures in subsequent commit, but you didn't bump them again. I \"fixed\" that by manually removing offending answer set from testing server.</p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -547,19 +501,8 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21984838"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21984838"
-                }
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
             "parent": {
                 "links": {
@@ -572,8 +515,16 @@
                 },
                 "id": 21982811
             },
+            "created_on": "2016-08-05T15:32:47.493239+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21984838"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21984838"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -583,19 +534,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "You incremented answers in commit `c86b005`, they run and failed creating empty answers. You fixed failures in subsequent commit, but you didn't bump them again. I \"fixed\" that by manually removing offending answer set from testing server.",
-                "html": "<p>You incremented answers in commit <code>c86b005</code>, they run and failed creating empty answers. You fixed failures in subsequent commit, but you didn't bump them again. I \"fixed\" that by manually removing offending answer set from testing server.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T15:32:47.493239+00:00",
-            "updated_on": "2016-08-05T15:32:47.500242+00:00",
-            "id": 21984838
+            "type": "pullrequest_comment",
+            "id": 21984838,
+            "updated_on": "2016-08-05T15:32:47.500242+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Ah, that makes sense.  So if I didn't have you to bail me out, I should've just made a new commit incrementing the .yaml file?\n\nI'm confused that it is now failing again on the same test for an indexing error.  I guess I should just increment the yaml file again?",
+                "html": "<p>Ah, that makes sense.  So if I didn't have you to bail me out, I should've just made a new commit incrementing the .yaml file?</p>\n<p>I'm confused that it is now failing again on the same test for an indexing error.  I guess I should just increment the yaml file again?</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -607,19 +561,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21985420"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21985420"
-                }
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -632,8 +575,16 @@
                 },
                 "id": 21984838
             },
+            "created_on": "2016-08-05T15:42:35.390341+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21985420"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21985420"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -643,19 +594,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Ah, that makes sense.  So if I didn't have you to bail me out, I should've just made a new commit incrementing the .yaml file?\n\nI'm confused that it is now failing again on the same test for an indexing error.  I guess I should just increment the yaml file again?",
-                "html": "<p>Ah, that makes sense.  So if I didn't have you to bail me out, I should've just made a new commit incrementing the .yaml file?</p>\n<p>I'm confused that it is now failing again on the same test for an indexing error.  I guess I should just increment the yaml file again?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T15:42:35.390341+00:00",
-            "updated_on": "2016-08-05T15:42:35.396673+00:00",
-            "id": 21985420
+            "type": "pullrequest_comment",
+            "id": 21985420,
+            "updated_on": "2016-08-05T15:42:35.396673+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "yeah, in general anything that may change the answer needs  incrementing the.yaml file.\n\nI'm not sure about that failure, cause the answers are new. Is there a chance that shape of that array may be not deterministic?",
+                "html": "<p>yeah, in general anything that may change the answer needs  incrementing the.yaml file.</p>\n<p>I'm not sure about that failure, cause the answers are new. Is there a chance that shape of that array may be not deterministic?</p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -667,19 +621,8 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21988133"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21988133"
-                }
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
             "parent": {
                 "links": {
@@ -692,8 +635,16 @@
                 },
                 "id": 21985420
             },
+            "created_on": "2016-08-05T16:41:16.437162+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21988133"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21988133"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -703,19 +654,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "yeah, in general anything that may change the answer needs  incrementing the.yaml file.\n\nI'm not sure about that failure, cause the answers are new. Is there a chance that shape of that array may be not deterministic?",
-                "html": "<p>yeah, in general anything that may change the answer needs  incrementing the.yaml file.</p>\n<p>I'm not sure about that failure, cause the answers are new. Is there a chance that shape of that array may be not deterministic?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T16:41:16.437162+00:00",
-            "updated_on": "2016-08-05T16:41:16.442775+00:00",
-            "id": 21988133
+            "type": "pullrequest_comment",
+            "id": 21988133,
+            "updated_on": "2016-08-05T16:41:16.442775+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Nah, the array should always be defined to be length defined in the `AbsorptionSpectrum` constructor.  I'll try incrementing the yaml file again, I guess.",
+                "html": "<p>Nah, the array should always be defined to be length defined in the <code>AbsorptionSpectrum</code> constructor.  I'll try incrementing the yaml file again, I guess.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -727,19 +681,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21993786"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21993786"
-                }
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -752,8 +695,16 @@
                 },
                 "id": 21988133
             },
+            "created_on": "2016-08-05T18:51:48.316208+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21993786"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21993786"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -763,19 +714,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Nah, the array should always be defined to be length defined in the `AbsorptionSpectrum` constructor.  I'll try incrementing the yaml file again, I guess.",
-                "html": "<p>Nah, the array should always be defined to be length defined in the <code>AbsorptionSpectrum</code> constructor.  I'll try incrementing the yaml file again, I guess.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T18:51:48.316208+00:00",
-            "updated_on": "2016-08-05T18:51:48.321592+00:00",
-            "id": 21993786
+            "type": "pullrequest_comment",
+            "id": 21993786,
+            "updated_on": "2016-08-05T18:51:48.321592+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@xarthisius: the arrays will always be 5001 elements long.",
+                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a>: the arrays will always be 5001 elements long.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -787,25 +741,23 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21993801"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21993801"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
                 }
             },
+            "created_on": "2016-08-05T18:52:16.159192+00:00",
+            "updated_on": "2016-08-05T18:52:16.166241+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -815,24 +767,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "@xarthisius: the arrays will always be 5001 elements long.",
-                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a>: the arrays will always be 5001 elements long.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T18:52:16.159192+00:00",
-            "updated_on": "2016-08-05T18:52:16.166241+00:00",
             "inline": {
-                "from": null,
+                "to": 386,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": 386
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 21993801
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/894/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/894/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/894/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -844,12 +798,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21995562"
@@ -858,8 +809,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21995562"
                 }
             },
+            "created_on": "2016-08-05T19:35:52.204322+00:00",
+            "updated_on": "2016-08-05T19:35:52.274749+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -869,19 +821,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/894/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/894/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/894/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T19:35:52.204322+00:00",
-            "updated_on": "2016-08-05T19:35:52.274749+00:00",
+            "type": "pullrequest_comment",
             "id": 21995562
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1108/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1108/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1108/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1108/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1108/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1108/artifact/sandbox/doc/build/html/index.html</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -893,12 +847,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21997391"
@@ -907,8 +858,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21997391"
                 }
             },
+            "created_on": "2016-08-05T20:23:09.201587+00:00",
+            "updated_on": "2016-08-05T20:23:09.318238+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -918,19 +870,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1108/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1108/artifact/sandbox/doc/build/html/index.html",
-                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1108/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1108/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1108/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1108/artifact/sandbox/doc/build/html/index.html</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:23:09.201587+00:00",
-            "updated_on": "2016-08-05T20:23:09.318238+00:00",
+            "type": "pullrequest_comment",
             "id": 21997391
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think this is due to a bug in the answer testing framework. See https://bitbucket.org/yt_analysis/yt/pull-requests/2324",
+                "html": "<p>I think this is due to a bug in the answer testing framework. See <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/2324\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/2324</a></p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -942,19 +896,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21997971"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21997971"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -967,8 +910,16 @@
                 },
                 "id": 21995562
             },
+            "created_on": "2016-08-05T20:38:59.130614+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21997971"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21997971"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -978,19 +929,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "I think this is due to a bug in the answer testing framework. See https://bitbucket.org/yt_analysis/yt/pull-requests/2324",
-                "html": "<p>I think this is due to a bug in the answer testing framework. See <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/2324\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/2324</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:38:59.130614+00:00",
-            "updated_on": "2016-08-05T20:38:59.135559+00:00",
-            "id": 21997971
+            "type": "pullrequest_comment",
+            "id": 21997971,
+            "updated_on": "2016-08-05T20:38:59.135559+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think it's not a bug; I've supplied a comment below.",
+                "html": "<p>I think it's not a bug; I've supplied a comment below.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1002,19 +956,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998004"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998004"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1027,8 +970,16 @@
                 },
                 "id": 21997971
             },
+            "created_on": "2016-08-05T20:40:14.802061+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998004"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998004"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1038,19 +989,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "I think it's not a bug; I've supplied a comment below.",
-                "html": "<p>I think it's not a bug; I've supplied a comment below.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:40:14.802061+00:00",
-            "updated_on": "2016-08-05T20:40:14.808065+00:00",
-            "id": 21998004
+            "type": "pullrequest_comment",
+            "id": 21998004,
+            "updated_on": "2016-08-05T20:40:14.808065+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Supply the dict to `GenericArrayTest` instead -- it expects to be handed a dict of arrays, not a single array.",
+                "html": "<p>Supply the dict to <code>GenericArrayTest</code> instead -- it expects to be handed a dict of arrays, not a single array.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1062,25 +1016,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998015"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998015"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
                 }
             },
+            "created_on": "2016-08-05T20:40:44.756887+00:00",
+            "updated_on": "2016-08-05T20:40:44.759116+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1090,24 +1042,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Supply the dict to `GenericArrayTest` instead -- it expects to be handed a dict of arrays, not a single array.",
-                "html": "<p>Supply the dict to <code>GenericArrayTest</code> instead -- it expects to be handed a dict of arrays, not a single array.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:40:44.756887+00:00",
-            "updated_on": "2016-08-05T20:40:44.759116+00:00",
             "inline": {
-                "from": null,
+                "to": 414,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": 414
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 21998015
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'm confused--what I'm doing here is identical to the other 5-6 tests in this file, so it seems odd that it would bug out on this instance.",
+                "html": "<p>I'm confused--what I'm doing here is identical to the other 5-6 tests in this file, so it seems odd that it would bug out on this instance.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -1119,22 +1073,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998348"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998348"
-                }
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -1147,8 +1087,19 @@
                 },
                 "id": 21998015
             },
+            "created_on": "2016-08-05T20:50:39.296028+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998348"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998348"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1158,24 +1109,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "I'm confused--what I'm doing here is identical to the other 5-6 tests in this file, so it seems odd that it would bug out on this instance.",
-                "html": "<p>I'm confused--what I'm doing here is identical to the other 5-6 tests in this file, so it seems odd that it would bug out on this instance.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:50:39.296028+00:00",
-            "updated_on": "2016-08-05T20:50:39.313519+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": null
+                "from": null
             },
-            "id": 21998348
+            "type": "pullrequest_comment",
+            "id": 21998348,
+            "updated_on": "2016-08-05T20:50:39.313519+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Reissued as PR 2325, which allows for dicts (which it turns out we were using elsewhere) https://bitbucket.org/yt_analysis/yt/pull-requests/2325",
+                "html": "<p>Reissued as PR 2325, which allows for dicts (which it turns out we were using elsewhere) <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/2325\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/2325</a></p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1187,19 +1141,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998350"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998350"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1212,8 +1155,16 @@
                 },
                 "id": 21998004
             },
+            "created_on": "2016-08-05T20:50:41.690097+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998350"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998350"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1223,19 +1174,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Reissued as PR 2325, which allows for dicts (which it turns out we were using elsewhere) https://bitbucket.org/yt_analysis/yt/pull-requests/2325",
-                "html": "<p>Reissued as PR 2325, which allows for dicts (which it turns out we were using elsewhere) <a href=\"https://bitbucket.org/yt_analysis/yt/pull-requests/2325\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/pull-requests/2325</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:50:41.690097+00:00",
-            "updated_on": "2016-08-05T20:50:41.691916+00:00",
-            "id": 21998350
+            "type": "pullrequest_comment",
+            "id": 21998350,
+            "updated_on": "2016-08-05T20:50:41.691916+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yeah, it was buggy for all the other instances as well. My PR 2325 should fix this. You might need to wait for that to go in before the tests pass here, but you won't need to update all the other tests in this file.",
+                "html": "<p>Yeah, it was buggy for all the other instances as well. My PR 2325 should fix this. You might need to wait for that to go in before the tests pass here, but you won't need to update all the other tests in this file.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1247,22 +1201,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998393"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998393"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1275,8 +1215,19 @@
                 },
                 "id": 21998348
             },
+            "created_on": "2016-08-05T20:51:44.478590+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998393"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998393"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1286,24 +1237,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Yeah, it was buggy for all the other instances as well. My PR 2325 should fix this. You might need to wait for that to go in before the tests pass here, but you won't need to update all the other tests in this file.",
-                "html": "<p>Yeah, it was buggy for all the other instances as well. My PR 2325 should fix this. You might need to wait for that to go in before the tests pass here, but you won't need to update all the other tests in this file.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:51:44.478590+00:00",
-            "updated_on": "2016-08-05T20:51:44.483488+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": null
+                "from": null
             },
-            "id": 21998393
+            "type": "pullrequest_comment",
+            "id": 21998393,
+            "updated_on": "2016-08-05T20:51:44.483488+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Thanks for issuing the PR to fix this, @ngoldbaum !",
+                "html": "<p>Thanks for issuing the PR to fix this, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> !</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -1315,22 +1269,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998448"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998448"
-                }
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -1343,8 +1283,19 @@
                 },
                 "id": 21998393
             },
+            "created_on": "2016-08-05T20:53:29.989802+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/21998448"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-21998448"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:None..None?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Ftests%2Ftest_absorption_spectrum.py"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1354,24 +1305,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Thanks for issuing the PR to fix this, @ngoldbaum !",
-                "html": "<p>Thanks for issuing the PR to fix this, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> !</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T20:53:29.989802+00:00",
-            "updated_on": "2016-08-05T20:53:29.996407+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/analysis_modules/absorption_spectrum/tests/test_absorption_spectrum.py",
-                "to": null
+                "from": null
             },
-            "id": 21998448
+            "type": "pullrequest_comment",
+            "id": 21998448,
+            "updated_on": "2016-08-05T20:53:29.996407+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/899/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/899/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/899/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1383,12 +1337,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22001018"
@@ -1397,8 +1348,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22001018"
                 }
             },
+            "created_on": "2016-08-05T22:34:45.195751+00:00",
+            "updated_on": "2016-08-05T22:34:45.276647+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1408,19 +1360,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/899/",
-                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/899/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/899/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T22:34:45.195751+00:00",
-            "updated_on": "2016-08-05T22:34:45.276647+00:00",
+            "type": "pullrequest_comment",
             "id": 22001018
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hooray!",
+                "html": "<p>Hooray!</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -1432,19 +1386,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "chummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22001199"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22001199"
-                }
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -1457,8 +1400,16 @@
                 },
                 "id": 22001018
             },
+            "created_on": "2016-08-05T22:44:35.328791+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22001199"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22001199"
+                }
+            },
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1468,19 +1419,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Hooray!",
-                "html": "<p>Hooray!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T22:44:35.328791+00:00",
-            "updated_on": "2016-08-05T22:44:35.331103+00:00",
-            "id": 22001199
+            "type": "pullrequest_comment",
+            "id": 22001199,
+            "updated_on": "2016-08-05T22:44:35.331103+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/900/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/900/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/900/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1492,12 +1446,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22001717"
@@ -1506,8 +1457,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22001717"
                 }
             },
+            "created_on": "2016-08-05T23:19:40.324366+00:00",
+            "updated_on": "2016-08-05T23:19:40.397822+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1517,19 +1469,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/900/",
-                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/900/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/900/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T23:19:40.324366+00:00",
-            "updated_on": "2016-08-05T23:19:40.397822+00:00",
+            "type": "pullrequest_comment",
             "id": 22001717
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1109/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1109/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1109/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1109/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1109/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1109/artifact/sandbox/doc/build/html/index.html</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1541,12 +1495,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22001750"
@@ -1555,8 +1506,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22001750"
                 }
             },
+            "created_on": "2016-08-05T23:22:22.224651+00:00",
+            "updated_on": "2016-08-05T23:22:22.282245+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1566,19 +1518,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1109/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1109/artifact/sandbox/doc/build/html/index.html",
-                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1109/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1109/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1109/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1109/artifact/sandbox/doc/build/html/index.html</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-05T23:22:22.224651+00:00",
-            "updated_on": "2016-08-05T23:22:22.282245+00:00",
+            "type": "pullrequest_comment",
             "id": 22001750
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1110/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1110/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1110/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1110/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1110/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1110/artifact/sandbox/doc/build/html/index.html</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1590,12 +1544,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22002602"
@@ -1604,8 +1555,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22002602"
                 }
             },
+            "created_on": "2016-08-06T00:49:01.625571+00:00",
+            "updated_on": "2016-08-06T00:49:01.702953+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1615,19 +1567,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1110/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1110/artifact/sandbox/doc/build/html/index.html",
-                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1110/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1110/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1110/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1110/artifact/sandbox/doc/build/html/index.html</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-06T00:49:01.625571+00:00",
-            "updated_on": "2016-08-06T00:49:01.702953+00:00",
+            "type": "pullrequest_comment",
             "id": 22002602
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "according to",
+                "html": "<p>according to</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -1639,25 +1593,23 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22222923"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=doc%2Fsource%2Fanalyzing%2Fanalysis_modules%2Fabsorption_spectrum.rst"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22222923"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=doc%2Fsource%2Fanalyzing%2Fanalysis_modules%2Fabsorption_spectrum.rst"
                 }
             },
+            "created_on": "2016-08-11T11:04:00.989520+00:00",
+            "updated_on": "2016-08-11T11:04:00.991964+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1667,24 +1619,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "according to",
-                "html": "<p>according to</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-11T11:04:00.989520+00:00",
-            "updated_on": "2016-08-11T11:04:00.991964+00:00",
             "inline": {
-                "from": null,
+                "to": 121,
                 "path": "doc/source/analyzing/analysis_modules/absorption_spectrum.rst",
-                "to": 121
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 22222923
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "`field_data[\"dl\"].size` may be faster as it's pure NumPy",
+                "html": "<p><code>field_data[\"dl\"].size</code> may be faster as it's pure NumPy</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -1696,25 +1650,23 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22223141"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22223141"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/chummels/yt:fcc4c4b45789..e01aafd56e01?path=yt%2Fanalysis_modules%2Fabsorption_spectrum%2Fabsorption_spectrum.py"
                 }
             },
+            "created_on": "2016-08-11T11:08:38.392096+00:00",
+            "updated_on": "2016-08-11T11:08:38.399324+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1724,24 +1676,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "`field_data[\"dl\"].size` may be faster as it's pure NumPy",
-                "html": "<p><code>field_data[\"dl\"].size</code> may be faster as it's pure NumPy</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-11T11:08:38.392096+00:00",
-            "updated_on": "2016-08-11T11:08:38.399324+00:00",
             "inline": {
-                "from": null,
+                "to": 299,
                 "path": "yt/analysis_modules/absorption_spectrum/absorption_spectrum.py",
-                "to": 299
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 22223141
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Minor comments, LGTM otherwise.",
+                "html": "<p>Minor comments, LGTM otherwise.</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -1753,12 +1707,9 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22223208"
@@ -1767,8 +1718,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22223208"
                 }
             },
+            "created_on": "2016-08-11T11:10:17.278928+00:00",
+            "updated_on": "2016-08-11T11:10:17.283991+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1778,19 +1730,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Minor comments, LGTM otherwise.",
-                "html": "<p>Minor comments, LGTM otherwise.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-11T11:10:17.278928+00:00",
-            "updated_on": "2016-08-11T11:10:17.283991+00:00",
+            "type": "pullrequest_comment",
             "id": 22223208
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/39/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/39/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/39/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1802,12 +1756,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22489511"
@@ -1816,8 +1767,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22489511"
                 }
             },
+            "created_on": "2016-08-17T19:26:52.656222+00:00",
+            "updated_on": "2016-08-17T19:26:52.746172+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1827,19 +1779,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/39/",
-                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/39/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/39/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-17T19:26:52.656222+00:00",
-            "updated_on": "2016-08-17T19:26:52.746172+00:00",
+            "type": "pullrequest_comment",
             "id": 22489511
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1151/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1151/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1151/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1151/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1151/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1151/artifact/sandbox/doc/build/html/index.html</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1851,12 +1805,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22491758"
@@ -1865,8 +1816,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22491758"
                 }
             },
+            "created_on": "2016-08-17T20:12:49.888574+00:00",
+            "updated_on": "2016-08-17T20:12:49.946843+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1876,19 +1828,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1151/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1151/artifact/sandbox/doc/build/html/index.html",
-                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1151/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1151/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1151/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1151/artifact/sandbox/doc/build/html/index.html</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-17T20:12:49.888574+00:00",
-            "updated_on": "2016-08-17T20:12:49.946843+00:00",
+            "type": "pullrequest_comment",
             "id": 22491758
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/40/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/40/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/40/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1900,12 +1854,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22495306"
@@ -1914,8 +1865,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22495306"
                 }
             },
+            "created_on": "2016-08-17T21:26:56.448756+00:00",
+            "updated_on": "2016-08-17T21:26:56.521537+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1925,19 +1877,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/40/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/40/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/40/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-17T21:26:56.448756+00:00",
-            "updated_on": "2016-08-17T21:26:56.521537+00:00",
+            "type": "pullrequest_comment",
             "id": 22495306
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1152/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1152/artifact/sandbox/doc/build/html/index.html",
+                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1152/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1152/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1152/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1152/artifact/sandbox/doc/build/html/index.html</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1949,12 +1903,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22495651"
@@ -1963,8 +1914,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22495651"
                 }
             },
+            "created_on": "2016-08-17T21:37:46.359675+00:00",
+            "updated_on": "2016-08-17T21:37:46.418756+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1974,19 +1926,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1152/\nDocs build visible at https://tests.yt-project.org/job/yt_docs/1152/artifact/sandbox/doc/build/html/index.html",
-                "html": "<p>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1152/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1152/</a>\nDocs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1152/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1152/artifact/sandbox/doc/build/html/index.html</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-17T21:37:46.359675+00:00",
-            "updated_on": "2016-08-17T21:37:46.418756+00:00",
+            "type": "pullrequest_comment",
             "id": 22495651
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/42/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/42/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/42/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1998,12 +1952,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2323/comments/22497922"
@@ -2012,8 +1963,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323/_/diff#comment-22497922"
                 }
             },
+            "created_on": "2016-08-17T22:56:58.423012+00:00",
+            "updated_on": "2016-08-17T22:56:58.490822+00:00",
             "pullrequest": {
-                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2023,16 +1975,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2323"
                     }
                 },
+                "title": "AbsorptionSpectrum continuum improvements and fixes",
                 "id": 2323
             },
-            "content": {
-                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/42/",
-                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/42/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/42/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-08-17T22:56:58.423012+00:00",
-            "updated_on": "2016-08-17T22:56:58.490822+00:00",
+            "type": "pullrequest_comment",
             "id": 22497922
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "The AbsorptionSpectrum analysis module has the ability to add lines as well as continuua sources (like lyman continuum absorption at 912 A), but there were a couple of bugs preventing it from working in all cases.  This PR addresses those bugs, adds test coverage, updates the documentation, and includes a lot of comments for what is happening in the code.  In addition, there is a bunch of code that got reformatted because it went beyond the 80 char limit.\r\n\r\nThe two bugs that were addressed are as follows:\r\n\r\n1) the column_density values are calculated by multiplying densities in cgs by path lengths in kpc, which left it in units of `cm**-3*kpc`.  When these values were multiplied by some non-unitful input values, it resulted in wrong values, so I recast these as `cm**-2`, the traditional units of column densities in astro.  \r\n\r\n2) previously, we apply a cutoff in column density for absorbers in terms of whether or not we calculate their effects on continuum sources.  this cutoff threshold is equal to `min_tau * normalization`, where the `min_tau` is the minimum optical depth we care about (i.e. 1e-3) and `normalization` is the user-provided column density that should elicit an optical depth of 1 at the defined wavelength.  but the problem is that we get different behavior from a single absorber with X column density > cutoff than if we have N absorbers each with X/N column density < cutoff even though the total column density for both cases = X.  \r\n\r\nThis is corrected by scaling our `min_tau` value by the number of absorbers present to assure collections of seemingly inconsequential absorbers don't get ignored en masse when their effects add up to a consequential continuum.\r\n\r\nI have gone through the math and done a lot of tests to assure this behavior works, which is why I'm commenting this so heavily.  Any feedback is welcome.\r\n\r\nUPDATE1: Fixing test failure.\r\n\r\nUPDATE2: Merging with @ngoldbaum 's GenericArrayTest fix.\r\n\r\nUPDATE3: Fixing issues pointed out by @brittonsmith .",
+    "author": {
+        "username": "chummels",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
+    },
+    "updated_on": "2016-08-18T15:58:33.716534+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "8de8a3c315df",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/8de8a3c315df"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

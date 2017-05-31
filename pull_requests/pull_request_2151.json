@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2016-04-29T16:49:37.477895+00:00",
-    "comment_count": 5,
-    "description": "This issue relates to what happens when the north and normal vectors are aligned. Before this change, the following script \r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\n\r\n# Load the dataset\r\nds = yt.load(\"Enzo_64/DD0043/data0043\")\r\n\r\n# Create a volume rendering\r\nsc = yt.create_scene(ds, field=('gas', 'density'))\r\n\r\n# Now increase the resolution\r\nsc.camera.resolution = (1024, 1024)\r\n\r\n# Set the camera focus to a position that is offset from the center of\r\n# the domain\r\nsc.camera.focus = ds.arr([0.3, 0.3, 0.3], 'unitary')\r\n\r\n# Move the camera position to the other side of the dataset\r\nsc.camera.set_position (ds.arr([0, 0, 0], 'unitary'), sc.camera.normal_vector)\r\n\r\n# save to disk with a custom filename and apply sigma clipping to eliminate\r\n# very bright pixels, producing an image with better contrast.\r\nsc.render()\r\nsc.save('custom.png', sigma_clip=4)\r\n```\r\nproduces this traceback:\r\n\r\n```\r\n#!python\r\n\r\nyt : [INFO     ] 2016-04-28 13:33:58,979 Parameters: current_time              = 645.817072369\r\nyt : [INFO     ] 2016-04-28 13:33:58,979 Parameters: domain_dimensions         = [64 64 64]\r\nyt : [INFO     ] 2016-04-28 13:33:58,979 Parameters: domain_left_edge          = [ 0.  0.  0.]\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: domain_right_edge         = [ 1.  1.  1.]\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: cosmological_simulation   = 1\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: current_redshift          = 0.00139308806408\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: omega_lambda              = 0.7\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: omega_matter              = 0.3\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: hubble_constant           = 0.71\r\nParsing Hierarchy : 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 752/752 [00:00<00:00, 24371.17it/s]\r\nyt : [INFO     ] 2016-04-28 13:33:59,063 Gathering a field list (this may take a moment.)\r\nyt : [INFO     ] 2016-04-28 13:34:00,572 Creating default volume\r\n/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/amr_kdtree/amr_kdtree.py:307: RuntimeWarning: invalid value encountered in log10\r\n  if self.log_fields[i]: vcd = np.log10(vcd)\r\nyt : [INFO     ] 2016-04-28 13:34:07,245 Creating default transfer function\r\nyt : [INFO     ] 2016-04-28 13:34:07,245 Calculating data bounds. This may take a while.  Set the .bounds to avoid this.\r\nTraceback (most recent call last):\r\n  File \"test.py\", line 17, in <module>\r\n    sc.camera.set_position (ds.arr([0, 0, 0], 'unitary'), sc.camera.normal_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 391, in set_position\r\n    north_vector=north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 433, in switch_orientation\r\n    self._setup_normalized_vectors(normal_vector, north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/orientation.py\", line 93, in _setup_normalized_vectors\r\n    self.inv_mat = np.linalg.pinv(self.unit_vectors)\r\n  File \"/Users/atmyers/yt-conda/lib/python2.7/site-packages/numpy/linalg/linalg.py\", line 1617, in pinv\r\n    u, s, vt = svd(a, 0)\r\n  File \"/Users/atmyers/yt-conda/lib/python2.7/site-packages/numpy/linalg/linalg.py\", line 1359, in svd\r\n    u, s, vt = gufunc(a, signature=signature, extobj=extobj)\r\n  File \"/Users/atmyers/yt-conda/lib/python2.7/site-packages/numpy/linalg/linalg.py\", line 99, in _raise_linalgerror_svd_nonconvergence\r\n    raise LinAlgError(\"SVD did not converge\")\r\nnumpy.linalg.linalg.LinAlgError: SVD did not converge\r\n\r\n```\r\n\r\nAfter, it produces the following traceback instead:\r\n\r\n\r\n```\r\n#!python\r\n\r\n [24] \u2192 python test.py\r\nyt : [INFO     ] 2016-04-28 13:59:13,253 Parameters: current_time              = 645.817072369\r\nyt : [INFO     ] 2016-04-28 13:59:13,253 Parameters: domain_dimensions         = [64 64 64]\r\nyt : [INFO     ] 2016-04-28 13:59:13,253 Parameters: domain_left_edge          = [ 0.  0.  0.]\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: domain_right_edge         = [ 1.  1.  1.]\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: cosmological_simulation   = 1\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: current_redshift          = 0.00139308806408\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: omega_lambda              = 0.7\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: omega_matter              = 0.3\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: hubble_constant           = 0.71\r\nParsing Hierarchy : 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 752/752 [00:00<00:00, 22540.67it/s]\r\nyt : [INFO     ] 2016-04-28 13:59:13,339 Gathering a field list (this may take a moment.)\r\nyt : [INFO     ] 2016-04-28 13:59:14,861 Creating default volume\r\n/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/amr_kdtree/amr_kdtree.py:307: RuntimeWarning: invalid value encountered in log10\r\n  if self.log_fields[i]: vcd = np.log10(vcd)\r\nyt : [INFO     ] 2016-04-28 13:59:20,998 Creating default transfer function\r\nyt : [INFO     ] 2016-04-28 13:59:20,999 Calculating data bounds. This may take a while.  Set the .bounds to avoid this.\r\nTraceback (most recent call last):\r\n  File \"test.py\", line 17, in <module>\r\n    sc.camera.set_position (ds.arr([0, 0, 0], 'unitary'), sc.camera.normal_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 391, in set_position\r\n    north_vector=north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 433, in switch_orientation\r\n    self._setup_normalized_vectors(normal_vector, north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/orientation.py\", line 78, in _setup_normalized_vectors\r\n    north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/orientation.py\", line 40, in _validate_unit_vectors\r\n    raise YTException(\"normal_vector and north_vector cannot be aligned.\")\r\nyt.utilities.exceptions.YTException: normal_vector and north_vector cannot be aligned.\r\n```",
-    "created_on": "2016-04-28T20:54:36.569136+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/0daf747c5d00"
-            }
-        },
-        "hash": "0daf747c5d00"
-    },
-    "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
-            },
-            "html": {
-                "href": "https://bitbucket.org/xarthisius/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Kacper Kowalik",
-        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-        "username": "xarthisius"
-    },
-    "id": 2151,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/atmyers"
-            },
-            "html": {
-                "href": "https://bitbucket.org/atmyers/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Andrew Myers",
-        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
-        "username": "atmyers"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt/commit/3d9c78c4ec94"
-                }
-            },
-            "hash": "3d9c78c4ec94"
-        },
         "repository": {
             "full_name": "atmyers/yt",
+            "uuid": "{14866916-6c53-4d06-95e1-89d30c798c08}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/atmyers/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{14866916-6c53-4d06-95e1-89d30c798c08}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "3d9c78c4ec94",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a3c2f4884d53"
+                    "href": "https://api.bitbucket.org/2.0/repositories/atmyers/yt/commit/3d9c78c4ec94"
                 }
-            },
-            "hash": "a3c2f4884d53"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "xarthisius",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
+    },
+    "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
+    "id": 2151,
+    "comment_count": 5,
+    "created_on": "2016-04-28T20:54:36.569136+00:00",
+    "merge_commit": {
+        "hash": "0daf747c5d00",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/0daf747c5d00"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'd prefer to raise an error here instead of silently continuing. Keep in mind that some people (like me) have logging turned off, so we can't expect logging messages to always propagate to users.",
+                "html": "<p>I'd prefer to raise an error here instead of silently continuing. Keep in mind that some people (like me) have logging turned off, so we can't expect logging messages to always propagate to users.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -158,25 +112,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/comments/17913654"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:ee5dcfbad0f3..b02a8c47c9d0?path=yt%2Futilities%2Forientation.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151/_/diff#comment-17913654"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/atmyers/yt:ee5dcfbad0f3..b02a8c47c9d0?path=yt%2Futilities%2Forientation.py"
                 }
             },
+            "created_on": "2016-04-28T20:56:17.314183+00:00",
+            "updated_on": "2016-04-28T20:56:17.317450+00:00",
             "pullrequest": {
-                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -186,24 +138,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151"
                     }
                 },
+                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "id": 2151
             },
-            "content": {
-                "raw": "I'd prefer to raise an error here instead of silently continuing. Keep in mind that some people (like me) have logging turned off, so we can't expect logging messages to always propagate to users.",
-                "html": "<p>I'd prefer to raise an error here instead of silently continuing. Keep in mind that some people (like me) have logging turned off, so we can't expect logging messages to always propagate to users.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-28T20:56:17.314183+00:00",
-            "updated_on": "2016-04-28T20:56:17.317450+00:00",
             "inline": {
-                "from": null,
+                "to": 41,
                 "path": "yt/utilities/orientation.py",
-                "to": 41
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 17913654
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@mzingale do you like this approach? Any comments?",
+                "html": "<p><a href=\"/mzingale/\" rel=\"nofollow\" title=\"@mzingale\" class=\"mention\">Michael  Zingale</a> do you like this approach? Any comments?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -215,12 +169,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/comments/17913905"
@@ -229,8 +180,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151/_/diff#comment-17913905"
                 }
             },
+            "created_on": "2016-04-28T21:02:36.935760+00:00",
+            "updated_on": "2016-04-28T21:02:36.942858+00:00",
             "pullrequest": {
-                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -240,19 +192,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151"
                     }
                 },
+                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "id": 2151
             },
-            "content": {
-                "raw": "@mzingale do you like this approach? Any comments?",
-                "html": "<p><a href=\"/mzingale/\" rel=\"nofollow\" title=\"@mzingale\" class=\"mention\">Michael  Zingale</a> do you like this approach? Any comments?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-28T21:02:36.935760+00:00",
-            "updated_on": "2016-04-28T21:02:36.942858+00:00",
+            "type": "pullrequest_comment",
             "id": 17913905
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/367/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/367/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/367/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -264,12 +218,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/comments/17917196"
@@ -278,8 +229,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151/_/diff#comment-17917196"
                 }
             },
+            "created_on": "2016-04-28T22:53:40.659894+00:00",
+            "updated_on": "2016-04-28T22:53:40.867928+00:00",
             "pullrequest": {
-                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -289,19 +241,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151"
                     }
                 },
+                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "id": 2151
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/367/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/367/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/367/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-28T22:53:40.659894+00:00",
-            "updated_on": "2016-04-28T22:53:40.867928+00:00",
+            "type": "pullrequest_comment",
             "id": 17917196
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "yes, that seems better",
+                "html": "<p>yes, that seems better</p>"
+            },
             "user": {
+                "username": "mzingale",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/mzingale"
@@ -313,19 +267,8 @@
                         "href": "https://bitbucket.org/account/mzingale/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Michael  Zingale",
-                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}",
-                "username": "mzingale"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/comments/17920625"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151/_/diff#comment-17920625"
-                }
+                "uuid": "{d1d09b0d-3bd7-4129-ac64-6aa3abfa3223}"
             },
             "parent": {
                 "links": {
@@ -338,8 +281,16 @@
                 },
                 "id": 17913905
             },
+            "created_on": "2016-04-29T02:02:23.309317+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/comments/17920625"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151/_/diff#comment-17920625"
+                }
+            },
             "pullrequest": {
-                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -349,19 +300,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151"
                     }
                 },
+                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "id": 2151
             },
-            "content": {
-                "raw": "yes, that seems better",
-                "html": "<p>yes, that seems better</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-29T02:02:23.309317+00:00",
-            "updated_on": "2016-04-29T02:02:23.312173+00:00",
-            "id": 17920625
+            "type": "pullrequest_comment",
+            "id": 17920625,
+            "updated_on": "2016-04-29T02:02:23.312173+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/371/",
+                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/371/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/371/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -373,12 +327,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2151/comments/17921946"
@@ -387,8 +338,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151/_/diff#comment-17921946"
                 }
             },
+            "created_on": "2016-04-29T03:51:42.283565+00:00",
+            "updated_on": "2016-04-29T03:51:42.411897+00:00",
             "pullrequest": {
-                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -398,16 +350,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2151"
                     }
                 },
+                "title": "Print an error message in Orientation if the requested vectors are aligned. Closes Issue #1189.",
                 "id": 2151
             },
-            "content": {
-                "raw": "All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/371/",
-                "html": "<p>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/371/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/371/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-04-29T03:51:42.283565+00:00",
-            "updated_on": "2016-04-29T03:51:42.411897+00:00",
+            "type": "pullrequest_comment",
             "id": 17921946
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This issue relates to what happens when the north and normal vectors are aligned. Before this change, the following script \r\n\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\n\r\n# Load the dataset\r\nds = yt.load(\"Enzo_64/DD0043/data0043\")\r\n\r\n# Create a volume rendering\r\nsc = yt.create_scene(ds, field=('gas', 'density'))\r\n\r\n# Now increase the resolution\r\nsc.camera.resolution = (1024, 1024)\r\n\r\n# Set the camera focus to a position that is offset from the center of\r\n# the domain\r\nsc.camera.focus = ds.arr([0.3, 0.3, 0.3], 'unitary')\r\n\r\n# Move the camera position to the other side of the dataset\r\nsc.camera.set_position (ds.arr([0, 0, 0], 'unitary'), sc.camera.normal_vector)\r\n\r\n# save to disk with a custom filename and apply sigma clipping to eliminate\r\n# very bright pixels, producing an image with better contrast.\r\nsc.render()\r\nsc.save('custom.png', sigma_clip=4)\r\n```\r\nproduces this traceback:\r\n\r\n```\r\n#!python\r\n\r\nyt : [INFO     ] 2016-04-28 13:33:58,979 Parameters: current_time              = 645.817072369\r\nyt : [INFO     ] 2016-04-28 13:33:58,979 Parameters: domain_dimensions         = [64 64 64]\r\nyt : [INFO     ] 2016-04-28 13:33:58,979 Parameters: domain_left_edge          = [ 0.  0.  0.]\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: domain_right_edge         = [ 1.  1.  1.]\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: cosmological_simulation   = 1\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: current_redshift          = 0.00139308806408\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: omega_lambda              = 0.7\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: omega_matter              = 0.3\r\nyt : [INFO     ] 2016-04-28 13:33:58,980 Parameters: hubble_constant           = 0.71\r\nParsing Hierarchy : 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 752/752 [00:00<00:00, 24371.17it/s]\r\nyt : [INFO     ] 2016-04-28 13:33:59,063 Gathering a field list (this may take a moment.)\r\nyt : [INFO     ] 2016-04-28 13:34:00,572 Creating default volume\r\n/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/amr_kdtree/amr_kdtree.py:307: RuntimeWarning: invalid value encountered in log10\r\n  if self.log_fields[i]: vcd = np.log10(vcd)\r\nyt : [INFO     ] 2016-04-28 13:34:07,245 Creating default transfer function\r\nyt : [INFO     ] 2016-04-28 13:34:07,245 Calculating data bounds. This may take a while.  Set the .bounds to avoid this.\r\nTraceback (most recent call last):\r\n  File \"test.py\", line 17, in <module>\r\n    sc.camera.set_position (ds.arr([0, 0, 0], 'unitary'), sc.camera.normal_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 391, in set_position\r\n    north_vector=north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 433, in switch_orientation\r\n    self._setup_normalized_vectors(normal_vector, north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/orientation.py\", line 93, in _setup_normalized_vectors\r\n    self.inv_mat = np.linalg.pinv(self.unit_vectors)\r\n  File \"/Users/atmyers/yt-conda/lib/python2.7/site-packages/numpy/linalg/linalg.py\", line 1617, in pinv\r\n    u, s, vt = svd(a, 0)\r\n  File \"/Users/atmyers/yt-conda/lib/python2.7/site-packages/numpy/linalg/linalg.py\", line 1359, in svd\r\n    u, s, vt = gufunc(a, signature=signature, extobj=extobj)\r\n  File \"/Users/atmyers/yt-conda/lib/python2.7/site-packages/numpy/linalg/linalg.py\", line 99, in _raise_linalgerror_svd_nonconvergence\r\n    raise LinAlgError(\"SVD did not converge\")\r\nnumpy.linalg.linalg.LinAlgError: SVD did not converge\r\n\r\n```\r\n\r\nAfter, it produces the following traceback instead:\r\n\r\n\r\n```\r\n#!python\r\n\r\n [24] \u2192 python test.py\r\nyt : [INFO     ] 2016-04-28 13:59:13,253 Parameters: current_time              = 645.817072369\r\nyt : [INFO     ] 2016-04-28 13:59:13,253 Parameters: domain_dimensions         = [64 64 64]\r\nyt : [INFO     ] 2016-04-28 13:59:13,253 Parameters: domain_left_edge          = [ 0.  0.  0.]\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: domain_right_edge         = [ 1.  1.  1.]\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: cosmological_simulation   = 1\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: current_redshift          = 0.00139308806408\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: omega_lambda              = 0.7\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: omega_matter              = 0.3\r\nyt : [INFO     ] 2016-04-28 13:59:13,254 Parameters: hubble_constant           = 0.71\r\nParsing Hierarchy : 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 752/752 [00:00<00:00, 22540.67it/s]\r\nyt : [INFO     ] 2016-04-28 13:59:13,339 Gathering a field list (this may take a moment.)\r\nyt : [INFO     ] 2016-04-28 13:59:14,861 Creating default volume\r\n/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/amr_kdtree/amr_kdtree.py:307: RuntimeWarning: invalid value encountered in log10\r\n  if self.log_fields[i]: vcd = np.log10(vcd)\r\nyt : [INFO     ] 2016-04-28 13:59:20,998 Creating default transfer function\r\nyt : [INFO     ] 2016-04-28 13:59:20,999 Calculating data bounds. This may take a while.  Set the .bounds to avoid this.\r\nTraceback (most recent call last):\r\n  File \"test.py\", line 17, in <module>\r\n    sc.camera.set_position (ds.arr([0, 0, 0], 'unitary'), sc.camera.normal_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 391, in set_position\r\n    north_vector=north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/visualization/volume_rendering/camera.py\", line 433, in switch_orientation\r\n    self._setup_normalized_vectors(normal_vector, north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/orientation.py\", line 78, in _setup_normalized_vectors\r\n    north_vector)\r\n  File \"/Users/atmyers/yt-conda/src/yt-hg/yt/utilities/orientation.py\", line 40, in _validate_unit_vectors\r\n    raise YTException(\"normal_vector and north_vector cannot be aligned.\")\r\nyt.utilities.exceptions.YTException: normal_vector and north_vector cannot be aligned.\r\n```",
+    "author": {
+        "username": "atmyers",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/atmyers"
+            },
+            "html": {
+                "href": "https://bitbucket.org/atmyers/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/atmyers/avatar/32/"
+            }
+        },
+        "display_name": "Andrew Myers",
+        "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}"
+    },
+    "updated_on": "2016-04-29T16:49:37.477895+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "a3c2f4884d53",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a3c2f4884d53"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

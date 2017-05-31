@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2011-11-10T15:28:45.276117+00:00",
-    "comment_count": 4,
-    "description": "This PR makes two minor changes:\r\n\r\n1. If a grid is fully  contained and has no children, do not calculate point indices that belong to it, and do not use fancy-indexing.  This speeds up unigrid analysis substantially.\r\n2. Make the Nyx format not do unnecessary reshapes and copies.\r\n\r\nThe tests pass for me!\r\n\r\n*UPDATE*\r\n\r\nThis fixes it in case of having overlapping siblings (i.e., RAMSES data).\r\n\r\n*UPDATE 2*\r\n\r\nBackport of Nyx IO fix to Orion.\r\n\r\n*UPDATE 3*\r\n\r\nAt Casey's suggestion, I've added a new Cython routine to further speed up the Nyx reading, and to overall clean up the code in that function.  This results in epsilon speedup over here, but I am optimistic that on a networked file system it may have some improvement.\r\n\r\nThe real problem, I think, is that we need to call \"getline\" or \"readline\" to find out the size of what I believe is a variable-length header for the FABs.  We could potentially also calculate the offsets backwards, from subsequent FABs in the file, or calculate the size of the string.  Neither of these sounds enticing to me.\r\n\r\n*UPDATE 4*\r\n\r\nThis fixes a bug wherein I was incorrectly allocating and using char*'s in the read_and_seek function.\r\n\r\n*UPDATE 5*\r\n\r\nIn response to #319, I've updated this to get rid of \"getline\" and move to \"fgets\" which is definitely available on OSX.",
-    "created_on": "2011-11-02T19:58:15.620215+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5f9200b277e0"
-            }
-        },
-        "hash": "5f9200b277e0"
-    },
-    "title": "Speedup for Unigrid",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/sskory"
-            },
-            "html": {
-                "href": "https://bitbucket.org/sskory/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/sskory/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Stephen Skory",
-        "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-        "username": "sskory"
-    },
-    "id": 18,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/906ce654ac6e"
-                }
-            },
-            "hash": "906ce654ac6e"
-        },
         "repository": {
             "full_name": "MatthewTurk/yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "906ce654ac6e",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/919755bd071b"
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/906ce654ac6e"
                 }
-            },
-            "hash": "919755bd071b"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "sskory",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/sskory"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/sskory/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/sskory/avatar/32/"
+            }
+        },
+        "display_name": "Stephen Skory",
+        "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
+    },
+    "title": "Speedup for Unigrid",
+    "id": 18,
+    "comment_count": 4,
+    "created_on": "2011-11-02T19:58:15.620215+00:00",
+    "merge_commit": {
+        "hash": "5f9200b277e0",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/5f9200b277e0"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "creole",
+                "raw": "I just realized I need to insert a check against OverlappingGrids. Update forthcoming!",
+                "html": "<p>I just realized I need to insert a check against OverlappingGrids. Update forthcoming!</p>\n"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/comments/746"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18/_/diff#comment-746"
                 }
             },
+            "created_on": "2011-11-02T20:03:41.477171+00:00",
+            "updated_on": "2011-11-02T20:03:41.496714+00:00",
             "pullrequest": {
-                "title": "Speedup for Unigrid",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18"
                     }
                 },
+                "title": "Speedup for Unigrid",
                 "id": 18
             },
-            "content": {
-                "raw": "I just realized I need to insert a check against OverlappingGrids. Update forthcoming!",
-                "html": "<p>I just realized I need to insert a check against OverlappingGrids. Update forthcoming!</p>\n",
-                "markup": "creole"
-            },
-            "created_on": "2011-11-02T20:03:41.477171+00:00",
-            "updated_on": "2011-11-02T20:03:41.496714+00:00",
+            "type": "pullrequest_comment",
             "id": 746
         },
         {
+            "content": {
+                "markup": "creole",
+                "raw": "can you check if the nyx fix could be backported to Orion?",
+                "html": "<p>can you check if the nyx fix could be backported to Orion?</p>\n"
+            },
             "user": {
+                "username": "jsoishi",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jsoishi"
@@ -207,12 +161,9 @@
                         "href": "https://bitbucket.org/account/jsoishi/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "J. S. Oishi",
-                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}",
-                "username": "jsoishi"
+                "uuid": "{ab7c2db2-7642-47a8-9264-0939f601d904}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/comments/748"
@@ -221,8 +172,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18/_/diff#comment-748"
                 }
             },
+            "created_on": "2011-11-02T21:24:02.393413+00:00",
+            "updated_on": "2011-11-02T21:24:02.409497+00:00",
             "pullrequest": {
-                "title": "Speedup for Unigrid",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -232,19 +184,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18"
                     }
                 },
+                "title": "Speedup for Unigrid",
                 "id": 18
             },
-            "content": {
-                "raw": "can you check if the nyx fix could be backported to Orion?",
-                "html": "<p>can you check if the nyx fix could be backported to Orion?</p>\n",
-                "markup": "creole"
-            },
-            "created_on": "2011-11-02T21:24:02.393413+00:00",
-            "updated_on": "2011-11-02T21:24:02.409497+00:00",
+            "type": "pullrequest_comment",
             "id": 748
         },
         {
+            "content": {
+                "markup": "creole",
+                "raw": "My reading of it is that it should work, verbatim, backported to Orion.  I have applied this in the latest version of the PR.",
+                "html": "<p>My reading of it is that it should work, verbatim, backported to Orion.  I have applied this in the latest version of the PR.</p>\n"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -256,19 +210,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/comments/749"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18/_/diff#comment-749"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -281,8 +224,16 @@
                 },
                 "id": 748
             },
+            "created_on": "2011-11-02T21:25:45.143908+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/comments/749"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18/_/diff#comment-749"
+                }
+            },
             "pullrequest": {
-                "title": "Speedup for Unigrid",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -292,19 +243,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18"
                     }
                 },
+                "title": "Speedup for Unigrid",
                 "id": 18
             },
-            "content": {
-                "raw": "My reading of it is that it should work, verbatim, backported to Orion.  I have applied this in the latest version of the PR.",
-                "html": "<p>My reading of it is that it should work, verbatim, backported to Orion.  I have applied this in the latest version of the PR.</p>\n",
-                "markup": "creole"
-            },
-            "created_on": "2011-11-02T21:25:45.143908+00:00",
-            "updated_on": "2011-11-02T21:25:45.156491+00:00",
-            "id": 749
+            "type": "pullrequest_comment",
+            "id": 749,
+            "updated_on": "2011-11-02T21:25:45.156491+00:00"
         },
         {
+            "content": {
+                "markup": "creole",
+                "raw": "Looks awesome. Definitely faster loading. Trying to test at NERSC now.",
+                "html": "<p>Looks awesome. Definitely faster loading. Trying to test at NERSC now.</p>\n"
+            },
             "user": {
+                "username": "caseywstark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/caseywstark"
@@ -316,12 +270,9 @@
                         "href": "https://bitbucket.org/account/caseywstark/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Casey Stark",
-                "uuid": "{f4055fc4-bdcf-427f-8a5e-0a401f5bc756}",
-                "username": "caseywstark"
+                "uuid": "{f4055fc4-bdcf-427f-8a5e-0a401f5bc756}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/18/comments/751"
@@ -330,8 +281,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18/_/diff#comment-751"
                 }
             },
+            "created_on": "2011-11-02T21:50:24.159609+00:00",
+            "updated_on": "2011-11-02T21:50:24.321125+00:00",
             "pullrequest": {
-                "title": "Speedup for Unigrid",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -341,16 +293,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/18"
                     }
                 },
+                "title": "Speedup for Unigrid",
                 "id": 18
             },
-            "content": {
-                "raw": "Looks awesome. Definitely faster loading. Trying to test at NERSC now.",
-                "html": "<p>Looks awesome. Definitely faster loading. Trying to test at NERSC now.</p>\n",
-                "markup": "creole"
-            },
-            "created_on": "2011-11-02T21:50:24.159609+00:00",
-            "updated_on": "2011-11-02T21:50:24.321125+00:00",
+            "type": "pullrequest_comment",
             "id": 751
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This PR makes two minor changes:\r\n\r\n1. If a grid is fully  contained and has no children, do not calculate point indices that belong to it, and do not use fancy-indexing.  This speeds up unigrid analysis substantially.\r\n2. Make the Nyx format not do unnecessary reshapes and copies.\r\n\r\nThe tests pass for me!\r\n\r\n*UPDATE*\r\n\r\nThis fixes it in case of having overlapping siblings (i.e., RAMSES data).\r\n\r\n*UPDATE 2*\r\n\r\nBackport of Nyx IO fix to Orion.\r\n\r\n*UPDATE 3*\r\n\r\nAt Casey's suggestion, I've added a new Cython routine to further speed up the Nyx reading, and to overall clean up the code in that function.  This results in epsilon speedup over here, but I am optimistic that on a networked file system it may have some improvement.\r\n\r\nThe real problem, I think, is that we need to call \"getline\" or \"readline\" to find out the size of what I believe is a variable-length header for the FABs.  We could potentially also calculate the offsets backwards, from subsequent FABs in the file, or calculate the size of the string.  Neither of these sounds enticing to me.\r\n\r\n*UPDATE 4*\r\n\r\nThis fixes a bug wherein I was incorrectly allocating and using char*'s in the read_and_seek function.\r\n\r\n*UPDATE 5*\r\n\r\nIn response to #319, I've updated this to get rid of \"getline\" and move to \"fgets\" which is definitely available on OSX.",
+    "author": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "updated_on": "2011-11-10T15:28:45.276117+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "919755bd071b",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/919755bd071b"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

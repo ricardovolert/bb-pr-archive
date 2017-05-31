@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2015-10-22T09:34:46.994772+00:00",
-    "comment_count": 13,
-    "description": "Right now several things are wrong in the way the tipsy frontend handles cosmological datasets.\r\n\r\n1. If the hubble constant *doesn't* come from a gasoline or pkdgrav parameter file, it was being incorrectly scaled.\r\n\r\n2. If there wasn't a parameter file available, we weren't correctly identifying the dataset as comoving (even though `ds.cosmological_simulation` was set to `). This had the unintended side effect of making ds.domain_left_edge and ds.domain_right_edge incorrect, since the dataset was recognized as non-cosmological with no bounding box, so the bbox is inferred by looking at the particle positions and adding some padding.  This is badly wrong is cosmological datasets, since the box size sets the length units.\r\n\r\n3. The tests were using `unit_base` incorrectly and were reading in the test datasets with the wrong length units.\r\n\r\nThese issues should not all be fixed.\r\n\r\nI used the following test script to debug this:\r\n\r\n```\r\nimport yt\r\n\r\ncosmology_parameters = dict(current_redshift = 0.0,\r\n                            omega_lambda = 0.728,\r\n                            omega_matter = 0.272,\r\n                            hubble_constant = 0.702)\r\n\r\nkwargs = dict(cosmology_parameters = cosmology_parameters,\r\n              unit_base = {'length': (60.0, \"Mpccm/h\")},\r\n              n_ref = 64)\r\n\r\nds = yt.load(\"agora_1e11.00400/agora_1e11.00400\", **kwargs)\r\n```\r\n\r\nThe easier way to work with this script is to run it in IPython with the `%run` magic and then inspect e.g. `ds.hubble_constant`, `ds.comoving`, `ds.domain_left_edge`, and `ds.domain_width`.\r\n\r\nThe answers will need to be regenerated before this is merged in.",
-    "created_on": "2015-10-06T04:36:16.171264+00:00",
-    "task_count": 1,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a5d76f647fbb"
-            }
-        },
-        "hash": "a5d76f647fbb"
-    },
-    "title": "Tipsy cosmology unit fixes",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
-            },
-            "html": {
-                "href": "https://bitbucket.org/brittonsmith/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Britton Smith",
-        "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-        "username": "brittonsmith"
-    },
-    "id": 1787,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 1,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/85d2a0080323"
-                }
-            },
-            "hash": "85d2a0080323"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "85d2a0080323",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d77e881944f8"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/85d2a0080323"
                 }
-            },
-            "hash": "d77e881944f8"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "brittonsmith",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/brittonsmith/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
+            }
+        },
+        "display_name": "Britton Smith",
+        "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
+    },
+    "title": "Tipsy cosmology unit fixes",
+    "id": 1787,
+    "comment_count": 13,
+    "created_on": "2015-10-06T04:36:16.171264+00:00",
+    "merge_commit": {
+        "hash": "a5d76f647fbb",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a5d76f647fbb"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/639/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/639/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/639/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10524978"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10524978"
                 }
             },
+            "created_on": "2015-10-06T05:49:58.001654+00:00",
+            "updated_on": "2015-10-06T05:49:58.071034+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/639/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/639/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/639/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-06T05:49:58.001654+00:00",
-            "updated_on": "2015-10-06T05:49:58.071034+00:00",
+            "type": "pullrequest_comment",
             "id": 10524978
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/640/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/640/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/640/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -207,12 +161,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10527117"
@@ -221,8 +172,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10527117"
                 }
             },
+            "created_on": "2015-10-06T07:26:13.290962+00:00",
+            "updated_on": "2015-10-06T07:26:13.448539+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -232,19 +184,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/640/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/640/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/640/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-06T07:26:13.290962+00:00",
-            "updated_on": "2015-10-06T07:26:13.448539+00:00",
+            "type": "pullrequest_comment",
             "id": 10527117
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "These failures are expected given the changes in the PR. Answers will need to be regenerated.",
+                "html": "<p>These failures are expected given the changes in the PR. Answers will need to be regenerated.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -256,19 +210,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10543707"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10543707"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -281,8 +224,16 @@
                 },
                 "id": 10527117
             },
+            "created_on": "2015-10-06T14:06:46.341137+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10543707"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10543707"
+                }
+            },
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -292,19 +243,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "These failures are expected given the changes in the PR. Answers will need to be regenerated.",
-                "html": "<p>These failures are expected given the changes in the PR. Answers will need to be regenerated.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-06T14:06:46.341137+00:00",
-            "updated_on": "2015-10-06T14:06:46.344219+00:00",
-            "id": 10543707
+            "type": "pullrequest_comment",
+            "id": 10543707,
+            "updated_on": "2015-10-06T14:06:46.344219+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This should be a check against `self.cosmological_simulation` rather than self.comoving, since `comoving` is a tipsy-specific thing.  We should also probably deprecate `comoving`.",
+                "html": "<p>This should be a check against <code>self.cosmological_simulation</code> rather than self.comoving, since <code>comoving</code> is a tipsy-specific thing.  We should also probably deprecate <code>comoving</code>.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -316,25 +270,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10725301"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:a962b8bc8d9c..ca754f897f2f?path=yt%2Ffrontends%2Ftipsy%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10725301"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:a962b8bc8d9c..ca754f897f2f?path=yt%2Ffrontends%2Ftipsy%2Fdata_structures.py"
                 }
             },
+            "created_on": "2015-10-12T18:52:07.458141+00:00",
+            "updated_on": "2015-10-12T18:52:07.460676+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -344,24 +296,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "This should be a check against `self.cosmological_simulation` rather than self.comoving, since `comoving` is a tipsy-specific thing.  We should also probably deprecate `comoving`.",
-                "html": "<p>This should be a check against <code>self.cosmological_simulation</code> rather than self.comoving, since <code>comoving</code> is a tipsy-specific thing.  We should also probably deprecate <code>comoving</code>.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-12T18:52:07.458141+00:00",
-            "updated_on": "2015-10-12T18:52:07.460676+00:00",
             "inline": {
-                "from": null,
+                "to": 192,
                 "path": "yt/frontends/tipsy/data_structures.py",
-                "to": 192
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 10725301
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi @ngoldbaum, I've looked this over and your changes seem correct.  However, I have found one additional issue.  Currently, the mass units default to mass_unit = 1 Msun, but if I take the sum of the particle masses for the whole dataset, I end up with a value of 0.272 code_mass, which ends up being 0.272 Msun.  Conveniently, 0.272 is the value of omega_matter for this dataset.  Therefore, it seems to me that when the dataset is cosmological and the ``dMsolUnit`` key is missing from the parameters dict, the particle masses are in units of the (critical density x domain volume), or possibly the (critical density at z = 0 x domain volume).  So, in ``_set_code_unit_attributes``, there needs to be something like:\n\n```\n#!python\n\nif \"dMsolUnit\" not in ds.parameters:\n    self.mass_unit = cosmo.critical_density(0.0) * ds.domain_width.prod()\n```\n\nUnfortunately, because the one test dataset we have is at z = 0, there is the unfortunate degeneracy caused by the comoving and proper frame being equal.  Would it be possible to obtain another dataset from this run at z > 0 to verify that the above is correct all the time?  It would also be valuable in verifying the rest of this PR.",
+                "html": "<p>Hi <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>, I've looked this over and your changes seem correct.  However, I have found one additional issue.  Currently, the mass units default to mass_unit = 1 Msun, but if I take the sum of the particle masses for the whole dataset, I end up with a value of 0.272 code_mass, which ends up being 0.272 Msun.  Conveniently, 0.272 is the value of omega_matter for this dataset.  Therefore, it seems to me that when the dataset is cosmological and the <code>dMsolUnit</code> key is missing from the parameters dict, the particle masses are in units of the (critical density x domain volume), or possibly the (critical density at z = 0 x domain volume).  So, in <code>_set_code_unit_attributes</code>, there needs to be something like:</p>\n<div class=\"codehilite language-python\"><pre><span></span><span class=\"k\">if</span> <span class=\"s2\">&quot;dMsolUnit&quot;</span> <span class=\"ow\">not</span> <span class=\"ow\">in</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">parameters</span><span class=\"p\">:</span>\n    <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">mass_unit</span> <span class=\"o\">=</span> <span class=\"n\">cosmo</span><span class=\"o\">.</span><span class=\"n\">critical_density</span><span class=\"p\">(</span><span class=\"mf\">0.0</span><span class=\"p\">)</span> <span class=\"o\">*</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">domain_width</span><span class=\"o\">.</span><span class=\"n\">prod</span><span class=\"p\">()</span>\n</pre></div>\n\n\n<p>Unfortunately, because the one test dataset we have is at z = 0, there is the unfortunate degeneracy caused by the comoving and proper frame being equal.  Would it be possible to obtain another dataset from this run at z &gt; 0 to verify that the above is correct all the time?  It would also be valuable in verifying the rest of this PR.</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -373,12 +327,9 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10847260"
@@ -387,8 +338,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10847260"
                 }
             },
+            "created_on": "2015-10-15T15:32:03.180092+00:00",
+            "updated_on": "2015-10-15T15:32:03.194386+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -398,19 +350,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "Hi @ngoldbaum, I've looked this over and your changes seem correct.  However, I have found one additional issue.  Currently, the mass units default to mass_unit = 1 Msun, but if I take the sum of the particle masses for the whole dataset, I end up with a value of 0.272 code_mass, which ends up being 0.272 Msun.  Conveniently, 0.272 is the value of omega_matter for this dataset.  Therefore, it seems to me that when the dataset is cosmological and the ``dMsolUnit`` key is missing from the parameters dict, the particle masses are in units of the (critical density x domain volume), or possibly the (critical density at z = 0 x domain volume).  So, in ``_set_code_unit_attributes``, there needs to be something like:\n\n```\n#!python\n\nif \"dMsolUnit\" not in ds.parameters:\n    self.mass_unit = cosmo.critical_density(0.0) * ds.domain_width.prod()\n```\n\nUnfortunately, because the one test dataset we have is at z = 0, there is the unfortunate degeneracy caused by the comoving and proper frame being equal.  Would it be possible to obtain another dataset from this run at z > 0 to verify that the above is correct all the time?  It would also be valuable in verifying the rest of this PR.",
-                "html": "<p>Hi <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>, I've looked this over and your changes seem correct.  However, I have found one additional issue.  Currently, the mass units default to mass_unit = 1 Msun, but if I take the sum of the particle masses for the whole dataset, I end up with a value of 0.272 code_mass, which ends up being 0.272 Msun.  Conveniently, 0.272 is the value of omega_matter for this dataset.  Therefore, it seems to me that when the dataset is cosmological and the <code>dMsolUnit</code> key is missing from the parameters dict, the particle masses are in units of the (critical density x domain volume), or possibly the (critical density at z = 0 x domain volume).  So, in <code>_set_code_unit_attributes</code>, there needs to be something like:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"k\">if</span> <span class=\"s2\">&quot;dMsolUnit&quot;</span> <span class=\"ow\">not</span> <span class=\"ow\">in</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">parameters</span><span class=\"p\">:</span>\n    <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">mass_unit</span> <span class=\"o\">=</span> <span class=\"n\">cosmo</span><span class=\"o\">.</span><span class=\"n\">critical_density</span><span class=\"p\">(</span><span class=\"mf\">0.0</span><span class=\"p\">)</span> <span class=\"o\">*</span> <span class=\"n\">ds</span><span class=\"o\">.</span><span class=\"n\">domain_width</span><span class=\"o\">.</span><span class=\"n\">prod</span><span class=\"p\">()</span>\n</pre></div>\n\n\n<p>Unfortunately, because the one test dataset we have is at z = 0, there is the unfortunate degeneracy caused by the comoving and proper frame being equal.  Would it be possible to obtain another dataset from this run at z &gt; 0 to verify that the above is correct all the time?  It would also be valuable in verifying the rest of this PR.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-15T15:32:03.180092+00:00",
-            "updated_on": "2015-10-15T15:32:03.194386+00:00",
+            "type": "pullrequest_comment",
             "id": 10847260
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Thank you for the detailed checking and thoughtful comment!\n\nI have an output from z=3 I can share offline.",
+                "html": "<p>Thank you for the detailed checking and thoughtful comment!</p>\n<p>I have an output from z=3 I can share offline.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -422,19 +376,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10847567"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10847567"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -447,8 +390,16 @@
                 },
                 "id": 10847260
             },
+            "created_on": "2015-10-15T15:38:49.692128+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10847567"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10847567"
+                }
+            },
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -458,19 +409,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "Thank you for the detailed checking and thoughtful comment!\n\nI have an output from z=3 I can share offline.",
-                "html": "<p>Thank you for the detailed checking and thoughtful comment!</p>\n<p>I have an output from z=3 I can share offline.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-15T15:38:49.692128+00:00",
-            "updated_on": "2015-10-15T15:38:49.694435+00:00",
-            "id": 10847567
+            "type": "pullrequest_comment",
+            "id": 10847567,
+            "updated_on": "2015-10-15T15:38:49.694435+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@brittonsmith fixed a few lingering issues that I left behind. I think the Tipsy cosmology units situation should be substantially improved with this pull request.\n\nThat said, I'd *really* like to hear from a Tipsy expert (@bwkeller ?) to check if what we're doing here is correct and to play around with some real data.",
+                "html": "<p><a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> fixed a few lingering issues that I left behind. I think the Tipsy cosmology units situation should be substantially improved with this pull request.</p>\n<p>That said, I'd <em>really</em> like to hear from a Tipsy expert (<a href=\"/bwkeller/\" rel=\"nofollow\" title=\"@bwkeller\" class=\"mention\">Ben Keller</a> ?) to check if what we're doing here is correct and to play around with some real data.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -482,12 +436,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10888204"
@@ -496,8 +447,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10888204"
                 }
             },
+            "created_on": "2015-10-16T16:58:31.637550+00:00",
+            "updated_on": "2015-10-16T16:58:31.647120+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -507,19 +459,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "@brittonsmith fixed a few lingering issues that I left behind. I think the Tipsy cosmology units situation should be substantially improved with this pull request.\n\nThat said, I'd *really* like to hear from a Tipsy expert (@bwkeller ?) to check if what we're doing here is correct and to play around with some real data.",
-                "html": "<p><a href=\"/brittonsmith/\" rel=\"nofollow\" title=\"@brittonsmith\" class=\"mention\">Britton Smith</a> fixed a few lingering issues that I left behind. I think the Tipsy cosmology units situation should be substantially improved with this pull request.</p>\n<p>That said, I'd <em>really</em> like to hear from a Tipsy expert (<a href=\"/bwkeller/\" rel=\"nofollow\" title=\"@bwkeller\" class=\"mention\">Ben Keller</a> ?) to check if what we're doing here is correct and to play around with some real data.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-16T16:58:31.637550+00:00",
-            "updated_on": "2015-10-16T16:58:31.647120+00:00",
+            "type": "pullrequest_comment",
             "id": 10888204
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This still needs to be checking `cosmological_simulation` and `comoving` should be deprecated.",
+                "html": "<p>This still needs to be checking <code>cosmological_simulation</code> and <code>comoving</code> should be deprecated.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -531,25 +485,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10888231"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:525e7a051959..d77e881944f8?path=yt%2Ffrontends%2Ftipsy%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10888231"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:525e7a051959..d77e881944f8?path=yt%2Ffrontends%2Ftipsy%2Fdata_structures.py"
                 }
             },
+            "created_on": "2015-10-16T16:59:09.501309+00:00",
+            "updated_on": "2015-10-16T16:59:09.506145+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -559,24 +511,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "This still needs to be checking `cosmological_simulation` and `comoving` should be deprecated.",
-                "html": "<p>This still needs to be checking <code>cosmological_simulation</code> and <code>comoving</code> should be deprecated.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-16T16:59:09.501309+00:00",
-            "updated_on": "2015-10-16T16:59:09.506145+00:00",
             "inline": {
-                "from": null,
+                "to": 192,
                 "path": "yt/frontends/tipsy/data_structures.py",
-                "to": 192
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 10888231
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/707/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/707/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/707/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -588,12 +542,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10890903"
@@ -602,8 +553,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10890903"
                 }
             },
+            "created_on": "2015-10-16T18:29:55.139737+00:00",
+            "updated_on": "2015-10-16T18:29:55.197783+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -613,19 +565,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/707/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/707/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/707/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-16T18:29:55.139737+00:00",
-            "updated_on": "2015-10-16T18:29:55.197783+00:00",
+            "type": "pullrequest_comment",
             "id": 10890903
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'll take a look at this later today.",
+                "html": "<p>I'll take a look at this later today.</p>"
+            },
             "user": {
+                "username": "bwkeller",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/bwkeller"
@@ -637,12 +591,21 @@
                         "href": "https://bitbucket.org/account/bwkeller/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Ben Keller",
-                "uuid": "{1719424c-ccde-435f-aa44-5102314e6b2d}",
-                "username": "bwkeller"
+                "uuid": "{1719424c-ccde-435f-aa44-5102314e6b2d}"
             },
-            "type": "pullrequest_comment",
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10888204"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10888204"
+                    }
+                },
+                "id": 10888204
+            },
+            "created_on": "2015-10-16T19:09:56.001741+00:00",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10892223"
@@ -651,19 +614,7 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10892223"
                 }
             },
-            "parent": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10888204"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10888204"
-                    }
-                },
-                "id": 10888204
-            },
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -673,19 +624,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "I'll take a look at this later today.",
-                "html": "<p>I'll take a look at this later today.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-16T19:09:56.001741+00:00",
-            "updated_on": "2015-10-16T19:09:56.006765+00:00",
-            "id": 10892223
+            "type": "pullrequest_comment",
+            "id": 10892223,
+            "updated_on": "2015-10-16T19:09:56.006765+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I just looked through the code, and loaded some cosmological and non-cosmological simulations.  The units and cosmological detection are all working as they should.  I'm going to approve this.",
+                "html": "<p>I just looked through the code, and loaded some cosmological and non-cosmological simulations.  The units and cosmological detection are all working as they should.  I'm going to approve this.</p>"
+            },
             "user": {
+                "username": "bwkeller",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/bwkeller"
@@ -697,19 +651,8 @@
                         "href": "https://bitbucket.org/account/bwkeller/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Ben Keller",
-                "uuid": "{1719424c-ccde-435f-aa44-5102314e6b2d}",
-                "username": "bwkeller"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10989310"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10989310"
-                }
+                "uuid": "{1719424c-ccde-435f-aa44-5102314e6b2d}"
             },
             "parent": {
                 "links": {
@@ -722,8 +665,16 @@
                 },
                 "id": 10888204
             },
+            "created_on": "2015-10-20T20:38:57.007964+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/10989310"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-10989310"
+                }
+            },
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -733,19 +684,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "I just looked through the code, and loaded some cosmological and non-cosmological simulations.  The units and cosmological detection are all working as they should.  I'm going to approve this.",
-                "html": "<p>I just looked through the code, and loaded some cosmological and non-cosmological simulations.  The units and cosmological detection are all working as they should.  I'm going to approve this.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-20T20:38:57.007964+00:00",
-            "updated_on": "2015-10-20T20:38:57.011835+00:00",
-            "id": 10989310
+            "type": "pullrequest_comment",
+            "id": 10989310,
+            "updated_on": "2015-10-20T20:38:57.011835+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I have tested this on the Tipsy dataset generated from an original Gadget dataset provided by @nmearl and @benopp .  With this PR, we now get reliable results from both ways of reading in the data, either the Tipsy data (while setting the `cosmology_parameters` and `unit_base` in the `load` command) or with the Gadget data.  Great work, @ngoldbaum !  I'd add tests for these, but the datasets are large and loading/projecting is time-consuming.  ",
+                "html": "<p>I have tested this on the Tipsy dataset generated from an original Gadget dataset provided by <a href=\"/nmearl/\" rel=\"nofollow\" title=\"@nmearl\" class=\"mention\">Nicholas Earl</a> and <a href=\"/benopp/\" rel=\"nofollow\" title=\"@benopp\" class=\"mention\">Ben Oppenheimer</a> .  With this PR, we now get reliable results from both ways of reading in the data, either the Tipsy data (while setting the <code>cosmology_parameters</code> and <code>unit_base</code> in the <code>load</code> command) or with the Gadget data.  Great work, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> !  I'd add tests for these, but the datasets are large and loading/projecting is time-consuming.  </p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -757,12 +711,9 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/11032769"
@@ -771,8 +722,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-11032769"
                 }
             },
+            "created_on": "2015-10-21T21:53:34.053863+00:00",
+            "updated_on": "2015-10-21T21:53:34.065325+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -782,19 +734,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "I have tested this on the Tipsy dataset generated from an original Gadget dataset provided by @nmearl and @benopp .  With this PR, we now get reliable results from both ways of reading in the data, either the Tipsy data (while setting the `cosmology_parameters` and `unit_base` in the `load` command) or with the Gadget data.  Great work, @ngoldbaum !  I'd add tests for these, but the datasets are large and loading/projecting is time-consuming.  ",
-                "html": "<p>I have tested this on the Tipsy dataset generated from an original Gadget dataset provided by <a href=\"/nmearl/\" rel=\"nofollow\" title=\"@nmearl\" class=\"mention\">Nicholas Earl</a> and <a href=\"/benopp/\" rel=\"nofollow\" title=\"@benopp\" class=\"mention\">Ben Oppenheimer</a> .  With this PR, we now get reliable results from both ways of reading in the data, either the Tipsy data (while setting the <code>cosmology_parameters</code> and <code>unit_base</code> in the <code>load</code> command) or with the Gadget data.  Great work, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> !  I'd add tests for these, but the datasets are large and loading/projecting is time-consuming.  </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-21T21:53:34.053863+00:00",
-            "updated_on": "2015-10-21T21:53:34.065325+00:00",
+            "type": "pullrequest_comment",
             "id": 11032769
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/754/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/754/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/754/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -806,12 +760,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1787/comments/11040279"
@@ -820,8 +771,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787/_/diff#comment-11040279"
                 }
             },
+            "created_on": "2015-10-22T07:03:24.610161+00:00",
+            "updated_on": "2015-10-22T07:03:24.686075+00:00",
             "pullrequest": {
-                "title": "Tipsy cosmology unit fixes",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -831,16 +783,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1787"
                     }
                 },
+                "title": "Tipsy cosmology unit fixes",
                 "id": 1787
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/yt_testsuite_dev/754/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/yt_testsuite_dev/754/\" rel=\"nofollow\">http://tests.yt-project.org/job/yt_testsuite_dev/754/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-10-22T07:03:24.610161+00:00",
-            "updated_on": "2015-10-22T07:03:24.686075+00:00",
+            "type": "pullrequest_comment",
             "id": 11040279
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "Right now several things are wrong in the way the tipsy frontend handles cosmological datasets.\r\n\r\n1. If the hubble constant *doesn't* come from a gasoline or pkdgrav parameter file, it was being incorrectly scaled.\r\n\r\n2. If there wasn't a parameter file available, we weren't correctly identifying the dataset as comoving (even though `ds.cosmological_simulation` was set to `). This had the unintended side effect of making ds.domain_left_edge and ds.domain_right_edge incorrect, since the dataset was recognized as non-cosmological with no bounding box, so the bbox is inferred by looking at the particle positions and adding some padding.  This is badly wrong is cosmological datasets, since the box size sets the length units.\r\n\r\n3. The tests were using `unit_base` incorrectly and were reading in the test datasets with the wrong length units.\r\n\r\nThese issues should not all be fixed.\r\n\r\nI used the following test script to debug this:\r\n\r\n```\r\nimport yt\r\n\r\ncosmology_parameters = dict(current_redshift = 0.0,\r\n                            omega_lambda = 0.728,\r\n                            omega_matter = 0.272,\r\n                            hubble_constant = 0.702)\r\n\r\nkwargs = dict(cosmology_parameters = cosmology_parameters,\r\n              unit_base = {'length': (60.0, \"Mpccm/h\")},\r\n              n_ref = 64)\r\n\r\nds = yt.load(\"agora_1e11.00400/agora_1e11.00400\", **kwargs)\r\n```\r\n\r\nThe easier way to work with this script is to run it in IPython with the `%run` magic and then inspect e.g. `ds.hubble_constant`, `ds.comoving`, `ds.domain_left_edge`, and `ds.domain_width`.\r\n\r\nThe answers will need to be regenerated before this is merged in.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2015-10-22T09:34:46.994772+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "d77e881944f8",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d77e881944f8"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

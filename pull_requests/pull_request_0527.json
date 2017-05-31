@@ -1,34 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2013-06-07T12:28:30.703950+00:00",
-    "comment_count": 1,
-    "description": "Right now it's not possible to test yt unless it has been set up using `setup.py develop`.  This PR does two things to ameliorate this situation.\r\n\r\n1. Makes the test directories subpackages.\r\n\r\n2. Adds a new 'run_nose' convenience function attached to the top-level `yt` module.\r\n\r\nThis means that `pip install`, and `setup.py install` will deploy the test directories, making it possible for nose to discover the tests in the first place.  \r\n\r\nSince yt will generally be installed in an egg in an out of the way system directory or somewhere in a user's home directory, it's not very convenient to discover the extracted egg and run nosetests inside of the deployed install directory.  To make this workflow easier, I've defined a new funciton `run_nose` that lives in the top-level yt module.\r\n\r\nThis makes it possible to do the following:\r\n\r\n\r\n```\r\n#!python\r\n\r\n>>> import yt\r\n>>> yt.run_nose()\r\n............................................................................... etc etc etc\r\n```\r\n\r\nI've chosen the suppress yt's logging to get a cleaner output from nose.  I could be persuaded to change that, but I really think this is the way to go as it matches the behavior of numpy and scipy.  I've also added optional keyword parameters to get more verbose output from nose and run the answer tests, optionally with the big data tests.\r\n\r\nWe could probably do something fancier than a function in the top level `__init__.py`.  For example, numpy defines a class that handles numpy.test().  However, the approach used here seems to work and has the virtue of being simple and explicit.\r\n\r\nOne wrinkle: I originally wanted to call the function `yt.test()` to match numpy and scipy, but nose then discovered `yt.test()` as a test function and entered into an infinite loop.  Changing the name fixes the test discovery issue but that's a little unsatisfying.  It would be nice to figure out how to make nose ignore just this one function so we can match the numpy and scipy API but I have no idea how to do that.",
-    "created_on": "2013-06-06T07:36:49.761721+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "Improving the testability of yt installations",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/approve"
@@ -36,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/527"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
-    "id": 527,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/bb30e1a5937e"
-                }
-            },
-            "hash": "bb30e1a5937e"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -102,25 +48,120 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "bb30e1a5937e",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7d765411da34"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/bb30e1a5937e"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "title": "Improving the testability of yt installations",
+    "id": 527,
+    "comment_count": 1,
+    "created_on": "2013-06-06T07:36:49.761721+00:00",
+    "merge_commit": null,
+    "comments": [
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hey Nathan, this looks great!  A very nice and useful improvement.  I'm approving with no comment -- looks great.",
+                "html": "<p>Hey Nathan, this looks great!  A very nice and useful improvement.  I'm approving with no comment -- looks great.</p>"
+            },
+            "user": {
+                "username": "MatthewTurk",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/MatthewTurk/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+                    }
+                },
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/comments/294312"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/527/_/diff#comment-294312"
                 }
             },
-            "hash": "7d765411da34"
+            "created_on": "2013-06-06T11:32:32.356823+00:00",
+            "updated_on": "2013-06-06T11:32:32.368923+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/527"
+                    }
+                },
+                "title": "Improving the testability of yt installations",
+                "id": 527
+            },
+            "type": "pullrequest_comment",
+            "id": 294312
+        }
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "Right now it's not possible to test yt unless it has been set up using `setup.py develop`.  This PR does two things to ameliorate this situation.\r\n\r\n1. Makes the test directories subpackages.\r\n\r\n2. Adds a new 'run_nose' convenience function attached to the top-level `yt` module.\r\n\r\nThis means that `pip install`, and `setup.py install` will deploy the test directories, making it possible for nose to discover the tests in the first place.  \r\n\r\nSince yt will generally be installed in an egg in an out of the way system directory or somewhere in a user's home directory, it's not very convenient to discover the extracted egg and run nosetests inside of the deployed install directory.  To make this workflow easier, I've defined a new funciton `run_nose` that lives in the top-level yt module.\r\n\r\nThis makes it possible to do the following:\r\n\r\n\r\n```\r\n#!python\r\n\r\n>>> import yt\r\n>>> yt.run_nose()\r\n............................................................................... etc etc etc\r\n```\r\n\r\nI've chosen the suppress yt's logging to get a cleaner output from nose.  I could be persuaded to change that, but I really think this is the way to go as it matches the behavior of numpy and scipy.  I've also added optional keyword parameters to get more verbose output from nose and run the answer tests, optionally with the big data tests.\r\n\r\nWe could probably do something fancier than a function in the top level `__init__.py`.  For example, numpy defines a class that handles numpy.test().  However, the approach used here seems to work and has the virtue of being simple and explicit.\r\n\r\nOne wrinkle: I originally wanted to call the function `yt.test()` to match numpy and scipy, but nose then discovered `yt.test()` as a test function and entered into an infinite loop.  Changing the name fixes the test discovery issue but that's a little unsatisfying.  It would be nice to figure out how to make nose ignore just this one function so we can match the numpy and scipy API but I have no idea how to do that.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
         },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2013-06-07T12:28:30.703950+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -133,59 +174,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
-        }
-    },
-    "comments": [
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/MatthewTurk/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "7d765411da34",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527/comments/294312"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/527/_/diff#comment-294312"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/7d765411da34"
                 }
-            },
-            "pullrequest": {
-                "title": "Improving the testability of yt installations",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/527"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/527"
-                    }
-                },
-                "id": 527
-            },
-            "content": {
-                "raw": "Hey Nathan, this looks great!  A very nice and useful improvement.  I'm approving with no comment -- looks great.",
-                "html": "<p>Hey Nathan, this looks great!  A very nice and useful improvement.  I'm approving with no comment -- looks great.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-06-06T11:32:32.356823+00:00",
-            "updated_on": "2013-06-06T11:32:32.368923+00:00",
-            "id": 294312
+            }
+        },
+        "branch": {
+            "name": "yt"
         }
-    ]
+    }
 }

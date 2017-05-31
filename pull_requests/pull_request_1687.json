@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2015-08-13T16:26:56.269822+00:00",
-    "comment_count": 4,
-    "description": "This PR leads to significant speedups when iterating over YTArrays or when using the python builtin reduction functions (e.g. `max` and `min`).  Most of the speedup for reduction operators comes from the third commit in the series, where I add a short-circuit some somewhat expensive unit conversion operations for unit expressions that are identical. I've also implemented a custom iterator that avoids calling the YTArray initializer repeatedly.\r\n\r\nUsing a notebook to benchmark this stuff, I get the following results before:\r\n\r\nhttps://gist.github.com/da2d4f8ea6cfbc06bb0b\r\n\r\nand after:\r\n\r\nhttps://gist.github.com/2d75f502f547cebacfeb\r\n\r\nThere are probably other place we could use `bypass_validation` but I want to be careful we don't break something, so I'm conservatively only using it in two places I know for sure that the unit object has to be valid.\r\n\r\nUnfortunately we're still about 100x slower than iterating over a bare ndarray. Implementing some or all of the logic in YTArray in cython might lead to further speedups.\r\n\r\nCommit logs:\r\n\r\n* Add a basic test for YTArray iteration semantics\r\n\r\n* Outsource YTArray comparison operator unit validation logic to one function\r\n\r\n* Only do a unit conversion for comparison operators if we need it\r\n\r\n    This leads to a 5x speedup for iterating over a YTArray\r\n\r\n* Add a way to bypass input validation for YTArray\r\n\r\n* Eplicitly overload iteration and copying to speed up iteration over a YTArray\r\n\r\n* Remove unnecessary copy function\r\n\r\n* Minor speedup from using exact object comparison to compare unit expressions\r\n\r\n* Use [()] indexing for a small speedup compared to put",
-    "created_on": "2015-08-09T21:41:27.835168+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a46e96ef9fcb"
-            }
-        },
-        "hash": "a46e96ef9fcb"
-    },
-    "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
-    "id": 1687,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/60c55599d460"
-                }
-            },
-            "hash": "60c55599d460"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "60c55599d460",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/475280b53ae1"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/60c55599d460"
                 }
-            },
-            "hash": "475280b53ae1"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
+    "id": 1687,
+    "comment_count": 4,
+    "created_on": "2015-08-09T21:41:27.835168+00:00",
+    "merge_commit": {
+        "hash": "a46e96ef9fcb",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a46e96ef9fcb"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This isn't ready to merge: http://hub.yt:8080/job/yt_testsuite_dev/376/",
+                "html": "<p>This isn't ready to merge: <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/376/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/376/</a></p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/comments/8925746"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687/_/diff#comment-8925746"
                 }
             },
+            "created_on": "2015-08-09T23:58:01.077454+00:00",
+            "updated_on": "2015-08-09T23:58:19.522850+00:00",
             "pullrequest": {
-                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687"
                     }
                 },
+                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "id": 1687
             },
-            "content": {
-                "raw": "This isn't ready to merge: http://hub.yt:8080/job/yt_testsuite_dev/376/",
-                "html": "<p>This isn't ready to merge: <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/376/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/376/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-08-09T23:58:01.077454+00:00",
-            "updated_on": "2015-08-09T23:58:19.522850+00:00",
+            "type": "pullrequest_comment",
             "id": 8925746
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -207,12 +161,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/comments/8953258"
@@ -221,8 +172,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687/_/diff#comment-8953258"
                 }
             },
+            "created_on": "2015-08-10T17:32:52.089759+00:00",
+            "updated_on": "2015-08-10T17:32:52.142814+00:00",
             "pullrequest": {
-                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -232,19 +184,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687"
                     }
                 },
+                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "id": 1687
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-08-10T17:32:52.089759+00:00",
-            "updated_on": "2015-08-10T17:32:52.142814+00:00",
+            "type": "pullrequest_comment",
             "id": 8953258
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'm interested in this particular line -- it should short-circuit comparison ops, but is it also common to have identical exprs?",
+                "html": "<p>I'm interested in this particular line -- it should short-circuit comparison ops, but is it also common to have identical exprs?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -256,25 +210,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/comments/8953327"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:60c55599d460..7c2d53feae18?path=yt%2Funits%2Fyt_array.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687/_/diff#comment-8953327"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:60c55599d460..7c2d53feae18?path=yt%2Funits%2Fyt_array.py"
                 }
             },
+            "created_on": "2015-08-10T17:34:50.422171+00:00",
+            "updated_on": "2015-08-10T17:34:50.431177+00:00",
             "pullrequest": {
-                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -284,24 +236,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687"
                     }
                 },
+                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "id": 1687
             },
-            "content": {
-                "raw": "I'm interested in this particular line -- it should short-circuit comparison ops, but is it also common to have identical exprs?",
-                "html": "<p>I'm interested in this particular line -- it should short-circuit comparison ops, but is it also common to have identical exprs?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-08-10T17:34:50.422171+00:00",
-            "updated_on": "2015-08-10T17:34:50.431177+00:00",
             "inline": {
-                "from": null,
+                "to": 140,
                 "path": "yt/units/yt_array.py",
-                "to": 140
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 8953327
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Since the unit expressions are cached in the unit machinery (thanks for working on that way back when, by the way), the unit expressions *are* identical quite often. In addition, for the specific case of `max(arr)`, where python will repeatedly call `__gt__` on different array elements, the expr has to be the same since all array elements share the same unit object.\n\nWe may be able to skip more sympy overhead elsewhere by exploiting the caching of unit expressions implying that two unit objects representing the same unit have identical unit expressions, so we can cheaply compare them with `is` as a first try for the most common case. ",
+                "html": "<p>Since the unit expressions are cached in the unit machinery (thanks for working on that way back when, by the way), the unit expressions <em>are</em> identical quite often. In addition, for the specific case of <code>max(arr)</code>, where python will repeatedly call <code>__gt__</code> on different array elements, the expr has to be the same since all array elements share the same unit object.</p>\n<p>We may be able to skip more sympy overhead elsewhere by exploiting the caching of unit expressions implying that two unit objects representing the same unit have identical unit expressions, so we can cheaply compare them with <code>is</code> as a first try for the most common case. </p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -313,22 +267,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/comments/8953814"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Funits%2Fyt_array.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687/_/diff#comment-8953814"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -341,8 +281,19 @@
                 },
                 "id": 8953327
             },
+            "created_on": "2015-08-10T17:51:14.577752+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1687/comments/8953814"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687/_/diff#comment-8953814"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Funits%2Fyt_array.py"
+                }
+            },
             "pullrequest": {
-                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -352,21 +303,70 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1687"
                     }
                 },
+                "title": "[perf] [enhancement] Speedups for iterating over YTArray instances",
                 "id": 1687
             },
-            "content": {
-                "raw": "Since the unit expressions are cached in the unit machinery (thanks for working on that way back when, by the way), the unit expressions *are* identical quite often. In addition, for the specific case of `max(arr)`, where python will repeatedly call `__gt__` on different array elements, the expr has to be the same since all array elements share the same unit object.\n\nWe may be able to skip more sympy overhead elsewhere by exploiting the caching of unit expressions implying that two unit objects representing the same unit have identical unit expressions, so we can cheaply compare them with `is` as a first try for the most common case. ",
-                "html": "<p>Since the unit expressions are cached in the unit machinery (thanks for working on that way back when, by the way), the unit expressions <em>are</em> identical quite often. In addition, for the specific case of <code>max(arr)</code>, where python will repeatedly call <code>__gt__</code> on different array elements, the expr has to be the same since all array elements share the same unit object.</p>\n<p>We may be able to skip more sympy overhead elsewhere by exploiting the caching of unit expressions implying that two unit objects representing the same unit have identical unit expressions, so we can cheaply compare them with <code>is</code> as a first try for the most common case. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-08-10T17:51:14.577752+00:00",
-            "updated_on": "2015-08-10T17:51:44.277144+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/units/yt_array.py",
-                "to": null
+                "from": null
             },
-            "id": 8953814
+            "type": "pullrequest_comment",
+            "id": 8953814,
+            "updated_on": "2015-08-10T17:51:44.277144+00:00"
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This PR leads to significant speedups when iterating over YTArrays or when using the python builtin reduction functions (e.g. `max` and `min`).  Most of the speedup for reduction operators comes from the third commit in the series, where I add a short-circuit some somewhat expensive unit conversion operations for unit expressions that are identical. I've also implemented a custom iterator that avoids calling the YTArray initializer repeatedly.\r\n\r\nUsing a notebook to benchmark this stuff, I get the following results before:\r\n\r\nhttps://gist.github.com/da2d4f8ea6cfbc06bb0b\r\n\r\nand after:\r\n\r\nhttps://gist.github.com/2d75f502f547cebacfeb\r\n\r\nThere are probably other place we could use `bypass_validation` but I want to be careful we don't break something, so I'm conservatively only using it in two places I know for sure that the unit object has to be valid.\r\n\r\nUnfortunately we're still about 100x slower than iterating over a bare ndarray. Implementing some or all of the logic in YTArray in cython might lead to further speedups.\r\n\r\nCommit logs:\r\n\r\n* Add a basic test for YTArray iteration semantics\r\n\r\n* Outsource YTArray comparison operator unit validation logic to one function\r\n\r\n* Only do a unit conversion for comparison operators if we need it\r\n\r\n    This leads to a 5x speedup for iterating over a YTArray\r\n\r\n* Add a way to bypass input validation for YTArray\r\n\r\n* Eplicitly overload iteration and copying to speed up iteration over a YTArray\r\n\r\n* Remove unnecessary copy function\r\n\r\n* Minor speedup from using exact object comparison to compare unit expressions\r\n\r\n* Use [()] indexing for a small speedup compared to put",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2015-08-13T16:26:56.269822+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "475280b53ae1",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/475280b53ae1"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

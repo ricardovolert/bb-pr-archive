@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2015-06-01T19:28:12.349571+00:00",
-    "comment_count": 24,
-    "description": "This changes the implementation of the scale callback to use matplotlib's AnchoredSizeBar artist. It also fixes some other issues related to how the scale bar is scaled.\r\n\r\nRight now we don't attempt to draw a scale bar if the x and y limits aren't identical.  This is not necessary, instead we should only bail from drawing the scale bar if the *scaling* of the x and y axes are different.  This is encoded in the `_aspect` attribute of the `WindowPlotMPL` objects, which itself can be set via the `aspect` keyword argument of any of the `PlotWindow` class initializers. I've adjusted the check to be based on the aspect ratio. Since we weren't passing the plot aspect ratio to callbacks until now, I've gone ahead and added the `aspect` attribute to the `CallbackWrapper`.\r\n\r\nIn addition, now that we're not using the text and line plot callbacks under the hood, I've replaced the dictionaries controlling their properties with a single dictionary that gets passed to `AnchoredSizeBar`. This callback hasn't been in a release yet, so I don't need to formally deprecate things.\r\n\r\nI'd love feedback on these changes.  The main improvement is that the scale bar can now be drawn with an inset box, which makes it much easier to see when drawn on top of a plot that has lots of structure.\r\n\r\nQuick example:\r\n\r\n\r\n```\r\n#!python\r\n\r\nslc.annotate_scale(size_bar_args=dict(pad=0.75, sep=5, borderpad=0.5, frameon=True, color='k'))\r\n```\r\n\r\n\r\n![galaxy0030_Slice_x_density.png](https://bitbucket.org/repo/BXbAb/images/584938296-galaxy0030_Slice_x_density.png)",
-    "created_on": "2015-05-27T02:48:08.734853+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/4da925e20253"
-            }
-        },
-        "hash": "4da925e20253"
-    },
-    "title": "annotate_scale improvements",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
-    "id": 1600,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/8844192c89d9"
-                }
-            },
-            "hash": "8844192c89d9"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "8844192c89d9",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ac0abcc06c42"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/8844192c89d9"
                 }
-            },
-            "hash": "ac0abcc06c42"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "title": "annotate_scale improvements",
+    "id": 1600,
+    "comment_count": 24,
+    "created_on": "2015-05-27T02:48:08.734853+00:00",
+    "merge_commit": {
+        "hash": "4da925e20253",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/4da925e20253"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "ping @chummels ",
+                "html": "<p>ping <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">chummels</a> </p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7108808"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7108808"
                 }
             },
+            "created_on": "2015-05-27T02:48:16.193688+00:00",
+            "updated_on": "2015-05-27T02:48:16.206662+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "ping @chummels ",
-                "html": "<p>ping <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T02:48:16.193688+00:00",
-            "updated_on": "2015-05-27T02:48:16.206662+00:00",
+            "type": "pullrequest_comment",
             "id": 7108808
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Care was taken in creating these positions to have the scale bar align with the `annotate_timescale()` output, since these will often be used in concert.  Is there a way to assure these will be aligned using the new method?",
+                "html": "<p>Care was taken in creating these positions to have the scale bar align with the <code>annotate_timescale()</code> output, since these will often be used in concert.  Is there a way to assure these will be aligned using the new method?</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -207,25 +161,23 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7125357"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7125357"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
                 }
             },
+            "created_on": "2015-05-27T15:03:18.100899+00:00",
+            "updated_on": "2015-05-27T15:03:18.115401+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -235,24 +187,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "Care was taken in creating these positions to have the scale bar align with the `annotate_timescale()` output, since these will often be used in concert.  Is there a way to assure these will be aligned using the new method?",
-                "html": "<p>Care was taken in creating these positions to have the scale bar align with the <code>annotate_timescale()</code> output, since these will often be used in concert.  Is there a way to assure these will be aligned using the new method?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T15:03:18.100899+00:00",
-            "updated_on": "2015-05-27T15:03:18.115401+00:00",
             "inline": {
-                "from": null,
+                "to": 1837,
                 "path": "yt/visualization/plot_modifications.py",
-                "to": 1837
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 7125357
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "In order to retain consistency with the other callbacks for assuring that the font properties of the callback are in line with those of the overall plot, the preferred method is something like this:\n\n```\n#!python\n\n       label = plot._axes.text(x, y, self.text, transform=self.transform,\n                                bbox=self.inset_box_args, **kwargs)\n        self._set_font_properties(plot, [label], **kwargs)\n```\n\nOr you can see the end of the `TextLabelCallback` for an example.",
+                "html": "<p>In order to retain consistency with the other callbacks for assuring that the font properties of the callback are in line with those of the overall plot, the preferred method is something like this:</p>\n<div class=\"codehilite language-python\"><pre><span></span>       <span class=\"n\">label</span> <span class=\"o\">=</span> <span class=\"n\">plot</span><span class=\"o\">.</span><span class=\"n\">_axes</span><span class=\"o\">.</span><span class=\"n\">text</span><span class=\"p\">(</span><span class=\"n\">x</span><span class=\"p\">,</span> <span class=\"n\">y</span><span class=\"p\">,</span> <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">text</span><span class=\"p\">,</span> <span class=\"n\">transform</span><span class=\"o\">=</span><span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">transform</span><span class=\"p\">,</span>\n                                <span class=\"n\">bbox</span><span class=\"o\">=</span><span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">inset_box_args</span><span class=\"p\">,</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">)</span>\n        <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">_set_font_properties</span><span class=\"p\">(</span><span class=\"n\">plot</span><span class=\"p\">,</span> <span class=\"p\">[</span><span class=\"n\">label</span><span class=\"p\">],</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>Or you can see the end of the <code>TextLabelCallback</code> for an example.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -264,25 +218,23 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7125696"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7125696"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
                 }
             },
+            "created_on": "2015-05-27T15:11:50.828122+00:00",
+            "updated_on": "2015-05-27T15:11:50.836348+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -292,24 +244,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "In order to retain consistency with the other callbacks for assuring that the font properties of the callback are in line with those of the overall plot, the preferred method is something like this:\n\n```\n#!python\n\n       label = plot._axes.text(x, y, self.text, transform=self.transform,\n                                bbox=self.inset_box_args, **kwargs)\n        self._set_font_properties(plot, [label], **kwargs)\n```\n\nOr you can see the end of the `TextLabelCallback` for an example.",
-                "html": "<p>In order to retain consistency with the other callbacks for assuring that the font properties of the callback are in line with those of the overall plot, the preferred method is something like this:</p>\n<div class=\"codehilite\"><pre><span></span>       <span class=\"n\">label</span> <span class=\"o\">=</span> <span class=\"n\">plot</span><span class=\"o\">.</span><span class=\"n\">_axes</span><span class=\"o\">.</span><span class=\"n\">text</span><span class=\"p\">(</span><span class=\"n\">x</span><span class=\"p\">,</span> <span class=\"n\">y</span><span class=\"p\">,</span> <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">text</span><span class=\"p\">,</span> <span class=\"n\">transform</span><span class=\"o\">=</span><span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">transform</span><span class=\"p\">,</span>\n                                <span class=\"n\">bbox</span><span class=\"o\">=</span><span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">inset_box_args</span><span class=\"p\">,</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">)</span>\n        <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">_set_font_properties</span><span class=\"p\">(</span><span class=\"n\">plot</span><span class=\"p\">,</span> <span class=\"p\">[</span><span class=\"n\">label</span><span class=\"p\">],</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">)</span>\n</pre></div>\n\n\n<p>Or you can see the end of the <code>TextLabelCallback</code> for an example.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T15:11:50.828122+00:00",
-            "updated_on": "2015-05-27T15:11:50.836348+00:00",
             "inline": {
-                "from": null,
+                "to": 1878,
                 "path": "yt/visualization/plot_modifications.py",
-                "to": 1878
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 7125696
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Quick correction that isn't your fault: timestamp -> scale",
+                "html": "<p>Quick correction that isn't your fault: timestamp -&gt; scale</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -321,25 +275,23 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7125885"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7125885"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
                 }
             },
+            "created_on": "2015-05-27T15:16:26.689222+00:00",
+            "updated_on": "2015-05-27T15:16:26.702098+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -349,24 +301,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "Quick correction that isn't your fault: timestamp -> scale",
-                "html": "<p>Quick correction that isn't your fault: timestamp -&gt; scale</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T15:16:26.689222+00:00",
-            "updated_on": "2015-05-27T15:16:26.702098+00:00",
             "inline": {
-                "from": 1745,
+                "to": null,
                 "path": "yt/visualization/plot_modifications.py",
-                "to": null
+                "from": 1745
             },
+            "type": "pullrequest_comment",
             "id": 7125885
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Quick correction that isn't your fault: timestamp -> scale",
+                "html": "<p>Quick correction that isn't your fault: timestamp -&gt; scale</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -378,25 +332,23 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7125893"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7125893"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d7c563a9dbd1..c12349973350?path=yt%2Fvisualization%2Fplot_modifications.py"
                 }
             },
+            "created_on": "2015-05-27T15:16:37.334312+00:00",
+            "updated_on": "2015-05-27T15:16:37.348880+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -406,24 +358,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "Quick correction that isn't your fault: timestamp -> scale",
-                "html": "<p>Quick correction that isn't your fault: timestamp -&gt; scale</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T15:16:37.334312+00:00",
-            "updated_on": "2015-05-27T15:16:37.348880+00:00",
             "inline": {
-                "from": null,
+                "to": 1764,
                 "path": "yt/visualization/plot_modifications.py",
-                "to": 1764
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 7125893
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hey @ngoldbaum , overall this looks like an improvement in terms of simplifying the scale callback.  Nice job!  A couple of things:\n\nIt doesn't look like the `pos` kwarg works anymore for specifying an arbitrary location where you can put the scale callback.  Previously, if you specified it (along with the `coord_system` kwarg) you could put the scale wherever you wanted.  All of the coordinate sanitization took place inside the `LinePlotCallback` and the `TextLabelCallback`, which is probably how you missed it here.  I think now you can only put the scale callback in one of the pre-ordained positions in the corners (ie `loc`= [0,10]).  Can we make the `AnchoredSizeBar` work with an arbitrary position (and arbitrary coord system) using the machinery I built for doing this?\n\nI mentioned below about the `font_properties` issue for consistency with other callbacks to assure that the font matches that of the overall plot.  An additional concern here is whether or not we can set all of the font properties in the `AnchoredSizeBar` the way we can in the `TextLabelCallback` since the `text_args` kwarg is getting subsumed into the `size_bar_args`.  Can we still?\n\nSince the `annotate_scale()` and `annotate_timestamp()`get used together often, I worked hard to make sure they would work well in unison.  This meant I tried to get their default positions aligned well.  I'm concerned that this PR altered these this alignment by placing the scalebar at the MPL default positions (see http://i.imgur.com/kwIAntj.png for the default `annotate_scale()` and `annotate_timestamp()` with this PR).  Suggestions?  Maybe we can use the same MPL positions with the `annotate_timestamp()` callback so that plots generated using both don't look misaligned?  \n\nIt looks like something is wrong with the `draw_inset_box` kwarg with this PR.  When I set it and use the defaults, I get this: http://i.imgur.com/PAx8sVr.png .  I guess we just need to change the default size_bar_args?  Is it possible to match the `annotate_timestamp()` inset box so that they match colors, size, opacity?\n\nI wish I'd known about this MPL class when I wrote the scale callback, as it would've saved this upgrade.  Thanks for doing this, though.  It looks like a move toward the FUTURE.",
+                "html": "<p>Hey <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> , overall this looks like an improvement in terms of simplifying the scale callback.  Nice job!  A couple of things:</p>\n<p>It doesn't look like the <code>pos</code> kwarg works anymore for specifying an arbitrary location where you can put the scale callback.  Previously, if you specified it (along with the <code>coord_system</code> kwarg) you could put the scale wherever you wanted.  All of the coordinate sanitization took place inside the <code>LinePlotCallback</code> and the <code>TextLabelCallback</code>, which is probably how you missed it here.  I think now you can only put the scale callback in one of the pre-ordained positions in the corners (ie <code>loc</code>= [0,10]).  Can we make the <code>AnchoredSizeBar</code> work with an arbitrary position (and arbitrary coord system) using the machinery I built for doing this?</p>\n<p>I mentioned below about the <code>font_properties</code> issue for consistency with other callbacks to assure that the font matches that of the overall plot.  An additional concern here is whether or not we can set all of the font properties in the <code>AnchoredSizeBar</code> the way we can in the <code>TextLabelCallback</code> since the <code>text_args</code> kwarg is getting subsumed into the <code>size_bar_args</code>.  Can we still?</p>\n<p>Since the <code>annotate_scale()</code> and <code>annotate_timestamp()</code>get used together often, I worked hard to make sure they would work well in unison.  This meant I tried to get their default positions aligned well.  I'm concerned that this PR altered these this alignment by placing the scalebar at the MPL default positions (see <a href=\"http://i.imgur.com/kwIAntj.png\" rel=\"nofollow\">http://i.imgur.com/kwIAntj.png</a> for the default <code>annotate_scale()</code> and <code>annotate_timestamp()</code> with this PR).  Suggestions?  Maybe we can use the same MPL positions with the <code>annotate_timestamp()</code> callback so that plots generated using both don't look misaligned?  </p>\n<p>It looks like something is wrong with the <code>draw_inset_box</code> kwarg with this PR.  When I set it and use the defaults, I get this: <a href=\"http://i.imgur.com/PAx8sVr.png\" rel=\"nofollow\">http://i.imgur.com/PAx8sVr.png</a> .  I guess we just need to change the default size_bar_args?  Is it possible to match the <code>annotate_timestamp()</code> inset box so that they match colors, size, opacity?</p>\n<p>I wish I'd known about this MPL class when I wrote the scale callback, as it would've saved this upgrade.  Thanks for doing this, though.  It looks like a move toward the FUTURE.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -435,12 +389,9 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7127268"
@@ -449,8 +400,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7127268"
                 }
             },
+            "created_on": "2015-05-27T15:55:29.328634+00:00",
+            "updated_on": "2015-05-27T16:01:29.772495+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -460,19 +412,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "Hey @ngoldbaum , overall this looks like an improvement in terms of simplifying the scale callback.  Nice job!  A couple of things:\n\nIt doesn't look like the `pos` kwarg works anymore for specifying an arbitrary location where you can put the scale callback.  Previously, if you specified it (along with the `coord_system` kwarg) you could put the scale wherever you wanted.  All of the coordinate sanitization took place inside the `LinePlotCallback` and the `TextLabelCallback`, which is probably how you missed it here.  I think now you can only put the scale callback in one of the pre-ordained positions in the corners (ie `loc`= [0,10]).  Can we make the `AnchoredSizeBar` work with an arbitrary position (and arbitrary coord system) using the machinery I built for doing this?\n\nI mentioned below about the `font_properties` issue for consistency with other callbacks to assure that the font matches that of the overall plot.  An additional concern here is whether or not we can set all of the font properties in the `AnchoredSizeBar` the way we can in the `TextLabelCallback` since the `text_args` kwarg is getting subsumed into the `size_bar_args`.  Can we still?\n\nSince the `annotate_scale()` and `annotate_timestamp()`get used together often, I worked hard to make sure they would work well in unison.  This meant I tried to get their default positions aligned well.  I'm concerned that this PR altered these this alignment by placing the scalebar at the MPL default positions (see http://i.imgur.com/kwIAntj.png for the default `annotate_scale()` and `annotate_timestamp()` with this PR).  Suggestions?  Maybe we can use the same MPL positions with the `annotate_timestamp()` callback so that plots generated using both don't look misaligned?  \n\nIt looks like something is wrong with the `draw_inset_box` kwarg with this PR.  When I set it and use the defaults, I get this: http://i.imgur.com/PAx8sVr.png .  I guess we just need to change the default size_bar_args?  Is it possible to match the `annotate_timestamp()` inset box so that they match colors, size, opacity?\n\nI wish I'd known about this MPL class when I wrote the scale callback, as it would've saved this upgrade.  Thanks for doing this, though.  It looks like a move toward the FUTURE.",
-                "html": "<p>Hey <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> , overall this looks like an improvement in terms of simplifying the scale callback.  Nice job!  A couple of things:</p>\n<p>It doesn't look like the <code>pos</code> kwarg works anymore for specifying an arbitrary location where you can put the scale callback.  Previously, if you specified it (along with the <code>coord_system</code> kwarg) you could put the scale wherever you wanted.  All of the coordinate sanitization took place inside the <code>LinePlotCallback</code> and the <code>TextLabelCallback</code>, which is probably how you missed it here.  I think now you can only put the scale callback in one of the pre-ordained positions in the corners (ie <code>loc</code>= [0,10]).  Can we make the <code>AnchoredSizeBar</code> work with an arbitrary position (and arbitrary coord system) using the machinery I built for doing this?</p>\n<p>I mentioned below about the <code>font_properties</code> issue for consistency with other callbacks to assure that the font matches that of the overall plot.  An additional concern here is whether or not we can set all of the font properties in the <code>AnchoredSizeBar</code> the way we can in the <code>TextLabelCallback</code> since the <code>text_args</code> kwarg is getting subsumed into the <code>size_bar_args</code>.  Can we still?</p>\n<p>Since the <code>annotate_scale()</code> and <code>annotate_timestamp()</code>get used together often, I worked hard to make sure they would work well in unison.  This meant I tried to get their default positions aligned well.  I'm concerned that this PR altered these this alignment by placing the scalebar at the MPL default positions (see <a href=\"http://i.imgur.com/kwIAntj.png\" rel=\"nofollow\">http://i.imgur.com/kwIAntj.png</a> for the default <code>annotate_scale()</code> and <code>annotate_timestamp()</code> with this PR).  Suggestions?  Maybe we can use the same MPL positions with the <code>annotate_timestamp()</code> callback so that plots generated using both don't look misaligned?  </p>\n<p>It looks like something is wrong with the <code>draw_inset_box</code> kwarg with this PR.  When I set it and use the defaults, I get this: <a href=\"http://i.imgur.com/PAx8sVr.png\" rel=\"nofollow\">http://i.imgur.com/PAx8sVr.png</a> .  I guess we just need to change the default size_bar_args?  Is it possible to match the <code>annotate_timestamp()</code> inset box so that they match colors, size, opacity?</p>\n<p>I wish I'd known about this MPL class when I wrote the scale callback, as it would've saved this upgrade.  Thanks for doing this, though.  It looks like a move toward the FUTURE.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T15:55:29.328634+00:00",
-            "updated_on": "2015-05-27T16:01:29.772495+00:00",
+            "type": "pullrequest_comment",
             "id": 7127268
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Unfortunately the `AnchoredSizeBar` doesn't subscribe to the API that `_set_font_properties` assumes, so I can't use that function. Fortunately `AnchoredSizeBar` takes a `FontProperties` instance as a keyword argument to its initializer, so It works out to the same thing.",
+                "html": "<p>Unfortunately the <code>AnchoredSizeBar</code> doesn't subscribe to the API that <code>_set_font_properties</code> assumes, so I can't use that function. Fortunately <code>AnchoredSizeBar</code> takes a <code>FontProperties</code> instance as a keyword argument to its initializer, so It works out to the same thing.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -484,22 +438,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131199"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131199"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -512,8 +452,19 @@
                 },
                 "id": 7125696
             },
+            "created_on": "2015-05-27T18:26:30.886795+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131199"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131199"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                }
+            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -523,24 +474,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "Unfortunately the `AnchoredSizeBar` doesn't subscribe to the API that `_set_font_properties` assumes, so I can't use that function. Fortunately `AnchoredSizeBar` takes a `FontProperties` instance as a keyword argument to its initializer, so It works out to the same thing.",
-                "html": "<p>Unfortunately the <code>AnchoredSizeBar</code> doesn't subscribe to the API that <code>_set_font_properties</code> assumes, so I can't use that function. Fortunately <code>AnchoredSizeBar</code> takes a <code>FontProperties</code> instance as a keyword argument to its initializer, so It works out to the same thing.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T18:26:30.886795+00:00",
-            "updated_on": "2015-05-27T18:26:30.896919+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_modifications.py",
-                "to": null
+                "from": null
             },
-            "id": 7131199
+            "type": "pullrequest_comment",
+            "id": 7131199,
+            "updated_on": "2015-05-27T18:26:30.896919+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I visually double checked on a square plot and it the locations are all consistent.  The matplotlib docs claim that `loc` can be a 2-tuple, but that doesn't seem to work for `AnchoredSizeBar`.\n\nAre you ok with the scale bar being locked to one of the locations allowed by matplotlib's `loc` codes? See http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend\n\nIt also looks like matplotlib `Text` objects can't be placed by a `loc` code, so I don't think I can fully reconcile this with the timestamp callback.",
+                "html": "<p>I visually double checked on a square plot and it the locations are all consistent.  The matplotlib docs claim that <code>loc</code> can be a 2-tuple, but that doesn't seem to work for <code>AnchoredSizeBar</code>.</p>\n<p>Are you ok with the scale bar being locked to one of the locations allowed by matplotlib's <code>loc</code> codes? See <a href=\"http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend\" rel=\"nofollow\">http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend</a></p>\n<p>It also looks like matplotlib <code>Text</code> objects can't be placed by a <code>loc</code> code, so I don't think I can fully reconcile this with the timestamp callback.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -552,22 +506,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131775"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131775"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -580,8 +520,19 @@
                 },
                 "id": 7125357
             },
+            "created_on": "2015-05-27T18:46:56.696928+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131775"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131775"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_modifications.py"
+                }
+            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -591,24 +542,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "I visually double checked on a square plot and it the locations are all consistent.  The matplotlib docs claim that `loc` can be a 2-tuple, but that doesn't seem to work for `AnchoredSizeBar`.\n\nAre you ok with the scale bar being locked to one of the locations allowed by matplotlib's `loc` codes? See http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend\n\nIt also looks like matplotlib `Text` objects can't be placed by a `loc` code, so I don't think I can fully reconcile this with the timestamp callback.",
-                "html": "<p>I visually double checked on a square plot and it the locations are all consistent.  The matplotlib docs claim that <code>loc</code> can be a 2-tuple, but that doesn't seem to work for <code>AnchoredSizeBar</code>.</p>\n<p>Are you ok with the scale bar being locked to one of the locations allowed by matplotlib's <code>loc</code> codes? See <a href=\"http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend\" rel=\"nofollow\">http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend</a></p>\n<p>It also looks like matplotlib <code>Text</code> objects can't be placed by a <code>loc</code> code, so I don't think I can fully reconcile this with the timestamp callback.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T18:46:56.696928+00:00",
-            "updated_on": "2015-05-27T18:46:56.706512+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_modifications.py",
-                "to": null
+                "from": null
             },
-            "id": 7131775
+            "type": "pullrequest_comment",
+            "id": 7131775,
+            "updated_on": "2015-05-27T18:46:56.706512+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "OK, I think all of these concerns should be addressed, including my responses inline below.\n\nWith the current version of this PR, the default inset boxes look like this: http://i.imgur.com/weTqYtr.png\n",
+                "html": "<p>OK, I think all of these concerns should be addressed, including my responses inline below.</p>\n<p>With the current version of this PR, the default inset boxes look like this: <a href=\"http://i.imgur.com/weTqYtr.png\" rel=\"nofollow\">http://i.imgur.com/weTqYtr.png</a></p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -620,19 +574,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131978"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131978"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -645,8 +588,16 @@
                 },
                 "id": 7127268
             },
+            "created_on": "2015-05-27T18:55:26.911305+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131978"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131978"
+                }
+            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -656,19 +607,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "OK, I think all of these concerns should be addressed, including my responses inline below.\n\nWith the current version of this PR, the default inset boxes look like this: http://i.imgur.com/weTqYtr.png\n",
-                "html": "<p>OK, I think all of these concerns should be addressed, including my responses inline below.</p>\n<p>With the current version of this PR, the default inset boxes look like this: <a href=\"http://i.imgur.com/weTqYtr.png\" rel=\"nofollow\">http://i.imgur.com/weTqYtr.png</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T18:55:26.911305+00:00",
-            "updated_on": "2015-05-27T18:56:27.613817+00:00",
-            "id": 7131978
+            "type": "pullrequest_comment",
+            "id": 7131978,
+            "updated_on": "2015-05-27T18:56:27.613817+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/94/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/94/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/94/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -680,12 +634,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7134748"
@@ -694,8 +645,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7134748"
                 }
             },
+            "created_on": "2015-05-27T20:50:44.793169+00:00",
+            "updated_on": "2015-05-27T20:50:44.869216+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -705,19 +657,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://hub.yt:8080/job/yt_testsuite_dev/94/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://hub.yt:8080/job/yt_testsuite_dev/94/\" rel=\"nofollow\">http://hub.yt:8080/job/yt_testsuite_dev/94/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T20:50:44.793169+00:00",
-            "updated_on": "2015-05-27T20:50:44.869216+00:00",
+            "type": "pullrequest_comment",
             "id": 7134748
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -729,12 +683,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7136199"
@@ -743,8 +694,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7136199"
                 }
             },
+            "created_on": "2015-05-27T21:55:34.050381+00:00",
+            "updated_on": "2015-05-27T21:55:34.132193+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -754,19 +706,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T21:55:34.050381+00:00",
-            "updated_on": "2015-05-27T21:55:34.132193+00:00",
+            "type": "pullrequest_comment",
             "id": 7136199
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Nice--you matched the old inset box characteristics.  Looks good.  A couple of docstrings things, but first.\n\nOne thing that just dawned on me about the legend-style-only placement of the scale callback is that it is going to look weird for movies where the scale is changing, because it will shift around the position of the text.  It looks good for stand-alone images, but in a movie with a varying lengthscale (e.g. cosmology movies) it looks weird.\n\nHere is an example.  [This script](http://paste.yt-project.org/show/5565/) generates [this movie prior to the PR](http://chummels.org/movies/old.mp4), and [this movie with the code from this PR](http://chummels.org/movies/new.mp4).\n\nThe way I got around it in the old way was making the position far enough to the left that the scale bar never gets big enough to touch the axis edge.  But I think with the legend-style `loc` settings, it defines the placement of the text to be close to the edge of the axis.  Given that we cannot specify the position manually, I'm not sure how to get around this.  Ideas?  Perhaps by buffering the unit text with enough spaces on the left+right sides that it juts the whole bar out farther from the edge?  But this seems problematic since we don't know how many characters a priori, and we have to do it on both sides to make sure the inset box looks ok ([movie with inset box](http://chummels.org/movies/new_bbox.mp4)).",
+                "html": "<p>Nice--you matched the old inset box characteristics.  Looks good.  A couple of docstrings things, but first.</p>\n<p>One thing that just dawned on me about the legend-style-only placement of the scale callback is that it is going to look weird for movies where the scale is changing, because it will shift around the position of the text.  It looks good for stand-alone images, but in a movie with a varying lengthscale (e.g. cosmology movies) it looks weird.</p>\n<p>Here is an example.  <a href=\"http://paste.yt-project.org/show/5565/\">This script</a> generates <a href=\"http://chummels.org/movies/old.mp4\">this movie prior to the PR</a>, and <a href=\"http://chummels.org/movies/new.mp4\">this movie with the code from this PR</a>.</p>\n<p>The way I got around it in the old way was making the position far enough to the left that the scale bar never gets big enough to touch the axis edge.  But I think with the legend-style <code>loc</code> settings, it defines the placement of the text to be close to the edge of the axis.  Given that we cannot specify the position manually, I'm not sure how to get around this.  Ideas?  Perhaps by buffering the unit text with enough spaces on the left+right sides that it juts the whole bar out farther from the edge?  But this seems problematic since we don't know how many characters a priori, and we have to do it on both sides to make sure the inset box looks ok (<a href=\"http://chummels.org/movies/new_bbox.mp4\">movie with inset box</a>).</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -778,12 +732,21 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
+            "parent": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131978"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131978"
+                    }
+                },
+                "id": 7131978
+            },
+            "created_on": "2015-05-27T23:24:06.250367+00:00",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137682"
@@ -792,6 +755,217 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137682"
                 }
             },
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
+                    }
+                },
+                "title": "annotate_scale improvements",
+                "id": 1600
+            },
+            "type": "pullrequest_comment",
+            "id": 7137682,
+            "updated_on": "2015-05-27T23:24:06.258874+00:00"
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "if we're truly not using the `pos` or the `coord_system` kwargs, we should remove them (and references to them) from the docstrings.",
+                "html": "<p>if we're truly not using the <code>pos</code> or the <code>coord_system</code> kwargs, we should remove them (and references to them) from the docstrings.</p>"
+            },
+            "user": {
+                "username": "chummels",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137709"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137709"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:01d72c4818b6..8ad62b624390?path=yt%2Fvisualization%2Fplot_modifications.py"
+                }
+            },
+            "created_on": "2015-05-27T23:26:08.278418+00:00",
+            "updated_on": "2015-05-27T23:26:08.286866+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
+                    }
+                },
+                "title": "annotate_scale improvements",
+                "id": 1600
+            },
+            "inline": {
+                "to": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "from": 1728
+            },
+            "type": "pullrequest_comment",
+            "id": 7137709
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "And I suppose remove `pos` and `coord_system` from the function call.",
+                "html": "<p>And I suppose remove <code>pos</code> and <code>coord_system</code> from the function call.</p>"
+            },
+            "user": {
+                "username": "chummels",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137726"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137726"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:01d72c4818b6..8ad62b624390?path=yt%2Fvisualization%2Fplot_modifications.py"
+                }
+            },
+            "created_on": "2015-05-27T23:26:58.156728+00:00",
+            "updated_on": "2015-05-27T23:26:58.163221+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
+                    }
+                },
+                "title": "annotate_scale improvements",
+                "id": 1600
+            },
+            "inline": {
+                "to": null,
+                "path": "yt/visualization/plot_modifications.py",
+                "from": 1804
+            },
+            "type": "pullrequest_comment",
+            "id": 7137726
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "I found that a value of 0.0 or 0.05 for `pad` seemed to match the results from `annotate_timestamp()` the best.",
+                "html": "<p>I found that a value of 0.0 or 0.05 for <code>pad</code> seemed to match the results from <code>annotate_timestamp()</code> the best.</p>"
+            },
+            "user": {
+                "username": "chummels",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137732"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137732"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:01d72c4818b6..8ad62b624390?path=yt%2Fvisualization%2Fplot_modifications.py"
+                }
+            },
+            "created_on": "2015-05-27T23:27:32.016550+00:00",
+            "updated_on": "2015-05-27T23:27:32.022756+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
+                    }
+                },
+                "title": "annotate_scale improvements",
+                "id": 1600
+            },
+            "inline": {
+                "to": 1814,
+                "path": "yt/visualization/plot_modifications.py",
+                "from": null
+            },
+            "type": "pullrequest_comment",
+            "id": 7137732
+        },
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "It also appears from those movies that the scale bar itself is changing its thickness based on its width, which looks a little weird in a movie.  Is there a way to use a fixed thickness instead of a fixed aspect ratio for the line?",
+                "html": "<p>It also appears from those movies that the scale bar itself is changing its thickness based on its width, which looks a little weird in a movie.  Is there a way to use a fixed thickness instead of a fixed aspect ratio for the line?</p>"
+            },
+            "user": {
+                "username": "chummels",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/chummels"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/chummels/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
+                    }
+                },
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
+            },
             "parent": {
                 "links": {
                     "self": {
@@ -803,218 +977,7 @@
                 },
                 "id": 7131978
             },
-            "pullrequest": {
-                "title": "annotate_scale improvements",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
-                    }
-                },
-                "id": 1600
-            },
-            "content": {
-                "raw": "Nice--you matched the old inset box characteristics.  Looks good.  A couple of docstrings things, but first.\n\nOne thing that just dawned on me about the legend-style-only placement of the scale callback is that it is going to look weird for movies where the scale is changing, because it will shift around the position of the text.  It looks good for stand-alone images, but in a movie with a varying lengthscale (e.g. cosmology movies) it looks weird.\n\nHere is an example.  [This script](http://paste.yt-project.org/show/5565/) generates [this movie prior to the PR](http://chummels.org/movies/old.mp4), and [this movie with the code from this PR](http://chummels.org/movies/new.mp4).\n\nThe way I got around it in the old way was making the position far enough to the left that the scale bar never gets big enough to touch the axis edge.  But I think with the legend-style `loc` settings, it defines the placement of the text to be close to the edge of the axis.  Given that we cannot specify the position manually, I'm not sure how to get around this.  Ideas?  Perhaps by buffering the unit text with enough spaces on the left+right sides that it juts the whole bar out farther from the edge?  But this seems problematic since we don't know how many characters a priori, and we have to do it on both sides to make sure the inset box looks ok ([movie with inset box](http://chummels.org/movies/new_bbox.mp4)).",
-                "html": "<p>Nice--you matched the old inset box characteristics.  Looks good.  A couple of docstrings things, but first.</p>\n<p>One thing that just dawned on me about the legend-style-only placement of the scale callback is that it is going to look weird for movies where the scale is changing, because it will shift around the position of the text.  It looks good for stand-alone images, but in a movie with a varying lengthscale (e.g. cosmology movies) it looks weird.</p>\n<p>Here is an example.  <a href=\"http://paste.yt-project.org/show/5565/\">This script</a> generates <a href=\"http://chummels.org/movies/old.mp4\">this movie prior to the PR</a>, and <a href=\"http://chummels.org/movies/new.mp4\">this movie with the code from this PR</a>.</p>\n<p>The way I got around it in the old way was making the position far enough to the left that the scale bar never gets big enough to touch the axis edge.  But I think with the legend-style <code>loc</code> settings, it defines the placement of the text to be close to the edge of the axis.  Given that we cannot specify the position manually, I'm not sure how to get around this.  Ideas?  Perhaps by buffering the unit text with enough spaces on the left+right sides that it juts the whole bar out farther from the edge?  But this seems problematic since we don't know how many characters a priori, and we have to do it on both sides to make sure the inset box looks ok (<a href=\"http://chummels.org/movies/new_bbox.mp4\">movie with inset box</a>).</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T23:24:06.250367+00:00",
-            "updated_on": "2015-05-27T23:24:06.258874+00:00",
-            "id": 7137682
-        },
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/chummels"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/chummels/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137709"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:01d72c4818b6..8ad62b624390?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137709"
-                }
-            },
-            "pullrequest": {
-                "title": "annotate_scale improvements",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
-                    }
-                },
-                "id": 1600
-            },
-            "content": {
-                "raw": "if we're truly not using the `pos` or the `coord_system` kwargs, we should remove them (and references to them) from the docstrings.",
-                "html": "<p>if we're truly not using the <code>pos</code> or the <code>coord_system</code> kwargs, we should remove them (and references to them) from the docstrings.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T23:26:08.278418+00:00",
-            "updated_on": "2015-05-27T23:26:08.286866+00:00",
-            "inline": {
-                "from": 1728,
-                "path": "yt/visualization/plot_modifications.py",
-                "to": null
-            },
-            "id": 7137709
-        },
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/chummels"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/chummels/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137726"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:01d72c4818b6..8ad62b624390?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137726"
-                }
-            },
-            "pullrequest": {
-                "title": "annotate_scale improvements",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
-                    }
-                },
-                "id": 1600
-            },
-            "content": {
-                "raw": "And I suppose remove `pos` and `coord_system` from the function call.",
-                "html": "<p>And I suppose remove <code>pos</code> and <code>coord_system</code> from the function call.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T23:26:58.156728+00:00",
-            "updated_on": "2015-05-27T23:26:58.163221+00:00",
-            "inline": {
-                "from": 1804,
-                "path": "yt/visualization/plot_modifications.py",
-                "to": null
-            },
-            "id": 7137726
-        },
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/chummels"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/chummels/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137732"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:01d72c4818b6..8ad62b624390?path=yt%2Fvisualization%2Fplot_modifications.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137732"
-                }
-            },
-            "pullrequest": {
-                "title": "annotate_scale improvements",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
-                    }
-                },
-                "id": 1600
-            },
-            "content": {
-                "raw": "I found that a value of 0.0 or 0.05 for `pad` seemed to match the results from `annotate_timestamp()` the best.",
-                "html": "<p>I found that a value of 0.0 or 0.05 for <code>pad</code> seemed to match the results from <code>annotate_timestamp()</code> the best.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T23:27:32.016550+00:00",
-            "updated_on": "2015-05-27T23:27:32.022756+00:00",
-            "inline": {
-                "from": null,
-                "path": "yt/visualization/plot_modifications.py",
-                "to": 1814
-            },
-            "id": 7137732
-        },
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/chummels"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/chummels/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/chummels/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
+            "created_on": "2015-05-27T23:28:57.045079+00:00",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7137757"
@@ -1023,19 +986,7 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7137757"
                 }
             },
-            "parent": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7131978"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7131978"
-                    }
-                },
-                "id": 7131978
-            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1045,19 +996,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "It also appears from those movies that the scale bar itself is changing its thickness based on its width, which looks a little weird in a movie.  Is there a way to use a fixed thickness instead of a fixed aspect ratio for the line?",
-                "html": "<p>It also appears from those movies that the scale bar itself is changing its thickness based on its width, which looks a little weird in a movie.  Is there a way to use a fixed thickness instead of a fixed aspect ratio for the line?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-27T23:28:57.045079+00:00",
-            "updated_on": "2015-05-27T23:28:57.054605+00:00",
-            "id": 7137757
+            "type": "pullrequest_comment",
+            "id": 7137757,
+            "updated_on": "2015-05-27T23:28:57.054605+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "After spelunking a bit in the matplotlib internal API I was able to figure out an incantation that allows me to use absolute positioning for the scale bar.  The issue with the scale bar moving around in zoom movies should be fixed.",
+                "html": "<p>After spelunking a bit in the matplotlib internal API I was able to figure out an incantation that allows me to use absolute positioning for the scale bar.  The issue with the scale bar moving around in zoom movies should be fixed.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1069,19 +1023,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7138799"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7138799"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1094,8 +1037,16 @@
                 },
                 "id": 7137682
             },
+            "created_on": "2015-05-28T00:53:14.798539+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7138799"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7138799"
+                }
+            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1105,19 +1056,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "After spelunking a bit in the matplotlib internal API I was able to figure out an incantation that allows me to use absolute positioning for the scale bar.  The issue with the scale bar moving around in zoom movies should be fixed.",
-                "html": "<p>After spelunking a bit in the matplotlib internal API I was able to figure out an incantation that allows me to use absolute positioning for the scale bar.  The issue with the scale bar moving around in zoom movies should be fixed.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-28T00:53:14.798539+00:00",
-            "updated_on": "2015-05-28T00:53:14.806506+00:00",
-            "id": 7138799
+            "type": "pullrequest_comment",
+            "id": 7138799,
+            "updated_on": "2015-05-28T00:53:14.806506+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'm now using a fixed height of .01 in normalized axis coordinates.",
+                "html": "<p>I'm now using a fixed height of .01 in normalized axis coordinates.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1129,19 +1083,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7138802"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7138802"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1154,8 +1097,16 @@
                 },
                 "id": 7137757
             },
+            "created_on": "2015-05-28T00:53:44.434511+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7138802"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7138802"
+                }
+            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1165,19 +1116,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "I'm now using a fixed height of .01 in normalized axis coordinates.",
-                "html": "<p>I'm now using a fixed height of .01 in normalized axis coordinates.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-28T00:53:44.434511+00:00",
-            "updated_on": "2015-05-28T00:53:44.441898+00:00",
-            "id": 7138802
+            "type": "pullrequest_comment",
+            "id": 7138802,
+            "updated_on": "2015-05-28T00:53:44.441898+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1189,12 +1143,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7139373"
@@ -1203,8 +1154,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7139373"
                 }
             },
+            "created_on": "2015-05-28T01:48:07.795133+00:00",
+            "updated_on": "2015-05-28T01:48:07.934978+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1214,19 +1166,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-28T01:48:07.795133+00:00",
-            "updated_on": "2015-05-28T01:48:07.934978+00:00",
+            "type": "pullrequest_comment",
             "id": 7139373
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1238,12 +1192,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7139739"
@@ -1252,8 +1203,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7139739"
                 }
             },
+            "created_on": "2015-05-28T02:25:39.262025+00:00",
+            "updated_on": "2015-05-28T02:25:39.380148+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1263,19 +1215,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-28T02:25:39.262025+00:00",
-            "updated_on": "2015-05-28T02:25:39.380148+00:00",
+            "type": "pullrequest_comment",
             "id": 7139739
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@chummels, does this one look good to you?\n",
+                "html": "<p><a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">chummels</a>, does this one look good to you?</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1287,12 +1241,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7191992"
@@ -1301,8 +1252,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7191992"
                 }
             },
+            "created_on": "2015-05-29T19:18:20.316393+00:00",
+            "updated_on": "2015-05-29T19:18:20.331090+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1312,19 +1264,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "@chummels, does this one look good to you?\n",
-                "html": "<p><a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a>, does this one look good to you?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-29T19:18:20.316393+00:00",
-            "updated_on": "2015-05-29T19:18:20.331090+00:00",
+            "type": "pullrequest_comment",
             "id": 7191992
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Not yet.  I'm working on a commit to correct some things here.",
+                "html": "<p>Not yet.  I'm working on a commit to correct some things here.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -1336,19 +1290,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7192144"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7192144"
-                }
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -1361,8 +1304,16 @@
                 },
                 "id": 7191992
             },
+            "created_on": "2015-05-29T19:24:18.922843+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7192144"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7192144"
+                }
+            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1372,19 +1323,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "Not yet.  I'm working on a commit to correct some things here.",
-                "html": "<p>Not yet.  I'm working on a commit to correct some things here.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-29T19:24:18.922843+00:00",
-            "updated_on": "2015-05-29T19:24:18.931580+00:00",
-            "id": 7192144
+            "type": "pullrequest_comment",
+            "id": 7192144,
+            "updated_on": "2015-05-29T19:24:18.931580+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This is good on my end.  As soon as tests pass, unless anyone has any final comments, I think this is good to go.  Definitely an improvement--thanks @ngoldbaum .",
+                "html": "<p>This is good on my end.  As soon as tests pass, unless anyone has any final comments, I think this is good to go.  Definitely an improvement--thanks <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> .</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -1396,19 +1350,8 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7194888"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7194888"
-                }
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
             "parent": {
                 "links": {
@@ -1421,8 +1364,16 @@
                 },
                 "id": 7192144
             },
+            "created_on": "2015-05-29T22:05:56.107050+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7194888"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7194888"
+                }
+            },
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1432,19 +1383,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "This is good on my end.  As soon as tests pass, unless anyone has any final comments, I think this is good to go.  Definitely an improvement--thanks @ngoldbaum .",
-                "html": "<p>This is good on my end.  As soon as tests pass, unless anyone has any final comments, I think this is good to go.  Definitely an improvement--thanks <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> .</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-29T22:05:56.107050+00:00",
-            "updated_on": "2015-05-29T22:05:56.116223+00:00",
-            "id": 7194888
+            "type": "pullrequest_comment",
+            "id": 7194888,
+            "updated_on": "2015-05-29T22:05:56.116223+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -1456,12 +1410,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1600/comments/7195894"
@@ -1470,8 +1421,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600/_/diff#comment-7195894"
                 }
             },
+            "created_on": "2015-05-29T23:52:42.814479+00:00",
+            "updated_on": "2015-05-29T23:52:42.861442+00:00",
             "pullrequest": {
-                "title": "annotate_scale improvements",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1481,16 +1433,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1600"
                     }
                 },
+                "title": "annotate_scale improvements",
                 "id": 1600
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-05-29T23:52:42.814479+00:00",
-            "updated_on": "2015-05-29T23:52:42.861442+00:00",
+            "type": "pullrequest_comment",
             "id": 7195894
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This changes the implementation of the scale callback to use matplotlib's AnchoredSizeBar artist. It also fixes some other issues related to how the scale bar is scaled.\r\n\r\nRight now we don't attempt to draw a scale bar if the x and y limits aren't identical.  This is not necessary, instead we should only bail from drawing the scale bar if the *scaling* of the x and y axes are different.  This is encoded in the `_aspect` attribute of the `WindowPlotMPL` objects, which itself can be set via the `aspect` keyword argument of any of the `PlotWindow` class initializers. I've adjusted the check to be based on the aspect ratio. Since we weren't passing the plot aspect ratio to callbacks until now, I've gone ahead and added the `aspect` attribute to the `CallbackWrapper`.\r\n\r\nIn addition, now that we're not using the text and line plot callbacks under the hood, I've replaced the dictionaries controlling their properties with a single dictionary that gets passed to `AnchoredSizeBar`. This callback hasn't been in a release yet, so I don't need to formally deprecate things.\r\n\r\nI'd love feedback on these changes.  The main improvement is that the scale bar can now be drawn with an inset box, which makes it much easier to see when drawn on top of a plot that has lots of structure.\r\n\r\nQuick example:\r\n\r\n\r\n```\r\n#!python\r\n\r\nslc.annotate_scale(size_bar_args=dict(pad=0.75, sep=5, borderpad=0.5, frameon=True, color='k'))\r\n```\r\n\r\n\r\n![galaxy0030_Slice_x_density.png](https://bitbucket.org/repo/BXbAb/images/584938296-galaxy0030_Slice_x_density.png)",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2015-06-01T19:28:12.349571+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "ac0abcc06c42",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/ac0abcc06c42"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

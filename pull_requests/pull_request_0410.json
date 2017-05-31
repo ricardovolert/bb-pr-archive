@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2013-02-01T17:13:50.095672+00:00",
-    "comment_count": 20,
-    "description": "This PR introduces a new Periodicity attribute which now must be attached to StaticOutputs, redefines the Radius field to properly handle periodic boundary conditions, improves periodic_dist, and adds euclidean_dist to math_utils.py.\r\n\r\nI've gone through and added code that checks how to set the Periodicity attribute in some of the code frontends.  I know this works for enzo, flash, and the stream frontend but since I don't have datasets handy, I was unable to test this for the other frontends I modified.  I'm particularly worried that my changes will break the orion and nyx frontends - @caseywstark would you mind taking a look at my modifications to the nyx frontend?  If you have any knowledge of the other chombo and boxlib codes, it would be great if you took a look at those frontends as well.  I was unable to figure out how to modify the chombo, gdf, maestro, orion, or tiger frontends.  I left the gadget frontend alone since it seems to be vestigial.  @atmyers, would you mind lending a hand with the orion frontends, and, if you can, the other boxlib/chombo frontends?\r\n\r\n@MatthewTurk originally suggested in the notes for Issue #484 that we should use validators and new field definitions to get the radius field to properly update its self to the appropriate definition given the parameter file's periodicity.  I did end up implementing such a system but realized that it needlessly added additional complexity.  I added some additional justification for not using validators in the commit message for e2239c3.\r\n\r\nThere's still a fair ways to go before YTEP-6 is done but I think with this change we're well on our way.  \r\n\r\nPlease let me know if you spot any issues or have any style or functional suggestions.\r\n\r\nUpdate 1: Fixing typos (thanks for the docstring Stephen!), adding gdf support (thanks Kacper!), and checking to make sure we pass all the answer and unit tests.  On my laptop, all the tests pass except for a couple which error on not being able to create an OutputLog file.  Any idea what's going on there?  I'm invoking the answer tests in $YT_HG/yt with 'nosetests --with-answer-testing.'  I originally tried 'nosetests --with-answer-testing frontends/enzo --answer-name=gold005' but in that case nose didn't find any tests.  I'm doing this using my new laptop, maybe I screwed up setting it up? I've got the answer test files and .yt/config file set up correctly as far as I can tell.  Here's a pastebin of the output from nose: http://paste.yt-project.org/show/3085/\r\n\r\nUpdate 2: Updating following Matt's comments.  This passes all unit and answer tests on my machine.\r\n\r\nUpdate 3: Updating for the orion frontend, thanks for commenting Andrew!",
-    "created_on": "2013-01-28T22:09:06.577730+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d7b721d8320d"
-            }
-        },
-        "hash": "d7b721d8320d"
-    },
-    "title": "First pass at YTEP-6.  Closes #484.",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
-    "id": 410,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/3617719a777f"
-                }
-            },
-            "hash": "3617719a777f"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "3617719a777f",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/749385e5bd82"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/3617719a777f"
                 }
-            },
-            "hash": "749385e5bd82"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "title": "First pass at YTEP-6.  Closes #484.",
+    "id": 410,
+    "comment_count": 20,
+    "created_on": "2013-01-28T22:09:06.577730+00:00",
+    "merge_commit": {
+        "hash": "d7b721d8320d",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/d7b721d8320d"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "period here is extraneous/erroneous.",
+                "html": "<p>period here is extraneous/erroneous.</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -158,25 +112,23 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/98902"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d1fb8648ec3c..597ce0513a71?path=yt%2Futilities%2Fmath_utils.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-98902"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:d1fb8648ec3c..597ce0513a71?path=yt%2Futilities%2Fmath_utils.py"
                 }
             },
+            "created_on": "2013-01-28T22:16:18.693289+00:00",
+            "updated_on": "2013-01-28T22:16:18.700186+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -186,24 +138,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "period here is extraneous/erroneous.",
-                "html": "<p>period here is extraneous/erroneous.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-28T22:16:18.693289+00:00",
-            "updated_on": "2013-01-28T22:16:18.700186+00:00",
             "inline": {
-                "from": null,
+                "to": 140,
                 "path": "yt/utilities/math_utils.py",
-                "to": 140
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 98902
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Looks very good, Nathan!",
+                "html": "<p>Looks very good, Nathan!</p>"
+            },
             "user": {
+                "username": "sskory",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/sskory"
@@ -215,12 +169,9 @@
                         "href": "https://bitbucket.org/account/sskory/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Stephen Skory",
-                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}",
-                "username": "sskory"
+                "uuid": "{11787434-dea2-42d8-b94d-88d347eb151a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/98903"
@@ -229,8 +180,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-98903"
                 }
             },
+            "created_on": "2013-01-28T22:17:26.470689+00:00",
+            "updated_on": "2013-01-28T22:17:26.483367+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -240,19 +192,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Looks very good, Nathan!",
-                "html": "<p>Looks very good, Nathan!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-28T22:17:26.470689+00:00",
-            "updated_on": "2013-01-28T22:17:26.483367+00:00",
+            "type": "pullrequest_comment",
             "id": 98903
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Nathan,\n\nfor gdf you can define `periodicity` as:\n\n```\n#!python\n\nself.periodicity = ensure_tuple([bnd == 0 for bnd in self.boundary_conditions[::2]])\n```",
+                "html": "<p>Hi Nathan,</p>\n<p>for gdf you can define <code>periodicity</code> as:</p>\n<div class=\"codehilite language-python\"><pre><span></span><span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">periodicity</span> <span class=\"o\">=</span> <span class=\"n\">ensure_tuple</span><span class=\"p\">([</span><span class=\"n\">bnd</span> <span class=\"o\">==</span> <span class=\"mi\">0</span> <span class=\"k\">for</span> <span class=\"n\">bnd</span> <span class=\"ow\">in</span> <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">boundary_conditions</span><span class=\"p\">[::</span><span class=\"mi\">2</span><span class=\"p\">]])</span>\n</pre></div>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -264,12 +218,9 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99293"
@@ -278,8 +229,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99293"
                 }
             },
+            "created_on": "2013-01-29T06:49:55.082862+00:00",
+            "updated_on": "2013-01-29T06:49:55.091245+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -289,19 +241,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Hi Nathan,\n\nfor gdf you can define `periodicity` as:\n\n```\n#!python\n\nself.periodicity = ensure_tuple([bnd == 0 for bnd in self.boundary_conditions[::2]])\n```",
-                "html": "<p>Hi Nathan,</p>\n<p>for gdf you can define <code>periodicity</code> as:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">periodicity</span> <span class=\"o\">=</span> <span class=\"n\">ensure_tuple</span><span class=\"p\">([</span><span class=\"n\">bnd</span> <span class=\"o\">==</span> <span class=\"mi\">0</span> <span class=\"k\">for</span> <span class=\"n\">bnd</span> <span class=\"ow\">in</span> <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">boundary_conditions</span><span class=\"p\">[::</span><span class=\"mi\">2</span><span class=\"p\">]])</span>\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T06:49:55.082862+00:00",
-            "updated_on": "2013-01-29T06:49:55.091245+00:00",
+            "type": "pullrequest_comment",
             "id": 99293
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Nathan -- as a note, I intend to review this today, but wow, thank you for your work!  As far as the answer tests go, my recollection is that they never actually look for `OutputLog` unless you're running the old framework.  I think we can & should just ditch the old framework.  Can you try instead doing a two-step process:\n\n`python2.7 setup.py develop`\n`python2.7 setup.py nosetests --with-answer-testing`\n\nYou can undo `develop` by running `pip uninstall yt`.",
+                "html": "<p>Hi Nathan -- as a note, I intend to review this today, but wow, thank you for your work!  As far as the answer tests go, my recollection is that they never actually look for <code>OutputLog</code> unless you're running the old framework.  I think we can &amp; should just ditch the old framework.  Can you try instead doing a two-step process:</p>\n<p><code>python2.7 setup.py develop</code>\n<code>python2.7 setup.py nosetests --with-answer-testing</code></p>\n<p>You can undo <code>develop</code> by running <code>pip uninstall yt</code>.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -313,12 +267,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99653"
@@ -327,8 +278,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99653"
                 }
             },
+            "created_on": "2013-01-29T12:52:42.056531+00:00",
+            "updated_on": "2013-01-29T12:52:42.064965+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -338,19 +290,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Hi Nathan -- as a note, I intend to review this today, but wow, thank you for your work!  As far as the answer tests go, my recollection is that they never actually look for `OutputLog` unless you're running the old framework.  I think we can & should just ditch the old framework.  Can you try instead doing a two-step process:\n\n`python2.7 setup.py develop`\n`python2.7 setup.py nosetests --with-answer-testing`\n\nYou can undo `develop` by running `pip uninstall yt`.",
-                "html": "<p>Hi Nathan -- as a note, I intend to review this today, but wow, thank you for your work!  As far as the answer tests go, my recollection is that they never actually look for <code>OutputLog</code> unless you're running the old framework.  I think we can &amp; should just ditch the old framework.  Can you try instead doing a two-step process:</p>\n<p><code>python2.7 setup.py develop</code>\n<code>python2.7 setup.py nosetests --with-answer-testing</code></p>\n<p>You can undo <code>develop</code> by running <code>pip uninstall yt</code>.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T12:52:42.056531+00:00",
-            "updated_on": "2013-01-29T12:52:42.064965+00:00",
+            "type": "pullrequest_comment",
             "id": 99653
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I like this routine.  I'm sorry you have to go through these hoops for the center tiling.",
+                "html": "<p>I like this routine.  I'm sorry you have to go through these hoops for the center tiling.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -362,25 +316,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99677"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Fdata_objects%2Funiversal_fields.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99677"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Fdata_objects%2Funiversal_fields.py"
                 }
             },
+            "created_on": "2013-01-29T13:13:00.106769+00:00",
+            "updated_on": "2013-01-29T13:13:00.117203+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -390,24 +342,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "I like this routine.  I'm sorry you have to go through these hoops for the center tiling.",
-                "html": "<p>I like this routine.  I'm sorry you have to go through these hoops for the center tiling.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:13:00.106769+00:00",
-            "updated_on": "2013-01-29T13:13:00.117203+00:00",
             "inline": {
-                "from": null,
+                "to": 787,
                 "path": "yt/data_objects/universal_fields.py",
-                "to": 787
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 99677
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "One quick note -- if periodicity is a tuple of booleans, you don't need `np.any`, you can have `any(periodicity)` for the same effect.",
+                "html": "<p>One quick note -- if periodicity is a tuple of booleans, you don't need <code>np.any</code>, you can have <code>any(periodicity)</code> for the same effect.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -419,25 +373,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99682"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Fdata_objects%2Funiversal_fields.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99682"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Fdata_objects%2Funiversal_fields.py"
                 }
             },
+            "created_on": "2013-01-29T13:14:36.737463+00:00",
+            "updated_on": "2013-01-29T13:14:36.745263+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -447,24 +399,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "One quick note -- if periodicity is a tuple of booleans, you don't need `np.any`, you can have `any(periodicity)` for the same effect.",
-                "html": "<p>One quick note -- if periodicity is a tuple of booleans, you don't need <code>np.any</code>, you can have <code>any(periodicity)</code> for the same effect.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:14:36.737463+00:00",
-            "updated_on": "2013-01-29T13:14:36.745263+00:00",
             "inline": {
-                "from": null,
+                "to": 792,
                 "path": "yt/data_objects/universal_fields.py",
-                "to": 792
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 99682
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think we're missing the case of dimensionality == 1 or == 2, as then the period will be just one or two elements long.  What about something like this:\n\n    self.periodicity = tuple( self.parameters.get(\"%sl_boundary_type\" % ax, None) == 'periodic' for ax in 'xyz' )\n",
+                "html": "<p>I think we're missing the case of dimensionality == 1 or == 2, as then the period will be just one or two elements long.  What about something like this:</p>\n<div class=\"codehilite\"><pre><span></span>self.periodicity = tuple( self.parameters.get(&quot;%sl_boundary_type&quot; % ax, None) == &#39;periodic&#39; for ax in &#39;xyz&#39; )\n</pre></div>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -476,25 +430,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99686"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Ffrontends%2Fflash%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99686"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Ffrontends%2Fflash%2Fdata_structures.py"
                 }
             },
+            "created_on": "2013-01-29T13:16:43.892224+00:00",
+            "updated_on": "2013-01-29T13:16:43.898748+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -504,24 +456,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "I think we're missing the case of dimensionality == 1 or == 2, as then the period will be just one or two elements long.  What about something like this:\n\n    self.periodicity = tuple( self.parameters.get(\"%sl_boundary_type\" % ax, None) == 'periodic' for ax in 'xyz' )\n",
-                "html": "<p>I think we're missing the case of dimensionality == 1 or == 2, as then the period will be just one or two elements long.  What about something like this:</p>\n<div class=\"codehilite\"><pre><span></span>self.periodicity = tuple( self.parameters.get(&quot;%sl_boundary_type&quot; % ax, None) == &#39;periodic&#39; for ax in &#39;xyz&#39; )\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:16:43.892224+00:00",
-            "updated_on": "2013-01-29T13:16:43.898748+00:00",
             "inline": {
-                "from": null,
+                "to": 453,
                 "path": "yt/frontends/flash/data_structures.py",
-                "to": 453
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 99686
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Quick sidenote -- I would like your help integrating this during the next merge-to-3.0, and I think this will be a good place to integrate non-cartesian coordinates nicely.  In the 3.0 branch we have the nascent development of specific distance calculations, and this would be a useful replacement for our existing cartesian calculation.",
+                "html": "<p>Quick sidenote -- I would like your help integrating this during the next merge-to-3.0, and I think this will be a good place to integrate non-cartesian coordinates nicely.  In the 3.0 branch we have the nascent development of specific distance calculations, and this would be a useful replacement for our existing cartesian calculation.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -533,25 +487,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99698"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Futilities%2Fmath_utils.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99698"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Futilities%2Fmath_utils.py"
                 }
             },
+            "created_on": "2013-01-29T13:24:51.730309+00:00",
+            "updated_on": "2013-01-29T13:24:51.736762+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -561,24 +513,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Quick sidenote -- I would like your help integrating this during the next merge-to-3.0, and I think this will be a good place to integrate non-cartesian coordinates nicely.  In the 3.0 branch we have the nascent development of specific distance calculations, and this would be a useful replacement for our existing cartesian calculation.",
-                "html": "<p>Quick sidenote -- I would like your help integrating this during the next merge-to-3.0, and I think this will be a good place to integrate non-cartesian coordinates nicely.  In the 3.0 branch we have the nascent development of specific distance calculations, and this would be a useful replacement for our existing cartesian calculation.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:24:51.730309+00:00",
-            "updated_on": "2013-01-29T13:24:51.736762+00:00",
             "inline": {
-                "from": null,
+                "to": 57,
                 "path": "yt/utilities/math_utils.py",
-                "to": 57
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 99698
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Is this okay as `abs` and not `np.abs`?",
+                "html": "<p>Is this okay as <code>abs</code> and not <code>np.abs</code>?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -590,25 +544,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99700"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Futilities%2Fmath_utils.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99700"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Futilities%2Fmath_utils.py"
                 }
             },
+            "created_on": "2013-01-29T13:25:30.531633+00:00",
+            "updated_on": "2013-01-29T13:25:30.538065+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -618,24 +570,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Is this okay as `abs` and not `np.abs`?",
-                "html": "<p>Is this okay as <code>abs</code> and not <code>np.abs</code>?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:25:30.531633+00:00",
-            "updated_on": "2013-01-29T13:25:30.538065+00:00",
             "inline": {
-                "from": null,
+                "to": 112,
                 "path": "yt/utilities/math_utils.py",
-                "to": 112
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 99700
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can we change this to in-place operations?\n\n    c = a.copy()\n    np.subtract(c, b, c)\n    np.power(c, 2, c)",
+                "html": "<p>Can we change this to in-place operations?</p>\n<div class=\"codehilite\"><pre><span></span>c = a.copy()\nnp.subtract(c, b, c)\nnp.power(c, 2, c)\n</pre></div>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -647,25 +601,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99701"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Futilities%2Fmath_utils.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99701"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1b3974db20e2..0514b030f647?path=yt%2Futilities%2Fmath_utils.py"
                 }
             },
+            "created_on": "2013-01-29T13:26:30.526784+00:00",
+            "updated_on": "2013-01-29T13:26:30.533829+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -675,24 +627,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Can we change this to in-place operations?\n\n    c = a.copy()\n    np.subtract(c, b, c)\n    np.power(c, 2, c)",
-                "html": "<p>Can we change this to in-place operations?</p>\n<div class=\"codehilite\"><pre><span></span>c = a.copy()\nnp.subtract(c, b, c)\nnp.power(c, 2, c)\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:26:30.526784+00:00",
-            "updated_on": "2013-01-29T13:26:30.533829+00:00",
             "inline": {
-                "from": null,
+                "to": 148,
                 "path": "yt/utilities/math_utils.py",
-                "to": 148
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 99701
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Erg, and actually, we can do the remaining lines as well:\n\n    c = c.sum(axis=0)\n    np.sqrt(c, c)\n    return c",
+                "html": "<p>Erg, and actually, we can do the remaining lines as well:</p>\n<div class=\"codehilite\"><pre><span></span>c = c.sum(axis=0)\nnp.sqrt(c, c)\nreturn c\n</pre></div>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -704,22 +658,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99703"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Futilities%2Fmath_utils.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99703"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -732,8 +672,19 @@
                 },
                 "id": 99701
             },
+            "created_on": "2013-01-29T13:27:13.125945+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99703"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99703"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Futilities%2Fmath_utils.py"
+                }
+            },
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -743,24 +694,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Erg, and actually, we can do the remaining lines as well:\n\n    c = c.sum(axis=0)\n    np.sqrt(c, c)\n    return c",
-                "html": "<p>Erg, and actually, we can do the remaining lines as well:</p>\n<div class=\"codehilite\"><pre><span></span>c = c.sum(axis=0)\nnp.sqrt(c, c)\nreturn c\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:27:13.125945+00:00",
-            "updated_on": "2013-01-29T13:27:13.141348+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/utilities/math_utils.py",
-                "to": null
+                "from": null
             },
-            "id": 99703
+            "type": "pullrequest_comment",
+            "id": 99703,
+            "updated_on": "2013-01-29T13:27:13.141348+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Nathan, this looks very nice to me.  My only comment is that we now need to update the YTEP to include a link to this pull request, update the status to \"in-progress\" and add a column with \"Done\" for the table of what needs to be changed.  I am happy to do that.  Thank you!",
+                "html": "<p>Nathan, this looks very nice to me.  My only comment is that we now need to update the YTEP to include a link to this pull request, update the status to \"in-progress\" and add a column with \"Done\" for the table of what needs to be changed.  I am happy to do that.  Thank you!</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -772,12 +726,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/99705"
@@ -786,8 +737,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-99705"
                 }
             },
+            "created_on": "2013-01-29T13:28:28.915589+00:00",
+            "updated_on": "2013-01-29T13:28:28.924880+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -797,19 +749,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Nathan, this looks very nice to me.  My only comment is that we now need to update the YTEP to include a link to this pull request, update the status to \"in-progress\" and add a column with \"Done\" for the table of what needs to be changed.  I am happy to do that.  Thank you!",
-                "html": "<p>Nathan, this looks very nice to me.  My only comment is that we now need to update the YTEP to include a link to this pull request, update the status to \"in-progress\" and add a column with \"Done\" for the table of what needs to be changed.  I am happy to do that.  Thank you!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T13:28:28.915589+00:00",
-            "updated_on": "2013-01-29T13:28:28.924880+00:00",
+            "type": "pullrequest_comment",
             "id": 99705
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "That works perfectly.  The second command (including nosetests in the setup.py call) is new to me.  I'll update the wiki with this information right now.",
+                "html": "<p>That works perfectly.  The second command (including nosetests in the setup.py call) is new to me.  I'll update the wiki with this information right now.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -821,19 +775,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/100007"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-100007"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -846,8 +789,16 @@
                 },
                 "id": 99653
             },
+            "created_on": "2013-01-29T18:25:19.282579+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/100007"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-100007"
+                }
+            },
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -857,19 +808,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "That works perfectly.  The second command (including nosetests in the setup.py call) is new to me.  I'll update the wiki with this information right now.",
-                "html": "<p>That works perfectly.  The second command (including nosetests in the setup.py call) is new to me.  I'll update the wiki with this information right now.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T18:25:19.282579+00:00",
-            "updated_on": "2013-01-29T18:25:19.292936+00:00",
-            "id": 100007
+            "type": "pullrequest_comment",
+            "id": 100007,
+            "updated_on": "2013-01-29T18:25:19.292936+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "If this addresses all the comments, I'm +1 on accepting once we hear from @caseywstark and @atmyers.  Once the YTEP is updated, can you email the user list?",
+                "html": "<p>If this addresses all the comments, I'm +1 on accepting once we hear from <a href=\"/caseywstark/\" rel=\"nofollow\" title=\"@caseywstark\" class=\"mention\">Casey Stark</a> and <a href=\"/atmyers/\" rel=\"nofollow\" title=\"@atmyers\" class=\"mention\">Andrew Myers</a>.  Once the YTEP is updated, can you email the user list?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -881,12 +835,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/100083"
@@ -895,8 +846,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-100083"
                 }
             },
+            "created_on": "2013-01-29T19:54:33.500413+00:00",
+            "updated_on": "2013-01-29T19:54:33.561066+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -906,19 +858,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "If this addresses all the comments, I'm +1 on accepting once we hear from @caseywstark and @atmyers.  Once the YTEP is updated, can you email the user list?",
-                "html": "<p>If this addresses all the comments, I'm +1 on accepting once we hear from <a href=\"/caseywstark/\" rel=\"nofollow\" title=\"@caseywstark\" class=\"mention\">Casey Stark</a> and <a href=\"/atmyers/\" rel=\"nofollow\" title=\"@atmyers\" class=\"mention\">Andrew Myers</a>.  Once the YTEP is updated, can you email the user list?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-29T19:54:33.500413+00:00",
-            "updated_on": "2013-01-29T19:54:33.561066+00:00",
+            "type": "pullrequest_comment",
             "id": 100083
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hey Nathan. I just looked at the Nyx data structures change and that looks great. 0 is the right BC flag for periodic. This flag has to be set in any Nyx input file, so no need for a default.",
+                "html": "<p>Hey Nathan. I just looked at the Nyx data structures change and that looks great. 0 is the right BC flag for periodic. This flag has to be set in any Nyx input file, so no need for a default.</p>"
+            },
             "user": {
+                "username": "caseywstark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/caseywstark"
@@ -930,12 +884,9 @@
                         "href": "https://bitbucket.org/account/caseywstark/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Casey Stark",
-                "uuid": "{f4055fc4-bdcf-427f-8a5e-0a401f5bc756}",
-                "username": "caseywstark"
+                "uuid": "{f4055fc4-bdcf-427f-8a5e-0a401f5bc756}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/101625"
@@ -944,8 +895,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-101625"
                 }
             },
+            "created_on": "2013-01-30T17:33:04.895433+00:00",
+            "updated_on": "2013-01-30T17:33:05.019815+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -955,19 +907,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Hey Nathan. I just looked at the Nyx data structures change and that looks great. 0 is the right BC flag for periodic. This flag has to be set in any Nyx input file, so no need for a default.",
-                "html": "<p>Hey Nathan. I just looked at the Nyx data structures change and that looks great. 0 is the right BC flag for periodic. This flag has to be set in any Nyx input file, so no need for a default.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-30T17:33:04.895433+00:00",
-            "updated_on": "2013-01-30T17:33:05.019815+00:00",
+            "type": "pullrequest_comment",
             "id": 101625
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "...and if it works in Nyx, it likely is the same for Orion, yes?",
+                "html": "<p>...and if it works in Nyx, it likely is the same for Orion, yes?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -979,19 +933,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/101673"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-101673"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1004,8 +947,16 @@
                 },
                 "id": 101625
             },
+            "created_on": "2013-01-30T17:51:04.487183+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/101673"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-101673"
+                }
+            },
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1015,19 +966,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "...and if it works in Nyx, it likely is the same for Orion, yes?",
-                "html": "<p>...and if it works in Nyx, it likely is the same for Orion, yes?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-30T17:51:04.487183+00:00",
-            "updated_on": "2013-01-30T17:51:04.497193+00:00",
-            "id": 101673
+            "type": "pullrequest_comment",
+            "id": 101673,
+            "updated_on": "2013-01-30T17:51:04.497193+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Very likely, but I've never seen Orion inputs, so I can't say for sure. Sorry!",
+                "html": "<p>Very likely, but I've never seen Orion inputs, so I can't say for sure. Sorry!</p>"
+            },
             "user": {
+                "username": "caseywstark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/caseywstark"
@@ -1039,19 +993,8 @@
                         "href": "https://bitbucket.org/account/caseywstark/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Casey Stark",
-                "uuid": "{f4055fc4-bdcf-427f-8a5e-0a401f5bc756}",
-                "username": "caseywstark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/101772"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-101772"
-                }
+                "uuid": "{f4055fc4-bdcf-427f-8a5e-0a401f5bc756}"
             },
             "parent": {
                 "links": {
@@ -1064,8 +1007,16 @@
                 },
                 "id": 101673
             },
+            "created_on": "2013-01-30T18:33:02.098136+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/101772"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-101772"
+                }
+            },
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1075,19 +1026,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Very likely, but I've never seen Orion inputs, so I can't say for sure. Sorry!",
-                "html": "<p>Very likely, but I've never seen Orion inputs, so I can't say for sure. Sorry!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-30T18:33:02.098136+00:00",
-            "updated_on": "2013-01-30T18:33:02.199315+00:00",
-            "id": 101772
+            "type": "pullrequest_comment",
+            "id": 101772,
+            "updated_on": "2013-01-30T18:33:02.199315+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Matt,\n\nVery similar, except the string to search for is slightly different:\n\n            elif param.startswith(\"Prob.lo_bc\"):\n                self.periodicity = tuple([i == 0 for i in vals])\n",
+                "html": "<p>Hi Matt,</p>\n<p>Very similar, except the string to search for is slightly different:</p>\n<div class=\"codehilite\"><pre><span></span>        elif param.startswith(&quot;Prob.lo_bc&quot;):\n            self.periodicity = tuple([i == 0 for i in vals])\n</pre></div>"
+            },
             "user": {
+                "username": "atmyers",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/atmyers"
@@ -1099,19 +1053,8 @@
                         "href": "https://bitbucket.org/account/atmyers/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Andrew Myers",
-                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}",
-                "username": "atmyers"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/101792"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-101792"
-                }
+                "uuid": "{651c5647-b78f-4cd9-8d9a-5d6e8c9ac8d3}"
             },
             "parent": {
                 "links": {
@@ -1124,8 +1067,16 @@
                 },
                 "id": 101673
             },
+            "created_on": "2013-01-30T18:49:52.027977+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/101792"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-101792"
+                }
+            },
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1135,19 +1086,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Hi Matt,\n\nVery similar, except the string to search for is slightly different:\n\n            elif param.startswith(\"Prob.lo_bc\"):\n                self.periodicity = tuple([i == 0 for i in vals])\n",
-                "html": "<p>Hi Matt,</p>\n<p>Very similar, except the string to search for is slightly different:</p>\n<div class=\"codehilite\"><pre><span></span>        elif param.startswith(&quot;Prob.lo_bc&quot;):\n            self.periodicity = tuple([i == 0 for i in vals])\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-01-30T18:49:52.027977+00:00",
-            "updated_on": "2013-01-30T18:49:52.185164+00:00",
-            "id": 101792
+            "type": "pullrequest_comment",
+            "id": 101792,
+            "updated_on": "2013-01-30T18:49:52.185164+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@ngoldbaum I think that does it, no?  I'm ready to accept.",
+                "html": "<p><a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> I think that does it, no?  I'm ready to accept.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1159,12 +1113,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/103975"
@@ -1173,8 +1124,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-103975"
                 }
             },
+            "created_on": "2013-02-01T14:01:05.030064+00:00",
+            "updated_on": "2013-02-01T14:01:05.046261+00:00",
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1184,19 +1136,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "@ngoldbaum I think that does it, no?  I'm ready to accept.",
-                "html": "<p><a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> I think that does it, no?  I'm ready to accept.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-01T14:01:05.030064+00:00",
-            "updated_on": "2013-02-01T14:01:05.046261+00:00",
+            "type": "pullrequest_comment",
             "id": 103975
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yup, this should be ready to go.",
+                "html": "<p>Yup, this should be ready to go.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1208,19 +1162,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/104193"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-104193"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1233,8 +1176,16 @@
                 },
                 "id": 103975
             },
+            "created_on": "2013-02-01T17:13:00.051219+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/410/comments/104193"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410/_/diff#comment-104193"
+                }
+            },
             "pullrequest": {
-                "title": "First pass at YTEP-6.  Closes #484.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1244,16 +1195,65 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/410"
                     }
                 },
+                "title": "First pass at YTEP-6.  Closes #484.",
                 "id": 410
             },
-            "content": {
-                "raw": "Yup, this should be ready to go.",
-                "html": "<p>Yup, this should be ready to go.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-01T17:13:00.051219+00:00",
-            "updated_on": "2013-02-01T17:13:00.058114+00:00",
-            "id": 104193
+            "type": "pullrequest_comment",
+            "id": 104193,
+            "updated_on": "2013-02-01T17:13:00.058114+00:00"
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This PR introduces a new Periodicity attribute which now must be attached to StaticOutputs, redefines the Radius field to properly handle periodic boundary conditions, improves periodic_dist, and adds euclidean_dist to math_utils.py.\r\n\r\nI've gone through and added code that checks how to set the Periodicity attribute in some of the code frontends.  I know this works for enzo, flash, and the stream frontend but since I don't have datasets handy, I was unable to test this for the other frontends I modified.  I'm particularly worried that my changes will break the orion and nyx frontends - @caseywstark would you mind taking a look at my modifications to the nyx frontend?  If you have any knowledge of the other chombo and boxlib codes, it would be great if you took a look at those frontends as well.  I was unable to figure out how to modify the chombo, gdf, maestro, orion, or tiger frontends.  I left the gadget frontend alone since it seems to be vestigial.  @atmyers, would you mind lending a hand with the orion frontends, and, if you can, the other boxlib/chombo frontends?\r\n\r\n@MatthewTurk originally suggested in the notes for Issue #484 that we should use validators and new field definitions to get the radius field to properly update its self to the appropriate definition given the parameter file's periodicity.  I did end up implementing such a system but realized that it needlessly added additional complexity.  I added some additional justification for not using validators in the commit message for e2239c3.\r\n\r\nThere's still a fair ways to go before YTEP-6 is done but I think with this change we're well on our way.  \r\n\r\nPlease let me know if you spot any issues or have any style or functional suggestions.\r\n\r\nUpdate 1: Fixing typos (thanks for the docstring Stephen!), adding gdf support (thanks Kacper!), and checking to make sure we pass all the answer and unit tests.  On my laptop, all the tests pass except for a couple which error on not being able to create an OutputLog file.  Any idea what's going on there?  I'm invoking the answer tests in $YT_HG/yt with 'nosetests --with-answer-testing.'  I originally tried 'nosetests --with-answer-testing frontends/enzo --answer-name=gold005' but in that case nose didn't find any tests.  I'm doing this using my new laptop, maybe I screwed up setting it up? I've got the answer test files and .yt/config file set up correctly as far as I can tell.  Here's a pastebin of the output from nose: http://paste.yt-project.org/show/3085/\r\n\r\nUpdate 2: Updating following Matt's comments.  This passes all unit and answer tests on my machine.\r\n\r\nUpdate 3: Updating for the orion frontend, thanks for commenting Andrew!",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2013-02-01T17:13:50.095672+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "749385e5bd82",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/749385e5bd82"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

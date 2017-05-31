@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2017-04-21T11:36:46.794991+00:00",
-    "comment_count": 1,
-    "description": "I discovered this was an issue while experimenting with the `UnitSystem` machinery. I wanted to be able to write a line like this:\r\n\r\n```\r\nus = UnitSystem('custom', 'angstrom', electron_mass, 's', current_mks_unit=elementary_charge)\r\n```\r\n\r\nCurrently this fails with a unit parse error because the `Unit` object doesn't do the right thing when it's handed a YTQuantity. Rather than sanitizing the input to `UnitSystem` I figure let's just make the `Unit` class do the right thing when it's handed a YTQuantity.\r\n\r\nThis is a little tricky because I need to avoid a circular import, since `YTArray` needs to be able to import `Unit`. Rather than doing import tricks and using `isinstance`, instead I use `hasattr` to check that whatever we're handed looks sufficiently like a `YTArray`. If reviewers would prefer for me to implement this another way please let me know.\r\n\r\nFinally I also noticed that `UnitSystem` isn't in the API docs, so I've added it.",
-    "created_on": "2017-03-28T00:05:39.525814+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/634cc55bf066"
-            }
-        },
-        "hash": "634cc55bf066"
-    },
-    "title": "Make it possible to create a Unit object from a YTQuantity",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2563"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
-            },
-            "html": {
-                "href": "https://bitbucket.org/xarthisius/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Kacper Kowalik",
-        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-        "username": "xarthisius"
-    },
-    "id": 2563,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/8b2147a1a06c"
-                }
-            },
-            "hash": "8b2147a1a06c"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,25 +48,127 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "8b2147a1a06c",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e0add337739c"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/8b2147a1a06c"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "xarthisius",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
+            },
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
+    },
+    "title": "Make it possible to create a Unit object from a YTQuantity",
+    "id": 2563,
+    "comment_count": 1,
+    "created_on": "2017-03-28T00:05:39.525814+00:00",
+    "merge_commit": {
+        "hash": "634cc55bf066",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/634cc55bf066"
+            }
+        }
+    },
+    "comments": [
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1575/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1576/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1576/artifact/sandbox/doc/build/html/index.html\n",
+                "html": "<ul>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1575/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1575/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1576/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1576/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1576/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1576/artifact/sandbox/doc/build/html/index.html</a></li>\n</ul>"
+            },
+            "user": {
+                "username": "yt-fido",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/comments/33952073"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2563/_/diff#comment-33952073"
                 }
             },
-            "hash": "e0add337739c"
+            "created_on": "2017-03-28T00:59:27.583269+00:00",
+            "updated_on": "2017-03-28T01:53:13.820065+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2563"
+                    }
+                },
+                "title": "Make it possible to create a Unit object from a YTQuantity",
+                "id": 2563
+            },
+            "type": "pullrequest_comment",
+            "id": 33952073
+        }
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "I discovered this was an issue while experimenting with the `UnitSystem` machinery. I wanted to be able to write a line like this:\r\n\r\n```\r\nus = UnitSystem('custom', 'angstrom', electron_mass, 's', current_mks_unit=elementary_charge)\r\n```\r\n\r\nCurrently this fails with a unit parse error because the `Unit` object doesn't do the right thing when it's handed a YTQuantity. Rather than sanitizing the input to `UnitSystem` I figure let's just make the `Unit` class do the right thing when it's handed a YTQuantity.\r\n\r\nThis is a little tricky because I need to avoid a circular import, since `YTArray` needs to be able to import `Unit`. Rather than doing import tricks and using `isinstance`, instead I use `hasattr` to check that whatever we're handed looks sufficiently like a `YTArray`. If reviewers would prefer for me to implement this another way please let me know.\r\n\r\nFinally I also noticed that `UnitSystem` isn't in the API docs, so I've added it.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
         },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2017-04-21T11:36:46.794991+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -140,59 +181,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
-        }
-    },
-    "comments": [
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt-fido/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
-            },
-            "type": "pullrequest_comment",
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "e0add337739c",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563/comments/33952073"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2563/_/diff#comment-33952073"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e0add337739c"
                 }
-            },
-            "pullrequest": {
-                "title": "Make it possible to create a Unit object from a YTQuantity",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2563"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2563"
-                    }
-                },
-                "id": 2563
-            },
-            "content": {
-                "raw": "* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_docs/1575/\n* Docs were built for this PR. See https://tests.yt-project.org/job/yt_docs/1576/. Docs build visible at https://tests.yt-project.org/job/yt_docs/1576/artifact/sandbox/doc/build/html/index.html\n",
-                "html": "<ul>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_docs/1575/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1575/</a></li>\n<li>Docs were built for this PR. See <a href=\"https://tests.yt-project.org/job/yt_docs/1576/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1576/</a>. Docs build visible at <a href=\"https://tests.yt-project.org/job/yt_docs/1576/artifact/sandbox/doc/build/html/index.html\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_docs/1576/artifact/sandbox/doc/build/html/index.html</a></li>\n</ul>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-03-28T00:59:27.583269+00:00",
-            "updated_on": "2017-03-28T01:53:13.820065+00:00",
-            "id": 33952073
+            }
+        },
+        "branch": {
+            "name": "yt"
         }
-    ]
+    }
 }

@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2013-05-10T22:32:55.354617+00:00",
-    "comment_count": 10,
-    "description": "This closes two open issues related to the plot window plotting code and also includes a couple of other minor touchups.\r\n\r\nThis closes #561, making it possible to do the following:\r\n\r\n\r\n```\r\n#!python\r\n\r\nslc = SlicePlot(pf, 0, 'Density')\r\nslc.set_width((10,'kpc'), (20, 'kpc'))\r\n```\r\n\r\nI haven't documented this since it's implemented in a sort of hacky way (overriding the `unit` keyword).  I don't think we should advertise this functionality but it seems to be something that people want to do intuitively and it's a shame to error out when we can catch it and do exactly what the user wants.  I've added a test to verify that this use case does what it's supposed to do.\r\n\r\nAdditionally I do a bit more error checking and input sanitization via the new `assert_valid_width_tuple()` function.  This will hopefully help users debug incorrect width tuples.  Just an example:\r\n\r\n\r\n```\r\n#!python\r\n\r\n>>> slc.set_width(('furlongs', 23))\r\nTraceback (most recent call last):\r\n  File \"<stdin>\", line 1, in <module>\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 87, in newfunc\r\n    rv = f(*args, **kwargs)\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 487, in set_width\r\n    assert_valid_width_tuple(width)\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 165, in assert_valid_width_tuple\r\n    raise YTInvalidWidthError(e)\r\nyt.utilities.exceptions.YTInvalidWidthError: width (('furlongs', 23)) is invalid. Valid widths look like this: (12, 'au')\r\n```\r\n\r\nSecond, this closes #536, making it possible to set the font color via the `set_font` function. I've also touched up the docstrings for `set_font`, giving a lot more detail without resorting to matplotlib's docs.\r\n\r\nLast, I've removed the `max_level` keyword for ProjectionPlot.  If users want to make a plot with `max_level`, they can generate a custom projection object and use either `to_pw()` or `data_source`, there's no need for the keyword argument to be attached to ProjectionPlot.",
-    "created_on": "2013-05-09T08:32:21.429521+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/eba217216a22"
-            }
-        },
-        "hash": "eba217216a22"
-    },
-    "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/chummels"
-            },
-            "html": {
-                "href": "https://bitbucket.org/chummels/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/chummels/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "chummels",
-        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-        "username": "chummels"
-    },
-    "id": 496,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/16d8e27e4f93"
-                }
-            },
-            "hash": "16d8e27e4f93"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "16d8e27e4f93",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/70ad437a12e2"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/16d8e27e4f93"
                 }
-            },
-            "hash": "70ad437a12e2"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "chummels",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
+    },
+    "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
+    "id": 496,
+    "comment_count": 10,
+    "created_on": "2013-05-09T08:32:21.429521+00:00",
+    "merge_commit": {
+        "hash": "eba217216a22",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/eba217216a22"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hmm, I like the idea here, but my *preference* would be to stick closer to what we use elsewhere.  For instance, inside definitions to call it something like `NumericTypes` and then making that a tuple that consists of `types.IntType, types.FloatType, types.LongType`.",
+                "html": "<p>Hmm, I like the idea here, but my <em>preference</em> would be to stick closer to what we use elsewhere.  For instance, inside definitions to call it something like <code>NumericTypes</code> and then making that a tuple that consists of <code>types.IntType, types.FloatType, types.LongType</code>.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -158,25 +112,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244077"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244077"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
                 }
             },
+            "created_on": "2013-05-09T20:46:43.213436+00:00",
+            "updated_on": "2013-05-09T20:46:43.222933+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -186,24 +138,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "Hmm, I like the idea here, but my *preference* would be to stick closer to what we use elsewhere.  For instance, inside definitions to call it something like `NumericTypes` and then making that a tuple that consists of `types.IntType, types.FloatType, types.LongType`.",
-                "html": "<p>Hmm, I like the idea here, but my <em>preference</em> would be to stick closer to what we use elsewhere.  For instance, inside definitions to call it something like <code>NumericTypes</code> and then making that a tuple that consists of <code>types.IntType, types.FloatType, types.LongType</code>.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-09T20:46:43.213436+00:00",
-            "updated_on": "2013-05-09T20:46:43.222933+00:00",
             "inline": {
-                "from": null,
+                "to": 160,
                 "path": "yt/visualization/plot_window.py",
-                "to": 160
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 244077
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "can we use the construction \"as e\" ?",
+                "html": "<p>can we use the construction \"as e\" ?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -215,25 +169,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244080"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244080"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
                 }
             },
+            "created_on": "2013-05-09T20:47:30.648135+00:00",
+            "updated_on": "2013-05-09T20:47:30.655765+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -243,24 +195,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "can we use the construction \"as e\" ?",
-                "html": "<p>can we use the construction \"as e\" ?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-09T20:47:30.648135+00:00",
-            "updated_on": "2013-05-09T20:47:30.655765+00:00",
             "inline": {
-                "from": null,
+                "to": 164,
                 "path": "yt/visualization/plot_window.py",
-                "to": 164
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 244080
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I tested that and unfortunately due to the way `AssertionError`s work, it has to be like this.",
+                "html": "<p>I tested that and unfortunately due to the way <code>AssertionError</code>s work, it has to be like this.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -272,22 +226,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244083"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244083"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -300,8 +240,19 @@
                 },
                 "id": 244080
             },
+            "created_on": "2013-05-09T20:49:02.687209+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244083"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244083"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                }
+            },
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -311,24 +262,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "I tested that and unfortunately due to the way `AssertionError`s work, it has to be like this.",
-                "html": "<p>I tested that and unfortunately due to the way <code>AssertionError</code>s work, it has to be like this.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-09T20:49:02.687209+00:00",
-            "updated_on": "2013-05-09T20:49:02.706221+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_window.py",
-                "to": null
+                "from": null
             },
-            "id": 244083
+            "type": "pullrequest_comment",
+            "id": 244083,
+            "updated_on": "2013-05-09T20:49:02.706221+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Alright, sounds good.  It's not too important to catch it here anyway.",
+                "html": "<p>Alright, sounds good.  It's not too important to catch it here anyway.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -340,22 +294,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244085"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244085"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -368,8 +308,19 @@
                 },
                 "id": 244083
             },
+            "created_on": "2013-05-09T20:49:28.052609+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244085"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244085"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                }
+            },
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -379,24 +330,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "Alright, sounds good.  It's not too important to catch it here anyway.",
-                "html": "<p>Alright, sounds good.  It's not too important to catch it here anyway.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-09T20:49:28.052609+00:00",
-            "updated_on": "2013-05-09T20:49:28.060007+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_window.py",
-                "to": null
+                "from": null
             },
-            "id": 244085
+            "type": "pullrequest_comment",
+            "id": 244085,
+            "updated_on": "2013-05-09T20:49:28.060007+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This feels like it wants to be a function, no?  And isn't a lot of this duplicated inside `StandardWidth`?",
+                "html": "<p>This feels like it wants to be a function, no?  And isn't a lot of this duplicated inside <code>StandardWidth</code>?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -408,25 +362,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244089"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244089"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
                 }
             },
+            "created_on": "2013-05-09T20:51:46.010288+00:00",
+            "updated_on": "2013-05-09T20:51:46.017583+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -436,24 +388,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "This feels like it wants to be a function, no?  And isn't a lot of this duplicated inside `StandardWidth`?",
-                "html": "<p>This feels like it wants to be a function, no?  And isn't a lot of this duplicated inside <code>StandardWidth</code>?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-09T20:51:46.010288+00:00",
-            "updated_on": "2013-05-09T20:51:46.017583+00:00",
             "inline": {
-                "from": null,
+                "to": 478,
                 "path": "yt/visualization/plot_window.py",
-                "to": 478
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 244089
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think there's a way to use InterSphinx here to link directly to it, maybe with `:class:` or something?",
+                "html": "<p>I think there's a way to use InterSphinx here to link directly to it, maybe with <code>:class:</code> or something?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -465,25 +419,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244091"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244091"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:1f9bf12e30c6..c2bb4cf6028a?path=yt%2Fvisualization%2Fplot_window.py"
                 }
             },
+            "created_on": "2013-05-09T20:52:42.607636+00:00",
+            "updated_on": "2013-05-09T20:52:42.615987+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -493,24 +445,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "I think there's a way to use InterSphinx here to link directly to it, maybe with `:class:` or something?",
-                "html": "<p>I think there's a way to use InterSphinx here to link directly to it, maybe with <code>:class:</code> or something?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-09T20:52:42.607636+00:00",
-            "updated_on": "2013-05-09T20:52:42.615987+00:00",
             "inline": {
-                "from": null,
+                "to": 956,
                 "path": "yt/visualization/plot_window.py",
-                "to": 956
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 244091
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Pending comments, I am okay with this.  But the removal of `max_level` should be brought up on `yt-dev`.",
+                "html": "<p>Pending comments, I am okay with this.  But the removal of <code>max_level</code> should be brought up on <code>yt-dev</code>.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -522,12 +476,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244094"
@@ -536,8 +487,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244094"
                 }
             },
+            "created_on": "2013-05-09T20:53:15.678364+00:00",
+            "updated_on": "2013-05-09T20:53:15.860190+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -547,19 +499,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "Pending comments, I am okay with this.  But the removal of `max_level` should be brought up on `yt-dev`.",
-                "html": "<p>Pending comments, I am okay with this.  But the removal of <code>max_level</code> should be brought up on <code>yt-dev</code>.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-09T20:53:15.678364+00:00",
-            "updated_on": "2013-05-09T20:53:15.860190+00:00",
+            "type": "pullrequest_comment",
             "id": 244094
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "In response to the e-mail discussion about `max_level`, I've backed out the changeset that stripped it out.\n\nI've also fixed another issue that I noticed after @juxtaposicion pasted an image to IRC just now.  Right now the `offset_text` font isn't being set correctly.  The latest change in this PR fixes that.\n\nBefore:\n![](http://i.imgur.com/rMwz7Nf.png)\nAfter:\n![](http://i.imgur.com/p1zzRT4.png)\n",
+                "html": "<p>In response to the e-mail discussion about <code>max_level</code>, I've backed out the changeset that stripped it out.</p>\n<p>I've also fixed another issue that I noticed after <a href=\"/juxtaposicion/\" rel=\"nofollow\" title=\"@juxtaposicion\" class=\"mention\">Christopher Moody</a> pasted an image to IRC just now.  Right now the <code>offset_text</code> font isn't being set correctly.  The latest change in this PR fixes that.</p>\n<p>Before:\n<img alt=\"\" src=\"http://i.imgur.com/rMwz7Nf.png\" />\nAfter:\n<img alt=\"\" src=\"http://i.imgur.com/p1zzRT4.png\" /></p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -571,12 +525,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/244500"
@@ -585,8 +536,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-244500"
                 }
             },
+            "created_on": "2013-05-10T02:41:34.720663+00:00",
+            "updated_on": "2013-05-10T02:41:34.738587+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -596,19 +548,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "In response to the e-mail discussion about `max_level`, I've backed out the changeset that stripped it out.\n\nI've also fixed another issue that I noticed after @juxtaposicion pasted an image to IRC just now.  Right now the `offset_text` font isn't being set correctly.  The latest change in this PR fixes that.\n\nBefore:\n![](http://i.imgur.com/rMwz7Nf.png)\nAfter:\n![](http://i.imgur.com/p1zzRT4.png)\n",
-                "html": "<p>In response to the e-mail discussion about <code>max_level</code>, I've backed out the changeset that stripped it out.</p>\n<p>I've also fixed another issue that I noticed after <a href=\"/juxtaposicion/\" rel=\"nofollow\" title=\"@juxtaposicion\" class=\"mention\">Christopher Moody</a> pasted an image to IRC just now.  Right now the <code>offset_text</code> font isn't being set correctly.  The latest change in this PR fixes that.</p>\n<p>Before:\n<img alt=\"\" src=\"http://i.imgur.com/rMwz7Nf.png\" />\nAfter:\n<img alt=\"\" src=\"http://i.imgur.com/p1zzRT4.png\" /></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-10T02:41:34.720663+00:00",
-            "updated_on": "2013-05-10T02:41:34.738587+00:00",
+            "type": "pullrequest_comment",
             "id": 244500
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Looks great, Nathan.  I've approved, and once we have a few more we should accept.  @chummels should be the person to Merge.",
+                "html": "<p>Looks great, Nathan.  I've approved, and once we have a few more we should accept.  <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">chummels</a> should be the person to Merge.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -620,12 +574,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/245809"
@@ -634,8 +585,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-245809"
                 }
             },
+            "created_on": "2013-05-10T17:36:44.570920+00:00",
+            "updated_on": "2013-05-10T17:36:44.588892+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -645,19 +597,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "Looks great, Nathan.  I've approved, and once we have a few more we should accept.  @chummels should be the person to Merge.",
-                "html": "<p>Looks great, Nathan.  I've approved, and once we have a few more we should accept.  <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> should be the person to Merge.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-10T17:36:44.570920+00:00",
-            "updated_on": "2013-05-10T17:36:44.588892+00:00",
+            "type": "pullrequest_comment",
             "id": 245809
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think these changes are good.  I'm sorry to be such a stickler on things, but I'm glad that we left in the backwards capability with the max_level functionality.  It will help scripts not to break.",
+                "html": "<p>I think these changes are good.  I'm sorry to be such a stickler on things, but I'm glad that we left in the backwards capability with the max_level functionality.  It will help scripts not to break.</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -669,12 +623,9 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/496/comments/246305"
@@ -683,8 +634,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496/_/diff#comment-246305"
                 }
             },
+            "created_on": "2013-05-10T22:32:43.851043+00:00",
+            "updated_on": "2013-05-10T22:32:43.858571+00:00",
             "pullrequest": {
-                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -694,16 +646,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/496"
                     }
                 },
+                "title": "Plot window improvements: set_width, set_font, and no more max_level for ProjectionPlot.",
                 "id": 496
             },
-            "content": {
-                "raw": "I think these changes are good.  I'm sorry to be such a stickler on things, but I'm glad that we left in the backwards capability with the max_level functionality.  It will help scripts not to break.",
-                "html": "<p>I think these changes are good.  I'm sorry to be such a stickler on things, but I'm glad that we left in the backwards capability with the max_level functionality.  It will help scripts not to break.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-10T22:32:43.851043+00:00",
-            "updated_on": "2013-05-10T22:32:43.858571+00:00",
+            "type": "pullrequest_comment",
             "id": 246305
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This closes two open issues related to the plot window plotting code and also includes a couple of other minor touchups.\r\n\r\nThis closes #561, making it possible to do the following:\r\n\r\n\r\n```\r\n#!python\r\n\r\nslc = SlicePlot(pf, 0, 'Density')\r\nslc.set_width((10,'kpc'), (20, 'kpc'))\r\n```\r\n\r\nI haven't documented this since it's implemented in a sort of hacky way (overriding the `unit` keyword).  I don't think we should advertise this functionality but it seems to be something that people want to do intuitively and it's a shame to error out when we can catch it and do exactly what the user wants.  I've added a test to verify that this use case does what it's supposed to do.\r\n\r\nAdditionally I do a bit more error checking and input sanitization via the new `assert_valid_width_tuple()` function.  This will hopefully help users debug incorrect width tuples.  Just an example:\r\n\r\n\r\n```\r\n#!python\r\n\r\n>>> slc.set_width(('furlongs', 23))\r\nTraceback (most recent call last):\r\n  File \"<stdin>\", line 1, in <module>\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 87, in newfunc\r\n    rv = f(*args, **kwargs)\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 487, in set_width\r\n    assert_valid_width_tuple(width)\r\n  File \"/Users/goldbaum/Documents/yt-hg/yt/visualization/plot_window.py\", line 165, in assert_valid_width_tuple\r\n    raise YTInvalidWidthError(e)\r\nyt.utilities.exceptions.YTInvalidWidthError: width (('furlongs', 23)) is invalid. Valid widths look like this: (12, 'au')\r\n```\r\n\r\nSecond, this closes #536, making it possible to set the font color via the `set_font` function. I've also touched up the docstrings for `set_font`, giving a lot more detail without resorting to matplotlib's docs.\r\n\r\nLast, I've removed the `max_level` keyword for ProjectionPlot.  If users want to make a plot with `max_level`, they can generate a custom projection object and use either `to_pw()` or `data_source`, there's no need for the keyword argument to be attached to ProjectionPlot.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2013-05-10T22:32:55.354617+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "70ad437a12e2",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/70ad437a12e2"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

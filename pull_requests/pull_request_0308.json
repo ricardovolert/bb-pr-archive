@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2012-10-23T22:53:35.202116+00:00",
-    "comment_count": 10,
-    "description": "This pull request includes an answer testing plugin for Nose, as well as a mechanism by which this plugin can be used to upload new results and compare existing results to a gold standard, stored in Amazon.\r\n\r\n## How does Answer Testing work now?\r\n\r\nCurrently, Answer Testing in yt works by running a completely home-grown test runner, discoverer, and storage system.  This works on a single parameter file at a time, and there is little flexibility in how the parameter files are tested.  For instance, you cannot select fields based on the code that generated the pf.  This catches many but not all errors, and can only test Enzo and FLASH.\r\n\r\nWhen a new set of \"reliable\" tests has been identified, it is tarred up and uploaded.  No one ever really used them, and it's difficult to run them unless you're on Matt's machine.\r\n\r\n## What does this do?\r\n\r\nThere are two ways in which this can function:\r\n\r\n * Pull down results for a given parameter file and compare the locally-created results against them\r\n * Run new results and upload those to S3\r\n\r\nThese are not meant to co-exist.  In fact, the ideal method of operation is that when the answer tests are changed *intentionally*, new gold standards are generated and pushed to S3 by one of a trusted set of users.  (New users can be added, with the privs necessary to push a new set of tests.)\r\n\r\nThis adds a new config option to `~/.yt/config` in the `[yt]` section: `test_data_dir`, which is where parameter files (such as \"IsolatedGalaxy\" and \"DD0010\" from yt's distribution) can be found.  When the nosetests are run, any parameter files it finds in that directory will be used as answer testing input.  In `yt/frontends/enzo/tests/test_outputs.py` is the Enzo frontend tests that rely on parameter files.  Note that right now, the standard AMR tests are quite extensive and generate a lot of data; I am still in the process of creating new tests to replicate the old answer tests, and also slimming it down for big datasets.\r\n\r\nTo run a comparison, you must first run \"develop\" so that the new nose plugin becomes available.  Then, in the yt directory,\r\n\r\n`nosetests --with-answer-testing frontends/enzo/ --answer-compare=gold001`\r\n\r\nTo run a set of tests and *store* them:\r\n\r\n`nosetests --with-answer-testing frontends/enzo/ --answer-store --answer-name=gold001`\r\n\r\nWe can now not only run answer tests, but we don't have to manage (manually or otherwise) the uploads.  yt will do this for us, using boto.  Down the road we can swap out Amazon for any OpenStack-compliant cloud provider, such as SDSC's cloud.\r\n\r\nAdditionally, we can now add answer testing of small data to Shining Panda.  In the future, we can add answer testing of large data with lower frequency, as well.\r\n\r\n## What's Next?\r\n\r\nBecause there's a lot to take in, I'd like to suggest this PR not be accepted as-is.  There are a few items that need to be done first:\r\n\r\n * The developer community needs to be brought in on this; I would like to suggest either a hangout or an IRC meeting to discuss how this works.  I'd also encourage others to pull this PR, run the nosetests command that compares data, and figure out if they like how it looks.\r\n * The old tests all need to be replicated.  This means things like projections turned into pixel buffers, field statistics (without storing the fields)\r\n * Tests need to be added for other frontends.  I am currently working with other frontend maintainers to get data, but once we've gotten it, we need to add tests as is done for Enzo.  This means FLASH, Nyx, Orion, as well as any others that would like to be on the testing suite.\r\n\r\nI'd like to encourage specific comments on lines of code to be left here, as well as comments on the actual structure of the code, but I'll be forwarding this PR to yt-dev and asking for broader comments there.  I think that having a single, integrated testing system that can test a subset of parameter files (as well as auto-discover them) will be extremely valuable for ensuring maintainability.  I'm really excited about this.\r\n\r\n*UPDATE 1*: Added separate bigdata/smalldata tests.\r\n\r\n*UPDATE 2*: Re-enabled answer testing comparisons against gold001, added a big_data option to the test runner plugin, and also to the `requires_pf` decorator.  Thanks to @ngoldbaum for heads up on the typo!\r\n\r\n*UPDATE 3*: This now works in Shining Panda.  I think it's ready for acceptance at this time.\r\n\r\n*UPDATE 4*: Fixes Nathan's reported bugs with the big data test",
-    "created_on": "2012-10-19T02:28:18.049640+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/dd8b7e82f5ee"
-            }
-        },
-        "hash": "dd8b7e82f5ee"
-    },
-    "title": "Answer testing plugin for Nose",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "id": 308,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/a70531b61894"
-                }
-            },
-            "hash": "a70531b61894"
-        },
         "repository": {
             "full_name": "MatthewTurk/yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "a70531b61894",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/82c77ccccc39"
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/a70531b61894"
                 }
-            },
-            "hash": "82c77ccccc39"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "Answer testing plugin for Nose",
+    "id": 308,
+    "comment_count": 10,
+    "created_on": "2012-10-19T02:28:18.049640+00:00",
+    "merge_commit": {
+        "hash": "dd8b7e82f5ee",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/dd8b7e82f5ee"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I should note that when this is accepted, it will close YT-2 .",
+                "html": "<p>I should note that when this is accepted, it will close <a href=\"https://yt-project.atlassian.net/browse/YT-2\" rel=\"nofollow\">YT-2</a> .</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/26933"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-26933"
                 }
             },
+            "created_on": "2012-10-19T02:29:05.997221+00:00",
+            "updated_on": "2012-10-19T02:29:06.007144+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "I should note that when this is accepted, it will close YT-2 .",
-                "html": "<p>I should note that when this is accepted, it will close <a href=\"https://yt-project.atlassian.net/browse/YT-2\" rel=\"nofollow\">YT-2</a> .</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-19T02:29:05.997221+00:00",
-            "updated_on": "2012-10-19T02:29:06.007144+00:00",
+            "type": "pullrequest_comment",
             "id": 26933
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Matt just walked me through this and I think it works quite well.  It is easy to see where the tests are setup and how they are selected to run with different datasets.  In my opinion, this will make both running the tests and creating new ones a lot simpler and should lower the barrier for people getting involved.  If we put all the datasets required for testing in the same location that will also help.\n\nThis new framework does not allow for offline testing as the results downloaded from Amazon are only stored in memory.  I can live with this for this iteration, but it might be nice in the future to have an option to download and store the comparison results.\n\nI encourage other people to check this out and see how much nicer it is.",
+                "html": "<p>Matt just walked me through this and I think it works quite well.  It is easy to see where the tests are setup and how they are selected to run with different datasets.  In my opinion, this will make both running the tests and creating new ones a lot simpler and should lower the barrier for people getting involved.  If we put all the datasets required for testing in the same location that will also help.</p>\n<p>This new framework does not allow for offline testing as the results downloaded from Amazon are only stored in memory.  I can live with this for this iteration, but it might be nice in the future to have an option to download and store the comparison results.</p>\n<p>I encourage other people to check this out and see how much nicer it is.</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -207,12 +161,9 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/28432"
@@ -221,8 +172,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-28432"
                 }
             },
+            "created_on": "2012-10-22T20:31:47.810572+00:00",
+            "updated_on": "2012-10-22T20:31:47.815429+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -232,19 +184,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "Matt just walked me through this and I think it works quite well.  It is easy to see where the tests are setup and how they are selected to run with different datasets.  In my opinion, this will make both running the tests and creating new ones a lot simpler and should lower the barrier for people getting involved.  If we put all the datasets required for testing in the same location that will also help.\n\nThis new framework does not allow for offline testing as the results downloaded from Amazon are only stored in memory.  I can live with this for this iteration, but it might be nice in the future to have an option to download and store the comparison results.\n\nI encourage other people to check this out and see how much nicer it is.",
-                "html": "<p>Matt just walked me through this and I think it works quite well.  It is easy to see where the tests are setup and how they are selected to run with different datasets.  In my opinion, this will make both running the tests and creating new ones a lot simpler and should lower the barrier for people getting involved.  If we put all the datasets required for testing in the same location that will also help.</p>\n<p>This new framework does not allow for offline testing as the results downloaded from Amazon are only stored in memory.  I can live with this for this iteration, but it might be nice in the future to have an option to download and store the comparison results.</p>\n<p>I encourage other people to check this out and see how much nicer it is.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-22T20:31:47.810572+00:00",
-            "updated_on": "2012-10-22T20:31:47.815429+00:00",
+            "type": "pullrequest_comment",
             "id": 28432
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "There's a typo here.",
+                "html": "<p>There's a typo here.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -256,25 +210,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/28640"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:65afdb7dbe7d..82c77ccccc39?path=yt%2Futilities%2Fanswer_testing%2Fframework.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-28640"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:65afdb7dbe7d..82c77ccccc39?path=yt%2Futilities%2Fanswer_testing%2Fframework.py"
                 }
             },
+            "created_on": "2012-10-23T05:47:28.068409+00:00",
+            "updated_on": "2012-10-23T05:47:28.079598+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -284,24 +236,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "There's a typo here.",
-                "html": "<p>There's a typo here.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T05:47:28.068409+00:00",
-            "updated_on": "2012-10-23T05:47:28.079598+00:00",
             "inline": {
-                "from": null,
+                "to": 151,
                 "path": "yt/utilities/answer_testing/framework.py",
-                "to": 151
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 28640
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Matt,\n\nThis is really great.  I like how this democratizes the testing process.\n\nOnce this is accepted I'd like to add my yt repository on bitbucket to ShiningPanda so I get test results after every commit!\n\nAfter fixing the typo I pointed our below, a number of tests fail for me: http://pastebin.com/NzRNVw5V  \n\nIt looks like all of the failures are due to shape mistmatches in the comparisons.  Do you have any idea what's going on?",
+                "html": "<p>Hi Matt,</p>\n<p>This is really great.  I like how this democratizes the testing process.</p>\n<p>Once this is accepted I'd like to add my yt repository on bitbucket to ShiningPanda so I get test results after every commit!</p>\n<p>After fixing the typo I pointed our below, a number of tests fail for me: <a href=\"http://pastebin.com/NzRNVw5V\" rel=\"nofollow\">http://pastebin.com/NzRNVw5V</a>  </p>\n<p>It looks like all of the failures are due to shape mistmatches in the comparisons.  Do you have any idea what's going on?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -313,12 +267,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/28641"
@@ -327,8 +278,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-28641"
                 }
             },
+            "created_on": "2012-10-23T05:59:42.639114+00:00",
+            "updated_on": "2012-10-23T05:59:42.644839+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -338,19 +290,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "Hi Matt,\n\nThis is really great.  I like how this democratizes the testing process.\n\nOnce this is accepted I'd like to add my yt repository on bitbucket to ShiningPanda so I get test results after every commit!\n\nAfter fixing the typo I pointed our below, a number of tests fail for me: http://pastebin.com/NzRNVw5V  \n\nIt looks like all of the failures are due to shape mistmatches in the comparisons.  Do you have any idea what's going on?",
-                "html": "<p>Hi Matt,</p>\n<p>This is really great.  I like how this democratizes the testing process.</p>\n<p>Once this is accepted I'd like to add my yt repository on bitbucket to ShiningPanda so I get test results after every commit!</p>\n<p>After fixing the typo I pointed our below, a number of tests fail for me: <a href=\"http://pastebin.com/NzRNVw5V\" rel=\"nofollow\">http://pastebin.com/NzRNVw5V</a>  </p>\n<p>It looks like all of the failures are due to shape mistmatches in the comparisons.  Do you have any idea what's going on?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T05:59:42.639114+00:00",
-            "updated_on": "2012-10-23T05:59:42.644839+00:00",
+            "type": "pullrequest_comment",
             "id": 28641
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Nathan,\n\nYup, I have a great idea what's wrong -- I updated the tests, but not the test results!  I think that means the system works.  :)  I've now updated the PR and the test results for gold001.\n\nI think this might mean we're ready to go once the Wiki goes up?",
+                "html": "<p>Hi Nathan,</p>\n<p>Yup, I have a great idea what's wrong -- I updated the tests, but not the test results!  I think that means the system works.  :)  I've now updated the PR and the test results for gold001.</p>\n<p>I think this might mean we're ready to go once the Wiki goes up?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -362,12 +316,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29017"
@@ -376,8 +327,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29017"
                 }
             },
+            "created_on": "2012-10-23T18:19:22.503124+00:00",
+            "updated_on": "2012-10-23T18:19:22.512639+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -387,19 +339,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "Hi Nathan,\n\nYup, I have a great idea what's wrong -- I updated the tests, but not the test results!  I think that means the system works.  :)  I've now updated the PR and the test results for gold001.\n\nI think this might mean we're ready to go once the Wiki goes up?",
-                "html": "<p>Hi Nathan,</p>\n<p>Yup, I have a great idea what's wrong -- I updated the tests, but not the test results!  I think that means the system works.  :)  I've now updated the PR and the test results for gold001.</p>\n<p>I think this might mean we're ready to go once the Wiki goes up?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T18:19:22.503124+00:00",
-            "updated_on": "2012-10-23T18:19:22.512639+00:00",
+            "type": "pullrequest_comment",
             "id": 29017
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Tried it just now - all tests pass.",
+                "html": "<p>Tried it just now - all tests pass.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -411,19 +365,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29023"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29023"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -436,8 +379,16 @@
                 },
                 "id": 29017
             },
+            "created_on": "2012-10-23T18:26:49.517620+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29023"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29023"
+                }
+            },
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -447,19 +398,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "Tried it just now - all tests pass.",
-                "html": "<p>Tried it just now - all tests pass.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T18:26:49.517620+00:00",
-            "updated_on": "2012-10-23T18:26:49.528151+00:00",
-            "id": 29023
+            "type": "pullrequest_comment",
+            "id": 29023,
+            "updated_on": "2012-10-23T18:26:49.528151+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can you give some more detail on the big_data option?",
+                "html": "<p>Can you give some more detail on the big_data option?</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -471,12 +425,9 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29071"
@@ -485,8 +436,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29071"
                 }
             },
+            "created_on": "2012-10-23T19:59:51.063805+00:00",
+            "updated_on": "2012-10-23T19:59:51.069052+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -496,19 +448,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "Can you give some more detail on the big_data option?",
-                "html": "<p>Can you give some more detail on the big_data option?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T19:59:51.063805+00:00",
-            "updated_on": "2012-10-23T19:59:51.069052+00:00",
+            "type": "pullrequest_comment",
             "id": 29071
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Britton, sure.  It's just a toggle, really, and I named it big data because I wanted it to toggle whether we ran it on things that are likely to take a long time -- for instance, we don't want to run the galaxy0030 tests every single push to the repo, because they take ~5 minutes, but we do want to run the little data tests every time.  This just toggles whether we do or not, and it is supplied on the command line.  Does that make sense?",
+                "html": "<p>Hi Britton, sure.  It's just a toggle, really, and I named it big data because I wanted it to toggle whether we ran it on things that are likely to take a long time -- for instance, we don't want to run the galaxy0030 tests every single push to the repo, because they take ~5 minutes, but we do want to run the little data tests every time.  This just toggles whether we do or not, and it is supplied on the command line.  Does that make sense?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -520,12 +474,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29077"
@@ -534,8 +485,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29077"
                 }
             },
+            "created_on": "2012-10-23T20:19:52.576921+00:00",
+            "updated_on": "2012-10-23T20:19:52.586551+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -545,19 +497,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "Hi Britton, sure.  It's just a toggle, really, and I named it big data because I wanted it to toggle whether we ran it on things that are likely to take a long time -- for instance, we don't want to run the galaxy0030 tests every single push to the repo, because they take ~5 minutes, but we do want to run the little data tests every time.  This just toggles whether we do or not, and it is supplied on the command line.  Does that make sense?",
-                "html": "<p>Hi Britton, sure.  It's just a toggle, really, and I named it big data because I wanted it to toggle whether we ran it on things that are likely to take a long time -- for instance, we don't want to run the galaxy0030 tests every single push to the repo, because they take ~5 minutes, but we do want to run the little data tests every time.  This just toggles whether we do or not, and it is supplied on the command line.  Does that make sense?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T20:19:52.576921+00:00",
-            "updated_on": "2012-10-23T20:19:52.586551+00:00",
+            "type": "pullrequest_comment",
             "id": 29077
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yes, thank you!",
+                "html": "<p>Yes, thank you!</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -569,19 +523,8 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29083"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29083"
-                }
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
             "parent": {
                 "links": {
@@ -594,8 +537,16 @@
                 },
                 "id": 29077
             },
+            "created_on": "2012-10-23T20:24:38.168325+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29083"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29083"
+                }
+            },
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -605,19 +556,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "Yes, thank you!",
-                "html": "<p>Yes, thank you!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T20:24:38.168325+00:00",
-            "updated_on": "2012-10-23T20:24:38.173905+00:00",
-            "id": 29083
+            "type": "pullrequest_comment",
+            "id": 29083,
+            "updated_on": "2012-10-23T20:24:38.173905+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I've added a wiki page https://bitbucket.org/yt_analysis/yt/wiki/AnswerTesting",
+                "html": "<p>I've added a wiki page <a href=\"https://bitbucket.org/yt_analysis/yt/wiki/AnswerTesting\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/wiki/AnswerTesting</a></p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -629,12 +583,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/308/comments/29087"
@@ -643,8 +594,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308/_/diff#comment-29087"
                 }
             },
+            "created_on": "2012-10-23T20:34:33.634781+00:00",
+            "updated_on": "2012-10-23T20:34:33.639735+00:00",
             "pullrequest": {
-                "title": "Answer testing plugin for Nose",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -654,16 +606,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/308"
                     }
                 },
+                "title": "Answer testing plugin for Nose",
                 "id": 308
             },
-            "content": {
-                "raw": "I've added a wiki page https://bitbucket.org/yt_analysis/yt/wiki/AnswerTesting",
-                "html": "<p>I've added a wiki page <a href=\"https://bitbucket.org/yt_analysis/yt/wiki/AnswerTesting\" rel=\"nofollow\">https://bitbucket.org/yt_analysis/yt/wiki/AnswerTesting</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2012-10-23T20:34:33.634781+00:00",
-            "updated_on": "2012-10-23T20:34:33.639735+00:00",
+            "type": "pullrequest_comment",
             "id": 29087
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This pull request includes an answer testing plugin for Nose, as well as a mechanism by which this plugin can be used to upload new results and compare existing results to a gold standard, stored in Amazon.\r\n\r\n## How does Answer Testing work now?\r\n\r\nCurrently, Answer Testing in yt works by running a completely home-grown test runner, discoverer, and storage system.  This works on a single parameter file at a time, and there is little flexibility in how the parameter files are tested.  For instance, you cannot select fields based on the code that generated the pf.  This catches many but not all errors, and can only test Enzo and FLASH.\r\n\r\nWhen a new set of \"reliable\" tests has been identified, it is tarred up and uploaded.  No one ever really used them, and it's difficult to run them unless you're on Matt's machine.\r\n\r\n## What does this do?\r\n\r\nThere are two ways in which this can function:\r\n\r\n * Pull down results for a given parameter file and compare the locally-created results against them\r\n * Run new results and upload those to S3\r\n\r\nThese are not meant to co-exist.  In fact, the ideal method of operation is that when the answer tests are changed *intentionally*, new gold standards are generated and pushed to S3 by one of a trusted set of users.  (New users can be added, with the privs necessary to push a new set of tests.)\r\n\r\nThis adds a new config option to `~/.yt/config` in the `[yt]` section: `test_data_dir`, which is where parameter files (such as \"IsolatedGalaxy\" and \"DD0010\" from yt's distribution) can be found.  When the nosetests are run, any parameter files it finds in that directory will be used as answer testing input.  In `yt/frontends/enzo/tests/test_outputs.py` is the Enzo frontend tests that rely on parameter files.  Note that right now, the standard AMR tests are quite extensive and generate a lot of data; I am still in the process of creating new tests to replicate the old answer tests, and also slimming it down for big datasets.\r\n\r\nTo run a comparison, you must first run \"develop\" so that the new nose plugin becomes available.  Then, in the yt directory,\r\n\r\n`nosetests --with-answer-testing frontends/enzo/ --answer-compare=gold001`\r\n\r\nTo run a set of tests and *store* them:\r\n\r\n`nosetests --with-answer-testing frontends/enzo/ --answer-store --answer-name=gold001`\r\n\r\nWe can now not only run answer tests, but we don't have to manage (manually or otherwise) the uploads.  yt will do this for us, using boto.  Down the road we can swap out Amazon for any OpenStack-compliant cloud provider, such as SDSC's cloud.\r\n\r\nAdditionally, we can now add answer testing of small data to Shining Panda.  In the future, we can add answer testing of large data with lower frequency, as well.\r\n\r\n## What's Next?\r\n\r\nBecause there's a lot to take in, I'd like to suggest this PR not be accepted as-is.  There are a few items that need to be done first:\r\n\r\n * The developer community needs to be brought in on this; I would like to suggest either a hangout or an IRC meeting to discuss how this works.  I'd also encourage others to pull this PR, run the nosetests command that compares data, and figure out if they like how it looks.\r\n * The old tests all need to be replicated.  This means things like projections turned into pixel buffers, field statistics (without storing the fields)\r\n * Tests need to be added for other frontends.  I am currently working with other frontend maintainers to get data, but once we've gotten it, we need to add tests as is done for Enzo.  This means FLASH, Nyx, Orion, as well as any others that would like to be on the testing suite.\r\n\r\nI'd like to encourage specific comments on lines of code to be left here, as well as comments on the actual structure of the code, but I'll be forwarding this PR to yt-dev and asking for broader comments there.  I think that having a single, integrated testing system that can test a subset of parameter files (as well as auto-discover them) will be extremely valuable for ensuring maintainability.  I'm really excited about this.\r\n\r\n*UPDATE 1*: Added separate bigdata/smalldata tests.\r\n\r\n*UPDATE 2*: Re-enabled answer testing comparisons against gold001, added a big_data option to the test runner plugin, and also to the `requires_pf` decorator.  Thanks to @ngoldbaum for heads up on the typo!\r\n\r\n*UPDATE 3*: This now works in Shining Panda.  I think it's ready for acceptance at this time.\r\n\r\n*UPDATE 4*: Fixes Nathan's reported bugs with the big data test",
+    "author": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "updated_on": "2012-10-23T22:53:35.202116+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "82c77ccccc39",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/82c77ccccc39"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

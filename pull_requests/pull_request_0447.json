@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2013-02-28T20:31:24.682459+00:00",
-    "comment_count": 6,
-    "description": "This PR improves performance for some serial and all parallel kdtree builds that I've tested.  I noticed recently that the performance with the new AMRKDTree build in parallel was not noticeably different for small datasets, but quite horrid for large datasets.  This is due primarily to the change in the build process:\r\n\r\nOld build:\r\n\r\n1. Split up grids until you left with 1 grid in a given region.\r\n2. Check if that grid has children\r\n3. Repeat steps 1-2 until there are no more children grids\r\n\r\nCurrent build:\r\n\r\n1. For each level, split up and add all the grids on that level to the current tree\r\n\r\nNew build:\r\n\r\n1. While the number of grids added < comm.size, add each level of grids\r\n2. After that, add each grid one-by-one to the tree\r\n\r\nThe current build suffers in that for each level, the first few splits of all the grids is a costly operation involving making several new large arrays from fairly random indices of the grids being added.  This results in a large overhead for each processor of grid inclusion operations. \r\n\r\nTo combat this, the new build first builds a bit using each of the levels (for many builds this will only happen for the first level).  This helps load balance the tree a bit better than adding all grids one-by-one.  \r\n\r\nHere are timings for 1 core and 8 core builds for several varying size datasets, in increasing number of grids.  Note that the first_star run has a very deep hierarchy, and shouldn't be expected to scale well for the build.\r\n\r\n```\r\n#!text\r\n1 core:\r\nDD1701 TIMING DATA: mean: 4.041939e-01 std: 0.000000e+00 min: 4.041939e-01 max: 4.041939e-01\r\nmhd TIMING DATA: mean: 1.285446e+00 std: 0.000000e+00 min: 1.285446e+00 max: 1.285446e+00\r\nfirst_star TIMING DATA: mean: 4.784500e+00 std: 0.000000e+00 min: 4.784500e+00 max: 4.784500e+00\r\nrelic64 TIMING DATA: mean: 1.965631e+01 std: 0.000000e+00 min: 1.965631e+01 max: 1.965631e+01\r\n```\r\n\r\n8 cores:\r\n```\r\n#!text\r\nDD1701 TIMING DATA: mean: 7.892209e-02 std: 2.330327e-02 min: 4.423690e-02 max: 1.162829e-01\r\nmhd TIMING DATA: mean: 1.702803e-01 std: 1.867732e-01 min: 6.197190e-02 max: 6.274600e-01\r\nfirst_star TIMING DATA: mean: 6.074529e-01 std: 1.239741e+00 min: 8.825707e-02 max: 3.886722e+00\r\nrelic64 TIMING DATA: mean: 3.944907e+00 std: 4.859449e-01 min: 3.208197e+00 max: 4.479849e+00\r\n```\r\n\r\nThere are downsides to the current state of this PR in that in order to test this out quickly I ended up copying the multiple-grid inserts/adds/splits to fairly similar single-grid add/insert/split functions.  I'd like to clean this up (as well as the rest of the AMRKDTree machinery), but fear I won't have time before the next release.  \r\n\r\nUpdate 1: Fixed up some tests for the AMRKDTree. Not using amrspace at the moment, but am being much more rigorous with a CoredSphere IC generator test.\r\n",
-    "created_on": "2013-02-26T04:21:03.724057+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/f8e5308c580c"
-            }
-        },
-        "hash": "f8e5308c580c"
-    },
-    "title": "AMRKDTree performance boost",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
-    "id": 447,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/samskillman"
-            },
-            "html": {
-                "href": "https://bitbucket.org/samskillman/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/samskillman/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Sam Skillman",
-        "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
-        "username": "samskillman"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt/commit/bbfaf46ae484"
-                }
-            },
-            "hash": "bbfaf46ae484"
-        },
         "repository": {
             "full_name": "samskillman/yt",
+            "uuid": "{f1df6f31-13ed-4d98-a11d-1954f1f1fdfa}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/samskillman/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{f1df6f31-13ed-4d98-a11d-1954f1f1fdfa}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "bbfaf46ae484",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/972598e86077"
+                    "href": "https://api.bitbucket.org/2.0/repositories/samskillman/yt/commit/bbfaf46ae484"
                 }
-            },
-            "hash": "972598e86077"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "title": "AMRKDTree performance boost",
+    "id": 447,
+    "comment_count": 6,
+    "created_on": "2013-02-26T04:21:03.724057+00:00",
+    "merge_commit": {
+        "hash": "f8e5308c580c",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/f8e5308c580c"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hey Sam, I think it's reasonable to do this the way you are right now.  Would it be possible to, instead, just have `add_grid` be the public method and `if iterable(...)` then call itself multiple times?\n\nA while back you mentioned that this would be easy to move into Cython, if the time ever came that the Python code was the barrier to performance.  Are we at that point now?",
+                "html": "<p>Hey Sam, I think it's reasonable to do this the way you are right now.  Would it be possible to, instead, just have <code>add_grid</code> be the public method and <code>if iterable(...)</code> then call itself multiple times?</p>\n<p>A while back you mentioned that this would be easy to move into Cython, if the time ever came that the Python code was the barrier to performance.  Are we at that point now?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/131589"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-131589"
                 }
             },
+            "created_on": "2013-02-26T13:23:29.060062+00:00",
+            "updated_on": "2013-02-26T13:23:29.068309+00:00",
             "pullrequest": {
-                "title": "AMRKDTree performance boost",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447"
                     }
                 },
+                "title": "AMRKDTree performance boost",
                 "id": 447
             },
-            "content": {
-                "raw": "Hey Sam, I think it's reasonable to do this the way you are right now.  Would it be possible to, instead, just have `add_grid` be the public method and `if iterable(...)` then call itself multiple times?\n\nA while back you mentioned that this would be easy to move into Cython, if the time ever came that the Python code was the barrier to performance.  Are we at that point now?",
-                "html": "<p>Hey Sam, I think it's reasonable to do this the way you are right now.  Would it be possible to, instead, just have <code>add_grid</code> be the public method and <code>if iterable(...)</code> then call itself multiple times?</p>\n<p>A while back you mentioned that this would be easy to move into Cython, if the time ever came that the Python code was the barrier to performance.  Are we at that point now?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-26T13:23:29.060062+00:00",
-            "updated_on": "2013-02-26T13:23:29.068309+00:00",
+            "type": "pullrequest_comment",
             "id": 131589
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Matt, thanks for taking a look at this.\n\nUnfortunately the load balancing of the build (and ultimately rendering) is different with add_grid vs. add_grids in that with add_grids, when it inserts a bunch of grids to be split up, it is able to pick a better \"next split\" based on the choices available at that time.  This is why I use add_grids for the first few levels (until grids_added > comm.size). Particularly with enzo where grids are somewhat ordered spatially, this can lead to really bad balancing.\n\nI think the next move is to Cython, getting ready for which was the main point of the big refactor earlier this year.  That's definitely on my roadmap for what is next.  Cythonizing may also help to transition to the new geometry system in 3.0, I hope.  I'm going to test a few more renderings this morning to make sure they are the same as before, then I'll post an update to this PR.",
+                "html": "<p>Hi Matt, thanks for taking a look at this.</p>\n<p>Unfortunately the load balancing of the build (and ultimately rendering) is different with add_grid vs. add_grids in that with add_grids, when it inserts a bunch of grids to be split up, it is able to pick a better \"next split\" based on the choices available at that time.  This is why I use add_grids for the first few levels (until grids_added &gt; comm.size). Particularly with enzo where grids are somewhat ordered spatially, this can lead to really bad balancing.</p>\n<p>I think the next move is to Cython, getting ready for which was the main point of the big refactor earlier this year.  That's definitely on my roadmap for what is next.  Cythonizing may also help to transition to the new geometry system in 3.0, I hope.  I'm going to test a few more renderings this morning to make sure they are the same as before, then I'll post an update to this PR.</p>"
+            },
             "user": {
+                "username": "samskillman",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samskillman"
@@ -207,19 +161,8 @@
                         "href": "https://bitbucket.org/account/samskillman/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Sam Skillman",
-                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
-                "username": "samskillman"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/131745"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-131745"
-                }
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}"
             },
             "parent": {
                 "links": {
@@ -232,8 +175,16 @@
                 },
                 "id": 131589
             },
+            "created_on": "2013-02-26T15:16:18.160777+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/131745"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-131745"
+                }
+            },
             "pullrequest": {
-                "title": "AMRKDTree performance boost",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -243,19 +194,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447"
                     }
                 },
+                "title": "AMRKDTree performance boost",
                 "id": 447
             },
-            "content": {
-                "raw": "Hi Matt, thanks for taking a look at this.\n\nUnfortunately the load balancing of the build (and ultimately rendering) is different with add_grid vs. add_grids in that with add_grids, when it inserts a bunch of grids to be split up, it is able to pick a better \"next split\" based on the choices available at that time.  This is why I use add_grids for the first few levels (until grids_added > comm.size). Particularly with enzo where grids are somewhat ordered spatially, this can lead to really bad balancing.\n\nI think the next move is to Cython, getting ready for which was the main point of the big refactor earlier this year.  That's definitely on my roadmap for what is next.  Cythonizing may also help to transition to the new geometry system in 3.0, I hope.  I'm going to test a few more renderings this morning to make sure they are the same as before, then I'll post an update to this PR.",
-                "html": "<p>Hi Matt, thanks for taking a look at this.</p>\n<p>Unfortunately the load balancing of the build (and ultimately rendering) is different with add_grid vs. add_grids in that with add_grids, when it inserts a bunch of grids to be split up, it is able to pick a better \"next split\" based on the choices available at that time.  This is why I use add_grids for the first few levels (until grids_added &gt; comm.size). Particularly with enzo where grids are somewhat ordered spatially, this can lead to really bad balancing.</p>\n<p>I think the next move is to Cython, getting ready for which was the main point of the big refactor earlier this year.  That's definitely on my roadmap for what is next.  Cythonizing may also help to transition to the new geometry system in 3.0, I hope.  I'm going to test a few more renderings this morning to make sure they are the same as before, then I'll post an update to this PR.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-26T15:16:18.160777+00:00",
-            "updated_on": "2013-02-26T15:16:18.172332+00:00",
-            "id": 131745
+            "type": "pullrequest_comment",
+            "id": 131745,
+            "updated_on": "2013-02-26T15:16:18.172332+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Any chance you might be able to load some grid structures, similar to what @scopatz did in `yt/testing.py`, that can have fixed answers stored in the testing suite?",
+                "html": "<p>Any chance you might be able to load some grid structures, similar to what <a href=\"/scopatz/\" rel=\"nofollow\" title=\"@scopatz\" class=\"mention\">Anthony Scopatz</a> did in <code>yt/testing.py</code>, that can have fixed answers stored in the testing suite?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -267,19 +221,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/131748"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-131748"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -292,8 +235,16 @@
                 },
                 "id": 131745
             },
+            "created_on": "2013-02-26T15:18:25.363890+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/131748"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-131748"
+                }
+            },
             "pullrequest": {
-                "title": "AMRKDTree performance boost",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -303,19 +254,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447"
                     }
                 },
+                "title": "AMRKDTree performance boost",
                 "id": 447
             },
-            "content": {
-                "raw": "Any chance you might be able to load some grid structures, similar to what @scopatz did in `yt/testing.py`, that can have fixed answers stored in the testing suite?",
-                "html": "<p>Any chance you might be able to load some grid structures, similar to what <a href=\"/scopatz/\" rel=\"nofollow\" title=\"@scopatz\" class=\"mention\">Anthony Scopatz</a> did in <code>yt/testing.py</code>, that can have fixed answers stored in the testing suite?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-26T15:18:25.363890+00:00",
-            "updated_on": "2013-02-26T15:18:25.378451+00:00",
-            "id": 131748
+            "type": "pullrequest_comment",
+            "id": 131748,
+            "updated_on": "2013-02-26T15:18:25.378451+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I tested this PR on a few VRs of my own.  I see a modest performance increase when VR'ing in parallel which is increased if I set $OMP_NUM_THREADS = 1 (e.g. 18sec -> 12 sec for 8 procs).  Anyway, it seems to work OK for me.  Great job!",
+                "html": "<p>I tested this PR on a few VRs of my own.  I see a modest performance increase when VR'ing in parallel which is increased if I set $OMP_NUM_THREADS = 1 (e.g. 18sec -&gt; 12 sec for 8 procs).  Anyway, it seems to work OK for me.  Great job!</p>"
+            },
             "user": {
+                "username": "chummels",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/chummels"
@@ -327,12 +281,9 @@
                         "href": "https://bitbucket.org/account/chummels/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Cameron Hummels",
-                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-                "username": "chummels"
+                "display_name": "chummels",
+                "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/132269"
@@ -341,8 +292,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-132269"
                 }
             },
+            "created_on": "2013-02-26T20:51:20.606029+00:00",
+            "updated_on": "2013-02-26T20:51:20.613066+00:00",
             "pullrequest": {
-                "title": "AMRKDTree performance boost",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -352,19 +304,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447"
                     }
                 },
+                "title": "AMRKDTree performance boost",
                 "id": 447
             },
-            "content": {
-                "raw": "I tested this PR on a few VRs of my own.  I see a modest performance increase when VR'ing in parallel which is increased if I set $OMP_NUM_THREADS = 1 (e.g. 18sec -> 12 sec for 8 procs).  Anyway, it seems to work OK for me.  Great job!",
-                "html": "<p>I tested this PR on a few VRs of my own.  I see a modest performance increase when VR'ing in parallel which is increased if I set $OMP_NUM_THREADS = 1 (e.g. 18sec -&gt; 12 sec for 8 procs).  Anyway, it seems to work OK for me.  Great job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-26T20:51:20.606029+00:00",
-            "updated_on": "2013-02-26T20:51:20.613066+00:00",
+            "type": "pullrequest_comment",
             "id": 132269
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I pushed better tests, but ones that just utilize an AMR cored sphere IC.  Until load_amr_grids and the amrspace are combined, I think this is good to go. ",
+                "html": "<p>I pushed better tests, but ones that just utilize an AMR cored sphere IC.  Until load_amr_grids and the amrspace are combined, I think this is good to go. </p>"
+            },
             "user": {
+                "username": "samskillman",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samskillman"
@@ -376,19 +330,8 @@
                         "href": "https://bitbucket.org/account/samskillman/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Sam Skillman",
-                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
-                "username": "samskillman"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/134069"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-134069"
-                }
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}"
             },
             "parent": {
                 "links": {
@@ -401,8 +344,16 @@
                 },
                 "id": 131748
             },
+            "created_on": "2013-02-27T21:09:20.376226+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/134069"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-134069"
+                }
+            },
             "pullrequest": {
-                "title": "AMRKDTree performance boost",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -412,19 +363,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447"
                     }
                 },
+                "title": "AMRKDTree performance boost",
                 "id": 447
             },
-            "content": {
-                "raw": "I pushed better tests, but ones that just utilize an AMR cored sphere IC.  Until load_amr_grids and the amrspace are combined, I think this is good to go. ",
-                "html": "<p>I pushed better tests, but ones that just utilize an AMR cored sphere IC.  Until load_amr_grids and the amrspace are combined, I think this is good to go. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-27T21:09:20.376226+00:00",
-            "updated_on": "2013-02-27T21:09:20.390568+00:00",
-            "id": 134069
+            "type": "pullrequest_comment",
+            "id": 134069,
+            "updated_on": "2013-02-27T21:09:20.390568+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This looks good to me.",
+                "html": "<p>This looks good to me.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -436,12 +390,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/447/comments/135712"
@@ -450,8 +401,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447/_/diff#comment-135712"
                 }
             },
+            "created_on": "2013-02-28T20:31:17.025213+00:00",
+            "updated_on": "2013-02-28T20:31:17.032803+00:00",
             "pullrequest": {
-                "title": "AMRKDTree performance boost",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -461,16 +413,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/447"
                     }
                 },
+                "title": "AMRKDTree performance boost",
                 "id": 447
             },
-            "content": {
-                "raw": "This looks good to me.",
-                "html": "<p>This looks good to me.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-02-28T20:31:17.025213+00:00",
-            "updated_on": "2013-02-28T20:31:17.032803+00:00",
+            "type": "pullrequest_comment",
             "id": 135712
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This PR improves performance for some serial and all parallel kdtree builds that I've tested.  I noticed recently that the performance with the new AMRKDTree build in parallel was not noticeably different for small datasets, but quite horrid for large datasets.  This is due primarily to the change in the build process:\r\n\r\nOld build:\r\n\r\n1. Split up grids until you left with 1 grid in a given region.\r\n2. Check if that grid has children\r\n3. Repeat steps 1-2 until there are no more children grids\r\n\r\nCurrent build:\r\n\r\n1. For each level, split up and add all the grids on that level to the current tree\r\n\r\nNew build:\r\n\r\n1. While the number of grids added < comm.size, add each level of grids\r\n2. After that, add each grid one-by-one to the tree\r\n\r\nThe current build suffers in that for each level, the first few splits of all the grids is a costly operation involving making several new large arrays from fairly random indices of the grids being added.  This results in a large overhead for each processor of grid inclusion operations. \r\n\r\nTo combat this, the new build first builds a bit using each of the levels (for many builds this will only happen for the first level).  This helps load balance the tree a bit better than adding all grids one-by-one.  \r\n\r\nHere are timings for 1 core and 8 core builds for several varying size datasets, in increasing number of grids.  Note that the first_star run has a very deep hierarchy, and shouldn't be expected to scale well for the build.\r\n\r\n```\r\n#!text\r\n1 core:\r\nDD1701 TIMING DATA: mean: 4.041939e-01 std: 0.000000e+00 min: 4.041939e-01 max: 4.041939e-01\r\nmhd TIMING DATA: mean: 1.285446e+00 std: 0.000000e+00 min: 1.285446e+00 max: 1.285446e+00\r\nfirst_star TIMING DATA: mean: 4.784500e+00 std: 0.000000e+00 min: 4.784500e+00 max: 4.784500e+00\r\nrelic64 TIMING DATA: mean: 1.965631e+01 std: 0.000000e+00 min: 1.965631e+01 max: 1.965631e+01\r\n```\r\n\r\n8 cores:\r\n```\r\n#!text\r\nDD1701 TIMING DATA: mean: 7.892209e-02 std: 2.330327e-02 min: 4.423690e-02 max: 1.162829e-01\r\nmhd TIMING DATA: mean: 1.702803e-01 std: 1.867732e-01 min: 6.197190e-02 max: 6.274600e-01\r\nfirst_star TIMING DATA: mean: 6.074529e-01 std: 1.239741e+00 min: 8.825707e-02 max: 3.886722e+00\r\nrelic64 TIMING DATA: mean: 3.944907e+00 std: 4.859449e-01 min: 3.208197e+00 max: 4.479849e+00\r\n```\r\n\r\nThere are downsides to the current state of this PR in that in order to test this out quickly I ended up copying the multiple-grid inserts/adds/splits to fairly similar single-grid add/insert/split functions.  I'd like to clean this up (as well as the rest of the AMRKDTree machinery), but fear I won't have time before the next release.  \r\n\r\nUpdate 1: Fixed up some tests for the AMRKDTree. Not using amrspace at the moment, but am being much more rigorous with a CoredSphere IC generator test.\r\n",
+    "author": {
+        "username": "samskillman",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/samskillman"
+            },
+            "html": {
+                "href": "https://bitbucket.org/samskillman/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/samskillman/avatar/32/"
+            }
+        },
+        "display_name": "Sam Skillman",
+        "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}"
+    },
+    "updated_on": "2013-02-28T20:31:24.682459+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "972598e86077",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/972598e86077"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

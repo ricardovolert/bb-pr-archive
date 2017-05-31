@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2017-04-10T20:41:39.475224+00:00",
-    "comment_count": 27,
-    "description": "This refactors Grid IO so that instead of including lots of logic about fluid selection in each `BaseIOHandler` subclass, we do it in the base class (like we do for particles).  It also implements a very simple LRU caching scheme, currently disabled, for IO caching.\r\n\r\nBecause of how this defines `read_fluid_selection`, it's a non-invasive change, and instead can be spread throughout the code gradually.\r\n\r\nI'm still thinking through the API; if you look at the commits, you can see I experimented with different ways of setting up the reading of objects.\r\n\r\nThe ultimate goal here is twofold:\r\n\r\n * Short-term, get this in, make the grid visitors PR use it so that it can be independent of the IO ordering.  This should allow us to get rid of the slowest parts of the indexing and instead use the visitors.\r\n * Long-term, use this as a mechanism to allow for numeric slicing of data objects, thus exposing them to things like dask.\r\n\r\nRight now, performance isn't *that* much better with this, or with caching, for most things.  Selection is still the slow part.\r\n\r\nI've tagged some reviewers that do grid frontends and the like.",
-    "created_on": "2016-11-17T17:56:42.423212+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/98c877e47f5c"
-            }
-        },
-        "hash": "98c877e47f5c"
-    },
-    "title": "Refactor Grid IO",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
-    "id": 2438,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/ab1d31997e27"
-                }
-            },
-            "hash": "ab1d31997e27"
-        },
         "repository": {
             "full_name": "MatthewTurk/yt",
+            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/MatthewTurk/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b5dfa70b-707c-4330-92a8-e3ea1bee18b3}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "ab1d31997e27",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/0b3d4a49ffbb"
+                    "href": "https://api.bitbucket.org/2.0/repositories/MatthewTurk/yt/commit/ab1d31997e27"
                 }
-            },
-            "hash": "0b3d4a49ffbb"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "title": "Refactor Grid IO",
+    "id": 2438,
+    "comment_count": 27,
+    "created_on": "2016-11-17T17:56:42.423212+00:00",
+    "merge_commit": {
+        "hash": "98c877e47f5c",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/98c877e47f5c"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/373/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/374/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/474/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/475/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/476/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/567/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/591/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/592/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/596/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/610/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/744/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/745/\n",
+                "html": "<ul>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/373/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/373/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/374/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/374/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/474/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/474/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/475/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/475/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/476/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/476/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/567/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/567/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/591/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/591/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/592/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/592/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/596/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/596/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/610/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/610/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/744/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/744/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/745/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/745/</a></li>\n</ul>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/26990307"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-26990307"
                 }
             },
+            "created_on": "2016-11-17T18:19:50.920054+00:00",
+            "updated_on": "2017-04-10T20:36:22.243859+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/373/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/374/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/474/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/475/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/476/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/567/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/591/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/592/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/596/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/610/\n* Something went wrong, you should checkout https://tests.yt-project.org/job/yt_testsuite/744/\n* All tests pass. Good job! https://tests.yt-project.org/job/yt_testsuite/745/\n",
-                "html": "<ul>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/373/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/373/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/374/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/374/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/474/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/474/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/475/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/475/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/476/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/476/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/567/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/567/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/591/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/591/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/592/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/592/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/596/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/596/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/610/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/610/</a></li>\n<li>Something went wrong, you should checkout <a href=\"https://tests.yt-project.org/job/yt_testsuite/744/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/744/</a></li>\n<li>All tests pass. Good job! <a href=\"https://tests.yt-project.org/job/yt_testsuite/745/\" rel=\"nofollow\">https://tests.yt-project.org/job/yt_testsuite/745/</a></li>\n</ul>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-11-17T18:19:50.920054+00:00",
-            "updated_on": "2017-04-10T20:36:22.243859+00:00",
+            "type": "pullrequest_comment",
             "id": 26990307
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Perhaps I am missing something. Should it be possible to implement preload using the new API as well?\n\n(Actually I'm sure I'm missing something, because I don't 100% understand how preload hooks into the rest of the IO machinery.)",
+                "html": "<p>Perhaps I am missing something. Should it be possible to implement preload using the new API as well?</p>\n<p>(Actually I'm sure I'm missing something, because I don't 100% understand how preload hooks into the rest of the IO machinery.)</p>"
+            },
             "user": {
+                "username": "Yurlungur",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
@@ -207,25 +161,23 @@
                         "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Jonah Miller",
-                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
-                "username": "Yurlungur"
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/27851878"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:72e5ba72c421..09f0ef297d70?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-27851878"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:72e5ba72c421..09f0ef297d70?path=yt%2Ffrontends%2Fenzo%2Fio.py"
                 }
             },
+            "created_on": "2016-12-05T23:12:57.636103+00:00",
+            "updated_on": "2016-12-05T23:12:57.683647+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -235,24 +187,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Perhaps I am missing something. Should it be possible to implement preload using the new API as well?\n\n(Actually I'm sure I'm missing something, because I don't 100% understand how preload hooks into the rest of the IO machinery.)",
-                "html": "<p>Perhaps I am missing something. Should it be possible to implement preload using the new API as well?</p>\n<p>(Actually I'm sure I'm missing something, because I don't 100% understand how preload hooks into the rest of the IO machinery.)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-05T23:12:57.636103+00:00",
-            "updated_on": "2016-12-05T23:12:57.683647+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/enzo/io.py",
-                "to": null
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 27851878
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Some brief comments/questions. I apologize if they are naive.\n\n1. I really like the `io_iter` machinery. This feels like a very clean API which makes things a lot easier to handle.\n2. I am confused about what pieces of the old machinery are required and what pieces are no longer required. Does `_read_chunk_data` still need to exist? And if so, can it too be implemented via io_iter? It would be very nice to merge these two bits of code, since (at least in my frontend) `_read_fluid_selections` calls `_read_chunk_data`. Requiring both `_read_chunk_data` and `io_iter` would result in a lot of duplicated code.\n3. Shouldn't the name be `_io_iter` for consistency?",
+                "html": "<p>Some brief comments/questions. I apologize if they are naive.</p>\n<ol>\n<li>I really like the <code>io_iter</code> machinery. This feels like a very clean API which makes things a lot easier to handle.</li>\n<li>I am confused about what pieces of the old machinery are required and what pieces are no longer required. Does <code>_read_chunk_data</code> still need to exist? And if so, can it too be implemented via io_iter? It would be very nice to merge these two bits of code, since (at least in my frontend) <code>_read_fluid_selections</code> calls <code>_read_chunk_data</code>. Requiring both <code>_read_chunk_data</code> and <code>io_iter</code> would result in a lot of duplicated code.</li>\n<li>Shouldn't the name be <code>_io_iter</code> for consistency?</li>\n</ol>"
+            },
             "user": {
+                "username": "Yurlungur",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/Yurlungur"
@@ -264,12 +218,9 @@
                         "href": "https://bitbucket.org/account/Yurlungur/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Jonah Miller",
-                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}",
-                "username": "Yurlungur"
+                "uuid": "{bec767b0-0d2d-4ff7-9b50-3ac98171078e}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/27852146"
@@ -278,8 +229,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-27852146"
                 }
             },
+            "created_on": "2016-12-05T23:19:46.868695+00:00",
+            "updated_on": "2016-12-05T23:19:46.915778+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -289,19 +241,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Some brief comments/questions. I apologize if they are naive.\n\n1. I really like the `io_iter` machinery. This feels like a very clean API which makes things a lot easier to handle.\n2. I am confused about what pieces of the old machinery are required and what pieces are no longer required. Does `_read_chunk_data` still need to exist? And if so, can it too be implemented via io_iter? It would be very nice to merge these two bits of code, since (at least in my frontend) `_read_fluid_selections` calls `_read_chunk_data`. Requiring both `_read_chunk_data` and `io_iter` would result in a lot of duplicated code.\n3. Shouldn't the name be `_io_iter` for consistency?",
-                "html": "<p>Some brief comments/questions. I apologize if they are naive.</p>\n<ol>\n<li>I really like the <code>io_iter</code> machinery. This feels like a very clean API which makes things a lot easier to handle.</li>\n<li>I am confused about what pieces of the old machinery are required and what pieces are no longer required. Does <code>_read_chunk_data</code> still need to exist? And if so, can it too be implemented via io_iter? It would be very nice to merge these two bits of code, since (at least in my frontend) <code>_read_fluid_selections</code> calls <code>_read_chunk_data</code>. Requiring both <code>_read_chunk_data</code> and <code>io_iter</code> would result in a lot of duplicated code.</li>\n<li>Shouldn't the name be <code>_io_iter</code> for consistency?</li>\n</ol>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-05T23:19:46.868695+00:00",
-            "updated_on": "2016-12-05T23:19:46.915778+00:00",
+            "type": "pullrequest_comment",
             "id": 27852146
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "As a note, I have dug into some of the answer test failures.  Some have been fixed, in a commit that fixed some iteration loops.\n\nThe Enzo grid values are currently changing because they are being cast to `f8` before getting the hashlib sum.  I was able to verify that casting to `>f4` before taking the hash results in answer tests for GridValues passing where they didn't before.  I'm going to continue to see if I can get the results to be identical, as I think that is a more stable solution in the long term.",
+                "html": "<p>As a note, I have dug into some of the answer test failures.  Some have been fixed, in a commit that fixed some iteration loops.</p>\n<p>The Enzo grid values are currently changing because they are being cast to <code>f8</code> before getting the hashlib sum.  I was able to verify that casting to <code>&gt;f4</code> before taking the hash results in answer tests for GridValues passing where they didn't before.  I'm going to continue to see if I can get the results to be identical, as I think that is a more stable solution in the long term.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -313,12 +267,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28927882"
@@ -327,8 +278,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28927882"
                 }
             },
+            "created_on": "2016-12-28T22:54:44.789919+00:00",
+            "updated_on": "2016-12-28T22:54:44.794421+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -338,19 +290,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "As a note, I have dug into some of the answer test failures.  Some have been fixed, in a commit that fixed some iteration loops.\n\nThe Enzo grid values are currently changing because they are being cast to `f8` before getting the hashlib sum.  I was able to verify that casting to `>f4` before taking the hash results in answer tests for GridValues passing where they didn't before.  I'm going to continue to see if I can get the results to be identical, as I think that is a more stable solution in the long term.",
-                "html": "<p>As a note, I have dug into some of the answer test failures.  Some have been fixed, in a commit that fixed some iteration loops.</p>\n<p>The Enzo grid values are currently changing because they are being cast to <code>f8</code> before getting the hashlib sum.  I was able to verify that casting to <code>&gt;f4</code> before taking the hash results in answer tests for GridValues passing where they didn't before.  I'm going to continue to see if I can get the results to be identical, as I think that is a more stable solution in the long term.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-28T22:54:44.789919+00:00",
-            "updated_on": "2016-12-28T22:54:44.794421+00:00",
+            "type": "pullrequest_comment",
             "id": 28927882
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Does `(fid, data) = (None, None, None)` work if you don't provide the `fid` and `data` keywords?  I get a value error when I try to run something like that.",
+                "html": "<p>Does <code>(fid, data) = (None, None, None)</code> work if you don't provide the <code>fid</code> and <code>data</code> keywords?  I get a value error when I try to run something like that.</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -362,25 +316,23 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953043"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:72e5ba72c421..09f0ef297d70?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953043"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:72e5ba72c421..09f0ef297d70?path=yt%2Ffrontends%2Fenzo%2Fio.py"
                 }
             },
+            "created_on": "2016-12-29T16:36:17.314885+00:00",
+            "updated_on": "2016-12-29T16:36:17.321523+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -390,24 +342,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Does `(fid, data) = (None, None, None)` work if you don't provide the `fid` and `data` keywords?  I get a value error when I try to run something like that.",
-                "html": "<p>Does <code>(fid, data) = (None, None, None)</code> work if you don't provide the <code>fid</code> and <code>data</code> keywords?  I get a value error when I try to run something like that.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:36:17.314885+00:00",
-            "updated_on": "2016-12-29T16:36:17.321523+00:00",
             "inline": {
-                "from": null,
+                "to": 162,
                 "path": "yt/frontends/enzo/io.py",
-                "to": 162
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 28953043
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Whoops!  No, it doesn't.  `(fid, data) = (None, None)` would work though.",
+                "html": "<p>Whoops!  No, it doesn't.  <code>(fid, data) = (None, None)</code> would work though.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -419,22 +373,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953089"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:72e5ba72c421..09f0ef297d70?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953089"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -447,8 +387,19 @@
                 },
                 "id": 28953043
             },
+            "created_on": "2016-12-29T16:37:27.975535+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953089"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953089"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:72e5ba72c421..09f0ef297d70?path=yt%2Ffrontends%2Fenzo%2Fio.py"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -458,24 +409,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Whoops!  No, it doesn't.  `(fid, data) = (None, None)` would work though.",
-                "html": "<p>Whoops!  No, it doesn't.  <code>(fid, data) = (None, None)</code> would work though.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:37:27.975535+00:00",
-            "updated_on": "2016-12-29T16:37:27.977721+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/enzo/io.py",
-                "to": null
+                "from": null
             },
-            "id": 28953089
+            "type": "pullrequest_comment",
+            "id": 28953089,
+            "updated_on": "2016-12-29T16:37:27.977721+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Just curious, is there a benefit to creating and passing an empty array over having h5py do everything?",
+                "html": "<p>Just curious, is there a benefit to creating and passing an empty array over having h5py do everything?</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -487,25 +441,23 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953303"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953303"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
                 }
             },
+            "created_on": "2016-12-29T16:41:45.495138+00:00",
+            "updated_on": "2016-12-29T16:41:45.503633+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -515,24 +467,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Just curious, is there a benefit to creating and passing an empty array over having h5py do everything?",
-                "html": "<p>Just curious, is there a benefit to creating and passing an empty array over having h5py do everything?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:41:45.495138+00:00",
-            "updated_on": "2016-12-29T16:41:45.503633+00:00",
             "inline": {
-                "from": null,
+                "to": 156,
                 "path": "yt/frontends/enzo/io.py",
-                "to": 156
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 28953303
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "If the try/except faster than checking if \"Dark_Matter_Density\" exists in the group?",
+                "html": "<p>If the try/except faster than checking if \"Dark_Matter_Density\" exists in the group?</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -544,25 +498,23 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953329"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953329"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
                 }
             },
+            "created_on": "2016-12-29T16:42:27.176182+00:00",
+            "updated_on": "2016-12-29T16:42:27.178278+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -572,24 +524,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "If the try/except faster than checking if \"Dark_Matter_Density\" exists in the group?",
-                "html": "<p>If the try/except faster than checking if \"Dark_Matter_Density\" exists in the group?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:42:27.176182+00:00",
-            "updated_on": "2016-12-29T16:42:27.178278+00:00",
             "inline": {
-                "from": null,
+                "to": 172,
                 "path": "yt/frontends/enzo/io.py",
-                "to": 172
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 28953329
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "So, that's a good question.  Yes, kind of.  So in the old method, *definitely*.  Here, *probably*.  We are reusing the array for each field, so we save on allocations, especially because we only ever use this as an input to a selection that copies (at the very least, to fix the F/C ordering.)  If we provide an array that is ordered the same as the on-disk HDF5 array, it will copy it in stride-1 straight from disk to memory.  If we supply C to an F array for instance, it will not do this, and instead do a value-by-value copy.  So I think so, and definitely there was before.",
+                "html": "<p>So, that's a good question.  Yes, kind of.  So in the old method, <em>definitely</em>.  Here, <em>probably</em>.  We are reusing the array for each field, so we save on allocations, especially because we only ever use this as an input to a selection that copies (at the very least, to fix the F/C ordering.)  If we provide an array that is ordered the same as the on-disk HDF5 array, it will copy it in stride-1 straight from disk to memory.  If we supply C to an F array for instance, it will not do this, and instead do a value-by-value copy.  So I think so, and definitely there was before.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -601,22 +555,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953393"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953393"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -629,8 +569,19 @@
                 },
                 "id": 28953303
             },
+            "created_on": "2016-12-29T16:44:04.341939+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953393"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953393"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -640,24 +591,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "So, that's a good question.  Yes, kind of.  So in the old method, *definitely*.  Here, *probably*.  We are reusing the array for each field, so we save on allocations, especially because we only ever use this as an input to a selection that copies (at the very least, to fix the F/C ordering.)  If we provide an array that is ordered the same as the on-disk HDF5 array, it will copy it in stride-1 straight from disk to memory.  If we supply C to an F array for instance, it will not do this, and instead do a value-by-value copy.  So I think so, and definitely there was before.",
-                "html": "<p>So, that's a good question.  Yes, kind of.  So in the old method, <em>definitely</em>.  Here, <em>probably</em>.  We are reusing the array for each field, so we save on allocations, especially because we only ever use this as an input to a selection that copies (at the very least, to fix the F/C ordering.)  If we provide an array that is ordered the same as the on-disk HDF5 array, it will copy it in stride-1 straight from disk to memory.  If we supply C to an F array for instance, it will not do this, and instead do a value-by-value copy.  So I think so, and definitely there was before.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:44:04.341939+00:00",
-            "updated_on": "2016-12-29T16:44:04.350918+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/enzo/io.py",
-                "to": null
+                "from": null
             },
-            "id": 28953393
+            "type": "pullrequest_comment",
+            "id": 28953393,
+            "updated_on": "2016-12-29T16:44:04.350918+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yes, disappointingly, it is.  I don't remember how big the difference is, but I think it can be really substantial if you're dealing with a lot of leaf nodes and datasets.",
+                "html": "<p>Yes, disappointingly, it is.  I don't remember how big the difference is, but I think it can be really substantial if you're dealing with a lot of leaf nodes and datasets.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -669,22 +623,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953415"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953415"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -697,8 +637,19 @@
                 },
                 "id": 28953329
             },
+            "created_on": "2016-12-29T16:44:38.750911+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953415"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953415"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -708,24 +659,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Yes, disappointingly, it is.  I don't remember how big the difference is, but I think it can be really substantial if you're dealing with a lot of leaf nodes and datasets.",
-                "html": "<p>Yes, disappointingly, it is.  I don't remember how big the difference is, but I think it can be really substantial if you're dealing with a lot of leaf nodes and datasets.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:44:38.750911+00:00",
-            "updated_on": "2016-12-29T16:44:38.754210+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/enzo/io.py",
-                "to": null
+                "from": null
             },
-            "id": 28953415
+            "type": "pullrequest_comment",
+            "id": 28953415,
+            "updated_on": "2016-12-29T16:44:38.754210+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Interesting, ok.",
+                "html": "<p>Interesting, ok.</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -737,22 +691,8 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953589"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953589"
-                }
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
             "parent": {
                 "links": {
@@ -765,8 +705,19 @@
                 },
                 "id": 28953415
             },
+            "created_on": "2016-12-29T16:47:59.555283+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953589"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953589"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -776,24 +727,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Interesting, ok.",
-                "html": "<p>Interesting, ok.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:47:59.555283+00:00",
-            "updated_on": "2016-12-29T16:47:59.558067+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/enzo/io.py",
-                "to": null
+                "from": null
             },
-            "id": 28953589
+            "type": "pullrequest_comment",
+            "id": 28953589,
+            "updated_on": "2016-12-29T16:47:59.558067+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "OK, fair enough.",
+                "html": "<p>OK, fair enough.</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -805,22 +759,8 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953595"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953595"
-                }
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
             "parent": {
                 "links": {
@@ -833,8 +773,19 @@
                 },
                 "id": 28953393
             },
+            "created_on": "2016-12-29T16:48:11.326582+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28953595"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28953595"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:782b08b33cf5..c23ff278bd32?path=yt%2Ffrontends%2Fenzo%2Fio.py"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -844,24 +795,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "OK, fair enough.",
-                "html": "<p>OK, fair enough.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T16:48:11.326582+00:00",
-            "updated_on": "2016-12-29T16:48:11.328875+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/enzo/io.py",
-                "to": null
+                "from": null
             },
-            "id": 28953595
+            "type": "pullrequest_comment",
+            "id": 28953595,
+            "updated_on": "2016-12-29T16:48:11.328875+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This definitely cuts down on the duplicate code.  I'm in favor of this for that alone.  The rest looks correct to me.  What is the plan for enabling the lru caching?  Does it need to be tested against having it off, either for speed or accuracy?",
+                "html": "<p>This definitely cuts down on the duplicate code.  I'm in favor of this for that alone.  The rest looks correct to me.  What is the plan for enabling the lru caching?  Does it need to be tested against having it off, either for speed or accuracy?</p>"
+            },
             "user": {
+                "username": "brittonsmith",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/brittonsmith"
@@ -873,12 +827,9 @@
                         "href": "https://bitbucket.org/account/brittonsmith/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Britton Smith",
-                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}",
-                "username": "brittonsmith"
+                "uuid": "{94333901-a436-4c2c-8322-8d09e387eece}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28954039"
@@ -887,8 +838,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28954039"
                 }
             },
+            "created_on": "2016-12-29T17:00:54.992986+00:00",
+            "updated_on": "2016-12-29T17:00:54.997768+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -898,19 +850,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "This definitely cuts down on the duplicate code.  I'm in favor of this for that alone.  The rest looks correct to me.  What is the plan for enabling the lru caching?  Does it need to be tested against having it off, either for speed or accuracy?",
-                "html": "<p>This definitely cuts down on the duplicate code.  I'm in favor of this for that alone.  The rest looks correct to me.  What is the plan for enabling the lru caching?  Does it need to be tested against having it off, either for speed or accuracy?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T17:00:54.992986+00:00",
-            "updated_on": "2016-12-29T17:00:54.997768+00:00",
+            "type": "pullrequest_comment",
             "id": 28954039
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Thanks!\n\nFor the LRU, I actually want to do some testing for speed before enabling it, but we also need to figure out how to make it globally tunable.  For instance, if we were to do a time series iteration and we had dataset-level caching enabled, we might end up in a case where we cache *all* of the grids for all the datasets, and then wouldn't be able to clear it.",
+                "html": "<p>Thanks!</p>\n<p>For the LRU, I actually want to do some testing for speed before enabling it, but we also need to figure out how to make it globally tunable.  For instance, if we were to do a time series iteration and we had dataset-level caching enabled, we might end up in a case where we cache <em>all</em> of the grids for all the datasets, and then wouldn't be able to clear it.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -922,19 +876,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28954594"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28954594"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -947,8 +890,16 @@
                 },
                 "id": 28954039
             },
+            "created_on": "2016-12-29T17:19:01.354401+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/28954594"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-28954594"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -958,19 +909,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Thanks!\n\nFor the LRU, I actually want to do some testing for speed before enabling it, but we also need to figure out how to make it globally tunable.  For instance, if we were to do a time series iteration and we had dataset-level caching enabled, we might end up in a case where we cache *all* of the grids for all the datasets, and then wouldn't be able to clear it.",
-                "html": "<p>Thanks!</p>\n<p>For the LRU, I actually want to do some testing for speed before enabling it, but we also need to figure out how to make it globally tunable.  For instance, if we were to do a time series iteration and we had dataset-level caching enabled, we might end up in a case where we cache <em>all</em> of the grids for all the datasets, and then wouldn't be able to clear it.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2016-12-29T17:19:01.354401+00:00",
-            "updated_on": "2016-12-29T17:19:01.357196+00:00",
-            "id": 28954594
+            "type": "pullrequest_comment",
+            "id": 28954594,
+            "updated_on": "2016-12-29T17:19:01.357196+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Not naive!\n\n1) Thanks!\n2) It doesn't, ideally, in any \"new-style\" frontends.  I am debating going through and updating all right now, in which case it will be removed.\n3) Good point.",
+                "html": "<p>Not naive!</p>\n<p>1) Thanks!\n2) It doesn't, ideally, in any \"new-style\" frontends.  I am debating going through and updating all right now, in which case it will be removed.\n3) Good point.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -982,19 +936,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/29553751"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-29553751"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1007,8 +950,16 @@
                 },
                 "id": 27852146
             },
+            "created_on": "2017-01-11T19:52:33.437661+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/29553751"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-29553751"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1018,19 +969,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Not naive!\n\n1) Thanks!\n2) It doesn't, ideally, in any \"new-style\" frontends.  I am debating going through and updating all right now, in which case it will be removed.\n3) Good point.",
-                "html": "<p>Not naive!</p>\n<p>1) Thanks!\n2) It doesn't, ideally, in any \"new-style\" frontends.  I am debating going through and updating all right now, in which case it will be removed.\n3) Good point.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-01-11T19:52:33.437661+00:00",
-            "updated_on": "2017-01-11T19:52:33.440544+00:00",
-            "id": 29553751
+            "type": "pullrequest_comment",
+            "id": 29553751,
+            "updated_on": "2017-01-11T19:52:33.440544+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'll try to have a look at this during the week.",
+                "html": "<p>I'll try to have a look at this during the week.</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1042,12 +996,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/29876306"
@@ -1056,8 +1007,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-29876306"
                 }
             },
+            "created_on": "2017-01-17T19:53:22.830424+00:00",
+            "updated_on": "2017-01-17T19:53:22.832614+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1067,19 +1019,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "I'll try to have a look at this during the week.",
-                "html": "<p>I'll try to have a look at this during the week.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-01-17T19:53:22.830424+00:00",
-            "updated_on": "2017-01-17T19:53:22.832614+00:00",
+            "type": "pullrequest_comment",
             "id": 29876306
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Just a heads up that this will be substantially slower than the C LRU Cache implementation in `fastcache`. Maybe it's possible to monkeypatch that so you can use a different implementation for `make_key`, avoiding defining `local_lru_cache`.",
+                "html": "<p>Just a heads up that this will be substantially slower than the C LRU Cache implementation in <code>fastcache</code>. Maybe it's possible to monkeypatch that so you can use a different implementation for <code>make_key</code>, avoiding defining <code>local_lru_cache</code>.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1091,25 +1045,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30735226"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:bad4fbf78161..0e90715fb16b?path=yt%2Futilities%2Flru_cache.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30735226"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:bad4fbf78161..0e90715fb16b?path=yt%2Futilities%2Flru_cache.py"
                 }
             },
+            "created_on": "2017-02-01T23:20:14.169193+00:00",
+            "updated_on": "2017-02-01T23:20:14.171775+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1119,24 +1071,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Just a heads up that this will be substantially slower than the C LRU Cache implementation in `fastcache`. Maybe it's possible to monkeypatch that so you can use a different implementation for `make_key`, avoiding defining `local_lru_cache`.",
-                "html": "<p>Just a heads up that this will be substantially slower than the C LRU Cache implementation in <code>fastcache</code>. Maybe it's possible to monkeypatch that so you can use a different implementation for <code>make_key</code>, avoiding defining <code>local_lru_cache</code>.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-01T23:20:14.169193+00:00",
-            "updated_on": "2017-02-01T23:20:14.171775+00:00",
             "inline": {
-                "from": null,
+                "to": 184,
                 "path": "yt/utilities/lru_cache.py",
-                "to": 184
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 30735226
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Sounds good; I'll look into it.",
+                "html": "<p>Sounds good; I'll look into it.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1148,22 +1102,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30735247"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:bad4fbf78161..0e90715fb16b?path=yt%2Futilities%2Flru_cache.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30735247"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1176,8 +1116,19 @@
                 },
                 "id": 30735226
             },
+            "created_on": "2017-02-01T23:20:47.488251+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30735247"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30735247"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:bad4fbf78161..0e90715fb16b?path=yt%2Futilities%2Flru_cache.py"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1187,24 +1138,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Sounds good; I'll look into it.",
-                "html": "<p>Sounds good; I'll look into it.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-01T23:20:47.488251+00:00",
-            "updated_on": "2017-02-01T23:20:47.490428+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/utilities/lru_cache.py",
-                "to": null
+                "from": null
             },
-            "id": 30735247
+            "type": "pullrequest_comment",
+            "id": 30735247,
+            "updated_on": "2017-02-01T23:20:47.490428+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Unfortunately I don't see anything obvious that would cause the test failures on Python3 (was looking mostly for division issues).",
+                "html": "<p>Unfortunately I don't see anything obvious that would cause the test failures on Python3 (was looking mostly for division issues).</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1216,12 +1170,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30735286"
@@ -1230,8 +1181,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30735286"
                 }
             },
+            "created_on": "2017-02-01T23:21:54.562557+00:00",
+            "updated_on": "2017-02-01T23:21:54.565256+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1241,19 +1193,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Unfortunately I don't see anything obvious that would cause the test failures on Python3 (was looking mostly for division issues).",
-                "html": "<p>Unfortunately I don't see anything obvious that would cause the test failures on Python3 (was looking mostly for division issues).</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-01T23:21:54.562557+00:00",
-            "updated_on": "2017-02-01T23:21:54.565256+00:00",
+            "type": "pullrequest_comment",
             "id": 30735286
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I'll keep digging!  The 32/64 thing was my guess, and I got stuff to pass locally, but I'll keep working.",
+                "html": "<p>I'll keep digging!  The 32/64 thing was my guess, and I got stuff to pass locally, but I'll keep working.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1265,19 +1219,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30735311"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30735311"
-                }
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -1290,8 +1233,16 @@
                 },
                 "id": 30735286
             },
+            "created_on": "2017-02-01T23:22:41.328189+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30735311"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30735311"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1301,19 +1252,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "I'll keep digging!  The 32/64 thing was my guess, and I got stuff to pass locally, but I'll keep working.",
-                "html": "<p>I'll keep digging!  The 32/64 thing was my guess, and I got stuff to pass locally, but I'll keep working.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-01T23:22:41.328189+00:00",
-            "updated_on": "2017-02-01T23:22:41.330692+00:00",
-            "id": 30735311
+            "type": "pullrequest_comment",
+            "id": 30735311,
+            "updated_on": "2017-02-01T23:22:41.330692+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I spent time looking at the current failures.  There is an asymmetry in how we do copying of field values in FLASH and Enzo.  When I fix this in favor of how Enzo did it (i.e., use an early exit with a check on the `GridSelector` object) it works for the enzo tests, but breaks FLASH.  Reverse is also true.\n\nThe reason this happens is that right now, if you ask a 32-bit FLASH file for a value from a grid directly, it gives you a 64-bit value.  Enzo returns 32-bit for 32-bit on a grid-by-grid basis.\n\nI'm inclined to leave the change as it is right now in this PR, and regenerate new answer results for FLASH.  What this would do is make it so that if you ask a 32-bit FLASH file for a set of grid values, they come back as 32-bit.  Same for Enzo.\n\nWith that being said, I think this is ready for review; I got some feedback already and I will try to incorporate that in the next day or so.",
+                "html": "<p>I spent time looking at the current failures.  There is an asymmetry in how we do copying of field values in FLASH and Enzo.  When I fix this in favor of how Enzo did it (i.e., use an early exit with a check on the <code>GridSelector</code> object) it works for the enzo tests, but breaks FLASH.  Reverse is also true.</p>\n<p>The reason this happens is that right now, if you ask a 32-bit FLASH file for a value from a grid directly, it gives you a 64-bit value.  Enzo returns 32-bit for 32-bit on a grid-by-grid basis.</p>\n<p>I'm inclined to leave the change as it is right now in this PR, and regenerate new answer results for FLASH.  What this would do is make it so that if you ask a 32-bit FLASH file for a set of grid values, they come back as 32-bit.  Same for Enzo.</p>\n<p>With that being said, I think this is ready for review; I got some feedback already and I will try to incorporate that in the next day or so.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1325,12 +1279,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30742573"
@@ -1339,8 +1290,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30742573"
                 }
             },
+            "created_on": "2017-02-02T04:01:03.044791+00:00",
+            "updated_on": "2017-02-02T04:01:03.048526+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1350,19 +1302,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "I spent time looking at the current failures.  There is an asymmetry in how we do copying of field values in FLASH and Enzo.  When I fix this in favor of how Enzo did it (i.e., use an early exit with a check on the `GridSelector` object) it works for the enzo tests, but breaks FLASH.  Reverse is also true.\n\nThe reason this happens is that right now, if you ask a 32-bit FLASH file for a value from a grid directly, it gives you a 64-bit value.  Enzo returns 32-bit for 32-bit on a grid-by-grid basis.\n\nI'm inclined to leave the change as it is right now in this PR, and regenerate new answer results for FLASH.  What this would do is make it so that if you ask a 32-bit FLASH file for a set of grid values, they come back as 32-bit.  Same for Enzo.\n\nWith that being said, I think this is ready for review; I got some feedback already and I will try to incorporate that in the next day or so.",
-                "html": "<p>I spent time looking at the current failures.  There is an asymmetry in how we do copying of field values in FLASH and Enzo.  When I fix this in favor of how Enzo did it (i.e., use an early exit with a check on the <code>GridSelector</code> object) it works for the enzo tests, but breaks FLASH.  Reverse is also true.</p>\n<p>The reason this happens is that right now, if you ask a 32-bit FLASH file for a value from a grid directly, it gives you a 64-bit value.  Enzo returns 32-bit for 32-bit on a grid-by-grid basis.</p>\n<p>I'm inclined to leave the change as it is right now in this PR, and regenerate new answer results for FLASH.  What this would do is make it so that if you ask a 32-bit FLASH file for a set of grid values, they come back as 32-bit.  Same for Enzo.</p>\n<p>With that being said, I think this is ready for review; I got some feedback already and I will try to incorporate that in the next day or so.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-02T04:01:03.044791+00:00",
-            "updated_on": "2017-02-02T04:01:03.048526+00:00",
+            "type": "pullrequest_comment",
             "id": 30742573
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Thanks for checking! :+1: on incrementing the answer number.",
+                "html": "<p>Thanks for checking! <img src=\"https://d301sr5gafysq2.cloudfront.net/1cc0811f4855/emoji/img/%2B1.svg\" alt=\"+1\" title=\"+1\" class=\"emoji\"> on incrementing the answer number.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1374,19 +1328,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30742674"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30742674"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1399,8 +1342,16 @@
                 },
                 "id": 30742573
             },
+            "created_on": "2017-02-02T04:05:49.368034+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30742674"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30742674"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1410,19 +1361,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Thanks for checking! :+1: on incrementing the answer number.",
-                "html": "<p>Thanks for checking! <img src=\"https://d301sr5gafysq2.cloudfront.net/87002ef24cff/emoji/img/%2B1.svg\" alt=\"+1\" title=\"+1\" class=\"emoji\"> on incrementing the answer number.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-02T04:05:49.368034+00:00",
-            "updated_on": "2017-02-02T04:05:49.370449+00:00",
-            "id": 30742674
+            "type": "pullrequest_comment",
+            "id": 30742674,
+            "updated_on": "2017-02-02T04:05:49.370449+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Tests pass now!  I have some comments from @Yurlungur to address, but I think I'd like some guidance: should I refactor all the other grid frontends in this PR, or do it in a subsequent PR?  And, what other feedback do folks have?",
+                "html": "<p>Tests pass now!  I have some comments from <a href=\"/Yurlungur/\" rel=\"nofollow\" title=\"@Yurlungur\" class=\"mention\">Jonah Miller</a> to address, but I think I'd like some guidance: should I refactor all the other grid frontends in this PR, or do it in a subsequent PR?  And, what other feedback do folks have?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1434,12 +1388,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30797288"
@@ -1448,8 +1399,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30797288"
                 }
             },
+            "created_on": "2017-02-02T17:46:44.518207+00:00",
+            "updated_on": "2017-02-02T17:46:44.585988+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1459,19 +1411,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Tests pass now!  I have some comments from @Yurlungur to address, but I think I'd like some guidance: should I refactor all the other grid frontends in this PR, or do it in a subsequent PR?  And, what other feedback do folks have?",
-                "html": "<p>Tests pass now!  I have some comments from <a href=\"/Yurlungur/\" rel=\"nofollow\" title=\"@Yurlungur\" class=\"mention\">Jonah Miller</a> to address, but I think I'd like some guidance: should I refactor all the other grid frontends in this PR, or do it in a subsequent PR?  And, what other feedback do folks have?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-02T17:46:44.518207+00:00",
-            "updated_on": "2017-02-02T17:46:44.585988+00:00",
+            "type": "pullrequest_comment",
             "id": 30797288
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Probably better to merge this now so this doesn't stay in limbo for too much longer.",
+                "html": "<p>Probably better to merge this now so this doesn't stay in limbo for too much longer.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1483,19 +1437,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30797579"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30797579"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1508,8 +1451,16 @@
                 },
                 "id": 30797288
             },
+            "created_on": "2017-02-02T17:51:10.394323+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30797579"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30797579"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1519,19 +1470,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Probably better to merge this now so this doesn't stay in limbo for too much longer.",
-                "html": "<p>Probably better to merge this now so this doesn't stay in limbo for too much longer.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-02T17:51:10.394323+00:00",
-            "updated_on": "2017-02-02T17:51:10.397632+00:00",
-            "id": 30797579
+            "type": "pullrequest_comment",
+            "id": 30797579,
+            "updated_on": "2017-02-02T17:51:10.397632+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "i'm not sure this comment is helpful given that the duplicated code is now deleted",
+                "html": "<p>i'm not sure this comment is helpful given that the duplicated code is now deleted</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1543,25 +1497,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/30797607"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:bad4fbf78161..0e90715fb16b?path=yt%2Ffrontends%2Fenzo%2Fio.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-30797607"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/MatthewTurk/yt:bad4fbf78161..0e90715fb16b?path=yt%2Ffrontends%2Fenzo%2Fio.py"
                 }
             },
+            "created_on": "2017-02-02T17:51:39.614230+00:00",
+            "updated_on": "2017-02-02T17:51:39.621252+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1571,24 +1523,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "i'm not sure this comment is helpful given that the duplicated code is now deleted",
-                "html": "<p>i'm not sure this comment is helpful given that the duplicated code is now deleted</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-02-02T17:51:39.614230+00:00",
-            "updated_on": "2017-02-02T17:51:39.621252+00:00",
             "inline": {
-                "from": null,
+                "to": 77,
                 "path": "yt/frontends/enzo/io.py",
-                "to": 77
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 30797607
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hey, what else do I need to do to get this over the finish line?",
+                "html": "<p>Hey, what else do I need to do to get this over the finish line?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -1600,12 +1554,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Matt Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/34788696"
@@ -1614,8 +1565,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-34788696"
                 }
             },
+            "created_on": "2017-04-10T18:05:02.358857+00:00",
+            "updated_on": "2017-04-10T18:05:02.361357+00:00",
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1625,19 +1577,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Hey, what else do I need to do to get this over the finish line?",
-                "html": "<p>Hey, what else do I need to do to get this over the finish line?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-04-10T18:05:02.358857+00:00",
-            "updated_on": "2017-04-10T18:05:02.361357+00:00",
+            "type": "pullrequest_comment",
             "id": 34788696
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can you trigger another test run to see if the tests still pass?",
+                "html": "<p>Can you trigger another test run to see if the tests still pass?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1649,19 +1603,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/34789459"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-34789459"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1674,8 +1617,16 @@
                 },
                 "id": 34788696
             },
+            "created_on": "2017-04-10T18:16:31.310875+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/2438/comments/34789459"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438/_/diff#comment-34789459"
+                }
+            },
             "pullrequest": {
-                "title": "Refactor Grid IO",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1685,16 +1636,65 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/2438"
                     }
                 },
+                "title": "Refactor Grid IO",
                 "id": 2438
             },
-            "content": {
-                "raw": "Can you trigger another test run to see if the tests still pass?",
-                "html": "<p>Can you trigger another test run to see if the tests still pass?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2017-04-10T18:16:31.310875+00:00",
-            "updated_on": "2017-04-10T18:16:31.314540+00:00",
-            "id": 34789459
+            "type": "pullrequest_comment",
+            "id": 34789459,
+            "updated_on": "2017-04-10T18:16:31.314540+00:00"
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This refactors Grid IO so that instead of including lots of logic about fluid selection in each `BaseIOHandler` subclass, we do it in the base class (like we do for particles).  It also implements a very simple LRU caching scheme, currently disabled, for IO caching.\r\n\r\nBecause of how this defines `read_fluid_selection`, it's a non-invasive change, and instead can be spread throughout the code gradually.\r\n\r\nI'm still thinking through the API; if you look at the commits, you can see I experimented with different ways of setting up the reading of objects.\r\n\r\nThe ultimate goal here is twofold:\r\n\r\n * Short-term, get this in, make the grid visitors PR use it so that it can be independent of the IO ordering.  This should allow us to get rid of the slowest parts of the indexing and instead use the visitors.\r\n * Long-term, use this as a mechanism to allow for numeric slicing of data objects, thus exposing them to things like dask.\r\n\r\nRight now, performance isn't *that* much better with this, or with caching, for most things.  Selection is still the slow part.\r\n\r\nI've tagged some reviewers that do grid frontends and the like.",
+    "author": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "updated_on": "2017-04-10T20:41:39.475224+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "0b3d4a49ffbb",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/0b3d4a49ffbb"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

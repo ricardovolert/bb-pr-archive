@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2014-11-17T20:34:34.360185+00:00",
-    "comment_count": 39,
-    "description": "I am going to be creating a series of updates/fixes to the YT frontend over the course of time whilst using YT to analyse my ramses simulation datasets.\r\n\r\nSince ramses is \"1-based\" in terms of index hierarchy (looking around, I think FLASH is the same and maybe other fortran based AMR codes). I have made these updates to accommodate for this.\r\n\r\nMain problem is with how it handles the max level and ds.index.get_smallest_dx()\r\n\r\nI will be pushing more updates overtime, since I know there is a few bugs with some of the fields.\r\n\r\nEDIT.. these changes ruin the octtree... going to look into it.\r\n\r\nEDIT.. alter one thing and another problem occurs.\r\n\r\nEDIT.. tested it on one unigrid run and two different multi-resolution runs... gives results that I would expect. We are good to go ahead with this PR\r\n\r\nEDIT.. Also fixes my previous problems with rockstar too.\r\n\r\n----------------------------------\r\nAs for why I have made these changes... ramses works in a 1-index format (so that the lowest resolved \"level\" is 1) as such that if max_level = 14, you will have up to 2^14 cells per dimension.\r\n\r\nWhich is fine, but the way the code is setup (e.g self.max_level = rheader['levelmax'] - self.min_level ) .. considering the min_level = rheader['levelmin'] - 1... the max level you are getting for a simulation resolving up to level 14, with a minimum level of 7,... 7 - 1 = 6... so your max level would be \"9\"\r\n\r\nNow.. if you were to do a YTSphere with this, the YTSphereTooSmall exception will be raised... even though you have data that is resolved spatially beyond level 9.\r\n\r\n\r\n\r\nBen.",
-    "created_on": "2014-11-11T01:08:12.441158+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/6b9ada3a86ad"
-            }
-        },
-        "hash": "6b9ada3a86ad"
-    },
-    "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/approve"
@@ -43,11 +9,39 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/diff"
+        }
+    },
+    "task_count": 0,
+    "source": {
+        "repository": null,
+        "commit": null,
+        "branch": {
+            "name": "yt"
         }
     },
     "closed_by": {
+        "username": "ngoldbaum",
+        "type": "user",
         "links": {
             "self": {
                 "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -59,71 +53,31 @@
                 "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
             }
         },
-        "type": "user",
         "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
     },
+    "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
     "id": 1302,
-    "type": "pullrequest",
-    "author": {
+    "comment_count": 39,
+    "created_on": "2014-11-11T01:08:12.441158+00:00",
+    "merge_commit": {
+        "hash": "6b9ada3a86ad",
         "links": {
             "self": {
-                "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
-            },
-            "html": {
-                "href": "https://bitbucket.org/cosmosquark/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/6b9ada3a86ad"
             }
-        },
-        "type": "user",
-        "display_name": "Benjamin Thompson",
-        "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-        "username": "cosmosquark"
-    },
-    "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": null,
-        "repository": null
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e8fb57e66ca4"
-                }
-            },
-            "hash": "e8fb57e66ca4"
-        },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
-            },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@samgeen would you mind taking a look at this?  If there are any other RAMSES experts out there, this could use their eyes.",
+                "html": "<p><a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> would you mind taking a look at this?  If there are any other RAMSES experts out there, this could use their eyes.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -135,12 +89,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3815522"
@@ -149,8 +100,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3815522"
                 }
             },
+            "created_on": "2014-11-11T01:13:29.912947+00:00",
+            "updated_on": "2014-11-11T01:13:29.986642+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -160,19 +112,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "@samgeen would you mind taking a look at this?  If there are any other RAMSES experts out there, this could use their eyes.",
-                "html": "<p><a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> would you mind taking a look at this?  If there are any other RAMSES experts out there, this could use their eyes.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T01:13:29.912947+00:00",
-            "updated_on": "2014-11-11T01:13:29.986642+00:00",
+            "type": "pullrequest_comment",
             "id": 3815522
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1628/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1628/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1628/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -184,12 +138,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3815622"
@@ -198,8 +149,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3815622"
                 }
             },
+            "created_on": "2014-11-11T01:30:26.356264+00:00",
+            "updated_on": "2014-11-11T01:30:26.985513+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -209,19 +161,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1628/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1628/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1628/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T01:30:26.356264+00:00",
-            "updated_on": "2014-11-11T01:30:26.985513+00:00",
+            "type": "pullrequest_comment",
             "id": 3815622
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yeah, just noticed a bug within the pull request. That has now been fixed. (I think)",
+                "html": "<p>Yeah, just noticed a bug within the pull request. That has now been fixed. (I think)</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -233,12 +187,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3815628"
@@ -247,8 +198,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3815628"
                 }
             },
+            "created_on": "2014-11-11T01:31:20.296140+00:00",
+            "updated_on": "2014-11-11T01:31:29.464547+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -258,19 +210,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Yeah, just noticed a bug within the pull request. That has now been fixed. (I think)",
-                "html": "<p>Yeah, just noticed a bug within the pull request. That has now been fixed. (I think)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T01:31:20.296140+00:00",
-            "updated_on": "2014-11-11T01:31:29.464547+00:00",
+            "type": "pullrequest_comment",
             "id": 3815628
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "As for why I have made these changes... ramses works in a 1-index format (so that the lowest resolved \"level\" is 1) as such that if max_level = 14, you will have up to 2^14 cells per dimension.\n\nWhich is fine, but the way the code is setup (e.g self.max_level = rheader['levelmax'] - self.min_level ) .. considering the min_level = rheader['levelmin'] - 1... the max level you are getting for a simulation resolving up to level 14, with a minimum level of 7,... 7 - 1 = 6... so your max level would be \"9\"\n\nNow.. if you were to do a YTSphere with this, the YTSphereTooSmall exception will be raised... even though you have data that is resolved spatially beyond level 9.",
+                "html": "<p>As for why I have made these changes... ramses works in a 1-index format (so that the lowest resolved \"level\" is 1) as such that if max_level = 14, you will have up to 2^14 cells per dimension.</p>\n<p>Which is fine, but the way the code is setup (e.g self.max_level = rheader['levelmax'] - self.min_level ) .. considering the min_level = rheader['levelmin'] - 1... the max level you are getting for a simulation resolving up to level 14, with a minimum level of 7,... 7 - 1 = 6... so your max level would be \"9\"</p>\n<p>Now.. if you were to do a YTSphere with this, the YTSphereTooSmall exception will be raised... even though you have data that is resolved spatially beyond level 9.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -282,12 +236,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3815663"
@@ -296,8 +247,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3815663"
                 }
             },
+            "created_on": "2014-11-11T01:37:09.224028+00:00",
+            "updated_on": "2014-11-11T01:37:09.470939+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -307,19 +259,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "As for why I have made these changes... ramses works in a 1-index format (so that the lowest resolved \"level\" is 1) as such that if max_level = 14, you will have up to 2^14 cells per dimension.\n\nWhich is fine, but the way the code is setup (e.g self.max_level = rheader['levelmax'] - self.min_level ) .. considering the min_level = rheader['levelmin'] - 1... the max level you are getting for a simulation resolving up to level 14, with a minimum level of 7,... 7 - 1 = 6... so your max level would be \"9\"\n\nNow.. if you were to do a YTSphere with this, the YTSphereTooSmall exception will be raised... even though you have data that is resolved spatially beyond level 9.",
-                "html": "<p>As for why I have made these changes... ramses works in a 1-index format (so that the lowest resolved \"level\" is 1) as such that if max_level = 14, you will have up to 2^14 cells per dimension.</p>\n<p>Which is fine, but the way the code is setup (e.g self.max_level = rheader['levelmax'] - self.min_level ) .. considering the min_level = rheader['levelmin'] - 1... the max level you are getting for a simulation resolving up to level 14, with a minimum level of 7,... 7 - 1 = 6... so your max level would be \"9\"</p>\n<p>Now.. if you were to do a YTSphere with this, the YTSphereTooSmall exception will be raised... even though you have data that is resolved spatially beyond level 9.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T01:37:09.224028+00:00",
-            "updated_on": "2014-11-11T01:37:09.470939+00:00",
+            "type": "pullrequest_comment",
             "id": 3815663
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1629/",
+                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1629/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1629/</a></p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -331,12 +285,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3816396"
@@ -345,8 +296,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3816396"
                 }
             },
+            "created_on": "2014-11-11T03:04:03.275565+00:00",
+            "updated_on": "2014-11-11T03:04:03.711148+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -356,19 +308,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Something went wrong, you should checkout http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1629/",
-                "html": "<p>Something went wrong, you should checkout <a href=\"http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1629/\" rel=\"nofollow\">http://tests.yt-project.org/job/py2.7-yt-3.0_testing/1629/</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T03:04:03.275565+00:00",
-            "updated_on": "2014-11-11T03:04:03.711148+00:00",
+            "type": "pullrequest_comment",
             "id": 3816396
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "we are almost there.. just need to figure out why these two are returning different values\n\nshot.ds.max_level = 1\nand \nshot.ds.index.max_level = 6\n\nfor a simulation with no refinement\n\nbut for a simulation with refinement (up to level 14 from level 7 (1-indexed)) I get\n\nshot.ds.max_level = 8\nshot.ds.index.max_level = 6\n\nI think shot.ds.index.max_level = self.min_level somewhere along the lines",
+                "html": "<p>we are almost there.. just need to figure out why these two are returning different values</p>\n<p>shot.ds.max_level = 1\nand \nshot.ds.index.max_level = 6</p>\n<p>for a simulation with no refinement</p>\n<p>but for a simulation with refinement (up to level 14 from level 7 (1-indexed)) I get</p>\n<p>shot.ds.max_level = 8\nshot.ds.index.max_level = 6</p>\n<p>I think shot.ds.index.max_level = self.min_level somewhere along the lines</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -380,12 +334,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3825958"
@@ -394,8 +345,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3825958"
                 }
             },
+            "created_on": "2014-11-11T15:50:37.148938+00:00",
+            "updated_on": "2014-11-11T15:55:43.322696+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -405,19 +357,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "we are almost there.. just need to figure out why these two are returning different values\n\nshot.ds.max_level = 1\nand \nshot.ds.index.max_level = 6\n\nfor a simulation with no refinement\n\nbut for a simulation with refinement (up to level 14 from level 7 (1-indexed)) I get\n\nshot.ds.max_level = 8\nshot.ds.index.max_level = 6\n\nI think shot.ds.index.max_level = self.min_level somewhere along the lines",
-                "html": "<p>we are almost there.. just need to figure out why these two are returning different values</p>\n<p>shot.ds.max_level = 1\nand \nshot.ds.index.max_level = 6</p>\n<p>for a simulation with no refinement</p>\n<p>but for a simulation with refinement (up to level 14 from level 7 (1-indexed)) I get</p>\n<p>shot.ds.max_level = 8\nshot.ds.index.max_level = 6</p>\n<p>I think shot.ds.index.max_level = self.min_level somewhere along the lines</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T15:50:37.148938+00:00",
-            "updated_on": "2014-11-11T15:55:43.322696+00:00",
+            "type": "pullrequest_comment",
             "id": 3825958
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Nathan, sorry I've been pretty bad at keeping up with this (my capacity to get sidetracked is pretty high). Yes, in RAMSES nomenclature a level refers to a grid cell of spatial length boxlen*2^(-level) refined level times from the top of the tree, so levelmax = 14 is an AMR cell of physical length boxlen*2^(-14), assuming no cosmological expansion, of course. For a simulation with no AMR, levelmin=levelmax. And then yeah, the hydro variables (density, pressure, etc) are stored in 2^ndim \"octs\" per cell.\n\nI don't particularly know why there should be an issue with YT; I'm not particularly familiar with how YT treats octrees, unfortunately. I suppose that given YT uses inheritance from generic Octree objects and that the data in the derived objects is mixed up with the base classes' data, it makes sense to work exclusively in YT's definition of what a level is and have a couple of functions to convert between the two that are used whenever RAMSES data files are accessed. Apologies if this is already the case; like I said, I'm not that familiar with YT's octree classes so don't really know where the bugs would come from.\n\nEDIT: Unsure how to stop the power-of symbol making the text italic, but the double asterisk notation boldfaces things, which is somewhat worse",
+                "html": "<p>Hi Nathan, sorry I've been pretty bad at keeping up with this (my capacity to get sidetracked is pretty high). Yes, in RAMSES nomenclature a level refers to a grid cell of spatial length boxlen<em>2^(-level) refined level times from the top of the tree, so levelmax = 14 is an AMR cell of physical length boxlen</em>2^(-14), assuming no cosmological expansion, of course. For a simulation with no AMR, levelmin=levelmax. And then yeah, the hydro variables (density, pressure, etc) are stored in 2^ndim \"octs\" per cell.</p>\n<p>I don't particularly know why there should be an issue with YT; I'm not particularly familiar with how YT treats octrees, unfortunately. I suppose that given YT uses inheritance from generic Octree objects and that the data in the derived objects is mixed up with the base classes' data, it makes sense to work exclusively in YT's definition of what a level is and have a couple of functions to convert between the two that are used whenever RAMSES data files are accessed. Apologies if this is already the case; like I said, I'm not that familiar with YT's octree classes so don't really know where the bugs would come from.</p>\n<p>EDIT: Unsure how to stop the power-of symbol making the text italic, but the double asterisk notation boldfaces things, which is somewhat worse</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -429,12 +383,9 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3827166"
@@ -443,8 +394,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3827166"
                 }
             },
+            "created_on": "2014-11-11T16:48:21.010640+00:00",
+            "updated_on": "2014-11-11T16:49:58.087454+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -454,19 +406,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Hi Nathan, sorry I've been pretty bad at keeping up with this (my capacity to get sidetracked is pretty high). Yes, in RAMSES nomenclature a level refers to a grid cell of spatial length boxlen*2^(-level) refined level times from the top of the tree, so levelmax = 14 is an AMR cell of physical length boxlen*2^(-14), assuming no cosmological expansion, of course. For a simulation with no AMR, levelmin=levelmax. And then yeah, the hydro variables (density, pressure, etc) are stored in 2^ndim \"octs\" per cell.\n\nI don't particularly know why there should be an issue with YT; I'm not particularly familiar with how YT treats octrees, unfortunately. I suppose that given YT uses inheritance from generic Octree objects and that the data in the derived objects is mixed up with the base classes' data, it makes sense to work exclusively in YT's definition of what a level is and have a couple of functions to convert between the two that are used whenever RAMSES data files are accessed. Apologies if this is already the case; like I said, I'm not that familiar with YT's octree classes so don't really know where the bugs would come from.\n\nEDIT: Unsure how to stop the power-of symbol making the text italic, but the double asterisk notation boldfaces things, which is somewhat worse",
-                "html": "<p>Hi Nathan, sorry I've been pretty bad at keeping up with this (my capacity to get sidetracked is pretty high). Yes, in RAMSES nomenclature a level refers to a grid cell of spatial length boxlen<em>2^(-level) refined level times from the top of the tree, so levelmax = 14 is an AMR cell of physical length boxlen</em>2^(-14), assuming no cosmological expansion, of course. For a simulation with no AMR, levelmin=levelmax. And then yeah, the hydro variables (density, pressure, etc) are stored in 2^ndim \"octs\" per cell.</p>\n<p>I don't particularly know why there should be an issue with YT; I'm not particularly familiar with how YT treats octrees, unfortunately. I suppose that given YT uses inheritance from generic Octree objects and that the data in the derived objects is mixed up with the base classes' data, it makes sense to work exclusively in YT's definition of what a level is and have a couple of functions to convert between the two that are used whenever RAMSES data files are accessed. Apologies if this is already the case; like I said, I'm not that familiar with YT's octree classes so don't really know where the bugs would come from.</p>\n<p>EDIT: Unsure how to stop the power-of symbol making the text italic, but the double asterisk notation boldfaces things, which is somewhat worse</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T16:48:21.010640+00:00",
-            "updated_on": "2014-11-11T16:49:58.087454+00:00",
+            "type": "pullrequest_comment",
             "id": 3827166
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -478,12 +432,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3827786"
@@ -492,8 +443,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3827786"
                 }
             },
+            "created_on": "2014-11-11T17:17:46.849523+00:00",
+            "updated_on": "2014-11-11T17:17:47.012601+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -503,19 +455,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T17:17:46.849523+00:00",
-            "updated_on": "2014-11-11T17:17:47.012601+00:00",
+            "type": "pullrequest_comment",
             "id": 3827786
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Only outstanding issue with this pull request is the difference between .ds.index.max_level and .ds.max_level ... will poke it sometime in the next 24 hours... should not take too long to do.\n\nSam Geen. Yeah I agree (and thanks for your comments) using YT's definition of a level I agree with. So shifting whatever values RAMSES gives you to the YT equivalent is essential.. but so is being able to access all the highly resolved data too... might want to make a mention of it somewhere in the docs about octrees (i.e showing how YT handles it compared to RAMSES or another AMR code).. but that would just be my 2 cents.",
+                "html": "<p>Only outstanding issue with this pull request is the difference between .ds.index.max_level and .ds.max_level ... will poke it sometime in the next 24 hours... should not take too long to do.</p>\n<p>Sam Geen. Yeah I agree (and thanks for your comments) using YT's definition of a level I agree with. So shifting whatever values RAMSES gives you to the YT equivalent is essential.. but so is being able to access all the highly resolved data too... might want to make a mention of it somewhere in the docs about octrees (i.e showing how YT handles it compared to RAMSES or another AMR code).. but that would just be my 2 cents.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -527,12 +481,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3832353"
@@ -541,8 +492,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3832353"
                 }
             },
+            "created_on": "2014-11-11T22:19:12.826020+00:00",
+            "updated_on": "2014-11-11T22:19:13.057816+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -552,19 +504,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Only outstanding issue with this pull request is the difference between .ds.index.max_level and .ds.max_level ... will poke it sometime in the next 24 hours... should not take too long to do.\n\nSam Geen. Yeah I agree (and thanks for your comments) using YT's definition of a level I agree with. So shifting whatever values RAMSES gives you to the YT equivalent is essential.. but so is being able to access all the highly resolved data too... might want to make a mention of it somewhere in the docs about octrees (i.e showing how YT handles it compared to RAMSES or another AMR code).. but that would just be my 2 cents.",
-                "html": "<p>Only outstanding issue with this pull request is the difference between .ds.index.max_level and .ds.max_level ... will poke it sometime in the next 24 hours... should not take too long to do.</p>\n<p>Sam Geen. Yeah I agree (and thanks for your comments) using YT's definition of a level I agree with. So shifting whatever values RAMSES gives you to the YT equivalent is essential.. but so is being able to access all the highly resolved data too... might want to make a mention of it somewhere in the docs about octrees (i.e showing how YT handles it compared to RAMSES or another AMR code).. but that would just be my 2 cents.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-11T22:19:12.826020+00:00",
-            "updated_on": "2014-11-11T22:19:13.057816+00:00",
+            "type": "pullrequest_comment",
             "id": 3832353
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "It is done. Tested it on a few snapshots too .. gives the expected results for get_smallest_dx()",
+                "html": "<p>It is done. Tested it on a few snapshots too .. gives the expected results for get_smallest_dx()</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -576,12 +530,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3843742"
@@ -590,8 +541,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3843742"
                 }
             },
+            "created_on": "2014-11-12T14:48:43.242031+00:00",
+            "updated_on": "2014-11-12T14:48:43.424714+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -601,19 +553,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "It is done. Tested it on a few snapshots too .. gives the expected results for get_smallest_dx()",
-                "html": "<p>It is done. Tested it on a few snapshots too .. gives the expected results for get_smallest_dx()</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-12T14:48:43.242031+00:00",
-            "updated_on": "2014-11-12T14:48:43.424714+00:00",
+            "type": "pullrequest_comment",
             "id": 3843742
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This also fixes the rockstar problems I encountered a few weeks ago too by the looks of it",
+                "html": "<p>This also fixes the rockstar problems I encountered a few weeks ago too by the looks of it</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -625,12 +579,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3845217"
@@ -639,8 +590,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3845217"
                 }
             },
+            "created_on": "2014-11-12T15:56:21.173017+00:00",
+            "updated_on": "2014-11-12T15:56:21.445107+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -650,19 +602,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "This also fixes the rockstar problems I encountered a few weeks ago too by the looks of it",
-                "html": "<p>This also fixes the rockstar problems I encountered a few weeks ago too by the looks of it</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-12T15:56:21.173017+00:00",
-            "updated_on": "2014-11-12T15:56:21.445107+00:00",
+            "type": "pullrequest_comment",
             "id": 3845217
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -674,12 +628,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3845762"
@@ -688,8 +639,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3845762"
                 }
             },
+            "created_on": "2014-11-12T16:19:45.580120+00:00",
+            "updated_on": "2014-11-12T16:19:45.798085+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -699,19 +651,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-12T16:19:45.580120+00:00",
-            "updated_on": "2014-11-12T16:19:45.798085+00:00",
+            "type": "pullrequest_comment",
             "id": 3845762
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can you put this comment above this line?  Can you also break it up into a few lines?  We try to keep lines to 80 characters max, in keeping with PEP-8.",
+                "html": "<p>Can you put this comment above this line?  Can you also break it up into a few lines?  We try to keep lines to 80 characters max, in keeping with PEP-8.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -723,25 +677,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3848212"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:7d390496848a..f7c75759e039?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3848212"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:7d390496848a..f7c75759e039?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
                 }
             },
+            "created_on": "2014-11-12T18:04:16.156206+00:00",
+            "updated_on": "2014-11-12T18:04:16.162889+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -751,24 +703,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Can you put this comment above this line?  Can you also break it up into a few lines?  We try to keep lines to 80 characters max, in keeping with PEP-8.",
-                "html": "<p>Can you put this comment above this line?  Can you also break it up into a few lines?  We try to keep lines to 80 characters max, in keeping with PEP-8.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-12T18:04:16.156206+00:00",
-            "updated_on": "2014-11-12T18:04:16.162889+00:00",
             "inline": {
-                "from": null,
+                "to": 227,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": 227
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 3848212
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@samgeen can you test this out?  I don't know of any other active ramses users off-hand, so if anyone else can test that would be very much appreciated.",
+                "html": "<p><a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> can you test this out?  I don't know of any other active ramses users off-hand, so if anyone else can test that would be very much appreciated.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -780,12 +734,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3848235"
@@ -794,8 +745,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3848235"
                 }
             },
+            "created_on": "2014-11-12T18:05:26.801795+00:00",
+            "updated_on": "2014-11-12T18:05:26.817915+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -805,19 +757,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "@samgeen can you test this out?  I don't know of any other active ramses users off-hand, so if anyone else can test that would be very much appreciated.",
-                "html": "<p><a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> can you test this out?  I don't know of any other active ramses users off-hand, so if anyone else can test that would be very much appreciated.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-12T18:05:26.801795+00:00",
-            "updated_on": "2014-11-12T18:05:26.817915+00:00",
+            "type": "pullrequest_comment",
             "id": 3848235
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Sure, I'm fighting pdf formats this evening but will try to download and test it tomorrow. I guess it's already been tried out on the sample datasets, but will give it a go with some of my simulations.",
+                "html": "<p>Sure, I'm fighting pdf formats this evening but will try to download and test it tomorrow. I guess it's already been tried out on the sample datasets, but will give it a go with some of my simulations.</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -829,12 +783,9 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3848266"
@@ -843,8 +794,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3848266"
                 }
             },
+            "created_on": "2014-11-12T18:07:38.966841+00:00",
+            "updated_on": "2014-11-12T18:07:39.402514+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -854,19 +806,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Sure, I'm fighting pdf formats this evening but will try to download and test it tomorrow. I guess it's already been tried out on the sample datasets, but will give it a go with some of my simulations.",
-                "html": "<p>Sure, I'm fighting pdf formats this evening but will try to download and test it tomorrow. I guess it's already been tried out on the sample datasets, but will give it a go with some of my simulations.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-12T18:07:38.966841+00:00",
-            "updated_on": "2014-11-12T18:07:39.402514+00:00",
+            "type": "pullrequest_comment",
             "id": 3848266
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Alright sure.",
+                "html": "<p>Alright sure.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -878,22 +832,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3862144"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3862144"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -906,8 +846,19 @@
                 },
                 "id": 3848212
             },
+            "created_on": "2014-11-13T13:44:35.720049+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3862144"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3862144"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/yt_analysis/yt:None..None?path=yt%2Ffrontends%2Framses%2Fdata_structures.py"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -917,24 +868,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Alright sure.",
-                "html": "<p>Alright sure.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-13T13:44:35.720049+00:00",
-            "updated_on": "2014-11-13T13:44:35.866083+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/frontends/ramses/data_structures.py",
-                "to": null
+                "from": null
             },
-            "id": 3862144
+            "type": "pullrequest_comment",
+            "id": 3862144,
+            "updated_on": "2014-11-13T13:44:35.866083+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
             "user": {
+                "username": "yt-fido",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/yt-fido"
@@ -946,12 +900,9 @@
                         "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3864289"
@@ -960,8 +911,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3864289"
                 }
             },
+            "created_on": "2014-11-13T15:25:21.014939+00:00",
+            "updated_on": "2014-11-13T15:25:21.172273+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -971,19 +923,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-13T15:25:21.014939+00:00",
-            "updated_on": "2014-11-13T15:25:21.172273+00:00",
+            "type": "pullrequest_comment",
             "id": 3864289
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "[samgeen](https://bitbucket.org/samgeen) let me know if this works for you.",
+                "html": "<p><a href=\"https://bitbucket.org/samgeen\">samgeen</a> let me know if this works for you.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -995,12 +949,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3882348"
@@ -1009,8 +960,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3882348"
                 }
             },
+            "created_on": "2014-11-14T15:28:50.343125+00:00",
+            "updated_on": "2014-11-14T15:29:40.693534+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1020,19 +972,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "[samgeen](https://bitbucket.org/samgeen) let me know if this works for you.",
-                "html": "<p><a href=\"https://bitbucket.org/samgeen\">samgeen</a> let me know if this works for you.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-14T15:28:50.343125+00:00",
-            "updated_on": "2014-11-14T15:29:40.693534+00:00",
+            "type": "pullrequest_comment",
             "id": 3882348
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I played around with this using some of the test ramses data on yt-project.org/data.  It seems to be doing the correct thing and I haven't noticed any issues.\n\nIf I haven't heard from @samgeen about this by monday, I'll merge this in.\n\nThanks for the contribution Ben!  I'm glad this was so straightforward to sort out :)",
+                "html": "<p>I played around with this using some of the test ramses data on <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>.  It seems to be doing the correct thing and I haven't noticed any issues.</p>\n<p>If I haven't heard from <a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> about this by monday, I'll merge this in.</p>\n<p>Thanks for the contribution Ben!  I'm glad this was so straightforward to sort out :)</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1044,12 +998,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3891783"
@@ -1058,8 +1009,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3891783"
                 }
             },
+            "created_on": "2014-11-16T02:29:11.800154+00:00",
+            "updated_on": "2014-11-16T02:29:11.811726+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1069,19 +1021,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "I played around with this using some of the test ramses data on yt-project.org/data.  It seems to be doing the correct thing and I haven't noticed any issues.\n\nIf I haven't heard from @samgeen about this by monday, I'll merge this in.\n\nThanks for the contribution Ben!  I'm glad this was so straightforward to sort out :)",
-                "html": "<p>I played around with this using some of the test ramses data on <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>.  It seems to be doing the correct thing and I haven't noticed any issues.</p>\n<p>If I haven't heard from <a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> about this by monday, I'll merge this in.</p>\n<p>Thanks for the contribution Ben!  I'm glad this was so straightforward to sort out :)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-16T02:29:11.800154+00:00",
-            "updated_on": "2014-11-16T02:29:11.811726+00:00",
+            "type": "pullrequest_comment",
             "id": 3891783
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Sorry, I've been sick recently so am behind on stuff. I tried installing this version and got an error with an import (I assume not related to the PR). I sent an email to the users list but I suspect that if it works for the test data you're good to merge it in.",
+                "html": "<p>Sorry, I've been sick recently so am behind on stuff. I tried installing this version and got an error with an import (I assume not related to the PR). I sent an email to the users list but I suspect that if it works for the test data you're good to merge it in.</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -1093,12 +1047,9 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3892974"
@@ -1107,8 +1058,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3892974"
                 }
             },
+            "created_on": "2014-11-16T17:30:15.965225+00:00",
+            "updated_on": "2014-11-16T17:30:16.197202+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1118,19 +1070,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Sorry, I've been sick recently so am behind on stuff. I tried installing this version and got an error with an import (I assume not related to the PR). I sent an email to the users list but I suspect that if it works for the test data you're good to merge it in.",
-                "html": "<p>Sorry, I've been sick recently so am behind on stuff. I tried installing this version and got an error with an import (I assume not related to the PR). I sent an email to the users list but I suspect that if it works for the test data you're good to merge it in.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-16T17:30:15.965225+00:00",
-            "updated_on": "2014-11-16T17:30:16.197202+00:00",
+            "type": "pullrequest_comment",
             "id": 3892974
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@samgreen I have built a fresh version on my laptop and YT imports fine. I suspect your import error is unrelated but keep me up to date with things.\nThis also fixes my problems with rockstar that I mentioned about in the users mailing list too :) ",
+                "html": "<p><a href=\"/samgreen/\" rel=\"nofollow\" title=\"@samgreen\" class=\"mention\">Sam Green</a> I have built a fresh version on my laptop and YT imports fine. I suspect your import error is unrelated but keep me up to date with things.\nThis also fixes my problems with rockstar that I mentioned about in the users mailing list too :) </p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -1142,12 +1096,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3893647"
@@ -1156,8 +1107,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3893647"
                 }
             },
+            "created_on": "2014-11-16T23:00:09.684435+00:00",
+            "updated_on": "2014-11-16T23:00:09.840861+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1167,19 +1119,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "@samgreen I have built a fresh version on my laptop and YT imports fine. I suspect your import error is unrelated but keep me up to date with things.\nThis also fixes my problems with rockstar that I mentioned about in the users mailing list too :) ",
-                "html": "<p><a href=\"/samgreen/\" rel=\"nofollow\" title=\"@samgreen\" class=\"mention\">Sam Green</a> I have built a fresh version on my laptop and YT imports fine. I suspect your import error is unrelated but keep me up to date with things.\nThis also fixes my problems with rockstar that I mentioned about in the users mailing list too :) </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-16T23:00:09.684435+00:00",
-            "updated_on": "2014-11-16T23:00:09.840861+00:00",
+            "type": "pullrequest_comment",
             "id": 3893647
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I ran the code on some of my data and the plots looked fine. However, I'm getting some strange units for the runs I just tried - temperatures of 10^11 K and 10^-35 g/cm^3. I suspect that this PR is OK, but I need to do some more digging to see what's up with the scalings.",
+                "html": "<p>I ran the code on some of my data and the plots looked fine. However, I'm getting some strange units for the runs I just tried - temperatures of 10^11 K and 10^-35 g/cm^3. I suspect that this PR is OK, but I need to do some more digging to see what's up with the scalings.</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -1191,12 +1145,9 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3893785"
@@ -1205,8 +1156,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3893785"
                 }
             },
+            "created_on": "2014-11-16T23:59:58.961936+00:00",
+            "updated_on": "2014-11-16T23:59:59.184092+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1216,19 +1168,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "I ran the code on some of my data and the plots looked fine. However, I'm getting some strange units for the runs I just tried - temperatures of 10^11 K and 10^-35 g/cm^3. I suspect that this PR is OK, but I need to do some more digging to see what's up with the scalings.",
-                "html": "<p>I ran the code on some of my data and the plots looked fine. However, I'm getting some strange units for the runs I just tried - temperatures of 10^11 K and 10^-35 g/cm^3. I suspect that this PR is OK, but I need to do some more digging to see what's up with the scalings.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-16T23:59:58.961936+00:00",
-            "updated_on": "2014-11-16T23:59:59.184092+00:00",
+            "type": "pullrequest_comment",
             "id": 3893785
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hmm, interesting.  Let's hold off on merging for a few days while we sort this out.\n\nFWIW, I'm seeing reasonable results using output_00080 from yt-project.org/data: http://nbviewer.ipython.org/gist/ngoldbaum/e921465a13c8c4294b47\n\nDo you happen to have a dataset you can share that is showing these anomalous temperatures and densities?",
+                "html": "<p>Hmm, interesting.  Let's hold off on merging for a few days while we sort this out.</p>\n<p>FWIW, I'm seeing reasonable results using output_00080 from <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>: <a href=\"http://nbviewer.ipython.org/gist/ngoldbaum/e921465a13c8c4294b47\" rel=\"nofollow\">http://nbviewer.ipython.org/gist/ngoldbaum/e921465a13c8c4294b47</a></p>\n<p>Do you happen to have a dataset you can share that is showing these anomalous temperatures and densities?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1240,19 +1194,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3893919"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3893919"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1265,8 +1208,16 @@
                 },
                 "id": 3893785
             },
+            "created_on": "2014-11-17T00:38:02.042327+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3893919"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3893919"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1276,19 +1227,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Hmm, interesting.  Let's hold off on merging for a few days while we sort this out.\n\nFWIW, I'm seeing reasonable results using output_00080 from yt-project.org/data: http://nbviewer.ipython.org/gist/ngoldbaum/e921465a13c8c4294b47\n\nDo you happen to have a dataset you can share that is showing these anomalous temperatures and densities?",
-                "html": "<p>Hmm, interesting.  Let's hold off on merging for a few days while we sort this out.</p>\n<p>FWIW, I'm seeing reasonable results using output_00080 from <a href=\"http://yt-project.org/data\" rel=\"nofollow\">yt-project.org/data</a>: <a href=\"http://nbviewer.ipython.org/gist/ngoldbaum/e921465a13c8c4294b47\" rel=\"nofollow\">http://nbviewer.ipython.org/gist/ngoldbaum/e921465a13c8c4294b47</a></p>\n<p>Do you happen to have a dataset you can share that is showing these anomalous temperatures and densities?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T00:38:02.042327+00:00",
-            "updated_on": "2014-11-17T00:38:02.049563+00:00",
-            "id": 3893919
+            "type": "pullrequest_comment",
+            "id": 3893919,
+            "updated_on": "2014-11-17T00:38:02.049563+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Uploading some data now, will take a little while. I also need to run yt side-by-side with pymses to make sure they give the same results.",
+                "html": "<p>Uploading some data now, will take a little while. I also need to run yt side-by-side with pymses to make sure they give the same results.</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -1300,19 +1254,8 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3893963"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3893963"
-                }
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
             "parent": {
                 "links": {
@@ -1325,8 +1268,16 @@
                 },
                 "id": 3893919
             },
+            "created_on": "2014-11-17T00:47:08.160965+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3893963"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3893963"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1336,19 +1287,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Uploading some data now, will take a little while. I also need to run yt side-by-side with pymses to make sure they give the same results.",
-                "html": "<p>Uploading some data now, will take a little while. I also need to run yt side-by-side with pymses to make sure they give the same results.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T00:47:08.160965+00:00",
-            "updated_on": "2014-11-17T00:47:08.385983+00:00",
-            "id": 3893963
+            "type": "pullrequest_comment",
+            "id": 3893963,
+            "updated_on": "2014-11-17T00:47:08.385983+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Here's the output: www.buildyourowngalaxy.com/dump/output_00025.zip\n\nI need to do some poking, but it's late here, so a job for another time...",
+                "html": "<p>Here's the output: <a href=\"http://www.buildyourowngalaxy.com/dump/output_00025.zip\" rel=\"nofollow\">www.buildyourowngalaxy.com/dump/output_00025.zip</a></p>\n<p>I need to do some poking, but it's late here, so a job for another time...</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -1360,12 +1314,9 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3894153"
@@ -1374,8 +1325,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3894153"
                 }
             },
+            "created_on": "2014-11-17T01:35:44.294466+00:00",
+            "updated_on": "2014-11-17T01:35:44.442781+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1385,19 +1337,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Here's the output: www.buildyourowngalaxy.com/dump/output_00025.zip\n\nI need to do some poking, but it's late here, so a job for another time...",
-                "html": "<p>Here's the output: <a href=\"http://www.buildyourowngalaxy.com/dump/output_00025.zip\" rel=\"nofollow\">www.buildyourowngalaxy.com/dump/output_00025.zip</a></p>\n<p>I need to do some poking, but it's late here, so a job for another time...</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T01:35:44.294466+00:00",
-            "updated_on": "2014-11-17T01:35:44.442781+00:00",
+            "type": "pullrequest_comment",
             "id": 3894153
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I get the same odd values for that dataset before and after this PR.\n\nI tried loading the data in pymses, but unfortunately ran into a seg fault (probably because I don't really understand how to use pymses), and can't print out the data values to compare.\n\nIt looks like the unit weirdness you're seeing is separate from this PR.  Since it fixes issues for Ben, I think it's worth merging.",
+                "html": "<p>I get the same odd values for that dataset before and after this PR.</p>\n<p>I tried loading the data in pymses, but unfortunately ran into a seg fault (probably because I don't really understand how to use pymses), and can't print out the data values to compare.</p>\n<p>It looks like the unit weirdness you're seeing is separate from this PR.  Since it fixes issues for Ben, I think it's worth merging.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1409,19 +1363,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3894286"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3894286"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1434,8 +1377,16 @@
                 },
                 "id": 3894153
             },
+            "created_on": "2014-11-17T02:11:16.576825+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3894286"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3894286"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1445,19 +1396,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "I get the same odd values for that dataset before and after this PR.\n\nI tried loading the data in pymses, but unfortunately ran into a seg fault (probably because I don't really understand how to use pymses), and can't print out the data values to compare.\n\nIt looks like the unit weirdness you're seeing is separate from this PR.  Since it fixes issues for Ben, I think it's worth merging.",
-                "html": "<p>I get the same odd values for that dataset before and after this PR.</p>\n<p>I tried loading the data in pymses, but unfortunately ran into a seg fault (probably because I don't really understand how to use pymses), and can't print out the data values to compare.</p>\n<p>It looks like the unit weirdness you're seeing is separate from this PR.  Since it fixes issues for Ben, I think it's worth merging.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T02:11:16.576825+00:00",
-            "updated_on": "2014-11-17T02:11:16.585430+00:00",
-            "id": 3894286
+            "type": "pullrequest_comment",
+            "id": 3894286,
+            "updated_on": "2014-11-17T02:11:16.585430+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@samgreen checking against pymses sounds like a good sanity check. I will check my simulations against pymses soon too (and compare results). Sounds like it is worth investigating independently of this PR.\n\nI agree with @ngoldbaum, it sounds like it would be something that is separate from this PR. Especially if the same problems arise before and after the PR. \n\nBefore we go ahead with this PR... it might be worth checking YT on other simulation sets that call yt/geometry/oct_geometry_handler.py ... do other AMR codes that call oct_geometry_handler.py encounter similar problems as to RAMSES?. It is worth checking.",
+                "html": "<p><a href=\"/samgreen/\" rel=\"nofollow\" title=\"@samgreen\" class=\"mention\">Sam Green</a> checking against pymses sounds like a good sanity check. I will check my simulations against pymses soon too (and compare results). Sounds like it is worth investigating independently of this PR.</p>\n<p>I agree with <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>, it sounds like it would be something that is separate from this PR. Especially if the same problems arise before and after the PR. </p>\n<p>Before we go ahead with this PR... it might be worth checking YT on other simulation sets that call yt/geometry/oct_geometry_handler.py ... do other AMR codes that call oct_geometry_handler.py encounter similar problems as to RAMSES?. It is worth checking.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -1469,19 +1423,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3901318"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3901318"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -1494,8 +1437,16 @@
                 },
                 "id": 3894286
             },
+            "created_on": "2014-11-17T12:54:38.951617+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3901318"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3901318"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1505,19 +1456,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "@samgreen checking against pymses sounds like a good sanity check. I will check my simulations against pymses soon too (and compare results). Sounds like it is worth investigating independently of this PR.\n\nI agree with @ngoldbaum, it sounds like it would be something that is separate from this PR. Especially if the same problems arise before and after the PR. \n\nBefore we go ahead with this PR... it might be worth checking YT on other simulation sets that call yt/geometry/oct_geometry_handler.py ... do other AMR codes that call oct_geometry_handler.py encounter similar problems as to RAMSES?. It is worth checking.",
-                "html": "<p><a href=\"/samgreen/\" rel=\"nofollow\" title=\"@samgreen\" class=\"mention\">Sam Green</a> checking against pymses sounds like a good sanity check. I will check my simulations against pymses soon too (and compare results). Sounds like it is worth investigating independently of this PR.</p>\n<p>I agree with <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a>, it sounds like it would be something that is separate from this PR. Especially if the same problems arise before and after the PR. </p>\n<p>Before we go ahead with this PR... it might be worth checking YT on other simulation sets that call yt/geometry/oct_geometry_handler.py ... do other AMR codes that call oct_geometry_handler.py encounter similar problems as to RAMSES?. It is worth checking.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T12:54:38.951617+00:00",
-            "updated_on": "2014-11-17T12:54:39.209269+00:00",
-            "id": 3901318
+            "type": "pullrequest_comment",
+            "id": 3901318,
+            "updated_on": "2014-11-17T12:54:39.209269+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@samgeen @ngoldbaum are you guys getting weird particle/cell numbers with the recent modifications? I am defiantly missing particles in a simple snapshot.sphere() request.. all_data() seems to be fine though",
+                "html": "<p><a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> are you guys getting weird particle/cell numbers with the recent modifications? I am defiantly missing particles in a simple snapshot.sphere() request.. all_data() seems to be fine though</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -1529,12 +1483,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3902999"
@@ -1543,8 +1494,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3902999"
                 }
             },
+            "created_on": "2014-11-17T14:21:09.322847+00:00",
+            "updated_on": "2014-11-17T14:27:45.980565+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1554,19 +1506,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "@samgeen @ngoldbaum are you guys getting weird particle/cell numbers with the recent modifications? I am defiantly missing particles in a simple snapshot.sphere() request.. all_data() seems to be fine though",
-                "html": "<p><a href=\"/samgeen/\" rel=\"nofollow\" title=\"@samgeen\" class=\"mention\">samgeen</a> <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> are you guys getting weird particle/cell numbers with the recent modifications? I am defiantly missing particles in a simple snapshot.sphere() request.. all_data() seems to be fine though</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T14:21:09.322847+00:00",
-            "updated_on": "2014-11-17T14:27:45.980565+00:00",
+            "type": "pullrequest_comment",
             "id": 3902999
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "e.g \n \nsp = snapa.ds.sphere([0.5,0.5,0.5],0.5)\n\nlen(sp[\"particle_mass\"])\nTraceback (most recent call last):\n\n  File \"<stdin>\", line 1, in <module>\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 240, in __getitem__\n    self.get_data(f)\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 667, in get_data\n    particles, self, self._current_chunk)\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/geometry/geometry_handler.py\", line 234, in _read_particle_fields\n    fields_to_read)\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/utilities/io_handler.py\", line 174, in _read_particle_selection\n    rv[field_f][my_ind:my_ind + vals.shape[0],...] = vals\n\nValueError: could not broadcast input array from shape (3115) into shape (0)\n",
+                "html": "<p>e.g </p>\n<p>sp = snapa.ds.sphere([0.5,0.5,0.5],0.5)</p>\n<p>len(sp[\"particle_mass\"])\nTraceback (most recent call last):</p>\n<p>File \"&lt;stdin&gt;\", line 1, in &lt;module&gt;</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 240, in <strong>getitem</strong>\n    self.get_data(f)</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 667, in get_data\n    particles, self, self._current_chunk)</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/geometry/geometry_handler.py\", line 234, in _read_particle_fields\n    fields_to_read)</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/utilities/io_handler.py\", line 174, in _read_particle_selection\n    rv[field_f][my_ind:my_ind + vals.shape[0],...] = vals</p>\n<p>ValueError: could not broadcast input array from shape (3115) into shape (0)</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -1578,19 +1532,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3903241"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3903241"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -1603,8 +1546,16 @@
                 },
                 "id": 3902999
             },
+            "created_on": "2014-11-17T14:30:30.251468+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3903241"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3903241"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1614,19 +1565,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "e.g \n \nsp = snapa.ds.sphere([0.5,0.5,0.5],0.5)\n\nlen(sp[\"particle_mass\"])\nTraceback (most recent call last):\n\n  File \"<stdin>\", line 1, in <module>\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 240, in __getitem__\n    self.get_data(f)\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 667, in get_data\n    particles, self, self._current_chunk)\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/geometry/geometry_handler.py\", line 234, in _read_particle_fields\n    fields_to_read)\n\n  File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/utilities/io_handler.py\", line 174, in _read_particle_selection\n    rv[field_f][my_ind:my_ind + vals.shape[0],...] = vals\n\nValueError: could not broadcast input array from shape (3115) into shape (0)\n",
-                "html": "<p>e.g </p>\n<p>sp = snapa.ds.sphere([0.5,0.5,0.5],0.5)</p>\n<p>len(sp[\"particle_mass\"])\nTraceback (most recent call last):</p>\n<p>File \"&lt;stdin&gt;\", line 1, in &lt;module&gt;</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 240, in <strong>getitem</strong>\n    self.get_data(f)</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/data_objects/data_containers.py\", line 667, in get_data\n    particles, self, self._current_chunk)</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/geometry/geometry_handler.py\", line 234, in _read_particle_fields\n    fields_to_read)</p>\n<p>File \"/gpfs/home/bthompson1/python/yt/yt-x86_64/src/yt-hg/yt/utilities/io_handler.py\", line 174, in _read_particle_selection\n    rv[field_f][my_ind:my_ind + vals.shape[0],...] = vals</p>\n<p>ValueError: could not broadcast input array from shape (3115) into shape (0)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T14:30:30.251468+00:00",
-            "updated_on": "2014-11-17T14:31:06.578263+00:00",
-            "id": 3903241
+            "type": "pullrequest_comment",
+            "id": 3903241,
+            "updated_on": "2014-11-17T14:31:06.578263+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Actually.. to give context on this one... this occurred when calling some commands in the python interpreter without calling YT initially as the first command.. I have a custom code that wraps around YT.... false alarm.. but at the same time.. this is another bug identified.",
+                "html": "<p>Actually.. to give context on this one... this occurred when calling some commands in the python interpreter without calling YT initially as the first command.. I have a custom code that wraps around YT.... false alarm.. but at the same time.. this is another bug identified.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -1638,19 +1592,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3903732"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3903732"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -1663,8 +1606,16 @@
                 },
                 "id": 3903241
             },
+            "created_on": "2014-11-17T14:49:41.393791+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3903732"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3903732"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1674,19 +1625,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Actually.. to give context on this one... this occurred when calling some commands in the python interpreter without calling YT initially as the first command.. I have a custom code that wraps around YT.... false alarm.. but at the same time.. this is another bug identified.",
-                "html": "<p>Actually.. to give context on this one... this occurred when calling some commands in the python interpreter without calling YT initially as the first command.. I have a custom code that wraps around YT.... false alarm.. but at the same time.. this is another bug identified.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T14:49:41.393791+00:00",
-            "updated_on": "2014-11-17T14:49:41.691631+00:00",
-            "id": 3903732
+            "type": "pullrequest_comment",
+            "id": 3903732,
+            "updated_on": "2014-11-17T14:49:41.691631+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Basically.. this PR is fine.. there looks like there are other issues with RAMSES (might ask my supervisor if I can take a week off ordinary research to investigate all of this).",
+                "html": "<p>Basically.. this PR is fine.. there looks like there are other issues with RAMSES (might ask my supervisor if I can take a week off ordinary research to investigate all of this).</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -1698,12 +1652,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3903793"
@@ -1712,8 +1663,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3903793"
                 }
             },
+            "created_on": "2014-11-17T14:52:14.822545+00:00",
+            "updated_on": "2014-11-17T14:52:14.970998+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1723,19 +1675,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Basically.. this PR is fine.. there looks like there are other issues with RAMSES (might ask my supervisor if I can take a week off ordinary research to investigate all of this).",
-                "html": "<p>Basically.. this PR is fine.. there looks like there are other issues with RAMSES (might ask my supervisor if I can take a week off ordinary research to investigate all of this).</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T14:52:14.822545+00:00",
-            "updated_on": "2014-11-17T14:52:14.970998+00:00",
+            "type": "pullrequest_comment",
             "id": 3903793
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi Matt.... The previous error I spoke about (2 comments above).. is caused by myself *not* importing YT in the interpreter.. calling objects from scripts... and then trying to use YT functionality (e.g getting a sphere object) without importing YT into the interpreter... I suspect this is a seperate error in it's own right.. and simply importing YT in the interpreter upon loading it up resolves the problem... those were all interpreter commands... I was trying to call an YT object from another script... and tried to interact with the YT fields without importing YT into the interpreter... basically something not sensible.\n\n(for context.. I have some code that wraps around yt, pynbody and pymses)\n\nBen",
+                "html": "<p>Hi Matt.... The previous error I spoke about (2 comments above).. is caused by myself <em>not</em> importing YT in the interpreter.. calling objects from scripts... and then trying to use YT functionality (e.g getting a sphere object) without importing YT into the interpreter... I suspect this is a seperate error in it's own right.. and simply importing YT in the interpreter upon loading it up resolves the problem... those were all interpreter commands... I was trying to call an YT object from another script... and tried to interact with the YT fields without importing YT into the interpreter... basically something not sensible.</p>\n<p>(for context.. I have some code that wraps around yt, pynbody and pymses)</p>\n<p>Ben</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -1747,12 +1701,9 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3904034"
@@ -1761,8 +1712,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3904034"
                 }
             },
+            "created_on": "2014-11-17T15:02:07.942508+00:00",
+            "updated_on": "2014-11-17T15:10:37.281518+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1772,19 +1724,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Hi Matt.... The previous error I spoke about (2 comments above).. is caused by myself *not* importing YT in the interpreter.. calling objects from scripts... and then trying to use YT functionality (e.g getting a sphere object) without importing YT into the interpreter... I suspect this is a seperate error in it's own right.. and simply importing YT in the interpreter upon loading it up resolves the problem... those were all interpreter commands... I was trying to call an YT object from another script... and tried to interact with the YT fields without importing YT into the interpreter... basically something not sensible.\n\n(for context.. I have some code that wraps around yt, pynbody and pymses)\n\nBen",
-                "html": "<p>Hi Matt.... The previous error I spoke about (2 comments above).. is caused by myself <em>not</em> importing YT in the interpreter.. calling objects from scripts... and then trying to use YT functionality (e.g getting a sphere object) without importing YT into the interpreter... I suspect this is a seperate error in it's own right.. and simply importing YT in the interpreter upon loading it up resolves the problem... those were all interpreter commands... I was trying to call an YT object from another script... and tried to interact with the YT fields without importing YT into the interpreter... basically something not sensible.</p>\n<p>(for context.. I have some code that wraps around yt, pynbody and pymses)</p>\n<p>Ben</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T15:02:07.942508+00:00",
-            "updated_on": "2014-11-17T15:10:37.281518+00:00",
+            "type": "pullrequest_comment",
             "id": 3904034
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "A comparison of pymses and YT slice plots: https://dl.dropboxusercontent.com/u/4926754/ytcompare.zip\nI've plotted the pymses density with hydrogen atoms/cm^3, but multiplying by 1.67e-24 should convert to g/cm^3\n\nThe box length is 0.0012554779, if this helps. I'll try to take a poke at the frontend at some point to see if I can see some bugs. ",
+                "html": "<p>A comparison of pymses and YT slice plots: <a href=\"https://dl.dropboxusercontent.com/u/4926754/ytcompare.zip\" rel=\"nofollow\">https://dl.dropboxusercontent.com/u/4926754/ytcompare.zip</a>\nI've plotted the pymses density with hydrogen atoms/cm^3, but multiplying by 1.67e-24 should convert to g/cm^3</p>\n<p>The box length is 0.<a href=\"/yt_analysis/yt/commits/0012554779\" rel=\"nofollow\">0012554779</a>, if this helps. I'll try to take a poke at the frontend at some point to see if I can see some bugs. </p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -1796,19 +1750,8 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910894"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910894"
-                }
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
             "parent": {
                 "links": {
@@ -1821,8 +1764,16 @@
                 },
                 "id": 3894286
             },
+            "created_on": "2014-11-17T20:24:29.747209+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910894"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910894"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1832,19 +1783,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "A comparison of pymses and YT slice plots: https://dl.dropboxusercontent.com/u/4926754/ytcompare.zip\nI've plotted the pymses density with hydrogen atoms/cm^3, but multiplying by 1.67e-24 should convert to g/cm^3\n\nThe box length is 0.0012554779, if this helps. I'll try to take a poke at the frontend at some point to see if I can see some bugs. ",
-                "html": "<p>A comparison of pymses and YT slice plots: <a href=\"https://dl.dropboxusercontent.com/u/4926754/ytcompare.zip\" rel=\"nofollow\">https://dl.dropboxusercontent.com/u/4926754/ytcompare.zip</a>\nI've plotted the pymses density with hydrogen atoms/cm^3, but multiplying by 1.67e-24 should convert to g/cm^3</p>\n<p>The box length is 0.<a href=\"/yt_analysis/yt/commits/0012554779\" rel=\"nofollow\">0012554779</a>, if this helps. I'll try to take a poke at the frontend at some point to see if I can see some bugs. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T20:24:29.747209+00:00",
-            "updated_on": "2014-11-17T20:24:29.981588+00:00",
-            "id": 3910894
+            "type": "pullrequest_comment",
+            "id": 3910894,
+            "updated_on": "2014-11-17T20:24:29.981588+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can you open a separate issue to track this?",
+                "html": "<p>Can you open a separate issue to track this?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1856,19 +1810,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910916"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910916"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1881,8 +1824,16 @@
                 },
                 "id": 3903732
             },
+            "created_on": "2014-11-17T20:26:25.136727+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910916"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910916"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1892,19 +1843,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Can you open a separate issue to track this?",
-                "html": "<p>Can you open a separate issue to track this?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T20:26:25.136727+00:00",
-            "updated_on": "2014-11-17T20:26:25.148646+00:00",
-            "id": 3910916
+            "type": "pullrequest_comment",
+            "id": 3910916,
+            "updated_on": "2014-11-17T20:26:25.148646+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Can you open a separate issue to track this?",
+                "html": "<p>Can you open a separate issue to track this?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1916,19 +1870,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910919"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910919"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1941,8 +1884,16 @@
                 },
                 "id": 3910894
             },
+            "created_on": "2014-11-17T20:26:36.953766+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910919"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910919"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1952,19 +1903,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Can you open a separate issue to track this?",
-                "html": "<p>Can you open a separate issue to track this?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T20:26:36.953766+00:00",
-            "updated_on": "2014-11-17T20:26:36.963336+00:00",
-            "id": 3910919
+            "type": "pullrequest_comment",
+            "id": 3910919,
+            "updated_on": "2014-11-17T20:26:36.963336+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "OK, so since this does solve some issues for Ben, and the other issues people have brought up seem orthogonal to what this PR addresses, is this OK to go in?",
+                "html": "<p>OK, so since this does solve some issues for Ben, and the other issues people have brought up seem orthogonal to what this PR addresses, is this OK to go in?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1976,12 +1930,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910927"
@@ -1990,8 +1941,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910927"
                 }
             },
+            "created_on": "2014-11-17T20:27:10.194370+00:00",
+            "updated_on": "2014-11-17T20:27:10.204586+00:00",
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2001,19 +1953,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "OK, so since this does solve some issues for Ben, and the other issues people have brought up seem orthogonal to what this PR addresses, is this OK to go in?",
-                "html": "<p>OK, so since this does solve some issues for Ben, and the other issues people have brought up seem orthogonal to what this PR addresses, is this OK to go in?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T20:27:10.194370+00:00",
-            "updated_on": "2014-11-17T20:27:10.204586+00:00",
+            "type": "pullrequest_comment",
             "id": 3910927
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Fine by me!",
+                "html": "<p>Fine by me!</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -2025,19 +1979,8 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910942"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910942"
-                }
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
             "parent": {
                 "links": {
@@ -2050,8 +1993,16 @@
                 },
                 "id": 3910927
             },
+            "created_on": "2014-11-17T20:28:50.322434+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3910942"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3910942"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2061,19 +2012,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Fine by me!",
-                "html": "<p>Fine by me!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T20:28:50.322434+00:00",
-            "updated_on": "2014-11-17T20:28:50.495174+00:00",
-            "id": 3910942
+            "type": "pullrequest_comment",
+            "id": 3910942,
+            "updated_on": "2014-11-17T20:28:50.495174+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Done",
+                "html": "<p>Done</p>"
+            },
             "user": {
+                "username": "samgeen",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samgeen"
@@ -2085,19 +2039,8 @@
                         "href": "https://bitbucket.org/account/samgeen/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "samgeen",
-                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}",
-                "username": "samgeen"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3911024"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3911024"
-                }
+                "uuid": "{661e1d27-bd6c-4370-bcc5-760b030335a0}"
             },
             "parent": {
                 "links": {
@@ -2110,8 +2053,16 @@
                 },
                 "id": 3910919
             },
+            "created_on": "2014-11-17T20:34:32.276105+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3911024"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3911024"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2121,19 +2072,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Done",
-                "html": "<p>Done</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T20:34:32.276105+00:00",
-            "updated_on": "2014-11-17T20:34:32.505454+00:00",
-            "id": 3911024
+            "type": "pullrequest_comment",
+            "id": 3911024,
+            "updated_on": "2014-11-17T20:34:32.505454+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yeah fine by me too.. things are going a bit orthogonal here.. lets address them all separately.",
+                "html": "<p>Yeah fine by me too.. things are going a bit orthogonal here.. lets address them all separately.</p>"
+            },
             "user": {
+                "username": "cosmosquark",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
@@ -2145,19 +2099,8 @@
                         "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Ben Thompson",
-                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}",
-                "username": "cosmosquark"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3911025"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3911025"
-                }
+                "display_name": "Benjamin Thompson",
+                "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
             },
             "parent": {
                 "links": {
@@ -2170,8 +2113,16 @@
                 },
                 "id": 3910942
             },
+            "created_on": "2014-11-17T20:34:34.256105+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1302/comments/3911025"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302/_/diff#comment-3911025"
+                }
+            },
             "pullrequest": {
-                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -2181,16 +2132,65 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1302"
                     }
                 },
+                "title": "Ramses frontend improvement  (min_level and max_level consistancy) + slight oct tree geometry change",
                 "id": 1302
             },
-            "content": {
-                "raw": "Yeah fine by me too.. things are going a bit orthogonal here.. lets address them all separately.",
-                "html": "<p>Yeah fine by me too.. things are going a bit orthogonal here.. lets address them all separately.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-11-17T20:34:34.256105+00:00",
-            "updated_on": "2014-11-17T20:34:34.356544+00:00",
-            "id": 3911025
+            "type": "pullrequest_comment",
+            "id": 3911025,
+            "updated_on": "2014-11-17T20:34:34.356544+00:00"
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "I am going to be creating a series of updates/fixes to the YT frontend over the course of time whilst using YT to analyse my ramses simulation datasets.\r\n\r\nSince ramses is \"1-based\" in terms of index hierarchy (looking around, I think FLASH is the same and maybe other fortran based AMR codes). I have made these updates to accommodate for this.\r\n\r\nMain problem is with how it handles the max level and ds.index.get_smallest_dx()\r\n\r\nI will be pushing more updates overtime, since I know there is a few bugs with some of the fields.\r\n\r\nEDIT.. these changes ruin the octtree... going to look into it.\r\n\r\nEDIT.. alter one thing and another problem occurs.\r\n\r\nEDIT.. tested it on one unigrid run and two different multi-resolution runs... gives results that I would expect. We are good to go ahead with this PR\r\n\r\nEDIT.. Also fixes my previous problems with rockstar too.\r\n\r\n----------------------------------\r\nAs for why I have made these changes... ramses works in a 1-index format (so that the lowest resolved \"level\" is 1) as such that if max_level = 14, you will have up to 2^14 cells per dimension.\r\n\r\nWhich is fine, but the way the code is setup (e.g self.max_level = rheader['levelmax'] - self.min_level ) .. considering the min_level = rheader['levelmin'] - 1... the max level you are getting for a simulation resolving up to level 14, with a minimum level of 7,... 7 - 1 = 6... so your max level would be \"9\"\r\n\r\nNow.. if you were to do a YTSphere with this, the YTSphereTooSmall exception will be raised... even though you have data that is resolved spatially beyond level 9.\r\n\r\n\r\n\r\nBen.",
+    "author": {
+        "username": "cosmosquark",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/cosmosquark"
+            },
+            "html": {
+                "href": "https://bitbucket.org/cosmosquark/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/cosmosquark/avatar/32/"
+            }
+        },
+        "display_name": "Benjamin Thompson",
+        "uuid": "{9e042959-0198-4a41-9f94-522b998130ed}"
+    },
+    "updated_on": "2014-11-17T20:34:34.360185+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "e8fb57e66ca4",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e8fb57e66ca4"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

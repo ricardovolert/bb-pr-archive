@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2013-05-21T19:00:44.559106+00:00",
-    "comment_count": 5,
-    "description": "This fixes a couple of deficiencies related to units and plotting.\r\n\r\n1. Adds `km` as a first class length unit.  We have `miles` already so there's really no excuse for not including `km` ;)\r\n\r\n2. Adds pretty formatting for some of the length units.  The main bonus here is that `mpc` (which we encode as megaparsec, not milliparsec) will be displayed as Mpc and `rsun` will be displayed as a pretty mathtext R_\\odot.\r\n\r\n3. Prevents huge colorbar tick labels when users are using a linear colorbar.\r\n\r\n4. Properly sets the offset text font for the colorbar.\r\n\r\n5. Improves the way field names with underscores are displayed.  This only affects fields that have undefined display names.\r\n\r\nI've pasted a before and after comparison plot that illustrates many of these improvements.\r\n\r\n\r\n```\r\n#!python\r\n\r\nfrom yt.mods import *\r\npf = load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\n\r\ndef _temperature_alias(field, data):\r\n    return data['Temperature']\r\n\r\nadd_field('temperature_alias',function=_temperature_alias)\r\n\r\nslc = SlicePlot(pf,0,'temperature_alias',width=(1.1e12,'rsun'))\r\nslc.set_log('temperature_alias', False)\r\nslc.save()\r\n\r\n```\r\n\r\nBefore:\r\n\r\n![](http://i.imgur.com/axQ1M6e.png)\r\n\r\nAfter:\r\n\r\n![](http://i.imgur.com/2xyaFE6.png)\r\n\r\nUPDATE:\r\n\r\nAfter experimenting with the plot window answer tests, I realized that the image comparison wasn't working correctly.  Since the matplotlib `compare_images` fails without raising an `AssertionError`, the test will pass even if the comparison fails.  \r\n\r\nThe most recent changeset (0645ed7) in the PR fixes the issue. Fortunately none of the tests have started to fail in the time since the answers were generated, so this can be merged in as is without updating the gold standard.\r\n\r\nUnfortunately this also means that the plot window answer tests haven't been running correctly for the past couple of months.  Sorry for the careless mistake that led to this situation.  Hopefully now that the comparison is fixed we'll be able to use it to catch some bugs rather than cause headaches.  The plot callbacks are probably the next low-hanging fruit since right now they're untested.",
-    "created_on": "2013-05-18T20:05:56.327440+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/508e6bd26c88"
-            }
-        },
-        "hash": "508e6bd26c88"
-    },
-    "title": "Fixes for unit handling and plotting.",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
-    "id": 504,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/0645ed7b016a"
-                }
-            },
-            "hash": "0645ed7b016a"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "0645ed7b016a",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/49b7b6f20d70"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/0645ed7b016a"
                 }
-            },
-            "hash": "49b7b6f20d70"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "title": "Fixes for unit handling and plotting.",
+    "id": 504,
+    "comment_count": 5,
+    "created_on": "2013-05-18T20:05:56.327440+00:00",
+    "merge_commit": {
+        "hash": "508e6bd26c88",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/508e6bd26c88"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This *does* look like a bunch of improvements.  Nice work!  I'll review this ASAP, but it would be good to hear from @jsoishi and @samskillman who have both done a bunch with plots in the past, too.",
+                "html": "<p>This <em>does</em> look like a bunch of improvements.  Nice work!  I'll review this ASAP, but it would be good to hear from <a href=\"/jsoishi/\" rel=\"nofollow\" title=\"@jsoishi\" class=\"mention\">J. S. Oishi</a> and <a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a> who have both done a bunch with plots in the past, too.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments/259305"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504/_/diff#comment-259305"
                 }
             },
+            "created_on": "2013-05-18T20:15:35.543679+00:00",
+            "updated_on": "2013-05-18T20:15:35.568824+00:00",
             "pullrequest": {
-                "title": "Fixes for unit handling and plotting.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504"
                     }
                 },
+                "title": "Fixes for unit handling and plotting.",
                 "id": 504
             },
-            "content": {
-                "raw": "This *does* look like a bunch of improvements.  Nice work!  I'll review this ASAP, but it would be good to hear from @jsoishi and @samskillman who have both done a bunch with plots in the past, too.",
-                "html": "<p>This <em>does</em> look like a bunch of improvements.  Nice work!  I'll review this ASAP, but it would be good to hear from <a href=\"/jsoishi/\" rel=\"nofollow\" title=\"@jsoishi\" class=\"mention\">J. S. Oishi</a> and <a href=\"/samskillman/\" rel=\"nofollow\" title=\"@samskillman\" class=\"mention\">Sam Skillman</a> who have both done a bunch with plots in the past, too.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-18T20:15:35.543679+00:00",
-            "updated_on": "2013-05-18T20:15:35.568824+00:00",
+            "type": "pullrequest_comment",
             "id": 259305
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "What does this line do?",
+                "html": "<p>What does this line do?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -207,25 +161,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments/261027"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:0645ed7b016a..49b7b6f20d70?path=yt%2Fvisualization%2Fplot_window.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504/_/diff#comment-261027"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:0645ed7b016a..49b7b6f20d70?path=yt%2Fvisualization%2Fplot_window.py"
                 }
             },
+            "created_on": "2013-05-20T15:43:49.134255+00:00",
+            "updated_on": "2013-05-20T15:43:49.141216+00:00",
             "pullrequest": {
-                "title": "Fixes for unit handling and plotting.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -235,24 +187,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504"
                     }
                 },
+                "title": "Fixes for unit handling and plotting.",
                 "id": 504
             },
-            "content": {
-                "raw": "What does this line do?",
-                "html": "<p>What does this line do?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-20T15:43:49.134255+00:00",
-            "updated_on": "2013-05-20T15:43:49.141216+00:00",
             "inline": {
-                "from": null,
+                "to": 1765,
                 "path": "yt/visualization/plot_window.py",
-                "to": 1765
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 261027
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "It sets the range where scientific notation kicks in, i.e for values < 1e-2 and > 1e3",
+                "html": "<p>It sets the range where scientific notation kicks in, i.e for values &lt; 1e-2 and &gt; 1e3</p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -264,22 +218,8 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments/261044"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504/_/diff#comment-261044"
-                }
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
             "parent": {
                 "links": {
@@ -292,8 +232,19 @@
                 },
                 "id": 261027
             },
+            "created_on": "2013-05-20T15:48:28.766440+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments/261044"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504/_/diff#comment-261044"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixes for unit handling and plotting.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -303,24 +254,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504"
                     }
                 },
+                "title": "Fixes for unit handling and plotting.",
                 "id": 504
             },
-            "content": {
-                "raw": "It sets the range where scientific notation kicks in, i.e for values < 1e-2 and > 1e3",
-                "html": "<p>It sets the range where scientific notation kicks in, i.e for values &lt; 1e-2 and &gt; 1e3</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-20T15:48:28.766440+00:00",
-            "updated_on": "2013-05-20T15:48:28.776045+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_window.py",
-                "to": null
+                "from": null
             },
-            "id": 261044
+            "type": "pullrequest_comment",
+            "id": 261044,
+            "updated_on": "2013-05-20T15:48:28.776045+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "See this discussion: http://matplotlib.1069221.n5.nabble.com/colorbar-and-scilimits-td24580.html#a31225944",
+                "html": "<p>See this discussion: <a href=\"http://matplotlib.1069221.n5.nabble.com/colorbar-and-scilimits-td24580.html#a31225944\" rel=\"nofollow\">http://matplotlib.1069221.n5.nabble.com/colorbar-and-scilimits-td24580.html#a31225944</a></p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -332,22 +286,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments/261492"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504/_/diff#comment-261492"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -360,8 +300,19 @@
                 },
                 "id": 261044
             },
+            "created_on": "2013-05-20T19:23:49.089243+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments/261492"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504/_/diff#comment-261492"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixes for unit handling and plotting.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -371,24 +322,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504"
                     }
                 },
+                "title": "Fixes for unit handling and plotting.",
                 "id": 504
             },
-            "content": {
-                "raw": "See this discussion: http://matplotlib.1069221.n5.nabble.com/colorbar-and-scilimits-td24580.html#a31225944",
-                "html": "<p>See this discussion: <a href=\"http://matplotlib.1069221.n5.nabble.com/colorbar-and-scilimits-td24580.html#a31225944\" rel=\"nofollow\">http://matplotlib.1069221.n5.nabble.com/colorbar-and-scilimits-td24580.html#a31225944</a></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-20T19:23:49.089243+00:00",
-            "updated_on": "2013-05-20T19:23:49.099342+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_window.py",
-                "to": null
+                "from": null
             },
-            "id": 261492
+            "type": "pullrequest_comment",
+            "id": 261492,
+            "updated_on": "2013-05-20T19:23:49.099342+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Looks like we have three approvals - anyone want to hit the merge button?",
+                "html": "<p>Looks like we have three approvals - anyone want to hit the merge button?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -400,12 +354,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/504/comments/261716"
@@ -414,8 +365,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504/_/diff#comment-261716"
                 }
             },
+            "created_on": "2013-05-20T21:02:08.910026+00:00",
+            "updated_on": "2013-05-20T21:02:08.916923+00:00",
             "pullrequest": {
-                "title": "Fixes for unit handling and plotting.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -425,16 +377,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/504"
                     }
                 },
+                "title": "Fixes for unit handling and plotting.",
                 "id": 504
             },
-            "content": {
-                "raw": "Looks like we have three approvals - anyone want to hit the merge button?",
-                "html": "<p>Looks like we have three approvals - anyone want to hit the merge button?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2013-05-20T21:02:08.910026+00:00",
-            "updated_on": "2013-05-20T21:02:08.916923+00:00",
+            "type": "pullrequest_comment",
             "id": 261716
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This fixes a couple of deficiencies related to units and plotting.\r\n\r\n1. Adds `km` as a first class length unit.  We have `miles` already so there's really no excuse for not including `km` ;)\r\n\r\n2. Adds pretty formatting for some of the length units.  The main bonus here is that `mpc` (which we encode as megaparsec, not milliparsec) will be displayed as Mpc and `rsun` will be displayed as a pretty mathtext R_\\odot.\r\n\r\n3. Prevents huge colorbar tick labels when users are using a linear colorbar.\r\n\r\n4. Properly sets the offset text font for the colorbar.\r\n\r\n5. Improves the way field names with underscores are displayed.  This only affects fields that have undefined display names.\r\n\r\nI've pasted a before and after comparison plot that illustrates many of these improvements.\r\n\r\n\r\n```\r\n#!python\r\n\r\nfrom yt.mods import *\r\npf = load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\n\r\ndef _temperature_alias(field, data):\r\n    return data['Temperature']\r\n\r\nadd_field('temperature_alias',function=_temperature_alias)\r\n\r\nslc = SlicePlot(pf,0,'temperature_alias',width=(1.1e12,'rsun'))\r\nslc.set_log('temperature_alias', False)\r\nslc.save()\r\n\r\n```\r\n\r\nBefore:\r\n\r\n![](http://i.imgur.com/axQ1M6e.png)\r\n\r\nAfter:\r\n\r\n![](http://i.imgur.com/2xyaFE6.png)\r\n\r\nUPDATE:\r\n\r\nAfter experimenting with the plot window answer tests, I realized that the image comparison wasn't working correctly.  Since the matplotlib `compare_images` fails without raising an `AssertionError`, the test will pass even if the comparison fails.  \r\n\r\nThe most recent changeset (0645ed7) in the PR fixes the issue. Fortunately none of the tests have started to fail in the time since the answers were generated, so this can be merged in as is without updating the gold standard.\r\n\r\nUnfortunately this also means that the plot window answer tests haven't been running correctly for the past couple of months.  Sorry for the careless mistake that led to this situation.  Hopefully now that the comparison is fixed we'll be able to use it to catch some bugs rather than cause headaches.  The plot callbacks are probably the next low-hanging fruit since right now they're untested.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2013-05-21T19:00:44.559106+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "49b7b6f20d70",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/49b7b6f20d70"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }

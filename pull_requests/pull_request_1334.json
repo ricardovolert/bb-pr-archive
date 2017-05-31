@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2014-12-08T17:56:17.253997+00:00",
-    "comment_count": 1,
-    "description": "The following script:\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nds = yt.load('GasSloshing/sloshing_nomag2_hdf5_plt_cnt_0150')\r\nds.index\r\nyt.SlicePlot(ds, 2, 'density')\r\n```\r\n\r\nwill trigger some warnings in recent releases of numpy and matplotlib:\r\n\r\n\r\n```\r\n#!python\r\n\r\n/home/goldbaum/Documents/yt-hg/yt/data_objects/static_output.py:684: FutureWarning: comparison to `None` will result in an elementwise object comparison in the future.\r\n  if None not in (self.domain_left_edge, self.domain_right_edge):\r\n/home/goldbaum/anaconda/lib/python2.7/site-packages/matplotlib/axes/_base.py:1039: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal\r\n  if aspect == 'normal':\r\n/home/goldbaum/anaconda/lib/python2.7/site-packages/matplotlib/axes/_base.py:1044: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal\r\n  elif aspect in ('equal', 'auto'):\r\n```\r\n\r\nThe first is due to a future behavior change in numpy.  Since `None in (array1, array2)` is equivalent to `None == array1 and None == array2`, what we're doing right now is probably not optimal.  I've updated this line to explicitly compare to `None` using `is`.\r\n\r\nThe second is due to a somewhat subtle issue with matplotlib's use of `from __future__ import unicode_literals`.  Since `numpy.float64` does not automatically convert to unicode, we inderectly trigger unicode  conversion errors when matplotlib tries to compare the aspect ratio with a string literal.  The solution is to pass a normal python `float` to matplotlib instead of a `numpy.float64`.",
-    "created_on": "2014-12-04T01:23:41.475375+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e2419cd7c329"
-            }
-        },
-        "hash": "e2419cd7c329"
-    },
-    "title": "Avoid triggering warnings in recent versions of NumPy and matplotlib",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1334"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
-            },
-            "html": {
-                "href": "https://bitbucket.org/MatthewTurk/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Matt Turk",
-        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-        "username": "MatthewTurk"
-    },
-    "id": 1334,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/92578327669e"
-                }
-            },
-            "hash": "92578327669e"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,25 +48,127 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
             "name": "yt"
         },
         "commit": {
+            "hash": "92578327669e",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/134ea7c1c9e8"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/92578327669e"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "MatthewTurk",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
+            },
+            "html": {
+                "href": "https://bitbucket.org/MatthewTurk/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
+            }
+        },
+        "display_name": "Matt Turk",
+        "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
+    },
+    "title": "Avoid triggering warnings in recent versions of NumPy and matplotlib",
+    "id": 1334,
+    "comment_count": 1,
+    "created_on": "2014-12-04T01:23:41.475375+00:00",
+    "merge_commit": {
+        "hash": "e2419cd7c329",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/e2419cd7c329"
+            }
+        }
+    },
+    "comments": [
+        {
+            "content": {
+                "markup": "markdown",
+                "raw": "All tests pass. Good job!",
+                "html": "<p>All tests pass. Good job!</p>"
+            },
+            "user": {
+                "username": "yt-fido",
+                "type": "user",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt-fido/"
+                    },
+                    "avatar": {
+                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
+                    }
+                },
+                "display_name": "yt-fido",
+                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/comments/4171531"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1334/_/diff#comment-4171531"
                 }
             },
-            "hash": "134ea7c1c9e8"
+            "created_on": "2014-12-05T08:13:26.293313+00:00",
+            "updated_on": "2014-12-05T08:13:26.551940+00:00",
+            "pullrequest": {
+                "type": "pullrequest",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1334"
+                    }
+                },
+                "title": "Avoid triggering warnings in recent versions of NumPy and matplotlib",
+                "id": 1334
+            },
+            "type": "pullrequest_comment",
+            "id": 4171531
+        }
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "The following script:\r\n\r\n```\r\n#!python\r\n\r\nimport yt\r\nds = yt.load('GasSloshing/sloshing_nomag2_hdf5_plt_cnt_0150')\r\nds.index\r\nyt.SlicePlot(ds, 2, 'density')\r\n```\r\n\r\nwill trigger some warnings in recent releases of numpy and matplotlib:\r\n\r\n\r\n```\r\n#!python\r\n\r\n/home/goldbaum/Documents/yt-hg/yt/data_objects/static_output.py:684: FutureWarning: comparison to `None` will result in an elementwise object comparison in the future.\r\n  if None not in (self.domain_left_edge, self.domain_right_edge):\r\n/home/goldbaum/anaconda/lib/python2.7/site-packages/matplotlib/axes/_base.py:1039: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal\r\n  if aspect == 'normal':\r\n/home/goldbaum/anaconda/lib/python2.7/site-packages/matplotlib/axes/_base.py:1044: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal\r\n  elif aspect in ('equal', 'auto'):\r\n```\r\n\r\nThe first is due to a future behavior change in numpy.  Since `None in (array1, array2)` is equivalent to `None == array1 and None == array2`, what we're doing right now is probably not optimal.  I've updated this line to explicitly compare to `None` using `is`.\r\n\r\nThe second is due to a somewhat subtle issue with matplotlib's use of `from __future__ import unicode_literals`.  Since `numpy.float64` does not automatically convert to unicode, we inderectly trigger unicode  conversion errors when matplotlib tries to compare the aspect ratio with a string literal.  The solution is to pass a normal python `float` to matplotlib instead of a `numpy.float64`.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
         },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2014-12-08T17:56:17.253997+00:00",
+    "destination": {
         "repository": {
             "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
             "type": "repository",
             "links": {
                 "self": {
@@ -140,59 +181,18 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
-        }
-    },
-    "comments": [
-        {
-            "user": {
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/users/yt-fido"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt-fido/"
-                    },
-                    "avatar": {
-                        "href": "https://bitbucket.org/account/yt-fido/avatar/32/"
-                    }
-                },
-                "type": "user",
-                "display_name": "yt-fido",
-                "uuid": "{da2aa332-3f05-45c9-ae53-ff5ba34b35ce}",
-                "username": "yt-fido"
-            },
-            "type": "pullrequest_comment",
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "134ea7c1c9e8",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334/comments/4171531"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1334/_/diff#comment-4171531"
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/134ea7c1c9e8"
                 }
-            },
-            "pullrequest": {
-                "title": "Avoid triggering warnings in recent versions of NumPy and matplotlib",
-                "type": "pullrequest",
-                "links": {
-                    "self": {
-                        "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1334"
-                    },
-                    "html": {
-                        "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1334"
-                    }
-                },
-                "id": 1334
-            },
-            "content": {
-                "raw": "All tests pass. Good job!",
-                "html": "<p>All tests pass. Good job!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-12-05T08:13:26.293313+00:00",
-            "updated_on": "2014-12-05T08:13:26.551940+00:00",
-            "id": 4171531
+            }
+        },
+        "branch": {
+            "name": "yt"
         }
-    ]
+    }
 }

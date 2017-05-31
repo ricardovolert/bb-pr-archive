@@ -1,34 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2014-03-17T22:56:19.151160+00:00",
-    "comment_count": 11,
-    "description": "This PR completely refactors the code that generates plot layouts. The quick upside is that this completely fixes the longstanding issue with plots that have non-unit aspect ratios. See e.g. Issue #735.\r\n\r\nTo make that a bit more concrete, take a look at the following test plotting script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nfrom yt.mods import *\r\nds = load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\nsl = SlicePlot(ds, 2, 'density')\r\nsl.set_width(((25, 'kpc'), (5, 'kpc')))\r\nsl.save(mpl_kwargs={'facecolor':'red'})\r\n```\r\n\r\nThis creates a plot and saves it with a red background color, making it easier to see the full extent of the figure on a white background.\r\n\r\nBefore applying this PR, I get the following:\r\n\r\n![galaxy0030_Slice_z_density.png](https://bitbucket.org/repo/7EagBy/images/3358720731-galaxy0030_Slice_z_density.png)\r\n\r\nAfter applying this PR I get:\r\n\r\n![galaxy0030_Slice_z_density.png](https://bitbucket.org/repo/7EagBy/images/1193584364-galaxy0030_Slice_z_density.png)\r\n\r\nI debugged this using an IPython notebook widget.  If you have the IPython 2.0 beta installed you can [download the notebook from nbviewer](http://nbviewer.ipython.org/url/hub.yt-project.org/notebooks/acdc1891d6d1498492baffcf93372558.ipynb) and test it out yourself.\r\n\r\nThis introduces some design changes in the plotting code:\r\n\r\n* Moves the layout code to `ImagePlotMPL`.  The layout constants are still calculated in subclasses, making it possible to have custom layouts for `PlotWindow` and `PhasePlot`. \r\n* Fixes a bug where colorbar and axis toggling do not persisting if a plot is modified after the element is toggled.\r\n* `set_font` now preserves the `family` and `size` settings, which we have custom defaults for.\r\n* Added `set_font_size`.  I find it useful to have this but I'll remove it if anyone thinks it clutters the API.\r\n\r\nUpdate: responding to comments.",
-    "created_on": "2014-03-15T04:04:11.686473+00:00",
-    "task_count": 0,
-    "merge_commit": null,
-    "title": "Fixing some longstanding issues with plot layouts.",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/approve"
@@ -36,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/chummels"
-            },
-            "html": {
-                "href": "https://bitbucket.org/chummels/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/chummels/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "chummels",
-        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}",
-        "username": "chummels"
-    },
-    "id": 723,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
-            },
-            "html": {
-                "href": "https://bitbucket.org/ngoldbaum/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Nathan Goldbaum",
-        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-        "username": "ngoldbaum"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt-3.0"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/853ec46f9c58"
-                }
-            },
-            "hash": "853ec46f9c58"
-        },
         "repository": {
             "full_name": "ngoldbaum/yt",
+            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}",
             "type": "repository",
             "links": {
                 "self": {
@@ -102,44 +48,52 @@
                     "href": "https://bitbucket.org/ngoldbaum/yt/avatar/32/"
                 }
             },
-            "name": "yt",
-            "uuid": "{cb18d7d9-ab77-4e80-81ed-8d32a945e0ef}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt-3.0"
+            "name": "yt"
         },
         "commit": {
+            "hash": "853ec46f9c58",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a6c02d0eb17f"
+                    "href": "https://api.bitbucket.org/2.0/repositories/ngoldbaum/yt/commit/853ec46f9c58"
                 }
-            },
-            "hash": "a6c02d0eb17f"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
-            },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+        "branch": {
+            "name": "yt-3.0"
         }
     },
+    "closed_by": {
+        "username": "chummels",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/chummels"
+            },
+            "html": {
+                "href": "https://bitbucket.org/chummels/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/chummels/avatar/32/"
+            }
+        },
+        "display_name": "chummels",
+        "uuid": "{de871bb8-32e9-450a-b8c9-2b49a1334f16}"
+    },
+    "title": "Fixing some longstanding issues with plot layouts.",
+    "id": 723,
+    "comment_count": 11,
+    "created_on": "2014-03-15T04:04:11.686473+00:00",
+    "merge_commit": null,
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Is this always a scalar?  Never a tuple?",
+                "html": "<p>Is this always a scalar?  Never a tuple?</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -151,25 +105,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1432941"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:bd41e2fe9b3a..a6c02d0eb17f?path=yt%2Fvisualization%2Fplot_container.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1432941"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:bd41e2fe9b3a..a6c02d0eb17f?path=yt%2Fvisualization%2Fplot_container.py"
                 }
             },
+            "created_on": "2014-03-16T13:07:08.916075+00:00",
+            "updated_on": "2014-03-16T13:07:08.927963+00:00",
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -179,24 +131,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "Is this always a scalar?  Never a tuple?",
-                "html": "<p>Is this always a scalar?  Never a tuple?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T13:07:08.916075+00:00",
-            "updated_on": "2014-03-16T13:07:08.927963+00:00",
             "inline": {
-                "from": null,
+                "to": 110,
                 "path": "yt/visualization/plot_container.py",
-                "to": 110
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 1432941
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think you might be able to use `setdefault` here.  (A method I just learned about that I intend to use more!)",
+                "html": "<p>I think you might be able to use <code>setdefault</code> here.  (A method I just learned about that I intend to use more!)</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -208,25 +162,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1432942"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:bd41e2fe9b3a..a6c02d0eb17f?path=yt%2Fvisualization%2Fplot_container.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1432942"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:bd41e2fe9b3a..a6c02d0eb17f?path=yt%2Fvisualization%2Fplot_container.py"
                 }
             },
+            "created_on": "2014-03-16T13:08:02.142386+00:00",
+            "updated_on": "2014-03-16T13:08:02.151391+00:00",
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -236,24 +188,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "I think you might be able to use `setdefault` here.  (A method I just learned about that I intend to use more!)",
-                "html": "<p>I think you might be able to use <code>setdefault</code> here.  (A method I just learned about that I intend to use more!)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T13:08:02.142386+00:00",
-            "updated_on": "2014-03-16T13:08:02.151391+00:00",
             "inline": {
-                "from": null,
+                "to": 324,
                 "path": "yt/visualization/plot_container.py",
-                "to": 324
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 1432942
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Why so small?  :)",
+                "html": "<p>Why so small?  :)</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -265,25 +219,23 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1432943"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:bd41e2fe9b3a..a6c02d0eb17f?path=yt%2Fvisualization%2Fprofile_plotter.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1432943"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:bd41e2fe9b3a..a6c02d0eb17f?path=yt%2Fvisualization%2Fprofile_plotter.py"
                 }
             },
+            "created_on": "2014-03-16T13:08:50.596497+00:00",
+            "updated_on": "2014-03-16T13:08:50.607000+00:00",
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -293,24 +245,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "Why so small?  :)",
-                "html": "<p>Why so small?  :)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T13:08:50.596497+00:00",
-            "updated_on": "2014-03-16T13:08:50.607000+00:00",
             "inline": {
-                "from": null,
+                "to": 560,
                 "path": "yt/visualization/profile_plotter.py",
-                "to": 560
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 1432943
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yes, always a scalar.  It is the size of the image along the longest axis in the final plot.  Since the aspect ratio of PlotWindow plots are controlled by the `width` keyword we can't also accept a tuple for `figure_size`.  We could for `PhasePlot` but no one has implemented that.\n\nDo you want me to add an error if someone passes in a tuple?",
+                "html": "<p>Yes, always a scalar.  It is the size of the image along the longest axis in the final plot.  Since the aspect ratio of PlotWindow plots are controlled by the <code>width</code> keyword we can't also accept a tuple for <code>figure_size</code>.  We could for <code>PhasePlot</code> but no one has implemented that.</p>\n<p>Do you want me to add an error if someone passes in a tuple?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -322,22 +276,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433110"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_container.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433110"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -350,8 +290,19 @@
                 },
                 "id": 1432941
             },
+            "created_on": "2014-03-16T16:07:46.635417+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433110"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433110"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_container.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -361,24 +312,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "Yes, always a scalar.  It is the size of the image along the longest axis in the final plot.  Since the aspect ratio of PlotWindow plots are controlled by the `width` keyword we can't also accept a tuple for `figure_size`.  We could for `PhasePlot` but no one has implemented that.\n\nDo you want me to add an error if someone passes in a tuple?",
-                "html": "<p>Yes, always a scalar.  It is the size of the image along the longest axis in the final plot.  Since the aspect ratio of PlotWindow plots are controlled by the <code>width</code> keyword we can't also accept a tuple for <code>figure_size</code>.  We could for <code>PhasePlot</code> but no one has implemented that.</p>\n<p>Do you want me to add an error if someone passes in a tuple?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T16:07:46.635417+00:00",
-            "updated_on": "2014-03-16T16:07:46.643058+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_container.py",
-                "to": null
+                "from": null
             },
-            "id": 1433110
+            "type": "pullrequest_comment",
+            "id": 1433110,
+            "updated_on": "2014-03-16T16:07:46.643058+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I've been meaning to change this default for a while.  The idea is that the entire plot should fit inside of an IPython notebook cell with a little bit of room to spare on a laptop display.\n\nLike I mention in the PR description, I'm ok with reverting it if people disagree.  Try checking out the tip of this PR and make some test plots.  Even better, use the test notebook I link to in the PR description, which lets you interactively control the figure size.",
+                "html": "<p>I've been meaning to change this default for a while.  The idea is that the entire plot should fit inside of an IPython notebook cell with a little bit of room to spare on a laptop display.</p>\n<p>Like I mention in the PR description, I'm ok with reverting it if people disagree.  Try checking out the tip of this PR and make some test plots.  Even better, use the test notebook I link to in the PR description, which lets you interactively control the figure size.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -390,22 +344,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433117"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fprofile_plotter.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433117"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -418,8 +358,19 @@
                 },
                 "id": 1432943
             },
+            "created_on": "2014-03-16T16:11:57.329346+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433117"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433117"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fprofile_plotter.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -429,24 +380,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "I've been meaning to change this default for a while.  The idea is that the entire plot should fit inside of an IPython notebook cell with a little bit of room to spare on a laptop display.\n\nLike I mention in the PR description, I'm ok with reverting it if people disagree.  Try checking out the tip of this PR and make some test plots.  Even better, use the test notebook I link to in the PR description, which lets you interactively control the figure size.",
-                "html": "<p>I've been meaning to change this default for a while.  The idea is that the entire plot should fit inside of an IPython notebook cell with a little bit of room to spare on a laptop display.</p>\n<p>Like I mention in the PR description, I'm ok with reverting it if people disagree.  Try checking out the tip of this PR and make some test plots.  Even better, use the test notebook I link to in the PR description, which lets you interactively control the figure size.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T16:11:57.329346+00:00",
-            "updated_on": "2014-03-16T16:11:57.335895+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/profile_plotter.py",
-                "to": null
+                "from": null
             },
-            "id": 1433117
+            "type": "pullrequest_comment",
+            "id": 1433117,
+            "updated_on": "2014-03-16T16:11:57.335895+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Well, to be honest, my preference is not to change the plot size in reference to the notebook.  I don't want to say no, but I think we should not (yet) be optimizing for that mode of operation.  Is there a way we could modify our `__repr_html__` to scale the image to fit in a cell?  Additionally, on different monitors and displays we will have different sizes that can be displayed.",
+                "html": "<p>Well, to be honest, my preference is not to change the plot size in reference to the notebook.  I don't want to say no, but I think we should not (yet) be optimizing for that mode of operation.  Is there a way we could modify our <code>__repr_html__</code> to scale the image to fit in a cell?  Additionally, on different monitors and displays we will have different sizes that can be displayed.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -458,22 +412,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433173"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fprofile_plotter.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433173"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -486,8 +426,19 @@
                 },
                 "id": 1433117
             },
+            "created_on": "2014-03-16T16:52:32.431278+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433173"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433173"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fprofile_plotter.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -497,24 +448,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "Well, to be honest, my preference is not to change the plot size in reference to the notebook.  I don't want to say no, but I think we should not (yet) be optimizing for that mode of operation.  Is there a way we could modify our `__repr_html__` to scale the image to fit in a cell?  Additionally, on different monitors and displays we will have different sizes that can be displayed.",
-                "html": "<p>Well, to be honest, my preference is not to change the plot size in reference to the notebook.  I don't want to say no, but I think we should not (yet) be optimizing for that mode of operation.  Is there a way we could modify our <code>__repr_html__</code> to scale the image to fit in a cell?  Additionally, on different monitors and displays we will have different sizes that can be displayed.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T16:52:32.431278+00:00",
-            "updated_on": "2014-03-16T16:52:32.439118+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/profile_plotter.py",
-                "to": null
+                "from": null
             },
-            "id": 1433173
+            "type": "pullrequest_comment",
+            "id": 1433173,
+            "updated_on": "2014-03-16T16:52:32.439118+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Nope, if it's a scalar, it's a scalar.",
+                "html": "<p>Nope, if it's a scalar, it's a scalar.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -526,22 +480,8 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433174"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_container.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433174"
-                }
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
             "parent": {
                 "links": {
@@ -554,8 +494,19 @@
                 },
                 "id": 1433110
             },
+            "created_on": "2014-03-16T16:52:49.621979+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433174"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433174"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fplot_container.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -565,24 +516,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "Nope, if it's a scalar, it's a scalar.",
-                "html": "<p>Nope, if it's a scalar, it's a scalar.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T16:52:49.621979+00:00",
-            "updated_on": "2014-03-16T16:52:49.638002+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_container.py",
-                "to": null
+                "from": null
             },
-            "id": 1433174
+            "type": "pullrequest_comment",
+            "id": 1433174,
+            "updated_on": "2014-03-16T16:52:49.638002+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I don't think it's a good idea to scale down the plots like that since it will make the text harder to read.\n\nI think 10 inches (or even 8) is awkwardly huge, even using an image viewer on a desktop display - completely ignoring the notebook use case.  If you open these links in new tabs you can compare see how big our current default is.  You may need to zoom in, as most browsers will automatically scale images that don't fit inside the display.\n\n[10 inches](https://bitbucket.org/repo/BXbAb/images/437117810-10_inches_Slice_z_density.png)\n\n[8 inches](https://bitbucket.org/repo/BXbAb/images/2385219573-8_inches_Slice_z_density.png)\n\n[6 inches](https://bitbucket.org/repo/BXbAb/images/3789403601-6_inches_Slice_z_density.png)\n\nAlso, I think it is worth thinking about the usability experience in the notebook as we design our code.  I use yt inside of a notebook more often than not and I would hope that we would at least give it some thought and try to fix real usability issues.  If this means changing a default value somewhere in the code, I don't think that's a huge stretch.",
+                "html": "<p>I don't think it's a good idea to scale down the plots like that since it will make the text harder to read.</p>\n<p>I think 10 inches (or even 8) is awkwardly huge, even using an image viewer on a desktop display - completely ignoring the notebook use case.  If you open these links in new tabs you can compare see how big our current default is.  You may need to zoom in, as most browsers will automatically scale images that don't fit inside the display.</p>\n<p><a href=\"https://bitbucket.org/repo/BXbAb/images/437117810-10_inches_Slice_z_density.png\">10 inches</a></p>\n<p><a href=\"https://bitbucket.org/repo/BXbAb/images/2385219573-8_inches_Slice_z_density.png\">8 inches</a></p>\n<p><a href=\"https://bitbucket.org/repo/BXbAb/images/3789403601-6_inches_Slice_z_density.png\">6 inches</a></p>\n<p>Also, I think it is worth thinking about the usability experience in the notebook as we design our code.  I use yt inside of a notebook more often than not and I would hope that we would at least give it some thought and try to fix real usability issues.  If this means changing a default value somewhere in the code, I don't think that's a huge stretch.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -594,22 +548,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433203"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fprofile_plotter.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433203"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -622,8 +562,19 @@
                 },
                 "id": 1433173
             },
+            "created_on": "2014-03-16T17:16:12.481090+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1433203"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1433203"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/ngoldbaum/yt:None..None?path=yt%2Fvisualization%2Fprofile_plotter.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -633,24 +584,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "I don't think it's a good idea to scale down the plots like that since it will make the text harder to read.\n\nI think 10 inches (or even 8) is awkwardly huge, even using an image viewer on a desktop display - completely ignoring the notebook use case.  If you open these links in new tabs you can compare see how big our current default is.  You may need to zoom in, as most browsers will automatically scale images that don't fit inside the display.\n\n[10 inches](https://bitbucket.org/repo/BXbAb/images/437117810-10_inches_Slice_z_density.png)\n\n[8 inches](https://bitbucket.org/repo/BXbAb/images/2385219573-8_inches_Slice_z_density.png)\n\n[6 inches](https://bitbucket.org/repo/BXbAb/images/3789403601-6_inches_Slice_z_density.png)\n\nAlso, I think it is worth thinking about the usability experience in the notebook as we design our code.  I use yt inside of a notebook more often than not and I would hope that we would at least give it some thought and try to fix real usability issues.  If this means changing a default value somewhere in the code, I don't think that's a huge stretch.",
-                "html": "<p>I don't think it's a good idea to scale down the plots like that since it will make the text harder to read.</p>\n<p>I think 10 inches (or even 8) is awkwardly huge, even using an image viewer on a desktop display - completely ignoring the notebook use case.  If you open these links in new tabs you can compare see how big our current default is.  You may need to zoom in, as most browsers will automatically scale images that don't fit inside the display.</p>\n<p><a href=\"https://bitbucket.org/repo/BXbAb/images/437117810-10_inches_Slice_z_density.png\">10 inches</a></p>\n<p><a href=\"https://bitbucket.org/repo/BXbAb/images/2385219573-8_inches_Slice_z_density.png\">8 inches</a></p>\n<p><a href=\"https://bitbucket.org/repo/BXbAb/images/3789403601-6_inches_Slice_z_density.png\">6 inches</a></p>\n<p>Also, I think it is worth thinking about the usability experience in the notebook as we design our code.  I use yt inside of a notebook more often than not and I would hope that we would at least give it some thought and try to fix real usability issues.  If this means changing a default value somewhere in the code, I don't think that's a huge stretch.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-16T17:16:12.481090+00:00",
-            "updated_on": "2014-03-16T17:18:03.203662+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/profile_plotter.py",
-                "to": null
+                "from": null
             },
-            "id": 1433203
+            "type": "pullrequest_comment",
+            "id": 1433203,
+            "updated_on": "2014-03-16T17:18:03.203662+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Thanks for taking the time to go through all of this, @ngoldbaum .  I'm really happy to see these cool improvements.",
+                "html": "<p>Thanks for taking the time to go through all of this, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> .  I'm really happy to see these cool improvements.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -662,12 +616,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1442327"
@@ -676,8 +627,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1442327"
                 }
             },
+            "created_on": "2014-03-17T21:59:50.794902+00:00",
+            "updated_on": "2014-03-17T21:59:50.814859+00:00",
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -687,19 +639,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "Thanks for taking the time to go through all of this, @ngoldbaum .  I'm really happy to see these cool improvements.",
-                "html": "<p>Thanks for taking the time to go through all of this, <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> .  I'm really happy to see these cool improvements.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-17T21:59:50.794902+00:00",
-            "updated_on": "2014-03-17T21:59:50.814859+00:00",
+            "type": "pullrequest_comment",
             "id": 1442327
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Hi @ngoldbaum this looks great.  I tested your stuff in the notebook, and they are definitely improvements. It is also worth noting that the (matplotlib) dpi is another handle on how figure size can vary.   I agree with the setup now to leave it a 10 inches and figure out a way to handle notebook optimizations later.  ",
+                "html": "<p>Hi <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> this looks great.  I tested your stuff in the notebook, and they are definitely improvements. It is also worth noting that the (matplotlib) dpi is another handle on how figure size can vary.   I agree with the setup now to leave it a 10 inches and figure out a way to handle notebook optimizations later.  </p>"
+            },
             "user": {
+                "username": "samskillman",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/samskillman"
@@ -711,12 +665,9 @@
                         "href": "https://bitbucket.org/account/samskillman/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Sam Skillman",
-                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}",
-                "username": "samskillman"
+                "uuid": "{b03f9d96-1c52-4f21-bbdc-72f8e2a97a81}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1442370"
@@ -725,8 +676,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1442370"
                 }
             },
+            "created_on": "2014-03-17T22:05:47.343931+00:00",
+            "updated_on": "2014-03-17T22:05:47.359922+00:00",
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -736,19 +688,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "Hi @ngoldbaum this looks great.  I tested your stuff in the notebook, and they are definitely improvements. It is also worth noting that the (matplotlib) dpi is another handle on how figure size can vary.   I agree with the setup now to leave it a 10 inches and figure out a way to handle notebook optimizations later.  ",
-                "html": "<p>Hi <a href=\"/ngoldbaum/\" rel=\"nofollow\" title=\"@ngoldbaum\" class=\"mention\">Nathan Goldbaum</a> this looks great.  I tested your stuff in the notebook, and they are definitely improvements. It is also worth noting that the (matplotlib) dpi is another handle on how figure size can vary.   I agree with the setup now to leave it a 10 inches and figure out a way to handle notebook optimizations later.  </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-17T22:05:47.343931+00:00",
-            "updated_on": "2014-03-17T22:05:47.359922+00:00",
+            "type": "pullrequest_comment",
             "id": 1442370
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I think this is good to go.  @chummels if you're satisfied, hit the button.",
+                "html": "<p>I think this is good to go.  <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">chummels</a> if you're satisfied, hit the button.</p>"
+            },
             "user": {
+                "username": "MatthewTurk",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/MatthewTurk"
@@ -760,12 +714,9 @@
                         "href": "https://bitbucket.org/account/MatthewTurk/avatar/32/"
                     }
                 },
-                "type": "user",
-                "display_name": "Matthew Turk",
-                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}",
-                "username": "MatthewTurk"
+                "display_name": "Matt Turk",
+                "uuid": "{b3f0b280-55fc-4e8a-8bd1-40478d4cbdbf}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/723/comments/1442600"
@@ -774,8 +725,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723/_/diff#comment-1442600"
                 }
             },
+            "created_on": "2014-03-17T22:41:04.143242+00:00",
+            "updated_on": "2014-03-17T22:41:04.158315+00:00",
             "pullrequest": {
-                "title": "Fixing some longstanding issues with plot layouts.",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -785,16 +737,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/723"
                     }
                 },
+                "title": "Fixing some longstanding issues with plot layouts.",
                 "id": 723
             },
-            "content": {
-                "raw": "I think this is good to go.  @chummels if you're satisfied, hit the button.",
-                "html": "<p>I think this is good to go.  <a href=\"/chummels/\" rel=\"nofollow\" title=\"@chummels\" class=\"mention\">Cameron Hummels</a> if you're satisfied, hit the button.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2014-03-17T22:41:04.143242+00:00",
-            "updated_on": "2014-03-17T22:41:04.158315+00:00",
+            "type": "pullrequest_comment",
             "id": 1442600
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "This PR completely refactors the code that generates plot layouts. The quick upside is that this completely fixes the longstanding issue with plots that have non-unit aspect ratios. See e.g. Issue #735.\r\n\r\nTo make that a bit more concrete, take a look at the following test plotting script:\r\n\r\n\r\n```\r\n#!python\r\n\r\nfrom yt.mods import *\r\nds = load('IsolatedGalaxy/galaxy0030/galaxy0030')\r\nsl = SlicePlot(ds, 2, 'density')\r\nsl.set_width(((25, 'kpc'), (5, 'kpc')))\r\nsl.save(mpl_kwargs={'facecolor':'red'})\r\n```\r\n\r\nThis creates a plot and saves it with a red background color, making it easier to see the full extent of the figure on a white background.\r\n\r\nBefore applying this PR, I get the following:\r\n\r\n![galaxy0030_Slice_z_density.png](https://bitbucket.org/repo/7EagBy/images/3358720731-galaxy0030_Slice_z_density.png)\r\n\r\nAfter applying this PR I get:\r\n\r\n![galaxy0030_Slice_z_density.png](https://bitbucket.org/repo/7EagBy/images/1193584364-galaxy0030_Slice_z_density.png)\r\n\r\nI debugged this using an IPython notebook widget.  If you have the IPython 2.0 beta installed you can [download the notebook from nbviewer](http://nbviewer.ipython.org/url/hub.yt-project.org/notebooks/acdc1891d6d1498492baffcf93372558.ipynb) and test it out yourself.\r\n\r\nThis introduces some design changes in the plotting code:\r\n\r\n* Moves the layout code to `ImagePlotMPL`.  The layout constants are still calculated in subclasses, making it possible to have custom layouts for `PlotWindow` and `PhasePlot`. \r\n* Fixes a bug where colorbar and axis toggling do not persisting if a plot is modified after the element is toggled.\r\n* `set_font` now preserves the `family` and `size` settings, which we have custom defaults for.\r\n* Added `set_font_size`.  I find it useful to have this but I'll remove it if anyone thinks it clutters the API.\r\n\r\nUpdate: responding to comments.",
+    "author": {
+        "username": "ngoldbaum",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
+            },
+            "html": {
+                "href": "https://bitbucket.org/ngoldbaum/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
+            }
+        },
+        "display_name": "Nathan Goldbaum",
+        "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
+    },
+    "updated_on": "2014-03-17T22:56:19.151160+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "a6c02d0eb17f",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a6c02d0eb17f"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt-3.0"
+        }
+    }
 }

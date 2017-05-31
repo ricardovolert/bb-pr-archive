@@ -1,41 +1,7 @@
 {
-    "reason": "",
-    "state": "MERGED",
-    "updated_on": "2015-04-17T18:57:01.152204+00:00",
-    "comment_count": 44,
-    "description": "Currently, we define everything in terms of cgs base units, which are centimeters, grams, and seconds (we add in Kelvin and radians for good measure). In cgs, even the electromagnetic units are expressed in terms of these base units. \r\n\r\nSI, however, has Ampere as a base unit, so that, for example, while in cgs:\r\n\r\n```python\r\nq = YTQuantity(1.0,\"esu\")\r\nprint q.in_cgs()\r\n```\r\n```pycon\r\n1.0 cm**(3/2)*sqrt(g)/s\r\n```\r\n\r\nin SI:\r\n\r\n```python\r\nq = YTQuantity(1.0,\"C\")\r\nprint q.in_mks()\r\n```\r\n```pycon\r\n1.0 A*s\r\n```\r\n\r\nFrom when they were introduced up until now, the SI EM units were based on Ampere, without regarding it as a base unit itself, even though it has a completely different dimension than any of our CGS base units. \r\n\r\nThere is also the other issue of translations between cgs <-> SI EM units. Our unit system relies on checking dimensions for unit equivalency. However, electrostatic units and Coulombs are both units of charge, but they don't have the same dimensions. So, up until this point, we translated between cgs <-> SI by a hack, where we treat those translations as a special case and ignore the fact that the dimensions aren't equivalent.\r\n\r\nSo, you could do things like this:\r\n\r\n```python\r\nfrom yt.utilities.physical_constants import qp\r\nqp_mks = qp.in_units(\"C\")\r\nprint qp, qp.units.dimensions\r\nprint qp_mks, qp_mks.units.dimensions\r\n```\r\n```pycon\r\n4.8032056e-10 esu (length)**(3/2)*sqrt((mass))/(time)\r\n1.60217693001e-19 C (current_mks)*(time)\r\n```\r\n\r\nand:\r\n\r\n```python\r\nB = YTQuantity(1.0,\"T\")\r\nB_cgs = B.in_units(\"gauss\")\r\nprint B, B.units.dimensions\r\nprint B_cgs, B_cgs.units.dimensions\r\n```\r\n```pycon\r\n1.0 T (mass)/((current_mks)*(time)**2)\r\n10000.0 gauss sqrt((mass))/(sqrt((length))*(time))\r\n```\r\n\r\nHowever, as Issue #1004 showed, these hacks were not sufficient to keep all of the unit translations self-consistent:\r\n\r\n```python\r\nB.in_mks()\r\n```\r\n```pycon\r\n29979245800.0 kg/(A*s**2) # WRONG!\r\n```\r\n\r\nThat one is particularly egregious since the definition of a Tesla in SI base units is `1 kg/(A*s*s)`.\r\n\r\nI tried to find a way to resolve these issues by altering the current state of the code in minor ways, but I always found out that I was never able to resolve all of them self-consistently. The only way to fix them in the current setup would be to introduce more ugly hacks. \r\n\r\nSo, this PR represents the following solution:\r\n\r\n1. Get rid of the hacks that translate between SI and cgs EM units when they don't have the same dimension. Stick strictly to the behavior where we can only translate any unit to another when they have the same dimension.\r\n\r\n2. Handle translations between SI and cgs EM units by a unit equivalency. \r\n\r\n3. Expand our definition of \"base units\" to include the \"Ampere\". This is potentially controversial, as we have always defined our base units to be cgs, which don't have the notion of a separate current dimension. My proposal is that we have the following set of base units, without refering to them as \"cgs\", but simply as \"base units\":\r\n\r\n```python\r\nyt_base_units = {\r\n    dimensions.mass:'g',\r\n    dimensions.length:'cm',\r\n    dimensions.time:'s',\r\n    dimensions.temperature:'K',\r\n    dimensions.angle:'radian',\r\n    dimensions.current_mks:'A',\r\n}\r\n```\r\n\r\nEvery unit we have can be reduced to a combination of these. \r\n\r\nWhat follows on from this is that, for internal consistency and to reduce confusion, we no longer should refer to these units anywhere in the code as \"cgs\" but as simply our \"base units\". In that vein, I have replaced the `Unit` attribute `cgs_value` with `base_value`, and added methods to `YTArray` such as `in_base`, `convert_to_base`, which will get you to base units of any quantity. `in_cgs`, `in_mks`, etc. are intact and should retain the same behavior. If you try to convert something which has \"Ampere\" as a base unit to cgs, you will get an error:\r\n\r\n```python\r\nQ = YTQuantity(1.0,\"C\")\r\nprint Q.in_mks()\r\nprint Q.in_cgs()\r\n```\r\n```pycon\r\n1.0 A*s\r\nYTUnitsNotReducible: The unit 'C' cannot be reduced to a single expression within the cgs base system of units.\r\n```\r\n\r\nThe impact of having these new methods to convert to \"base\" units is minimal at this point, but my hope is that this will serve as a starting point for eventually allowing a different set of base units to be specified, which is of course another can of worms and another PR. \r\n\r\nI have put the appropriate hooks into the code so that if someone tries to convert, say, between Tesla and Gauss as before, they will get a helpful error message:\r\n\r\n```python\r\nB = YTQuantity(1.0,\"gauss\")\r\nprint B.in_units(\"nT\")\r\n```\r\n```pycon\r\nYTEquivalentDimsError: It looks like you're trying to convert between 'gauss' and 'nT'. Try using \"to_equivalent('nT', 'SI')\" instead.\r\n```\r\n\r\nSo this should now be done instead:\r\n\r\n```python\r\nprint B.to_equivalent(\"nT\", \"SI\")\r\n```\r\n```pycon\r\n100000.0 nT\r\n```\r\n\r\nThe reverse direction works like this:\r\n```python\r\nI = YTQuantity(1.0,\"A\")\r\nprint I.to_equivalent(\"esu/s\",\"CGS\")\r\n```\r\n```pycon\r\n2997924580.0 esu/s\r\n```\r\n\r\nThis PR also adds units and dimensions for electric potential and resistance, as well as unit symbols for EM units, to close Issue #1005. \r\n\r\nUPDATE: Responded to @ngoldbaum's suggestions.",
-    "created_on": "2015-04-03T14:08:08.783044+00:00",
-    "task_count": 0,
-    "merge_commit": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a6be83558328"
-            }
-        },
-        "hash": "a6be83558328"
-    },
-    "title": "Fixing electromagnetic units",
     "links": {
-        "diff": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/diff"
-        },
         "decline": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/decline"
-        },
-        "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539"
-        },
-        "activity": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/activity"
-        },
-        "merge": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/merge"
-        },
-        "commits": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/commits"
-        },
-        "statuses": {
-            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/statuses"
         },
         "approve": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/approve"
@@ -43,60 +9,33 @@
         "html": {
             "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
         },
+        "activity": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/activity"
+        },
+        "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539"
+        },
+        "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/commits"
+        },
+        "merge": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/merge"
+        },
+        "statuses": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/statuses"
+        },
         "comments": {
             "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments"
+        },
+        "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/diff"
         }
     },
-    "closed_by": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
-            },
-            "html": {
-                "href": "https://bitbucket.org/xarthisius/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "Kacper Kowalik",
-        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-        "username": "xarthisius"
-    },
-    "id": 1539,
-    "type": "pullrequest",
-    "author": {
-        "links": {
-            "self": {
-                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
-            },
-            "html": {
-                "href": "https://bitbucket.org/jzuhone/"
-            },
-            "avatar": {
-                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
-            }
-        },
-        "type": "user",
-        "display_name": "John ZuHone",
-        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-        "username": "jzuhone"
-    },
+    "task_count": 0,
     "source": {
-        "branch": {
-            "name": "yt"
-        },
-        "commit": {
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/c31b42616125"
-                }
-            },
-            "hash": "c31b42616125"
-        },
         "repository": {
             "full_name": "jzuhone/yt-3.x",
+            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}",
             "type": "repository",
             "links": {
                 "self": {
@@ -109,44 +48,59 @@
                     "href": "https://bitbucket.org/jzuhone/yt-3.x/avatar/32/"
                 }
             },
-            "name": "yt-3.x",
-            "uuid": "{a412b917-f04d-4344-8e3a-f215a6a7976c}"
-        }
-    },
-    "close_source_branch": false,
-    "destination": {
-        "branch": {
-            "name": "yt"
+            "name": "yt-3.x"
         },
         "commit": {
+            "hash": "c31b42616125",
             "links": {
                 "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c8b8a6018832"
+                    "href": "https://api.bitbucket.org/2.0/repositories/jzuhone/yt-3.x/commit/c31b42616125"
                 }
-            },
-            "hash": "c8b8a6018832"
+            }
         },
-        "repository": {
-            "full_name": "yt_analysis/yt",
-            "type": "repository",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt"
-                },
-                "avatar": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
-                }
+        "branch": {
+            "name": "yt"
+        }
+    },
+    "closed_by": {
+        "username": "xarthisius",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/xarthisius"
             },
-            "name": "yt",
-            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}"
+            "html": {
+                "href": "https://bitbucket.org/xarthisius/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
+            }
+        },
+        "display_name": "Kacper Kowalik",
+        "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
+    },
+    "title": "Fixing electromagnetic units",
+    "id": 1539,
+    "comment_count": 44,
+    "created_on": "2015-04-03T14:08:08.783044+00:00",
+    "merge_commit": {
+        "hash": "a6be83558328",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/a6be83558328"
+            }
         }
     },
     "comments": [
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Also, I put in a relative link in an IPython notebook in the docs, but I'm not sure if this even works (pretty sure it doesn't, actually). ",
+                "html": "<p>Also, I put in a relative link in an IPython notebook in the docs, but I'm not sure if this even works (pretty sure it doesn't, actually). </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -158,12 +112,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6059912"
@@ -172,8 +123,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6059912"
                 }
             },
+            "created_on": "2015-04-03T14:12:42.429463+00:00",
+            "updated_on": "2015-04-03T14:12:42.435340+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -183,19 +135,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Also, I put in a relative link in an IPython notebook in the docs, but I'm not sure if this even works (pretty sure it doesn't, actually). ",
-                "html": "<p>Also, I put in a relative link in an IPython notebook in the docs, but I'm not sure if this even works (pretty sure it doesn't, actually). </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T14:12:42.429463+00:00",
-            "updated_on": "2015-04-03T14:12:42.435340+00:00",
+            "type": "pullrequest_comment",
             "id": 6059912
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "How is that not right?  `1 G = 10^-4 T`, so `1G = 10^-4 * 10^9 nT = 10^5 nT`.",
+                "html": "<p>How is that not right?  <code>1 G = 10^-4 T</code>, so <code>1G = 10^-4 * 10^9 nT = 10^5 nT</code>.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -207,19 +161,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6061542"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6061542"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -232,8 +175,16 @@
                 },
                 "id": 6060177
             },
+            "created_on": "2015-04-03T15:49:34.201805+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6061542"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6061542"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -243,19 +194,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "How is that not right?  `1 G = 10^-4 T`, so `1G = 10^-4 * 10^9 nT = 10^5 nT`.",
-                "html": "<p>How is that not right?  <code>1 G = 10^-4 T</code>, so <code>1G = 10^-4 * 10^9 nT = 10^5 nT</code>.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T15:49:34.201805+00:00",
-            "updated_on": "2015-04-03T15:49:34.207624+00:00",
-            "id": 6061542
+            "type": "pullrequest_comment",
+            "id": 6061542,
+            "updated_on": "2015-04-03T15:49:34.207624+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Why `em_SI` and `em_CGS`?  Couldn't it just be `SI` and `CGS`?",
+                "html": "<p>Why <code>em_SI</code> and <code>em_CGS</code>?  Couldn't it just be <code>SI</code> and <code>CGS</code>?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -267,12 +221,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6061557"
@@ -281,8 +232,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6061557"
                 }
             },
+            "created_on": "2015-04-03T15:50:18.429030+00:00",
+            "updated_on": "2015-04-03T15:50:18.435445+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -292,19 +244,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Why `em_SI` and `em_CGS`?  Couldn't it just be `SI` and `CGS`?",
-                "html": "<p>Why <code>em_SI</code> and <code>em_CGS</code>?  Couldn't it just be <code>SI</code> and <code>CGS</code>?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T15:50:18.429030+00:00",
-            "updated_on": "2015-04-03T15:50:18.435445+00:00",
+            "type": "pullrequest_comment",
             "id": 6061557
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Totally unrelated to this PR, but the python docs suggest never parsing `sys.version` and instead to parse `sys.version_info`",
+                "html": "<p>Totally unrelated to this PR, but the python docs suggest never parsing <code>sys.version</code> and instead to parse <code>sys.version_info</code></p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -316,25 +270,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6061577"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:fc1bc8a3f93f..fe5df4fdabb3?path=yt%2Futilities%2Fminimal_representation.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6061577"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:fc1bc8a3f93f..fe5df4fdabb3?path=yt%2Futilities%2Fminimal_representation.py"
                 }
             },
+            "created_on": "2015-04-03T15:51:50.857175+00:00",
+            "updated_on": "2015-04-03T15:51:50.865274+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -344,24 +296,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Totally unrelated to this PR, but the python docs suggest never parsing `sys.version` and instead to parse `sys.version_info`",
-                "html": "<p>Totally unrelated to this PR, but the python docs suggest never parsing <code>sys.version</code> and instead to parse <code>sys.version_info</code></p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T15:51:50.857175+00:00",
-            "updated_on": "2015-04-03T15:51:50.865274+00:00",
             "inline": {
-                "from": null,
+                "to": 27,
                 "path": "yt/utilities/minimal_representation.py",
-                "to": 27
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 6061577
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@xarthisius can we get a docs build?",
+                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> can we get a docs build?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -373,12 +327,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6061583"
@@ -387,8 +338,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6061583"
                 }
             },
+            "created_on": "2015-04-03T15:52:18.594928+00:00",
+            "updated_on": "2015-04-03T15:52:18.612517+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -398,19 +350,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "@xarthisius can we get a docs build?",
-                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> can we get a docs build?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T15:52:18.594928+00:00",
-            "updated_on": "2015-04-03T15:52:18.612517+00:00",
+            "type": "pullrequest_comment",
             "id": 6061583
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "where is it?",
+                "html": "<p>where is it?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -422,19 +376,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6061584"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6061584"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -447,8 +390,16 @@
                 },
                 "id": 6059912
             },
+            "created_on": "2015-04-03T15:52:25.852885+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6061584"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6061584"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -458,19 +409,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "where is it?",
-                "html": "<p>where is it?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T15:52:25.852885+00:00",
-            "updated_on": "2015-04-03T15:52:25.860593+00:00",
-            "id": 6061584
+            "type": "pullrequest_comment",
+            "id": 6061584,
+            "updated_on": "2015-04-03T15:52:25.860593+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I guess because these are conversions for EM only and only make sense and/or are necessary in that context.",
+                "html": "<p>I guess because these are conversions for EM only and only make sense and/or are necessary in that context.</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -482,19 +436,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062025"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062025"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -507,8 +450,16 @@
                 },
                 "id": 6061557
             },
+            "created_on": "2015-04-03T16:21:17.664312+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062025"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062025"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -518,19 +469,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "I guess because these are conversions for EM only and only make sense and/or are necessary in that context.",
-                "html": "<p>I guess because these are conversions for EM only and only make sense and/or are necessary in that context.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:21:17.664312+00:00",
-            "updated_on": "2015-04-03T16:21:17.676120+00:00",
-            "id": 6062025
+            "type": "pullrequest_comment",
+            "id": 6062025,
+            "updated_on": "2015-04-03T16:21:17.676120+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yeah, @smumford I think this is right. Other conversion software verifies it.",
+                "html": "<p>Yeah, <a href=\"/smumford/\" rel=\"nofollow\" title=\"@smumford\" class=\"mention\">Stuart Mumford</a> I think this is right. Other conversion software verifies it.</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -542,19 +496,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062038"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062038"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -567,8 +510,16 @@
                 },
                 "id": 6060177
             },
+            "created_on": "2015-04-03T16:22:12.368758+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062038"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062038"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -578,19 +529,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Yeah, @smumford I think this is right. Other conversion software verifies it.",
-                "html": "<p>Yeah, <a href=\"/smumford/\" rel=\"nofollow\" title=\"@smumford\" class=\"mention\">Stuart Mumford</a> I think this is right. Other conversion software verifies it.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:22:12.368758+00:00",
-            "updated_on": "2015-04-03T16:22:12.386248+00:00",
-            "id": 6062038
+            "type": "pullrequest_comment",
+            "id": 6062038,
+            "updated_on": "2015-04-03T16:22:12.386248+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Units notebook 2)",
+                "html": "<p>Units notebook 2)</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -602,19 +556,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062057"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062057"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -627,8 +570,16 @@
                 },
                 "id": 6061584
             },
+            "created_on": "2015-04-03T16:23:21.037007+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062057"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062057"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -638,19 +589,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Units notebook 2)",
-                "html": "<p>Units notebook 2)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:23:21.037007+00:00",
-            "updated_on": "2015-04-03T16:23:35.835760+00:00",
-            "id": 6062057
+            "type": "pullrequest_comment",
+            "id": 6062057,
+            "updated_on": "2015-04-03T16:23:35.835760+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "True.  The reason I'm bikesedding it is that it seems unnecessary to prepend both with `em` just to emphasize that.  It would make sense to do so if we had other systems that we needed to differentiate.",
+                "html": "<p>True.  The reason I'm bikesedding it is that it seems unnecessary to prepend both with <code>em</code> just to emphasize that.  It would make sense to do so if we had other systems that we needed to differentiate.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -662,19 +616,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062064"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062064"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -687,8 +630,16 @@
                 },
                 "id": 6062025
             },
+            "created_on": "2015-04-03T16:23:51.744248+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062064"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062064"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -698,19 +649,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "True.  The reason I'm bikesedding it is that it seems unnecessary to prepend both with `em` just to emphasize that.  It would make sense to do so if we had other systems that we needed to differentiate.",
-                "html": "<p>True.  The reason I'm bikesedding it is that it seems unnecessary to prepend both with <code>em</code> just to emphasize that.  It would make sense to do so if we had other systems that we needed to differentiate.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:23:51.744248+00:00",
-            "updated_on": "2015-04-03T16:23:51.750600+00:00",
-            "id": 6062064
+            "type": "pullrequest_comment",
+            "id": 6062064,
+            "updated_on": "2015-04-03T16:23:51.750600+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "You mean here?",
+                "html": "<p>You mean here?</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -722,25 +676,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062079"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:c31b42616125..c8b8a6018832?path=doc%2Fsource%2Fanalyzing%2Funits%2F2%29_Fields_and_unit_conversion.ipynb"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062079"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:c31b42616125..c8b8a6018832?path=doc%2Fsource%2Fanalyzing%2Funits%2F2%29_Fields_and_unit_conversion.ipynb"
                 }
             },
+            "created_on": "2015-04-03T16:24:38.880514+00:00",
+            "updated_on": "2015-04-03T16:24:38.889740+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -750,24 +702,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "You mean here?",
-                "html": "<p>You mean here?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:24:38.880514+00:00",
-            "updated_on": "2015-04-03T16:24:38.889740+00:00",
             "inline": {
-                "from": null,
+                "to": 267,
                 "path": "doc/source/analyzing/units/2)_Fields_and_unit_conversion.ipynb",
-                "to": 267
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 6062079
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Yep. ",
+                "html": "<p>Yep. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -779,22 +733,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062106"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fanalyzing%2Funits%2F2%29_Fields_and_unit_conversion.ipynb"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062106"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -807,8 +747,19 @@
                 },
                 "id": 6062079
             },
+            "created_on": "2015-04-03T16:26:48.825252+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062106"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062106"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=doc%2Fsource%2Fanalyzing%2Funits%2F2%29_Fields_and_unit_conversion.ipynb"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -818,24 +769,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Yep. ",
-                "html": "<p>Yep. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:26:48.825252+00:00",
-            "updated_on": "2015-04-03T16:26:48.839385+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "doc/source/analyzing/units/2)_Fields_and_unit_conversion.ipynb",
-                "to": null
+                "from": null
             },
-            "id": 6062106
+            "type": "pullrequest_comment",
+            "id": 6062106,
+            "updated_on": "2015-04-03T16:26:48.839385+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "So, it's not clear how important you think it is to change it though. :)",
+                "html": "<p>So, it's not clear how important you think it is to change it though. :)</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -847,19 +801,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062131"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062131"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -872,8 +815,16 @@
                 },
                 "id": 6062064
             },
+            "created_on": "2015-04-03T16:28:21.456186+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062131"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062131"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -883,19 +834,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "So, it's not clear how important you think it is to change it though. :)",
-                "html": "<p>So, it's not clear how important you think it is to change it though. :)</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:28:21.456186+00:00",
-            "updated_on": "2015-04-03T16:28:21.463510+00:00",
-            "id": 6062131
+            "type": "pullrequest_comment",
+            "id": 6062131,
+            "updated_on": "2015-04-03T16:28:21.463510+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Not hugely important, but I think it's worth changing since it's more intuitive without the `em_` (IMHO).",
+                "html": "<p>Not hugely important, but I think it's worth changing since it's more intuitive without the <code>em_</code> (IMHO).</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -907,19 +861,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062177"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062177"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -932,8 +875,16 @@
                 },
                 "id": 6062131
             },
+            "created_on": "2015-04-03T16:31:10.360312+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6062177"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6062177"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -943,19 +894,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Not hugely important, but I think it's worth changing since it's more intuitive without the `em_` (IMHO).",
-                "html": "<p>Not hugely important, but I think it's worth changing since it's more intuitive without the <code>em_</code> (IMHO).</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-03T16:31:10.360312+00:00",
-            "updated_on": "2015-04-03T16:31:10.371883+00:00",
-            "id": 6062177
+            "type": "pullrequest_comment",
+            "id": 6062177,
+            "updated_on": "2015-04-03T16:31:10.371883+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@xarthisius do we know why we didn't get a test run for this PR?",
+                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> do we know why we didn't get a test run for this PR?</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -967,12 +921,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6076395"
@@ -981,8 +932,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6076395"
                 }
             },
+            "created_on": "2015-04-06T13:00:51.334716+00:00",
+            "updated_on": "2015-04-06T13:00:51.344639+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -992,19 +944,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "@xarthisius do we know why we didn't get a test run for this PR?",
-                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> do we know why we didn't get a test run for this PR?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-06T13:00:51.334716+00:00",
-            "updated_on": "2015-04-06T13:00:51.344639+00:00",
+            "type": "pullrequest_comment",
             "id": 6076395
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "The docs build looks good to me--even the relative link from the notebook works.",
+                "html": "<p>The docs build looks good to me--even the relative link from the notebook works.</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1016,19 +970,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6076615"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6076615"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -1041,8 +984,16 @@
                 },
                 "id": 6062960
             },
+            "created_on": "2015-04-06T13:17:40.251467+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6076615"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6076615"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1052,19 +1003,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "The docs build looks good to me--even the relative link from the notebook works.",
-                "html": "<p>The docs build looks good to me--even the relative link from the notebook works.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-06T13:17:40.251467+00:00",
-            "updated_on": "2015-04-06T13:17:40.256374+00:00",
-            "id": 6076615
+            "type": "pullrequest_comment",
+            "id": 6076615,
+            "updated_on": "2015-04-06T13:17:40.256374+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Cause mercurial is stuck \u201cwaiting for lock\u201d... fixing",
+                "html": "<p>Cause mercurial is stuck \u201cwaiting for lock\u201d... fixing</p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -1076,19 +1030,8 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6076797"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6076797"
-                }
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
             "parent": {
                 "links": {
@@ -1101,8 +1044,16 @@
                 },
                 "id": 6076395
             },
+            "created_on": "2015-04-06T13:29:15.609353+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6076797"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6076797"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1112,19 +1063,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Cause mercurial is stuck \u201cwaiting for lock\u201d... fixing",
-                "html": "<p>Cause mercurial is stuck \u201cwaiting for lock\u201d... fixing</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-06T13:29:15.609353+00:00",
-            "updated_on": "2015-04-06T13:29:15.620768+00:00",
-            "id": 6076797
+            "type": "pullrequest_comment",
+            "id": 6076797,
+            "updated_on": "2015-04-06T13:29:15.620768+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@xarthisius this failed with a bizarre result:\n\n```\nERROR: Publisher hudson.tasks.junit.JUnitResultArchiver aborted due to exception\nhudson.AbortException: Test reports were found but none of them are new. Did tests run? \nFor example, /var/jenkins_home/workspace/yt_unittests/python_version/2.7/unittests.xml is 2 days 22 hr old\n```",
+                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> this failed with a bizarre result:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">ERROR</span><span class=\"o\">:</span> <span class=\"n\">Publisher</span> <span class=\"n\">hudson</span><span class=\"o\">.</span><span class=\"na\">tasks</span><span class=\"o\">.</span><span class=\"na\">junit</span><span class=\"o\">.</span><span class=\"na\">JUnitResultArchiver</span> <span class=\"n\">aborted</span> <span class=\"n\">due</span> <span class=\"n\">to</span> <span class=\"n\">exception</span>\n<span class=\"n\">hudson</span><span class=\"o\">.</span><span class=\"na\">AbortException</span><span class=\"o\">:</span> <span class=\"n\">Test</span> <span class=\"n\">reports</span> <span class=\"n\">were</span> <span class=\"n\">found</span> <span class=\"n\">but</span> <span class=\"n\">none</span> <span class=\"n\">of</span> <span class=\"n\">them</span> <span class=\"n\">are</span> <span class=\"k\">new</span><span class=\"o\">.</span> <span class=\"n\">Did</span> <span class=\"n\">tests</span> <span class=\"n\">run</span><span class=\"o\">?</span> \n<span class=\"n\">For</span> <span class=\"n\">example</span><span class=\"o\">,</span> <span class=\"sr\">/var/jenkins_home/workspace/yt_unittests/python_version/2.7/</span><span class=\"n\">unittests</span><span class=\"o\">.</span><span class=\"na\">xml</span> <span class=\"k\">is</span> <span class=\"mi\">2</span> <span class=\"n\">days</span> <span class=\"mi\">22</span> <span class=\"n\">hr</span> <span class=\"n\">old</span>\n</pre></div>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1136,19 +1090,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6077523"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6077523"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -1161,8 +1104,16 @@
                 },
                 "id": 6077424
             },
+            "created_on": "2015-04-06T14:13:24.102335+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6077523"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6077523"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1172,19 +1123,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "@xarthisius this failed with a bizarre result:\n\n```\nERROR: Publisher hudson.tasks.junit.JUnitResultArchiver aborted due to exception\nhudson.AbortException: Test reports were found but none of them are new. Did tests run? \nFor example, /var/jenkins_home/workspace/yt_unittests/python_version/2.7/unittests.xml is 2 days 22 hr old\n```",
-                "html": "<p><a href=\"/xarthisius/\" rel=\"nofollow\" title=\"@xarthisius\" class=\"mention\">Kacper Kowalik</a> this failed with a bizarre result:</p>\n<div class=\"codehilite\"><pre><span></span><span class=\"n\">ERROR</span><span class=\"o\">:</span> <span class=\"n\">Publisher</span> <span class=\"n\">hudson</span><span class=\"o\">.</span><span class=\"na\">tasks</span><span class=\"o\">.</span><span class=\"na\">junit</span><span class=\"o\">.</span><span class=\"na\">JUnitResultArchiver</span> <span class=\"n\">aborted</span> <span class=\"n\">due</span> <span class=\"n\">to</span> <span class=\"n\">exception</span>\n<span class=\"n\">hudson</span><span class=\"o\">.</span><span class=\"na\">AbortException</span><span class=\"o\">:</span> <span class=\"n\">Test</span> <span class=\"n\">reports</span> <span class=\"n\">were</span> <span class=\"n\">found</span> <span class=\"n\">but</span> <span class=\"n\">none</span> <span class=\"n\">of</span> <span class=\"n\">them</span> <span class=\"n\">are</span> <span class=\"k\">new</span><span class=\"o\">.</span> <span class=\"n\">Did</span> <span class=\"n\">tests</span> <span class=\"n\">run</span><span class=\"o\">?</span> \n<span class=\"n\">For</span> <span class=\"n\">example</span><span class=\"o\">,</span> <span class=\"sr\">/var/jenkins_home/workspace/yt_unittests/python_version/2.7/</span><span class=\"n\">unittests</span><span class=\"o\">.</span><span class=\"na\">xml</span> <span class=\"k\">is</span> <span class=\"mi\">2</span> <span class=\"n\">days</span> <span class=\"mi\">22</span> <span class=\"n\">hr</span> <span class=\"n\">old</span>\n</pre></div>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-06T14:13:24.102335+00:00",
-            "updated_on": "2015-04-06T14:13:53.042745+00:00",
-            "id": 6077523
+            "type": "pullrequest_comment",
+            "id": 6077523,
+            "updated_on": "2015-04-06T14:13:53.042745+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "That usually happens when `nose` process dies abruptly (like segmentation fault). I don't see direct cause though. Will rerun",
+                "html": "<p>That usually happens when <code>nose</code> process dies abruptly (like segmentation fault). I don't see direct cause though. Will rerun</p>"
+            },
             "user": {
+                "username": "xarthisius",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/xarthisius"
@@ -1196,19 +1150,8 @@
                         "href": "https://bitbucket.org/account/xarthisius/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Kacper Kowalik",
-                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}",
-                "username": "xarthisius"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6078838"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6078838"
-                }
+                "uuid": "{26af8f1d-35b3-46ce-9939-09915b06e31f}"
             },
             "parent": {
                 "links": {
@@ -1221,8 +1164,16 @@
                 },
                 "id": 6077523
             },
+            "created_on": "2015-04-06T15:25:15.525195+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6078838"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6078838"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1232,19 +1183,22 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "That usually happens when `nose` process dies abruptly (like segmentation fault). I don't see direct cause though. Will rerun",
-                "html": "<p>That usually happens when <code>nose</code> process dies abruptly (like segmentation fault). I don't see direct cause though. Will rerun</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-06T15:25:15.525195+00:00",
-            "updated_on": "2015-04-06T15:25:15.531986+00:00",
-            "id": 6078838
+            "type": "pullrequest_comment",
+            "id": 6078838,
+            "updated_on": "2015-04-06T15:25:15.531986+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Now that the tests have passed, I'd like to get some more feedback from folks on this as time allows. ",
+                "html": "<p>Now that the tests have passed, I'd like to get some more feedback from folks on this as time allows. </p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1256,12 +1210,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6081830"
@@ -1270,8 +1221,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6081830"
                 }
             },
+            "created_on": "2015-04-06T17:52:26.948402+00:00",
+            "updated_on": "2015-04-06T17:52:26.960230+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1281,19 +1233,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Now that the tests have passed, I'd like to get some more feedback from folks on this as time allows. ",
-                "html": "<p>Now that the tests have passed, I'd like to get some more feedback from folks on this as time allows. </p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-06T17:52:26.948402+00:00",
-            "updated_on": "2015-04-06T17:52:26.960230+00:00",
+            "type": "pullrequest_comment",
             "id": 6081830
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Should be \"base\" units I think.",
+                "html": "<p>Should be \"base\" units I think.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1305,25 +1259,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6307253"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:73d7e7e78c3d..c8b8a6018832?path=yt%2Funits%2Fyt_array.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6307253"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:73d7e7e78c3d..c8b8a6018832?path=yt%2Funits%2Fyt_array.py"
                 }
             },
+            "created_on": "2015-04-16T19:02:18.905061+00:00",
+            "updated_on": "2015-04-16T19:02:18.918217+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1333,24 +1285,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Should be \"base\" units I think.",
-                "html": "<p>Should be \"base\" units I think.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:02:18.905061+00:00",
-            "updated_on": "2015-04-16T19:02:18.918217+00:00",
             "inline": {
-                "from": null,
+                "to": 457,
                 "path": "yt/units/yt_array.py",
-                "to": 457
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 6307253
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Super minor, but I think it light be clearer to import this from six.moves.",
+                "html": "<p>Super minor, but I think it light be clearer to import this from six.moves.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1362,25 +1316,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6307283"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:73d7e7e78c3d..c8b8a6018832?path=yt%2Futilities%2Fminimal_representation.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6307283"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:73d7e7e78c3d..c8b8a6018832?path=yt%2Futilities%2Fminimal_representation.py"
                 }
             },
+            "created_on": "2015-04-16T19:04:01.058677+00:00",
+            "updated_on": "2015-04-16T19:04:01.066775+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1390,24 +1342,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Super minor, but I think it light be clearer to import this from six.moves.",
-                "html": "<p>Super minor, but I think it light be clearer to import this from six.moves.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:04:01.058677+00:00",
-            "updated_on": "2015-04-16T19:04:01.066775+00:00",
             "inline": {
-                "from": null,
+                "to": 23,
                 "path": "yt/utilities/minimal_representation.py",
-                "to": 23
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 6307283
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "I know I suggested this phrasing the other day, but I looked and it seems six.reraise might be cleaner. This is fine for now, though.",
+                "html": "<p>I know I suggested this phrasing the other day, but I looked and it seems six.reraise might be cleaner. This is fine for now, though.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1419,25 +1373,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6307312"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:c31b42616125..c8b8a6018832?path=yt%2Fvisualization%2Fplot_window.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6307312"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:c31b42616125..c8b8a6018832?path=yt%2Fvisualization%2Fplot_window.py"
                 }
             },
+            "created_on": "2015-04-16T19:05:29.251730+00:00",
+            "updated_on": "2015-04-16T19:05:29.258325+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1447,24 +1399,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "I know I suggested this phrasing the other day, but I looked and it seems six.reraise might be cleaner. This is fine for now, though.",
-                "html": "<p>I know I suggested this phrasing the other day, but I looked and it seems six.reraise might be cleaner. This is fine for now, though.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:05:29.251730+00:00",
-            "updated_on": "2015-04-16T19:05:29.258325+00:00",
             "inline": {
-                "from": null,
+                "to": 1005,
                 "path": "yt/visualization/plot_window.py",
-                "to": 1005
+                "from": null
             },
+            "type": "pullrequest_comment",
             "id": 6307312
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "This is a home run John.  Thanks so much for your time and effort to not only fix this stuff, but make it cleaner, and more powerful to boot!",
+                "html": "<p>This is a home run John.  Thanks so much for your time and effort to not only fix this stuff, but make it cleaner, and more powerful to boot!</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1476,12 +1430,9 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6307329"
@@ -1490,8 +1441,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6307329"
                 }
             },
+            "created_on": "2015-04-16T19:06:23.120069+00:00",
+            "updated_on": "2015-04-16T19:06:23.132123+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1501,19 +1453,21 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "This is a home run John.  Thanks so much for your time and effort to not only fix this stuff, but make it cleaner, and more powerful to boot!",
-                "html": "<p>This is a home run John.  Thanks so much for your time and effort to not only fix this stuff, but make it cleaner, and more powerful to boot!</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:06:23.120069+00:00",
-            "updated_on": "2015-04-16T19:06:23.132123+00:00",
+            "type": "pullrequest_comment",
             "id": 6307329
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "Should be base_offset",
+                "html": "<p>Should be base_offset</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1525,25 +1479,23 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6307353"
                 },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:73d7e7e78c3d..c8b8a6018832?path=yt%2Funits%2Funit_object.py"
-                },
                 "html": {
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6307353"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:73d7e7e78c3d..c8b8a6018832?path=yt%2Funits%2Funit_object.py"
                 }
             },
+            "created_on": "2015-04-16T19:07:46.923982+00:00",
+            "updated_on": "2015-04-16T19:07:46.932669+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1553,24 +1505,26 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "Should be base_offset",
-                "html": "<p>Should be base_offset</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:07:46.923982+00:00",
-            "updated_on": "2015-04-16T19:07:46.932669+00:00",
             "inline": {
-                "from": 140,
+                "to": null,
                 "path": "yt/units/unit_object.py",
-                "to": null
+                "from": 140
             },
+            "type": "pullrequest_comment",
             "id": 6307353
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "six.reraise(*sys.exc_info())?",
+                "html": "<p>six.reraise(*sys.exc_info())?</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1582,22 +1536,8 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6308151"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fvisualization%2Fplot_window.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6308151"
-                }
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
             "parent": {
                 "links": {
@@ -1610,8 +1550,19 @@
                 },
                 "id": 6307312
             },
+            "created_on": "2015-04-16T19:43:52.641532+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6308151"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6308151"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1621,24 +1572,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "six.reraise(*sys.exc_info())?",
-                "html": "<p>six.reraise(*sys.exc_info())?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:43:52.641532+00:00",
-            "updated_on": "2015-04-16T19:43:52.653850+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_window.py",
-                "to": null
+                "from": null
             },
-            "id": 6308151
+            "type": "pullrequest_comment",
+            "id": 6308151,
+            "updated_on": "2015-04-16T19:43:52.653850+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "`six.reraise(YTPlotCallbackError, YTPlotCallbackError(callback._type_name, e), sys.exc_info()[2])`.  Note that I haven't tried this so I don't know what the exceptions will look like if they go through six.",
+                "html": "<p><code>six.reraise(YTPlotCallbackError, YTPlotCallbackError(callback._type_name, e), sys.exc_info()[2])</code>.  Note that I haven't tried this so I don't know what the exceptions will look like if they go through six.</p>"
+            },
             "user": {
+                "username": "ngoldbaum",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/ngoldbaum"
@@ -1650,22 +1604,8 @@
                         "href": "https://bitbucket.org/account/ngoldbaum/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "Nathan Goldbaum",
-                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}",
-                "username": "ngoldbaum"
-            },
-            "type": "pullrequest_comment",
-            "links": {
-                "self": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6308195"
-                },
-                "code": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fvisualization%2Fplot_window.py"
-                },
-                "html": {
-                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6308195"
-                }
+                "uuid": "{5dcd72da-6420-4a6d-9571-e75dffcac587}"
             },
             "parent": {
                 "links": {
@@ -1678,8 +1618,19 @@
                 },
                 "id": 6308151
             },
+            "created_on": "2015-04-16T19:45:43.129533+00:00",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6308195"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6308195"
+                },
+                "code": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/diff/jzuhone/yt-3.x:None..None?path=yt%2Fvisualization%2Fplot_window.py"
+                }
+            },
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1689,24 +1640,27 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "`six.reraise(YTPlotCallbackError, YTPlotCallbackError(callback._type_name, e), sys.exc_info()[2])`.  Note that I haven't tried this so I don't know what the exceptions will look like if they go through six.",
-                "html": "<p><code>six.reraise(YTPlotCallbackError, YTPlotCallbackError(callback._type_name, e), sys.exc_info()[2])</code>.  Note that I haven't tried this so I don't know what the exceptions will look like if they go through six.</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:45:43.129533+00:00",
-            "updated_on": "2015-04-16T19:45:43.139554+00:00",
             "inline": {
-                "from": null,
+                "to": null,
                 "path": "yt/visualization/plot_window.py",
-                "to": null
+                "from": null
             },
-            "id": 6308195
+            "type": "pullrequest_comment",
+            "id": 6308195,
+            "updated_on": "2015-04-16T19:45:43.139554+00:00"
         },
         {
+            "content": {
+                "markup": "markdown",
+                "raw": "@smumford care to have another look at this?",
+                "html": "<p><a href=\"/smumford/\" rel=\"nofollow\" title=\"@smumford\" class=\"mention\">Stuart Mumford</a> care to have another look at this?</p>"
+            },
             "user": {
+                "username": "jzuhone",
+                "type": "user",
                 "links": {
                     "self": {
                         "href": "https://api.bitbucket.org/2.0/users/jzuhone"
@@ -1718,12 +1672,9 @@
                         "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
                     }
                 },
-                "type": "user",
                 "display_name": "John ZuHone",
-                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}",
-                "username": "jzuhone"
+                "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
             },
-            "type": "pullrequest_comment",
             "links": {
                 "self": {
                     "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/pullrequests/1539/comments/6308310"
@@ -1732,8 +1683,9 @@
                     "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539/_/diff#comment-6308310"
                 }
             },
+            "created_on": "2015-04-16T19:49:59.139679+00:00",
+            "updated_on": "2015-04-16T19:49:59.150597+00:00",
             "pullrequest": {
-                "title": "Fixing electromagnetic units",
                 "type": "pullrequest",
                 "links": {
                     "self": {
@@ -1743,16 +1695,64 @@
                         "href": "https://bitbucket.org/yt_analysis/yt/pull-requests/1539"
                     }
                 },
+                "title": "Fixing electromagnetic units",
                 "id": 1539
             },
-            "content": {
-                "raw": "@smumford care to have another look at this?",
-                "html": "<p><a href=\"/smumford/\" rel=\"nofollow\" title=\"@smumford\" class=\"mention\">Stuart Mumford</a> care to have another look at this?</p>",
-                "markup": "markdown"
-            },
-            "created_on": "2015-04-16T19:49:59.139679+00:00",
-            "updated_on": "2015-04-16T19:49:59.150597+00:00",
+            "type": "pullrequest_comment",
             "id": 6308310
         }
-    ]
+    ],
+    "reason": "",
+    "type": "pullrequest",
+    "close_source_branch": false,
+    "state": "MERGED",
+    "description": "Currently, we define everything in terms of cgs base units, which are centimeters, grams, and seconds (we add in Kelvin and radians for good measure). In cgs, even the electromagnetic units are expressed in terms of these base units. \r\n\r\nSI, however, has Ampere as a base unit, so that, for example, while in cgs:\r\n\r\n```python\r\nq = YTQuantity(1.0,\"esu\")\r\nprint q.in_cgs()\r\n```\r\n```pycon\r\n1.0 cm**(3/2)*sqrt(g)/s\r\n```\r\n\r\nin SI:\r\n\r\n```python\r\nq = YTQuantity(1.0,\"C\")\r\nprint q.in_mks()\r\n```\r\n```pycon\r\n1.0 A*s\r\n```\r\n\r\nFrom when they were introduced up until now, the SI EM units were based on Ampere, without regarding it as a base unit itself, even though it has a completely different dimension than any of our CGS base units. \r\n\r\nThere is also the other issue of translations between cgs <-> SI EM units. Our unit system relies on checking dimensions for unit equivalency. However, electrostatic units and Coulombs are both units of charge, but they don't have the same dimensions. So, up until this point, we translated between cgs <-> SI by a hack, where we treat those translations as a special case and ignore the fact that the dimensions aren't equivalent.\r\n\r\nSo, you could do things like this:\r\n\r\n```python\r\nfrom yt.utilities.physical_constants import qp\r\nqp_mks = qp.in_units(\"C\")\r\nprint qp, qp.units.dimensions\r\nprint qp_mks, qp_mks.units.dimensions\r\n```\r\n```pycon\r\n4.8032056e-10 esu (length)**(3/2)*sqrt((mass))/(time)\r\n1.60217693001e-19 C (current_mks)*(time)\r\n```\r\n\r\nand:\r\n\r\n```python\r\nB = YTQuantity(1.0,\"T\")\r\nB_cgs = B.in_units(\"gauss\")\r\nprint B, B.units.dimensions\r\nprint B_cgs, B_cgs.units.dimensions\r\n```\r\n```pycon\r\n1.0 T (mass)/((current_mks)*(time)**2)\r\n10000.0 gauss sqrt((mass))/(sqrt((length))*(time))\r\n```\r\n\r\nHowever, as Issue #1004 showed, these hacks were not sufficient to keep all of the unit translations self-consistent:\r\n\r\n```python\r\nB.in_mks()\r\n```\r\n```pycon\r\n29979245800.0 kg/(A*s**2) # WRONG!\r\n```\r\n\r\nThat one is particularly egregious since the definition of a Tesla in SI base units is `1 kg/(A*s*s)`.\r\n\r\nI tried to find a way to resolve these issues by altering the current state of the code in minor ways, but I always found out that I was never able to resolve all of them self-consistently. The only way to fix them in the current setup would be to introduce more ugly hacks. \r\n\r\nSo, this PR represents the following solution:\r\n\r\n1. Get rid of the hacks that translate between SI and cgs EM units when they don't have the same dimension. Stick strictly to the behavior where we can only translate any unit to another when they have the same dimension.\r\n\r\n2. Handle translations between SI and cgs EM units by a unit equivalency. \r\n\r\n3. Expand our definition of \"base units\" to include the \"Ampere\". This is potentially controversial, as we have always defined our base units to be cgs, which don't have the notion of a separate current dimension. My proposal is that we have the following set of base units, without refering to them as \"cgs\", but simply as \"base units\":\r\n\r\n```python\r\nyt_base_units = {\r\n    dimensions.mass:'g',\r\n    dimensions.length:'cm',\r\n    dimensions.time:'s',\r\n    dimensions.temperature:'K',\r\n    dimensions.angle:'radian',\r\n    dimensions.current_mks:'A',\r\n}\r\n```\r\n\r\nEvery unit we have can be reduced to a combination of these. \r\n\r\nWhat follows on from this is that, for internal consistency and to reduce confusion, we no longer should refer to these units anywhere in the code as \"cgs\" but as simply our \"base units\". In that vein, I have replaced the `Unit` attribute `cgs_value` with `base_value`, and added methods to `YTArray` such as `in_base`, `convert_to_base`, which will get you to base units of any quantity. `in_cgs`, `in_mks`, etc. are intact and should retain the same behavior. If you try to convert something which has \"Ampere\" as a base unit to cgs, you will get an error:\r\n\r\n```python\r\nQ = YTQuantity(1.0,\"C\")\r\nprint Q.in_mks()\r\nprint Q.in_cgs()\r\n```\r\n```pycon\r\n1.0 A*s\r\nYTUnitsNotReducible: The unit 'C' cannot be reduced to a single expression within the cgs base system of units.\r\n```\r\n\r\nThe impact of having these new methods to convert to \"base\" units is minimal at this point, but my hope is that this will serve as a starting point for eventually allowing a different set of base units to be specified, which is of course another can of worms and another PR. \r\n\r\nI have put the appropriate hooks into the code so that if someone tries to convert, say, between Tesla and Gauss as before, they will get a helpful error message:\r\n\r\n```python\r\nB = YTQuantity(1.0,\"gauss\")\r\nprint B.in_units(\"nT\")\r\n```\r\n```pycon\r\nYTEquivalentDimsError: It looks like you're trying to convert between 'gauss' and 'nT'. Try using \"to_equivalent('nT', 'SI')\" instead.\r\n```\r\n\r\nSo this should now be done instead:\r\n\r\n```python\r\nprint B.to_equivalent(\"nT\", \"SI\")\r\n```\r\n```pycon\r\n100000.0 nT\r\n```\r\n\r\nThe reverse direction works like this:\r\n```python\r\nI = YTQuantity(1.0,\"A\")\r\nprint I.to_equivalent(\"esu/s\",\"CGS\")\r\n```\r\n```pycon\r\n2997924580.0 esu/s\r\n```\r\n\r\nThis PR also adds units and dimensions for electric potential and resistance, as well as unit symbols for EM units, to close Issue #1005. \r\n\r\nUPDATE: Responded to @ngoldbaum's suggestions.",
+    "author": {
+        "username": "jzuhone",
+        "type": "user",
+        "links": {
+            "self": {
+                "href": "https://api.bitbucket.org/2.0/users/jzuhone"
+            },
+            "html": {
+                "href": "https://bitbucket.org/jzuhone/"
+            },
+            "avatar": {
+                "href": "https://bitbucket.org/account/jzuhone/avatar/32/"
+            }
+        },
+        "display_name": "John ZuHone",
+        "uuid": "{0c51edfa-e317-432f-bbef-7401c6e2aa8a}"
+    },
+    "updated_on": "2015-04-17T18:57:01.152204+00:00",
+    "destination": {
+        "repository": {
+            "full_name": "yt_analysis/yt",
+            "uuid": "{b73cb37c-40f2-493a-aaa9-41bc8d8974cc}",
+            "type": "repository",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/yt_analysis/yt"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/yt_analysis/yt/avatar/32/"
+                }
+            },
+            "name": "yt"
+        },
+        "commit": {
+            "hash": "c8b8a6018832",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/yt_analysis/yt/commit/c8b8a6018832"
+                }
+            }
+        },
+        "branch": {
+            "name": "yt"
+        }
+    }
 }
